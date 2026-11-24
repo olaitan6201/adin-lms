@@ -134,6 +134,8 @@ return new class extends Migration
             $table->string('external_student_id')->collation($driver === 'mysql' ? 'utf8mb4_bin' : null)->unique();
             $table->foreignUuid('user_id')->nullable()->unique()->constrained('users');
             $table->string('matric_number')->nullable()->unique();
+            $table->string('source_name')->nullable();
+            $table->string('source_email')->nullable();
             $table->string('status')->nullable();
             $table->timestampTz('created_at')->nullable();
             $table->timestampTz('updated_at')->nullable();

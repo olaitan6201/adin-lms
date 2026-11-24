@@ -11,6 +11,11 @@ class StudentPolicy
 {
     public function __construct(private readonly ScopedAuthority $authority) {}
 
+    public function viewHistory(User $user, Student $student): bool
+    {
+        return $student->user_id === $user->id;
+    }
+
     public function viewCompletedLessons(User $user, Student $student): bool
     {
         return $this->authority->institutionAllows($user, 'progress.read_approved')

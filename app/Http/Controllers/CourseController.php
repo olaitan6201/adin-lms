@@ -14,6 +14,7 @@ class CourseController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Courses', [
+            'historyUrl' => $request->user()->student ? route('students.history', $request->user()->student) : null,
             'courses' => $this->accessibleCourses($request)->orderBy('offerings.external_offering_id')->get(),
         ]);
     }

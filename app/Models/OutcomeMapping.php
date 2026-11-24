@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OutcomeMapping extends Model
+class OutcomeMapping extends DomainModel
 {
     protected $table = 'outcome_mappings';
 

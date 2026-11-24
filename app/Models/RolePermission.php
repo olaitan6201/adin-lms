@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class RolePermission extends Model
+class RolePermission extends DomainModel
 {
     protected $table = 'role_permissions';
 

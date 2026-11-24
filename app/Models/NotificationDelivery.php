@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class NotificationDelivery extends Model
+class NotificationDelivery extends DomainModel
 {
     protected $table = 'notification_deliveries';
 

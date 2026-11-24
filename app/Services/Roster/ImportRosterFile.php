@@ -5,6 +5,7 @@ namespace App\Services\Roster;
 use App\Enums\EnrolmentStatus;
 use DomainException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use SplFileObject;
 
 final class ImportRosterFile
@@ -56,9 +57,9 @@ final class ImportRosterFile
     {
         $now = now();
         $timestamps = ['created_at' => $now, 'updated_at' => $now];
-        DB::table('students')->insertOrIgnore(['external_student_id' => $student] + $timestamps);
+        DB::table('students')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_student_id' => $student] + $timestamps);
         $studentId = DB::table('students')->where('external_student_id', $student)->lockForUpdate()->firstOrFail()->id;
-        DB::table('offerings')->insertOrIgnore(['external_offering_id' => $offering] + $timestamps);
+        DB::table('offerings')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_offering_id' => $offering] + $timestamps);
         $offeringId = DB::table('offerings')->where('external_offering_id', $offering)->value('id');
         $key = ['student_id' => $studentId, 'offering_id' => $offeringId];
         $query = DB::table('enrolments')->where($key);
@@ -75,7 +76,7 @@ final class ImportRosterFile
         if ($current) {
             $query->update($values + ['updated_at' => $now]);
         } else {
-            DB::table('enrolments')->insert($key + $values + $timestamps);
+            DB::table('enrolments')->insert(['id' => (string) Str::uuid7()] + $key + $values + $timestamps);
         }
 
         return true;

@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 
-export type CourseSummary = { id: number; external_offering_id: string };
+export type CourseSummary = { id: string; external_offering_id: string };
 
 export default function Courses({ courses }: { courses: CourseSummary[] }) {
     return (

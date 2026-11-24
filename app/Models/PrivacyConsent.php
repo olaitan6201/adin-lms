@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PrivacyConsent extends Model
+class PrivacyConsent extends DomainModel
 {
     protected $table = 'privacy_consents';
 

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class RosterImportTest extends TestCase
@@ -26,6 +27,7 @@ class RosterImportTest extends TestCase
     {
         $this->loadRows('S1,C1,registered,1');
         $id = DB::table('enrolments')->sole()->id;
+        $this->assertTrue(Str::isUuid($id));
         $this->loadRows("S1,C1,registered,1\nS1,C1,withdrawn,2\nS1,C1,registered,1");
         $this->assertDatabaseCount('enrolments', 1);
         $this->assertDatabaseHas('enrolments', ['id' => $id, 'status' => 'withdrawn', 'source_revision' => 2]);
@@ -45,6 +47,7 @@ class RosterImportTest extends TestCase
         $this->loadRows("S1,C1,registered,1\nS2,C1,registered,1");
         $user = User::factory()->create();
         $other = User::factory()->create();
+        $this->artisan('roster:link', ['student' => 'S1', 'user' => '42'])->assertFailed();
         $this->artisan('roster:link', ['student' => 'S1', 'user' => $user->id])->assertSuccessful();
         $this->artisan('roster:link', ['student' => 'S1', 'user' => $other->id])->assertFailed();
         $this->artisan('roster:link', ['student' => 'S2', 'user' => $user->id])->assertFailed();

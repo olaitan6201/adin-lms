@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Examination extends Model
+class Examination extends DomainModel
 {
     protected $table = 'examinations';
 

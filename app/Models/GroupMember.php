@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class GroupMember extends Model
+class GroupMember extends DomainModel
 {
     protected $table = 'group_members';
 

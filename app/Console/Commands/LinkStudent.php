@@ -6,6 +6,7 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 #[Signature('roster:link {student : Upstream student ID} {user : Verified local user ID}')]
 #[Description('Bind a verified institutional student to their existing LMS account')]
@@ -16,11 +17,11 @@ class LinkStudent extends Command
      */
     public function handle(): int
     {
-        $id = filter_var($this->argument('user'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        $linked = $id && DB::transaction(function () use ($id) {
+        $id = strtolower($this->argument('user'));
+        $linked = Str::isUuid($id) && DB::transaction(function () use ($id) {
             $user = DB::table('users')->where('id', $id)->lockForUpdate()->first();
             $student = DB::table('students')->where('external_student_id', $this->argument('student'))->lockForUpdate()->first();
-            if (! $user || ! $student || ($student->user_id !== null && (int) $student->user_id !== $id)) {
+            if (! $user || ! $student || ($student->user_id !== null && $student->user_id !== $id)) {
                 return false;
             }
             if (DB::table('students')->where('user_id', $id)->where('id', '!=', $student->id)->exists()) {

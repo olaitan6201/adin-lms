@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AssignmentReference extends Model
+class AssignmentReference extends DomainModel
 {
     protected $table = 'assignment_references';
 

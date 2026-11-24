@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\EnrolmentStatus;
+use App\Models\Credential;
 use App\Models\Enrolment;
 use App\Models\Offering;
 use App\Models\QuestionVersion;
@@ -42,5 +43,16 @@ class AcademicSchemaTest extends TestCase
         $offering = Offering::forceCreate(['external_offering_id' => 'CSC101-1']);
         $this->expectException(QueryException::class);
         $offering->forceFill(['status' => 'published'])->save();
+    }
+
+    public function test_credential_uniqueness_uses_the_full_protected_value(): void
+    {
+        $attributes = ['kind' => 'test', 'user_id' => User::factory()->create()->id];
+        $prefix = str_repeat('a', 256);
+        Credential::forceCreate($attributes + ['protected_value' => $prefix.'1']);
+        Credential::forceCreate($attributes + ['protected_value' => $prefix.'2']);
+
+        $this->expectException(QueryException::class);
+        Credential::forceCreate($attributes + ['protected_value' => $prefix.'1']);
     }
 }

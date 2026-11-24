@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SubmissionVersion extends Model
+class SubmissionVersion extends DomainModel
 {
     protected $table = 'submission_versions';
 

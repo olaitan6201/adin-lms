@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AccessScope extends Model
+class AccessScope extends DomainModel
 {
     protected $table = 'access_scopes';
 

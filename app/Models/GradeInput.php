@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class GradeInput extends Model
+class GradeInput extends DomainModel
 {
     protected $table = 'grade_inputs';
 

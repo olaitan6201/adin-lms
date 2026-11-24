@@ -12,5 +12,5 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
-    Route::get('/courses/{offering}', [CourseController::class, 'show'])->whereNumber('offering')->name('courses.show');
+    Route::get('/courses/{offering}', [CourseController::class, 'show'])->whereUuid('offering')->name('courses.show');
 });

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SubmissionFile extends Model
+class SubmissionFile extends DomainModel
 {
     protected $table = 'submission_files';
 

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PrivateMessage extends Model
+class PrivateMessage extends DomainModel
 {
     protected $table = 'private_messages';
 

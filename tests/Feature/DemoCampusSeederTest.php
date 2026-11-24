@@ -23,6 +23,10 @@ class DemoCampusSeederTest extends TestCase
         $this->assertCount(4, $original);
         $this->assertSame($original, Enrolment::orderBy('id')->pluck('id')->all());
         $this->assertDatabaseCount('users', 4);
+        $nextTerm = Offering::where('external_offering_id', 'DEMO-CSC101-2026-2')->sole();
+        $this->assertSame(2, $nextTerm->semester->position);
+        $this->assertDatabaseHas('teaching_allocations', ['offering_id' => $nextTerm->id]);
+        $this->assertDatabaseMissing('enrolments', ['offering_id' => $nextTerm->id]);
         $this->assertDatabaseCount('material_versions', 2);
         foreach (MaterialVersion::all() as $version) {
             $this->assertTrue($version->material->module->offering->exists);

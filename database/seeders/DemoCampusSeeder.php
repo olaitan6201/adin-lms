@@ -67,6 +67,16 @@ class DemoCampusSeeder extends Seeder
                 'delivery_mode' => 'blended', 'status' => 'published', 'approved_by' => $curriculum->approved_by, 'approved_at' => now(),
             ]);
             $this->fixture(TeachingAllocation::class, ['lecturer_id' => $lecturer->id, 'offering_id' => $offering->id]);
+            if ($code === 'CSC101') {
+                $nextTerm = $this->fixture(Semester::class, ['session_id' => $session->id, 'position' => 2], [
+                    'starts_on' => '2027-02-01', 'ends_on' => '2027-07-31',
+                ]);
+                $nextOffering = $this->fixture(Offering::class, ['external_offering_id' => 'DEMO-CSC101-2026-2'], [
+                    'curriculum_course_id' => $entry->id, 'semester_id' => $nextTerm->id, 'section' => 'A',
+                    'delivery_mode' => 'blended', 'status' => 'draft',
+                ]);
+                $this->fixture(TeachingAllocation::class, ['lecturer_id' => $lecturer->id, 'offering_id' => $nextOffering->id]);
+            }
             $this->seedChapter($offering, $author, $title);
             foreach ($learners as $login => $student) {
                 $withdrawn = $login === 'tunde' && $code === 'CSC102';

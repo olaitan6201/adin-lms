@@ -7,6 +7,7 @@ use App\Models\Offering;
 use App\Models\User;
 use Database\Seeders\AuthoritySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class LecturerDirectoryTest extends TestCase
@@ -33,6 +34,8 @@ class LecturerDirectoryTest extends TestCase
         $this->post('/staff/allocations', $args)->assertRedirect(route('staff.index'));
         $this->post('/staff/allocations', $args)->assertRedirect(route('staff.index'));
         $this->assertDatabaseCount('teaching_allocations', 1);
+        $this->get('/staff')->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('staff.0.offerings.0', $offering->external_offering_id));
         $this->actingAs($teacher->fresh())->withSession(['security.mfa_user' => $teacher->id]);
         $this->getJson(route('offerings.roster', $offering))->assertOk();
         $this->patch('/profile', ['full_name' => 'Updated Lecturer', 'staff_number' => 'WRONG'])->assertRedirect();

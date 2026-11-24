@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Lecturer extends DomainModel
 {
@@ -21,5 +22,10 @@ class Lecturer extends DomainModel
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function allocations(): HasMany
+    {
+        return $this->hasMany(TeachingAllocation::class);
     }
 }

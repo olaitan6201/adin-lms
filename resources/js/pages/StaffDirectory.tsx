@@ -1,6 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 
-type Staff = { staff_number: string; full_name: string; department: string };
+type Staff = { staff_number: string; full_name: string; department: string; offerings: string[] };
 type Props = { staff: Staff[]; departments: { id: string; name: string }[]; previous: string | null; next: string | null };
 
 export default function StaffDirectory({ staff, departments, previous, next }: Props) {
@@ -34,7 +34,12 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
             </>}
         </Form>
         <h2 className="text-xl font-semibold">Registered staff</h2>
-        {staff.length ? <ul>{staff.map(s => <li key={s.staff_number}>{s.full_name} · {s.staff_number} · {s.department}</li>)}</ul> : <p>No lecturer profiles yet.</p>}
+        {staff.length ? <ul className="divide-y">{staff.map(s => <li key={s.staff_number} className="py-3">
+            <strong>{s.full_name}</strong> · {s.staff_number} · {s.department}
+            <details><summary className="cursor-pointer">Teaching allocations ({s.offerings.length})</summary>
+                {s.offerings.length ? <ul className="list-inside list-disc">{s.offerings.map(id => <li key={id}>{id}</li>)}</ul> : <p>No teaching allocations.</p>}
+            </details>
+        </li>)}</ul> : <p>No lecturer profiles yet.</p>}
         {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
     </main>;
 }

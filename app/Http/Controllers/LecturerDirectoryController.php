@@ -22,10 +22,14 @@ class LecturerDirectoryController extends Controller
         abort_unless($authority->institutionAllows($request->user(), 'staff.manage'), 403);
         $staff = Lecturer::join('departments', 'departments.id', '=', 'lecturers.department_id')
             ->join('users', 'users.id', '=', 'lecturers.user_id')->orderBy('lecturers.staff_number')
-            ->simplePaginate(50, ['staff_number', 'users.full_name', 'departments.name as department']);
+            ->with(['allocations:id,lecturer_id,offering_id', 'allocations.offering:id,external_offering_id'])
+            ->simplePaginate(50, ['lecturers.id', 'staff_number', 'users.full_name', 'departments.name as department']);
 
         return Inertia::render('StaffDirectory', [
-            'staff' => $staff->items(), 'previous' => $staff->previousPageUrl(), 'next' => $staff->nextPageUrl(),
+            'staff' => $staff->getCollection()->map(fn (Lecturer $lecturer) => $lecturer->only('staff_number', 'full_name', 'department') + [
+                'offerings' => $lecturer->allocations->pluck('offering.external_offering_id')->sort()->values(),
+            ]),
+            'previous' => $staff->previousPageUrl(), 'next' => $staff->nextPageUrl(),
             'departments' => Department::orderBy('name')->get(['id', 'name']),
         ]);
     }

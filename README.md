@@ -101,6 +101,31 @@ php artisan roster:link S100 019ad123-4567-789a-bcde-0123456789ab
 
 Replace the example UUID with the **existing** LMS user ID. Verify the person's institutional identity before linking; the import never matches on email or creates credentials. Sign in at `/login` with that account to see `/courses`. To revoke access, import `S100,CSC101-2026-1,withdrawn,2` with the same header. This preserves the enrolment ID and any associated learning history. This pilot format requires agreement with the registration platform before live use.
 
+### Student profiles and staff allocations
+
+Use `php artisan roster:profiles /path/to/profiles.csv` for an authorised
+student profile extract. A single-sheet `.xlsx` with literal cells in the
+same columns is also supported (PHP `zip` and `simplexml` extensions).
+Use programme code, level label and session label from the academic catalogue.
+An optional final `photo` column may be blank; the import does not fetch photos.
+
+```csv
+student_id,matric_number,name,email,programme,level,session,status,photo
+DEMO-ADA,DEMO/26/ADA,Ada Demo,ada@demo.example.test,DEMO-BSC,100 (demo),2026/27 (demo),active,
+```
+
+`active`, `graduated` and `suspended` describe the source student profile.
+The feed neither assigns course access nor modifies login credentials.
+Students can open **Academic history** from **My courses** to view their
+record, including withdrawals and released grades.
+
+The local `officer@demo.example.test` and `lecturer@demo.example.test`
+accounts require the authenticator setup described above. On the officer's
+**My courses** page, choose **Manage lecturers**. Verify a staff member's
+account UUID against the institutional record before registration.
+To try an allocation change, remove `DEMO-L1` from `DEMO-CSC101-2026-1`,
+check that lecturer access is revoked, then assign it again.
+
 ### Qualification commands
 
 ```sh

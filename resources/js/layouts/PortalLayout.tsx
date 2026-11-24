@@ -9,8 +9,11 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     const [notice, setNotice] = useState(navigator.onLine ? '' : 'offline');
     const brand = document.body.dataset;
     const links = [
+        { label: 'Dashboard', href: brand.dashboard },
         { label: 'My courses', href: brand.courses },
         { label: 'Search courses', href: brand.search },
+        { label: 'Reports', href: brand.reports },
+        { label: 'Inbox', href: brand.inbox },
         { label: 'Profile', href: brand.profile },
     ];
 

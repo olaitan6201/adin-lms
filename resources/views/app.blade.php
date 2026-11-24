@@ -13,6 +13,8 @@
 </head>
 <body data-institution="{{ config('branding.institution') }}" data-logo="{{ asset(config('branding.logo')) }}"
       data-palette="{{ config('branding.palette') }}" data-courses="{{ route('courses.index', [], false) }}" data-profile="{{ route('profile.edit', [], false) }}"
+      data-inbox="{{ route('community.inbox', [], false) }}"
+      data-dashboard="{{ route('insights.dashboard', [], false) }}" data-reports="{{ route('insights.reports', [], false) }}"
       data-search="{{ Route::has('mobile.search') ? route('mobile.search', [], false) : '' }}">
     @inertia
 </body>

@@ -24,7 +24,7 @@ class AcademicActivityCopyTest extends TestCase
     public function test_activity_copy_reanchors_schedule_without_copying_learner_work(): void
     {
         $this->seed(DemoCampusSeeder::class);
-        $actor = $this->academicUser(['offerings.manage']);
+        $actor = $this->academicUser();
         $from = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
         $into = Offering::where('external_offering_id', 'DEMO-CSC101-2026-2')->sole();
         $enrolment = $from->enrolments()->firstOrFail();

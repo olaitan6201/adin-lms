@@ -20,7 +20,7 @@ class CurriculumCatalogueTest extends TestCase
 
     public function test_reviewed_approval_immutable_version_and_independent_draft(): void
     {
-        $this->academicUser(['curriculum.edit'], 'ict_admin');
+        $this->academicUser();
         $this->post('/academics/curriculum', ['programme_id' => Programme::factory()->create()->id, 'framework_revision' => 'CCMAS 2023'])->assertSessionHasNoErrors();
         $version = Curriculum::sole();
         $path = '/academics/curriculum/'.$version->id;
@@ -43,15 +43,15 @@ class CurriculumCatalogueTest extends TestCase
         $this->get($path)->assertInertia(fn (AssertableInertia $p) => $p->has('courseOutcomes', 1)->has('programmeOutcomes', 1)->has('mappings', 0));
         $this->post("$path/mapping", $mapping)->assertSessionHasNoErrors();
         $this->post("$path/approve")->assertForbidden();
-        $this->academicUser(['curriculum.approve'], 'super_admin');
+        $this->academicUser('super_admin');
         $this->post("$path/approve")->assertSessionHasErrors('status');
-        $this->academicUser(['curriculum.edit'], 'ict_admin');
+        $this->academicUser();
         $this->post("$path/review")->assertSessionHasNoErrors();
-        $actor = $this->academicUser(['curriculum.approve'], 'super_admin');
+        $actor = $this->academicUser('super_admin');
         $this->post("$path/approve")->assertSessionHasNoErrors();
         $this->assertEquals($actor->id, $version->refresh()->approved_by);
         $this->assertNotNull($version->approved_at);
-        $this->academicUser(['curriculum.edit'], 'ict_admin');
+        $this->academicUser();
         $this->post("$path/entry", $entry)->assertSessionHasErrors('status');
         $this->post("$path/fork")->assertSessionHasNoErrors();
         $draft = Curriculum::where('programme_id', $version->programme_id)->where('version', 2)->sole();

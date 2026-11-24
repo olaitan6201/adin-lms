@@ -24,7 +24,7 @@ class OfferingDeliveryTest extends TestCase
 
     public function test_sections_recheck_entitlement_and_publish_state_on_every_request(): void
     {
-        $manager = $this->academicUser(['offerings.manage']);
+        $manager = $this->academicUser();
         $student = User::factory()->create();
         $profile = Student::factory()->create(['user_id' => $student->id]);
         $course = Offering::factory()->create();
@@ -50,7 +50,7 @@ class OfferingDeliveryTest extends TestCase
             $this->assertSame($mode, $course->refresh()->delivery_mode);
         }
         $this->post("$path/publish")->assertSessionHasErrors('status');
-        $teacher = $this->academicUser([], 'lecturer', 'offering:'.$course->id);
+        $teacher = $this->academicUser('lecturer', 'offering:'.$course->id);
         $lecturer = Lecturer::factory()->create(['user_id' => $teacher->id]);
         TeachingAllocation::factory()->create(['offering_id' => $course->id, 'lecturer_id' => $lecturer->id]);
         foreach (['publish' => 'published', 'unpublish' => 'unpublished', 'archive' => 'archived'] as $action => $state) {
@@ -66,7 +66,7 @@ class OfferingDeliveryTest extends TestCase
     public function test_copy_uses_fresh_activity_records_and_no_registrations(): void
     {
         $this->seed(DemoCampusSeeder::class);
-        $this->academicUser(['offerings.manage']);
+        $this->academicUser();
         $from = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
         $into = Offering::where('external_offering_id', 'DEMO-CSC101-2026-2')->sole();
         $path = "/academics/delivery/$into->id/copy";

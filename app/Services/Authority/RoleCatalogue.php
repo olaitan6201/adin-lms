@@ -5,8 +5,8 @@ namespace App\Services\Authority;
 final class RoleCatalogue
 {
     public const MATRIX = [
-        'super_admin' => ['roster.read', 'accounts.manage', 'login_events.read', 'staff.manage'],
-        'institutional_admin' => ['roster.read', 'accounts.manage', 'staff.manage'],
+        'super_admin' => ['roster.read', 'accounts.manage', 'login_events.read', 'staff.manage', 'academics.manage', 'curriculum.edit', 'offerings.manage', 'curriculum.approve'],
+        'institutional_admin' => ['roster.read', 'accounts.manage', 'staff.manage', 'academics.manage', 'curriculum.edit', 'offerings.manage'],
         'ict_admin' => ['login_events.read'],
         'dean' => ['roster.read'],
         'head_of_department' => ['roster.read'],

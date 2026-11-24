@@ -18,7 +18,7 @@ class AcademicHierarchyTest extends TestCase
 
     public function test_hierarchy_integrity_and_session_positions(): void
     {
-        $this->academicUser(['academics.manage']);
+        $this->academicUser();
         $base = '/academics/organisation';
         foreach (['Science', 'Arts'] as $name) {
             $this->post("$base/faculties", ['name' => $name, 'code' => $name])->assertSessionHasNoErrors();
@@ -46,7 +46,7 @@ class AcademicHierarchyTest extends TestCase
         $own = Department::factory()->create();
         $other = Department::factory()->create();
         foreach (['dean' => 'faculty:'.$own->faculty_id, 'head_of_department' => 'department:'.$own->id] as $role => $scope) {
-            $this->academicUser([], $role, $scope);
+            $this->academicUser($role, $scope);
             $this->get('/academics')->assertInertia(fn (AssertableInertia $p) => $p->has('departments', 1)->where('departments.0.id', $own->id));
             $this->get("/academics/departments/$other->id")->assertNotFound();
             $this->post('/academics/organisation/faculties', [])->assertForbidden();

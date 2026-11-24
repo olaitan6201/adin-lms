@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Academics\AcademicNavigation;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        Inertia::share('academicLinks', Inertia::always(fn () => app(AcademicNavigation::class)->forUser(request()->user())));
     }
 }

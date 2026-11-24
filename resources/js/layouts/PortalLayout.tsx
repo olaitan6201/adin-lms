@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 export function PortalLayout({ children }: { children: ReactNode }) {
-    const { url } = usePage();
+    const { url, props } = usePage<{ academicLinks: { label: string; href: string }[] }>();
     const path = url.split('?')[0];
     const previousPath = useRef(path);
     const content = useRef<HTMLDivElement>(null);
@@ -12,6 +12,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         { label: 'Dashboard', href: brand.dashboard },
         { label: 'My courses', href: brand.courses },
         { label: 'Search courses', href: brand.search },
+        ...(props.academicLinks ?? []),
         { label: 'Reports', href: brand.reports },
         { label: 'Inbox', href: brand.inbox },
         { label: 'Profile', href: brand.profile },

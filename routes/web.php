@@ -5,6 +5,7 @@ use App\Http\Controllers\SessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Home')->name('home');
+require __DIR__.'/web/profile.php';
 Route::middleware('guest')->group(function () {
     Route::inertia('/login', 'Login')->name('login');
     Route::post('/login', [SessionController::class, 'store'])->middleware('throttle:6,1');

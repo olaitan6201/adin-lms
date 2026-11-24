@@ -7,3 +7,26 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+body { --portal-ink: #134e4a; --portal-accent: #94c8ad; }
+body[data-palette="navy"] { --portal-ink: #19385b; --portal-accent: #b7caf0; }
+.portal-header { background: var(--portal-ink); color: white; border-bottom: 4px solid var(--portal-accent); }
+.portal-bar { max-width: 76rem; margin: auto; padding: .8rem clamp(1rem, 4vw, 3rem); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 2rem; }
+.portal-brand { display: flex; align-items: center; gap: .75rem; font-weight: 700; font-size: 1.2rem; overflow-wrap: anywhere; }
+.portal-brand img { object-fit: contain; }
+.portal-brand small { display: block; color: #d1e8de; font-size: .8rem; font-weight: 500; }
+.portal-nav { display: flex; flex-wrap: wrap; gap: .25rem; }
+.portal-nav a { display: inline-flex; min-height: 44px; align-items: center; padding: .5rem .75rem; border-radius: .25rem; }
+.portal-nav a:hover, .portal-nav [aria-current] { background: white; color: var(--portal-ink); text-decoration: underline; }
+.portal-skip { position: absolute; z-index: 2; left: 1rem; top: 0; transform: translateY(-125%); background: white; color: #134e4a; padding: .75rem; }
+.portal-skip:focus { transform: none; }
+:focus-visible { outline: 3px solid #075985; outline-offset: 2px; box-shadow: 0 0 0 2px white; }
+.portal-status:not(:empty) { padding: .8rem max(1rem, calc((100vw - 68rem) / 2)); background: #fff4cc; color: #492e0b; }
+#portal-content { overflow-wrap: anywhere; }
+.course-search-controls { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .35rem; }
+.course-search-controls input { flex: 1 1 12rem; min-width: 0; border: 1px solid #475569; border-radius: .25rem; padding: .65rem; }
+.course-search-controls button { min-height: 44px; padding: .5rem 1rem; background: var(--portal-ink); color: white; border-radius: .25rem; }
+@media (max-width: 40rem) {
+    .portal-bar { align-items: flex-start; flex-direction: column; gap: .35rem; }
+    .portal-nav a { padding-inline: .55rem; }
+}

@@ -1,0 +1,14 @@
+{
+    "id": "/",
+    "name": "Adin LMS Learning Portal",
+    "short_name": "Adin LMS",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#134e4a",
+    "icons": [
+        { "src": "/portal-192.png", "sizes": "192x192", "type": "image/png" },
+        { "src": "/portal-512.png", "sizes": "512x512", "type": "image/png" }
+    ]
+}

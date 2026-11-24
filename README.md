@@ -19,6 +19,22 @@ php artisan serve
 
 For frontend hot reload, also run `npm run dev` in another terminal. PostgreSQL is the production target; local setup uses SQLite.
 
+## Database baseline
+
+`database/migrations/2026_11_25_000000_create_lms_schema.php` is a single
+initial migration: 69 LMS domain tables plus seven Laravel storage tables
+for sessions, password resets, cache and queues. The migration is
+self-contained; it does not read the local `.agents/docs/schema.dbml`.
+Domain models live in `app/Models`; `ClassSession` maps to `classes`.
+Laravel authenticates against `users.password_hash` and displays
+`users.full_name`. Roster tables retain their operational timestamps.
+
+This is a **fresh-database baseline**, not an in-place upgrade of the
+earlier roster pilot. If a database already contains users or registrations,
+keep it intact: migrate a new database, transfer and reconcile the pilot
+records (including IDs, account links, password hashes and roster revisions),
+then switch connections. Rolling back this baseline drops the whole schema.
+
 ## Checks
 
 ### Roster pilot

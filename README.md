@@ -57,6 +57,34 @@ data outside `local` and `testing`.
 
 ## Checks
 
+### Identity and scoped access
+
+Run the updated baseline on a fresh database and seed the role catalogue with
+`php artisan db:seed --class=AuthoritySeeder`. Existing UUID baseline installations
+also need the new `users.auth_version` integer column (`NOT NULL DEFAULT 1`);
+editing the initial migration does not upgrade a database that already ran it.
+
+- Students can sign in with their matric number or email; lecturers can use
+  their staff number or email. An account link does not itself grant course
+  registration. `/profile` edits only the signed-in user's name.
+- Use a trusted operator console to bootstrap an institutional administrator:
+  `php artisan authority:grant <user-uuid> institutional_admin institution`.
+  Use `faculty:<uuid>` for a dean, `department:<uuid>` for a HoD and
+  `offering:<uuid>` for a lecturer. A lecturer also needs a teaching allocation.
+  Append `--revoke` to remove the grant.
+- Use `php artisan identity:account provision <email> --actor=<admin-uuid>
+  --name="Full Name"` for new accounts. `suspend` and `reactivate` take the
+  target account UUID. Configure mail and run `php artisan queue:work` for
+  account setup and password recovery. The repository does not supply a
+  production administrator account.
+- After verifying the staff member's identity, run
+  `php artisan security:issue-authenticator <user-uuid>` and deliver the
+  enrollment secret privately. Staff must complete the authenticator challenge
+  after password login. Do not copy secrets into tickets or agent logs.
+- Set `SESSION_LIFETIME` in minutes for idle expiry. To revoke access from
+  all browsers use `php artisan security:revoke-sessions <user-uuid>`.
+  Authorised ICT users can inspect authentication outcomes at `/security/login-events`.
+
 ### Roster pilot
 
 An operator can import registration changes from a UTF-8 CSV (no BOM). Each row is a delta: omission does not withdraw a student. Use stable, case-sensitive student and semester-specific offering IDs; the positive revision increases per student/offering pair. Replays and older revisions are ignored. Invalid rows and same-revision conflicts roll back the whole file.

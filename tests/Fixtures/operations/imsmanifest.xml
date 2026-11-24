@@ -1,0 +1,5 @@
+<manifest identifier="sample" xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2">
+  <metadata><schema>ADL SCORM</schema><schemaversion>1.2</schemaversion></metadata>
+  <organizations default="O"><organization identifier="O"><title>Fixture</title><item identifier="I" identifierref="R"><title>Water &amp; soils</title></item></organization></organizations>
+  <resources><resource identifier="R" type="webcontent" adlcp:scormtype="asset" href="field.txt"><file href="field.txt"/></resource></resources>
+</manifest>

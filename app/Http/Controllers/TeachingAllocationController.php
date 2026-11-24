@@ -17,6 +17,7 @@ class TeachingAllocationController extends Controller
     {
         DB::transaction(function () use ($request, $grants): void {
             $lecturer = Lecturer::where('staff_number', $request->validated('staff_number'))->lockForUpdate()->firstOrFail();
+            abort_if($lecturer->user_id === $request->user()->id, 403);
             $offering = Offering::where('external_offering_id', $request->validated('offering'))->firstOrFail();
             $key = ['offering_id' => $offering->id, 'lecturer_id' => $lecturer->id];
             $remove = $request->validated('operation') === 'remove';

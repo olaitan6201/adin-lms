@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Department;
+use App\Models\Lecturer;
 use App\Models\Offering;
 use App\Models\User;
 use Database\Seeders\AuthoritySeeder;
@@ -13,6 +14,18 @@ use Tests\TestCase;
 class LecturerDirectoryTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_dual_role_admin_cannot_assign_their_own_classes(): void
+    {
+        $this->seed(AuthoritySeeder::class);
+        $staff = Lecturer::factory()->create();
+        $offering = Offering::factory()->create();
+        $this->artisan('authority:grant', ['user' => $staff->user_id, 'role' => 'institutional_admin', 'scope' => 'institution'])->assertSuccessful();
+        $this->actingAs($staff->user)->withSession(['security.mfa_user' => $staff->user_id])
+            ->post('/staff/allocations', ['staff_number' => $staff->staff_number, 'offering' => $offering->external_offering_id, 'operation' => 'assign'])
+            ->assertForbidden();
+        $this->assertDatabaseEmpty('teaching_allocations');
+    }
 
     public function test_verified_registration_is_unique_and_only_admin_controls_allocations(): void
     {

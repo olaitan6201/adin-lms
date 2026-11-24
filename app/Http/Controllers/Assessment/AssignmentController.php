@@ -72,7 +72,7 @@ class AssignmentController
         $id = $access->learner($request->user(), $assignment->item->gradebook->offering_id)->value('id');
         abort_unless($marker || ($id && now()->gte($assignment->opens_at)), 404);
         $versions = SubmissionVersion::whereHas('submission', fn ($q) => $q->where('assignment_id', $assignment->id))->when(! $marker, fn ($q) => $q->whereIn('id', SubmissionRecipient::where('enrolment_id', $id)->select('version_id')))->select('id');
-        abort_unless(AssignmentReference::where('assignment_id', $assignment->id)->where('file_id', $file->id)->exists() || SubmissionFile::whereIn('version_id', $versions)->where('file_id', $file->id)->exists() || AssessmentScore::whereIn('submission_version_id', $versions)->where('marked_file_id', $file->id)->when(! $marker,fn ($q) => $q->where('enrolment_id',$id)->where('released_at','<=',now()))->exists(), 404);
+        abort_unless(AssignmentReference::where('assignment_id', $assignment->id)->where('file_id', $file->id)->exists() || SubmissionFile::whereIn('version_id', $versions)->where('file_id', $file->id)->exists() || AssessmentScore::whereIn('submission_version_id', $versions)->where('marked_file_id', $file->id)->when(! $marker, fn ($q) => $q->where('enrolment_id', $id)->where('released_at', '<=', now()))->exists(), 404);
 
         return $files->download($file);
     }

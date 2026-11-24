@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\EnrolmentStatus;
+use App\Models\Module;
+use App\Policies\LearningPolicy;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -21,21 +23,45 @@ class CourseController extends Controller
         ]);
     }
 
-    public function show(Request $request, string $offering): Response
+    public function show(Request $request, string $offering, LearningPolicy $release): Response
     {
         $course = $this->accessibleCourses($request)->where('offerings.id', $offering)->first();
         abort_if($course === null, 404);
 
-        return Inertia::render('Course', ['course' => $course]);
+        $teaching = $this->teaching($request)->where('teaching_allocations.offering_id', $offering)->exists();
+        $modules = $teaching || $course->status === 'published'
+            ? Module::where('offering_id', $offering)->orderBy('position')->get()
+                ->filter(fn (Module $module) => $teaching || $release->released($module))
+                ->values()->map->only(['id', 'kind', 'title', 'body'])
+            : [];
+
+        return Inertia::render('Course', ['course' => $course, 'teaching' => $teaching,
+            'modules' => $modules]);
     }
 
     private function accessibleCourses(Request $request): Builder
     {
-        return DB::table('offerings')
-            ->join('enrolments', 'enrolments.offering_id', '=', 'offerings.id')
+        $registered = DB::table('enrolments')
             ->join('students', 'students.id', '=', 'enrolments.student_id')
             ->where('students.user_id', $request->user()->id)
             ->where('enrolments.status', EnrolmentStatus::Registered->value)
-            ->select('offerings.id', 'offerings.external_offering_id');
+            ->select('enrolments.offering_id');
+
+        return DB::table('offerings')->leftJoin('curriculum_courses', 'curriculum_courses.id', '=', 'offerings.curriculum_course_id')
+            ->where(fn ($q) => $q->whereIn('offerings.id', $registered)->orWhereIn('offerings.id', $this->teaching($request)))
+            ->select('offerings.id', 'offerings.external_offering_id', 'offerings.status', 'offerings.delivery_mode', 'offerings.section', 'curriculum_courses.title');
+    }
+
+    private function teaching(Request $request): Builder
+    {
+        return DB::table('teaching_allocations')
+            ->join('lecturers', 'lecturers.id', '=', 'teaching_allocations.lecturer_id')
+            ->join('access_scopes', 'access_scopes.offering_id', '=', 'teaching_allocations.offering_id')
+            ->join('role_grants', 'scope_id', '=', 'access_scopes.id')
+            ->join('roles', 'roles.id', '=', 'role_grants.role_id')
+            ->join('role_permissions', 'role_permissions.role_id', '=', 'roles.id')
+            ->join('permissions', 'permissions.id', '=', 'role_permissions.permission_id')
+            ->where('lecturers.user_id', $request->user()->id)->where('role_grants.user_id', $request->user()->id)
+            ->where('roles.code', 'lecturer')->where('permissions.code', 'roster.read')->select('teaching_allocations.offering_id');
     }
 }

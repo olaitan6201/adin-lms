@@ -78,6 +78,7 @@ return new class extends Migration
             $table->string('password_hash')->nullable();
             $table->foreignUuid('photo_id')->nullable()->constrained('files');
             $table->string('status')->default('active');
+            $table->unsignedInteger('auth_version')->default(1);
             $table->rememberToken();
             $table->timestampTz('email_verified_at')->nullable();
             $table->timestampTz('created_at')->nullable();

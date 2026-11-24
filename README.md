@@ -35,6 +35,24 @@ keep it intact: migrate a new database, transfer and reconcile the pilot
 records (including IDs, account links, password hashes and roster revisions),
 then switch connections. Rolling back this baseline drops the whole schema.
 
+## Demo data
+
+After migrating the baseline, run `php artisan db:seed` in a **local** environment.
+The demo creates a computing programme, lecturer, two published course offerings,
+chapter readings and linked student accounts. Running it again fills missing
+fixtures without duplicating the campus or resetting existing records.
+
+Sign in at `/login` with the local demo password `password`:
+
+| Email | Expected course list |
+|---|---|
+| `ada@demo.example.test` | CSC101 and CSC102 |
+| `tunde@demo.example.test` | CSC101 only; the CSC102 enrolment is withdrawn |
+
+For isolated tests, use factories instead of seeding the whole campus, e.g.
+`Enrolment::factory()->withdrawn()->create()`. The default seeder skips demo
+data outside `local` and `testing`.
+
 ## Checks
 
 ### Roster pilot

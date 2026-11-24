@@ -1,0 +1,19 @@
+<?php
+
+namespace Tests\Feature;
+
+use Inertia\Testing\AssertableInertia;
+use Tests\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * A basic test example.
+     */
+    public function test_the_application_returns_a_successful_response(): void
+    {
+        $response = $this->withoutVite()->get('/');
+
+        $response->assertOk()->assertInertia(fn (AssertableInertia $page) => $page->component('Home'));
+    }
+}

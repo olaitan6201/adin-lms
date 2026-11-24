@@ -8,6 +8,8 @@ Read `.agents/docs/{features.md,schema.dbml,integrations.mmd,recommended-stack.m
 
 ## Commands
 
+Keep agent-only work (scratch files, implementation logs, test evidence and screenshots) under `.agent-work/`, which is gitignored. Keep deliverable code, tests and developer documentation in their normal project paths.
+
 See `README.md` for local setup. Run `php artisan test`, `vendor/bin/pint --test`, `npm run typecheck` and `npm run build` for a cross-stack change. Verify locking and production-specific migrations on PostgreSQL.
 
 ## Non-negotiables

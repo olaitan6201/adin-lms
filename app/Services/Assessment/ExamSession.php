@@ -19,6 +19,10 @@ class ExamSession
     public function start(User $user, Examination $exam): ExaminationAttempt
     {
         return DB::transaction(function () use ($exam, $user) {
+            if (DB::getDriverName() === 'sqlite') {
+                // SQLite ignores FOR UPDATE. Reserve its writer before opening a read snapshot.
+                Examination::whereKey($exam->id)->update(['max_attempts' => DB::raw('max_attempts')]);
+            }
             $exam = Examination::lockForUpdate()->findOrFail($exam->id);
             $learner = $this->access->learner($user, $exam->item->gradebook->offering_id)->lockForUpdate()->firstOrFail();
             $rules = Accommodation::where('exam_id', $exam->id)->where('enrolment_id', $learner->id)->first()?->overrides ?? [];

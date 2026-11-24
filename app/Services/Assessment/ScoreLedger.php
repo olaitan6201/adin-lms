@@ -15,7 +15,7 @@ class ScoreLedger
     {
         Enrolment::where('offering_id', $item->gradebook->offering_id)->lockForUpdate()->findOrFail($enrolment);
         abort_if(BigDecimal::of($points)->isNegative() || BigDecimal::of($points)->isGreaterThan((string) $item->maximum_score), 422, 'Points outside item range.');
-        $revision = 1 + AssessmentScore::where('item_id', $item->id)->where('enrolment_id', $enrolment)->max('revision');
+        $revision = 1 + AssessmentScore::where('item_id', $item->id)->where('enrolment_id', $enrolment)->latest('revision')->lockForUpdate()->value('revision');
         $score = AssessmentScore::forceCreate(['item_id' => $item->id, 'enrolment_id' => $enrolment, 'revision' => $revision, 'points' => $points, 'reason' => $reason, 'changed_by' => $actor, 'changed_at' => now()] + $evidence);
         $this->audit('score.recorded', $score->id, $actor, ['revision' => $revision, 'reason' => $reason, 'released' => isset($evidence['released_at'])]);
 

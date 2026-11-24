@@ -6,6 +6,7 @@ use App\Http\Requests\Assessment\SubmissionRequest;
 use App\Models\AssessmentScore;
 use App\Models\Assignment;
 use App\Models\AssignmentReference;
+use App\Models\Enrolment;
 use App\Models\File;
 use App\Models\GroupMember;
 use App\Models\SubmissionFile;
@@ -35,13 +36,14 @@ class AssignmentController
         if (! $marker) {
             $versions->whereIn('id', SubmissionRecipient::where('enrolment_id', $learner->id)->select('version_id'));
         }
+        $pending = $marker ? Enrolment::where('offering_id', $item->gradebook->offering_id)->where('status', 'registered')->whereNotIn('id', SubmissionRecipient::whereIn('version_id', (clone $versions)->select('id'))->select('enrolment_id'))->with('student:id,matric_number')->get()->pluck('student.matric_number') : [];
         $rows = $versions->latest('submitted_at')->get()->map(function ($version) use ($assignment, $learner, $marker) {
             $scores = AssessmentScore::where('submission_version_id', $version->id)->when(! $marker, fn ($q) => $q->where('enrolment_id', $learner->id)->where('released_at', '<=', now()))->latest('revision')->get(['id', 'points', 'feedback', 'marked_file_id', 'revision', 'released_at']);
 
-            return $version->only('id', 'revision', 'receipt', 'body') + ['late' => $version->submitted_at->gt($assignment->due_at), 'scores' => $scores, 'files' => SubmissionFile::where('version_id', $version->id)->pluck('file_id')];
+            return $version->only('id', 'revision', 'receipt', 'body') + ['late' => $version->submitted_at->gt($assignment->due_at), 'scores' => $scores, 'recipients' => $marker ? SubmissionRecipient::where('version_id', $version->id)->with('enrolment.student:id,matric_number')->get()->pluck('enrolment.student.matric_number') : [], 'files' => SubmissionFile::where('version_id', $version->id)->pluck('file_id')];
         });
 
-        return Inertia::render('Assessments/Assignment', ['assignment' => $assignment->only('id', 'instructions', 'group_work', 'due_at', 'closes_at'), 'title' => $item->title, 'marker' => $marker, 'rows' => $rows, 'references' => AssignmentReference::where('assignment_id', $assignment->id)->pluck('file_id'), 'groups' => $learner ? GroupMember::where('enrolment_id', $learner->id)->with('group:id,name')->get()->pluck('group') : []]);
+        return Inertia::render('Assessments/Assignment', ['assignment' => $assignment->only('id', 'instructions', 'group_work', 'due_at', 'closes_at'), 'title' => $item->title, 'marker' => $marker, 'pending' => $pending, 'rows' => $rows, 'references' => AssignmentReference::where('assignment_id', $assignment->id)->pluck('file_id'), 'groups' => $learner ? GroupMember::where('enrolment_id', $learner->id)->with('group:id,name')->get()->pluck('group') : []]);
     }
 
     public function submit(SubmissionRequest $request, Assignment $assignment, SubmissionIntake $intake): RedirectResponse

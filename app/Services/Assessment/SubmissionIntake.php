@@ -33,6 +33,7 @@ class SubmissionIntake
                 $recipients = Enrolment::whereIn('id', $members)->where('offering_id', $offering)->where('status', 'registered')->pluck('id');
                 abort_unless($recipients->contains($learner->id), 403);
             }
+            abort_if($body !== null && (! in_array('txt', $assignment->accepted_formats, true) || strlen($body) > $assignment->max_bytes), 422, 'Text outside assignment limits.');
             abort_if($file && ($file->getSize() > $assignment->max_bytes || ! in_array($file->guessExtension(), $assignment->accepted_formats, true)), 422, 'File outside assignment limits.');
             $key = ['assignment_id' => $assignment->id, 'group_id' => $group, 'enrolment_id' => $group ? null : $learner->id];
             $submission = Submission::where($key)->first() ?? Submission::forceCreate($key);

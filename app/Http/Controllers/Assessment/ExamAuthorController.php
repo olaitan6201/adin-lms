@@ -35,7 +35,7 @@ class ExamAuthorController
             AssessmentItem::lockForUpdate()->findOrFail($item->id);
             abort_if(Examination::where('item_id', $item->id)->exists(), 409);
             $exam = Examination::forceCreate(['item_id' => $item->id, 'opens_at' => $data['opens_at'], 'closes_at' => $data['closes_at'], 'duration_seconds' => $data['duration_seconds'], 'max_attempts' => $data['max_attempts'], 'shuffle_options' => $request->boolean('shuffle')]);
-            $course = $item->gradebook->offering->curriculumCourse->course_id;
+            $course = $item->gradebook->offering->curriculumCourse?->course_id ?? abort(422, 'Offering needs a curriculum course.');
             $points = BigDecimal::zero();
             foreach (array_values($data['questions']) as $i => $row) {
                 $bank = QuestionBank::where('course_id', $course)->where('topic', $row['topic'])->first() ?? QuestionBank::forceCreate(['course_id' => $course, 'topic' => $row['topic']]);
@@ -87,7 +87,10 @@ class ExamAuthorController
         Gate::authorize('mark', $attempt->exam->item);
         abort_unless($attempt->submitted_at, 409);
         $data = $request->validate(['points' => 'required|decimal:0,8|min:0', 'reason' => 'required|string|max:2000', 'release' => 'nullable|boolean']);
-        DB::transaction(fn () => $ledger->append($attempt->exam->item, $attempt->enrolment_id, (string) $data['points'], $data['reason'], $request->user()->id, ['attempt_id' => $attempt->id, 'released_at' => $request->boolean('release') ? now() : null]));
+        DB::transaction(function () use ($ledger, $attempt, $request, $data) {
+            $ledger->append($attempt->exam->item, $attempt->enrolment_id, (string) $data['points'], $data['reason'], $request->user()->id, ['attempt_id' => $attempt->id, 'released_at' => $request->boolean('release') ? now() : null]);
+            $attempt->forceFill(['state' => 'marked'])->save();
+        });
 
         return back();
     }

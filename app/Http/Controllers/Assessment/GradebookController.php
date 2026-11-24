@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Assessment;
 
 use App\Models\AssessmentItem;
+use App\Models\AssessmentScore;
 use App\Models\Enrolment;
 use App\Models\Grade;
 use App\Models\Gradebook;
@@ -45,6 +46,11 @@ class GradebookController
             Enrolment::lockForUpdate()->findOrFail($grade->enrolment_id);
             $grade = Grade::lockForUpdate()->findOrFail($grade->id);
             abort_if($grade->published_at || Grade::where('enrolment_id', $grade->enrolment_id)->where('revision', '>', $grade->revision)->exists(), 409);
+            if ($data['decision'] !== 'correct') {
+                foreach (GradeInput::with('score')->where('grade_id', $grade->id)->get() as $input) {
+                    abort_if(AssessmentScore::where('enrolment_id', $grade->enrolment_id)->where('item_id', $input->score->item_id)->where('revision', '>', $input->score->revision)->exists(), 409, 'A mark changed. Compute a new result revision.');
+                }
+            }
             $actor = $request->user()->id;
             if ($data['decision'] === 'publish') {
                 abort_unless($grade->moderation_status === 'approved' && $grade->approved_at && $grade->approved_by, 409, 'Approval required.');
@@ -66,7 +72,7 @@ class GradebookController
         abort_unless($grade->approved_by && $grade->approved_at && $grade->moderation_status === 'approved' && $grade->published_at?->lte(now()), 404);
         $offering = $grade->enrolment->offering;
         abort_unless($access->learner($request->user(), $offering->id)->whereKey($grade->enrolment_id)->exists() || $access->teaches($request->user(), $offering) || $authority->institutionAllows($request->user(), 'examinations.manage'), 404);
-        $inputs = GradeInput::where('grade_id', $grade->id)->with('score.item')->get()->map(fn ($i) => ['item' => $i->score->item->title, 'score_revision' => $i->score->revision, 'points' => (string) $i->score->points, 'maximum' => (string) $i->maximum_score, 'weight' => (string) $i->applied_weight]);
+        $inputs = GradeInput::where('grade_id', $grade->id)->orderBy('id')->with('score.item')->get()->map(fn ($i) => ['item' => $i->score->item->title, 'score_revision' => $i->score->revision, 'points' => (string) $i->score->points, 'maximum' => (string) $i->maximum_score, 'weight' => (string) $i->applied_weight]);
         $ledger->audit('grade.export', $grade->id, $request->user()->id);
 
         return response(json_encode(['enrolment' => $grade->enrolment_id, 'policy' => $grade->policy_id, 'revision' => $grade->revision, 'total' => (string) $grade->total_percent, 'grade' => $grade->grade, 'inputs' => $inputs], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), 200, ['Content-Type' => 'application/json', 'Cache-Control' => 'private, no-store', 'Content-Disposition' => 'attachment; filename="result-'.$grade->id.'.json"']);

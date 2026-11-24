@@ -14,7 +14,7 @@ class ExamPaper
     public function generate(ExaminationAttempt $attempt): void
     {
         $exam = $attempt->exam;
-        $course = $exam->item->gradebook->offering->curriculumCourse->course_id;
+        $course = $exam->item->gradebook->offering->curriculumCourse?->course_id ?? abort(422, 'Offering needs a curriculum course.');
         $slots = ExamSlot::where('exam_id', $exam->id)->orderBy('position')->get();
         abort_if($slots->isEmpty(), 422, 'No paper available.');
         $used = QuestionVersion::whereIn('id', $slots->pluck('fixed_version_id')->filter())->pluck('question_id')->all();

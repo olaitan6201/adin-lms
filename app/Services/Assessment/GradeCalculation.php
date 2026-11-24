@@ -23,11 +23,11 @@ class GradeCalculation
             $total = BigRational::zero();
             $weights = BigRational::zero();
             $inputs = [];
-            foreach (AssessmentItem::where('gradebook_id', $book->id)->get() as $item) {
+            foreach (AssessmentItem::where('gradebook_id', $book->id)->orderBy('id')->get() as $item) {
                 $score = AssessmentScore::where('item_id', $item->id)->where('enrolment_id', $enrolment->id)->latest('revision')->first();
                 abort_unless($score, 422, 'Every item needs a recorded mark.');
                 $weights = $weights->plus((string) $item->weight_percent);
-                $total = $total->plus(BigRational::of((string) $score->points)->multipliedBy((string) $item->weight_percent)->dividedBy((string) $item->maximum_score))->simplified();
+                $total = $total->plus(BigRational::of((string) $score->points)->multipliedBy((string) $item->weight_percent)->dividedBy((string) $item->maximum_score));
                 $inputs[] = ['score_id' => $score->id, 'maximum_score' => $item->maximum_score, 'applied_weight' => $item->weight_percent];
             }
             abort_unless($weights->isEqualTo(100), 422, 'Weights must total 100%.');

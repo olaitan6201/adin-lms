@@ -1,0 +1,13 @@
+.assessment-page { max-width: 58rem; margin: auto; padding: clamp(1rem,4vw,3rem); color: #172f38; overflow-wrap: anywhere; }
+.assessment-page h1 { font-size: clamp(1.65rem,4vw,2.4rem); font-weight: 700; margin-bottom: 1rem; }
+.assessment-page h2,.assessment-page h3,.assessment-page legend { font-weight: 650; margin: .8rem 0 .4rem; }
+.assessment-page h2 { font-size: 1.3rem; }
+.assessment-page section,.assessment-page article,.assessment-page details { border-top: 1px solid #b4c6c2; margin-top: 1rem; padding-top: .8rem; }
+.assessment-page form,.assessment-page fieldset { display: grid; gap: .65rem; padding: 1rem 0; }
+.assessment-page label { display: grid; gap: .25rem; max-width: 40rem; }
+.assessment-page label:has(input[type=checkbox]) { display: flex; gap: .5rem; align-items: center; }
+.assessment-page input:not([type=checkbox]),.assessment-page textarea,.assessment-page select { min-height: 44px; max-width:100%; min-width:0; background:white; border:1px solid #59736e; border-radius:.3rem; padding:.5rem; }
+.assessment-page button { width:fit-content; min-height:44px; padding:.45rem .9rem; background:#134e4a; color:white; border-radius:.3rem; cursor:pointer; }
+.assessment-page button:disabled { opacity:.65; cursor:default; }
+.assessment-page a { color:#075985; text-decoration:underline; display:inline-block; padding:.5rem 0; }
+.assessment-page pre { white-space:pre-wrap; }

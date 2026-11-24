@@ -36,6 +36,10 @@ class AssessmentDeskController
         $roster = $offering->enrolments()->where('status', 'registered');
         $grades = Grade::whereIn('enrolment_id', (clone $roster)->select('id'))->when(! $teacher && ! $officer, fn ($q) => $q->where('enrolment_id', $learner->id)->whereNotNull('approved_at')->whereNotNull('approved_by')->where('moderation_status', 'approved')->where('published_at', '<=', now()))->latest('revision')->get(['id', 'enrolment_id', 'revision', 'grade', 'total_percent', 'moderation_status', 'published_at', 'moderation_note']);
 
+        if (! $teacher && ! $officer) {
+            $grades->makeHidden('moderation_note');
+        }
+
         return Inertia::render('Assessments/Desk', ['offering' => $offering->id, 'book' => $book?->id, 'items' => $items, 'grades' => $grades, 'teacher' => $teacher, 'officer' => $officer, 'learner' => (bool) $learner, 'roster' => $teacher || $officer ? $roster->with('student:id,matric_number')->get(['id', 'student_id'])->map(fn ($e) => ['id' => $e->id, 'name' => $e->student->matric_number]) : []]);
     }
 }

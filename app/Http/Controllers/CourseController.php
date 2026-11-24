@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\EnrolmentStatus;
+use App\Services\Authority\ScopedAuthority;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,10 +12,11 @@ use Inertia\Response;
 
 class CourseController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, ScopedAuthority $authority): Response
     {
         return Inertia::render('Courses', [
             'historyUrl' => $request->user()->student ? route('students.history', $request->user()->student) : null,
+            'staffUrl' => $authority->institutionAllows($request->user(), 'staff.manage') ? route('staff.index') : null,
             'courses' => $this->accessibleCourses($request)->orderBy('offerings.external_offering_id')->get(),
         ]);
     }

@@ -16,9 +16,9 @@ use InvalidArgumentException;
 
 class ChangeRoleGrant
 {
-    public function apply(string $userId, string $code, string $scopeKey, bool $revoke): void
+    public function apply(string $userId, string $code, string $scopeKey, bool $revoke, ?string $actorId = null): void
     {
-        DB::transaction(function () use ($userId, $code, $scopeKey, $revoke): void {
+        DB::transaction(function () use ($userId, $code, $scopeKey, $revoke, $actorId): void {
             $user = Str::isUuid($userId) ? User::lockForUpdate()->find($userId) : null;
             $role = Role::where('code', $code)->first();
             if (! $user || ! $role || ! isset(RoleCatalogue::MATRIX[$code])) {
@@ -40,7 +40,8 @@ class ChangeRoleGrant
                 AuditLog::forceCreate([
                     'subject_key' => 'user:'.$user->id, 'occurred_at' => now(),
                     'action' => $revoke ? 'role.revoked' : 'role.granted',
-                    'details' => ['role' => $code, 'scope' => $scopeKey, 'source' => 'console'],
+                    'actor_id' => $actorId,
+                    'details' => ['role' => $code, 'scope' => $scopeKey, 'source' => $actorId ? 'web' : 'console'],
                 ]);
             }
         });

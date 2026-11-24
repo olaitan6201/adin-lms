@@ -17,14 +17,16 @@ npm run build
 php artisan serve
 ```
 
-For frontend hot reload, also run `npm run dev` in another terminal. PostgreSQL is the production target; local setup uses SQLite.
+For frontend hot reload, also run `npm run dev` in another terminal. Select `pgsql`, `mysql` (MySQL 8.0.16+), or `sqlite` using `DB_CONNECTION` and the matching PDO driver. Use an empty database and configure host, port and credentials for server engines.
 
 ## Database baseline
 
-`database/migrations/2026_11_25_000000_create_lms_schema.php` is a single
+`database/migrations/2026_11_25_000001_create_uuid_lms_schema.php` is a single
 initial migration: 69 LMS domain tables plus seven Laravel storage tables
 for sessions, password resets, cache and queues. The migration is
 self-contained; it does not read the local `.agents/docs/schema.dbml`.
+Domain primary keys are application-generated UUIDv7 values; foreign keys referencing them are UUIDs, including `sessions.user_id`. Framework-owned job counters and opaque session/cache keys keep their Laravel types. The default Schema string length is 191; explicit lengths override it.
+
 Domain models live in `app/Models`; `ClassSession` maps to `classes`.
 Laravel authenticates against `users.password_hash` and displays
 `users.full_name`. Roster tables retain their operational timestamps.
@@ -32,7 +34,7 @@ Laravel authenticates against `users.password_hash` and displays
 This is a **fresh-database baseline**, not an in-place upgrade of the
 earlier roster pilot. If a database already contains users or registrations,
 keep it intact: migrate a new database, transfer and reconcile the pilot
-records (including IDs, account links, password hashes and roster revisions),
+records (map legacy numeric IDs to new UUIDs and translate all dependent links; preserve password hashes and roster revisions),
 then switch connections. Rolling back this baseline drops the whole schema.
 
 ## Demo data
@@ -66,10 +68,10 @@ S100,CSC101-2026-1,registered,1
 
 ```sh
 php artisan roster:import /path/to/roster.csv
-php artisan roster:link S100 42
+php artisan roster:link S100 019ad123-4567-789a-bcde-0123456789ab
 ```
 
-`42` is an **existing** LMS user ID. Verify the person's institutional identity before linking; the import never matches on email or creates credentials. Sign in at `/login` with that account to see `/courses`. To revoke access, import `S100,CSC101-2026-1,withdrawn,2` with the same header. This preserves the enrolment ID and any associated learning history. This pilot format requires agreement with the registration platform before live use.
+Replace the example UUID with the **existing** LMS user ID. Verify the person's institutional identity before linking; the import never matches on email or creates credentials. Sign in at `/login` with that account to see `/courses`. To revoke access, import `S100,CSC101-2026-1,withdrawn,2` with the same header. This preserves the enrolment ID and any associated learning history. This pilot format requires agreement with the registration platform before live use.
 
 ### Qualification commands
 

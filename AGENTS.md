@@ -1,6 +1,6 @@
 # Adin LMS agent guide
 
-Custom Laravel 13 application with Inertia 3, React 19 and strict TypeScript. PostgreSQL is the production database. Laravel owns navigation, authorization and validation. Moodle is a content exchange target only.
+Custom Laravel 13 application with Inertia 3, React 19 and strict TypeScript. PostgreSQL and MySQL 8.0.16+ are supported server databases; SQLite is supported locally. Laravel owns navigation, authorization and validation. Moodle is a content exchange target only.
 
 ## Start here
 
@@ -17,7 +17,7 @@ See `README.md` for local setup. Run `php artisan test`, `vendor/bin/pint --test
 - Application, admission and official registration belong to the existing platform. Key roster imports by stable upstream student and offering IDs; replay safely and revoke withdrawn access without deleting academic history.
 - Enforce offering scope, enrolment and ownership in policies, including downloads and exports. Never expose answer keys or unreleased grades in Inertia props.
 - Persist exam answers before acknowledging autosave. Enforce deadlines and attempt limits on the server under concurrency. Version submissions, score changes and published results. Audit grading, moderation and release.
-- Every domain table has a generated `bigint id`; enforce natural uniqueness separately. Store exact scores and use institutional grading policies.
+- Every domain table has a Laravel-generated UUIDv7 `id`; use UUID foreign keys and a default string length of 191; enforce natural uniqueness separately. Store exact scores and use institutional grading policies.
 
 ## Engineering bar
 

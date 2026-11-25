@@ -1,20 +1,23 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../../components/PortalForm';
+import { AccountTask } from '../../components/identity/AccountTask';
 
 export default function Challenge() {
     return (
-        <main className="mx-auto max-w-md px-6 py-16">
+        <AccountTask
+            context="Account security"
+            title="Verify your sign-in"
+            introduction="Open your authenticator app to finish signing in."
+        >
             <Head title="Verify your sign-in" />
-            <h1 className="mb-4 text-3xl font-semibold">Verify your sign-in</h1>
-            <p id="code-help">
-                Enter the six-digit code from your authenticator. If this is your first
-                sign-in, ask ICT for a setup key and add it to your authenticator first.
+            <p id="code-help" className="desk-note">
+                Enter the current six-digit code, including any leading zero.
             </p>
             <Form
                 action="/security/challenge"
                 method="post"
                 resetOnError={['code']}
-                className="my-6 grid gap-4"
+                className="grid gap-4"
             >
                 {({ errors, processing }) => (
                     <>
@@ -34,9 +37,18 @@ export default function Challenge() {
                     </>
                 )}
             </Form>
-            <Link href="/logout" method="post" as="button" className="underline">
+            <details className="border-t border-[var(--portal-line)] pt-2">
+                <summary className="min-h-11 cursor-pointer py-2 font-semibold">
+                    Need help with your authenticator?
+                </summary>
+                <p className="desk-note">
+                    For first-time setup, ask ICT for a setup key and add it to your app. If you no
+                    longer have access to your authenticator, contact ICT.
+                </p>
+            </details>
+            <Link href="/logout" method="post" as="button" className="portal-action w-fit">
                 Sign out
             </Link>
-        </main>
+        </AccountTask>
     );
 }

@@ -1,5 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
+import { AccountTask } from '../components/identity/AccountTask';
 
 const minimumPasswordLength = 12;
 
@@ -10,12 +11,15 @@ type ResetPasswordProps = {
 
 export default function ResetPassword({ email, token }: ResetPasswordProps) {
     return (
-        <main className="mx-auto max-w-md px-6 py-16">
+        <AccountTask
+            context="Account recovery"
+            title="Set your password"
+            introduction="Use the email address that received the reset link."
+        >
             <Head title="Set your password">
                 <meta name="referrer" content="no-referrer" />
             </Head>
-            <h1 className="mb-2 text-3xl font-semibold">Set your password</h1>
-            <p id="password-help" className="mb-6">
+            <p id="password-help" className="desk-note">
                 Choose a password with at least {minimumPasswordLength} characters.
             </p>
             <Form
@@ -60,9 +64,9 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
                     </>
                 )}
             </Form>
-            <Link href="/forgot-password" className="mt-4 inline-block underline">
+            <Link href="/forgot-password" className="desk-link">
                 Request a new link
             </Link>
-        </main>
+        </AccountTask>
     );
 }

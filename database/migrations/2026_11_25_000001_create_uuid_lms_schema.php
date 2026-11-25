@@ -716,6 +716,20 @@ return new class extends Migration
             $table->unique(['user_id', 'role_id', 'scope_id'], 'role_grants_user_role_scope_uq');
         });
 
+        Schema::create('teaching_plans', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('offering_id')->constrained();
+            $table->foreignUuid('author_id')->constrained('users');
+            $table->integer('revision');
+            $table->string('status');
+            $table->jsonb('snapshot');
+            $table->timestampTz('submitted_at');
+            $table->foreignUuid('reviewer_id')->nullable()->constrained('users');
+            $table->timestampTz('reviewed_at')->nullable();
+            $table->text('reason')->nullable();
+            $table->unique(['offering_id', 'revision']);
+        });
+
         Schema::create('student_photos', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('student_id')->unique()->constrained('students')->cascadeOnDelete();
@@ -843,6 +857,7 @@ return new class extends Migration
         Schema::drop('failed_jobs');
         Schema::drop('scorm_progress');
         Schema::drop('scorm_packages');
+        Schema::drop('teaching_plans');
         Schema::drop('student_photos');
         Schema::drop('job_batches');
         Schema::drop('jobs');

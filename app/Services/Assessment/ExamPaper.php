@@ -2,6 +2,7 @@
 
 namespace App\Services\Assessment;
 
+use App\Enums\Assessment\QuestionKind;
 use App\Models\AttemptQuestion;
 use App\Models\ExaminationAttempt;
 use App\Models\ExaminationResponse;
@@ -11,6 +12,8 @@ use Brick\Math\BigDecimal;
 
 class ExamPaper
 {
+    public function __construct(private MatchingCredit $matching) {}
+
     public function generate(ExaminationAttempt $attempt): void
     {
         $exam = $attempt->exam;
@@ -34,10 +37,7 @@ class ExamPaper
                 ->first();
             abort_unless($version, 422, 'Question pool exhausted.');
             $used[] = $version->question_id;
-            $options = $version->options ?? [];
-            if ($exam->shuffle_options) {
-                shuffle($options);
-            }
+            $options = $this->optionOrder($version, $exam->shuffle_options);
 
             AttemptQuestion::forceCreate([
                 'attempt_id' => $attempt->id,
@@ -63,12 +63,31 @@ class ExamPaper
             $answer = ExaminationResponse::where('attempt_question_id', $q->id)
                 ->latest('revision')
                 ->first()?->answer['value'] ?? null;
-            $correct = $answer !== null && in_array($answer, $q->version->marking_key['accepted'] ?? [], true);
-            $points = $correct ? (string) $q->possible_points : '0';
+            $points = $this->matching->award($q, $answer);
             $q->forceFill(['awarded_points' => $points])->save();
             $total = $total->plus($points);
         }
 
         return $manual ? null : (string) $total;
+    }
+
+    private function optionOrder(QuestionVersion $version, bool $shuffle): array
+    {
+        if ($version->kind !== QuestionKind::Matching) {
+            $options = $version->options ?? [];
+            if ($shuffle) {
+                shuffle($options);
+            }
+
+            return $options;
+        }
+        $matching = $version->marking_key['matching'];
+        $left = array_column($matching['left'], 'id');
+        $right = array_column($matching['right'], 'id');
+        if ($shuffle) {
+            shuffle($right);
+        }
+
+        return compact('left', 'right');
     }
 }

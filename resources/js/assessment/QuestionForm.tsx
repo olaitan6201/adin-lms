@@ -14,7 +14,7 @@ type Props = {
 export function QuestionForm({ action, method = 'post', initial, submitLabel, cancelHref }: Props) {
     const [kind, setKind] = useState<QuestionKind>(initial?.kind ?? 'mcq');
     const choices = kind === 'mcq' || kind === 'true_false';
-    const accepted = kind === 'gap_fill' || kind === 'short_answer';
+    const accepted = choices || kind === 'gap_fill' || kind === 'short_answer';
     const subjective = kind === 'essay' || kind === 'programming' || kind === 'practical';
 
     return (
@@ -73,11 +73,11 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                     )}
                     {accepted && (
                         <label>
-                            Accepted answers (one per line)
+                            {choices ? 'Accepted answer (must match a choice)' : 'Accepted answers (one per line)'}
                             <textarea
                                 name="accepted"
                                 required
-                                rows={4}
+                                rows={choices ? 2 : 4}
                                 defaultValue={initial?.accepted}
                                 className="block w-full rounded border p-2"
                             />

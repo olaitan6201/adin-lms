@@ -17,6 +17,7 @@ class ExamSession
         private AssessmentItemPolicy $access,
         private ExamPaper $paper,
         private ScoreLedger $ledger,
+        private AnswerShape $answers,
     ) {}
 
     public function authorize(User $user, ExaminationAttempt $attempt): void
@@ -29,12 +30,13 @@ class ExamSession
         );
     }
 
-    public function save(User $user, ExaminationAttempt $attempt, string $question, int $base, string $value): int
+    public function save(User $user, ExaminationAttempt $attempt, string $question, int $base, string|array|null $value): int
     {
         $result = DB::transaction(function () use ($user, $attempt, $question, $base, $value) {
             $attempt = ExaminationAttempt::lockForUpdate()->findOrFail($attempt->id);
             $this->authorize($user, $attempt);
             $q = AttemptQuestion::where('attempt_id', $attempt->id)->findOrFail($question);
+            $value = $this->answers->validate($q, $value);
             $latest = (int) ExaminationResponse::where('attempt_question_id', $q->id)->max('revision');
             if ($attempt->submitted_at || now()->gte($attempt->expires_at) || $latest !== $base) {
                 $this->ledger->audit(

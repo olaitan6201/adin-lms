@@ -34,9 +34,17 @@ export function SetupExam({ id }: { id: string }) {
                             Choices (one per line for MCQ and true/false)
                             <textarea name={`${n}[options]`} />
                         </label>
+                        <label>
+                            Accepted answers (one per line; MCQ/TF use one choice)
+                            <textarea name={`${n}[accepted]`} />
+                        </label>
+                        <label>
+                            Matching pairs (one left =&gt; right pair per line)
+                            <textarea name={`${n}[pairs]`} />
+                        </label>
                         <Field
                             optional
-                            label="Exact accepted answer (objective questions)"
+                            label="Exact accepted answer (legacy objective input)"
                             name={`${n}[key]`}
                         />
                         <Field type="number" name={`${n}[points]`} label="Possible points" />

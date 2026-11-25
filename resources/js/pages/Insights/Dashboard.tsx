@@ -1,14 +1,15 @@
 import { Head, Link } from '@inertiajs/react';
+import { ReleasedWork, type Release } from '../../insights/ReleasedWork';
 
 type Task = { title: string; kind: string; context: string; at: string | null; href: string; action: string };
 type Course = { title: string; code: string; href: string };
 type Workspace = 'study' | 'teaching' | 'management';
-type Props = { audience: string; workspace: Workspace; name: string; queue: Task[]; courses: Course[]; tools: {label: string; href: string}[] };
+type Props = { audience: string; workspace: Workspace; name: string; queue: Task[]; courses: Course[]; releases: Release[]; tools: {label: string; href: string}[] };
 
 const copy = {
     study: {
         title: 'My study desk', lead: 'Plan your next class or assignment.', queue: 'Due dates & classes',
-        hint: 'Next 12, in date order', empty: 'No open assignments, active exams or scheduled classes to show.',
+        hint: 'Next 12, in date order', empty: 'No assignments, exams or scheduled classes to show.',
         side: 'My course shelf', action: 'Browse my courses', url: '/courses',
     },
     teaching: {
@@ -23,7 +24,7 @@ const copy = {
     },
 } as const;
 
-export default function Dashboard({ audience, workspace, name, queue, courses, tools }: Props) {
+export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools }: Props) {
     const desk = copy[workspace];
     return (
         <main className="portal-page">
@@ -35,7 +36,7 @@ export default function Dashboard({ audience, workspace, name, queue, courses, t
                 <div className="desk-owner">{name}</div>
             </header>
             <div className="desk-grid">
-                <section aria-labelledby="queue">
+                <div><section aria-labelledby="queue">
                     <h2 className="desk-section" id="queue">{desk.queue}</h2>
                     <p className="desk-note">{desk.hint}</p>
                     {queue.length ? <ol className="desk-list">{queue.map((task, index) => {
@@ -57,6 +58,8 @@ export default function Dashboard({ audience, workspace, name, queue, courses, t
                         </li>;
                     })}</ol> : <div className="desk-empty"><p>{desk.empty}</p><Link className="desk-link" href={desk.url}>{desk.action} →</Link></div>}
                 </section>
+                {workspace === 'study' && <ReleasedWork releases={releases} />}
+                </div>
                 <aside className="portal-panel desk-shelf">
                     {tools.length > 0 && <nav aria-label="Office workspaces" className="mb-6">
                         <h2 className="desk-section">Office workspaces</h2>

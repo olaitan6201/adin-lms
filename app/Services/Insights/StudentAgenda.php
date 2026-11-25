@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 
 final class StudentAgenda
 {
+    public function __construct(private StudentExamWindows $windows) {}
+
     public function forUser(User $user, Builder $scope): Collection
     {
         $assignments = (clone $scope)->reorder()
@@ -49,6 +51,7 @@ final class StudentAgenda
                 'at' => Carbon::parse($r->expires_at)->toIso8601String(), 'action' => 'Resume exam',
                 'href' => route('assessment.paper', $r->id, false),
             ]);
+        $windows = $this->windows->upcoming($user, clone $scope);
         $classes = $scope->reorder()->join('classes as cl', 'cl.offering_id', '=', 'o.id')
             ->where('cl.status', ClassStatus::Scheduled)->where('cl.ends_at', '>', now())
             ->select('cl.title', 'cl.starts_at', 'o.external_offering_id', 'o.id')
@@ -59,6 +62,6 @@ final class StudentAgenda
                 'href' => route('learning.classes', $r->id, false),
             ]);
 
-        return DashboardWorkspace::chronological($assignments->concat($classes)->concat($activePapers));
+        return DashboardWorkspace::chronological($assignments->concat($classes)->concat($activePapers)->concat($windows));
     }
 }

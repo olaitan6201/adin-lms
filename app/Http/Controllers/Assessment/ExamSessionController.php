@@ -30,7 +30,7 @@ class ExamSessionController
             $attempt->refresh();
         }
 
-        $questions = AttemptQuestion::with(['version:id,prompt', 'latestResponse'])
+        $questions = AttemptQuestion::with(['version:id,prompt,kind,marking_key', 'latestResponse'])
             ->where('attempt_id', $attempt->id)
             ->orderBy('position')
             ->get();
@@ -59,7 +59,7 @@ class ExamSessionController
             $attempt,
             $question,
             (int) $input['revision'],
-            (string) $input['answer'],
+            $input['answer'],
         );
 
         return response()->json(['revision' => $revision]);

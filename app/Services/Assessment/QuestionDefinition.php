@@ -104,8 +104,8 @@ class QuestionDefinition
             if (in_array($leftLabel, array_column($left, 'label'), true) || in_array($rightLabel, array_column($right, 'label'), true)) {
                 throw ValidationException::withMessages(['pairs' => 'Matching labels must be unique within each side.']);
             }
-            $leftId = 'left-'.(count($left) + 1);
-            $rightId = 'right-'.(count($right) + 1);
+            $leftId = $this->opaqueId();
+            $rightId = $this->opaqueId();
             $left[] = ['id' => $leftId, 'label' => $leftLabel];
             $right[] = ['id' => $rightId, 'label' => $rightLabel];
             $pairs[$leftId] = $rightId;
@@ -113,8 +113,14 @@ class QuestionDefinition
         if (count($pairs) < 2 || count($pairs) > 20) {
             throw ValidationException::withMessages(['pairs' => 'Supply between 2 and 20 matching pairs.']);
         }
+        shuffle($right);
 
         return compact('left', 'right', 'pairs');
+    }
+
+    private function opaqueId(): string
+    {
+        return bin2hex(random_bytes(12));
     }
 
     private function lines(?string $value): array

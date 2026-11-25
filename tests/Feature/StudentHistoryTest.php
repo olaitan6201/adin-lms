@@ -31,11 +31,13 @@ class StudentHistoryTest extends TestCase
                 'revision' => 1,
                 'grade' => 'A',
                 'approved_by' => $other->id,
+                'moderation_status' => 'approved',
                 'approved_at' => now()->subDay(),
                 'published_at' => now()->subHour(),
             ],
         );
-        Grade::forceCreate($key + ['total_percent' => 59, 'revision' => 2, 'grade' => 'DRAFT']);
+        Grade::forceCreate($key + ['total_percent' => 59, 'revision' => 2, 'grade' => 'DRAFT',
+            'moderation_status' => 'correction_requested', 'approved_by' => $other->id, 'approved_at' => now(), 'published_at' => now()]);
         $url = route('students.history', $entry->student_id);
         $this->actingAs($other)->get($url)->assertForbidden();
         $this->actingAs($entry->student->user)

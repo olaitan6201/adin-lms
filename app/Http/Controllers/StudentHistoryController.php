@@ -25,9 +25,7 @@ class StudentHistoryController extends Controller
             ->orderBy('offerings.external_offering_id')
             ->toBase()
             ->get();
-        $results = Grade::whereIn('enrolment_id', $enrolments->pluck('id'))
-            ->where('published_at', '<=', now())
-            ->whereNotNull('approved_at')
+        $results = Grade::published()->whereIn('enrolment_id', $enrolments->pluck('id'))
             ->orderByDesc('revision')
             ->get(['enrolment_id', 'total_percent', 'grade', 'revision'])
             ->unique('enrolment_id')

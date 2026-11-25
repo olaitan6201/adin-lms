@@ -14,8 +14,7 @@ final class LibraryProfiles
 {
     public function __construct(private LearningPolicy $learning) {}
 
-    /** @return array<string, array{label: string, url: string}> */
-    public function forUser(User $user, Offering $offering): array
+    public function forUser(User $user, Offering $offering, bool $tools = false): array
     {
         $learner = $this->learning->published($offering) && $this->learning->enrolment($user->id, $offering);
         $instructor = $this->learning->allocated($user->id, $offering) && RoleGrant::where('user_id', $user->id)
@@ -28,23 +27,29 @@ final class LibraryProfiles
         abort_unless($learner || $instructor, 404);
 
         $available = [];
-        foreach (config('integrations.libraries') as $key => $entry) {
+        foreach (config($tools ? 'integrations.tools' : 'integrations.libraries') as $key => $entry) {
             if (! is_string($key) || ! preg_match('/^[a-z][a-z0-9-]{0,62}$/D', $key)
                 || ! is_string($entry['label'] ?? null) || trim($entry['label']) === ''
                 || ! is_array($entry['offerings'] ?? null) || ! is_array($entry['roles'] ?? null)
                 || ! in_array($offering->external_offering_id, $entry['offerings'], true)
                 || ! (($learner && in_array('learner', $entry['roles'], true))
                     || ($instructor && in_array('instructor', $entry['roles'], true)))
-                || ! $this->publicLink($entry['url'] ?? null)) {
+                || ! self::publicLink($entry['url'] ?? null)) {
                 continue;
             }
-            $available[$key] = ['label' => $entry['label'], 'url' => $entry['url']];
+            if ($tools && (! self::publicLink($entry['login'] ?? null) || ! self::publicLink($entry['redirect'] ?? null)
+                || ! is_string($entry['client'] ?? null) || $entry['client'] === ''
+                || ! is_string($entry['deployment'] ?? null) || $entry['deployment'] === '')) {
+                continue;
+            }
+            $available[$key] = $entry;
+            $available[$key]['membership'] = $instructor && in_array('instructor', $entry['roles'], true) ? 'Instructor' : 'Learner';
         }
 
         return $available;
     }
 
-    private function publicLink(mixed $url): bool
+    public static function publicLink(mixed $url): bool
     {
         return is_string($url) && filter_var($url, FILTER_VALIDATE_URL)
             && ! preg_match('/[\\\\\s]/', $url) && parse_url($url, PHP_URL_SCHEME) === 'https'

@@ -23,7 +23,8 @@ class TrackWebAuthentication
             AuthEvents::record($event->user, AuthenticationOutcome::PasswordFailed);
         } elseif ($event instanceof Login) {
             $this->sessions->start(request(), $event->user);
-            AuthEvents::record($event->user, AuthenticationOutcome::PasswordAccepted);
+            AuthEvents::record($event->user, request()->routeIs('integrations.oidc.callback')
+                ? AuthenticationOutcome::InstitutionAccepted : AuthenticationOutcome::PasswordAccepted);
         } elseif ($event->user && request()->hasSession()) {
             $this->sessions->end(request(), $event->user);
             AuthEvents::record($event->user, AuthenticationOutcome::SignedOut);

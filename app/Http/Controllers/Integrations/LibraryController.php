@@ -23,6 +23,10 @@ final class LibraryController
         }
 
         return Inertia::render('Integrations/Resources', [
+            'tools' => collect($profiles->forUser($request->user(), $offering, true))->map(fn ($tool, $key) => [
+                'label' => $tool['label'], 'host' => parse_url($tool['login'], PHP_URL_HOST),
+                'href' => route('integrations.launch', [$offering, $key]),
+            ])->values(),
             'course' => $offering->external_offering_id,
             'back' => route('courses.show', $offering),
             'links' => $links,

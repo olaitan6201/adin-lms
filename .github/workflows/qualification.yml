@@ -68,6 +68,8 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Check isolated reading, offline and printable styles against their Tailwind sources
+        run: node resources/static-renderers/build.mjs --check
       - run: npm run test:e2e
 
   database:

@@ -1,0 +1,33 @@
+name: Qualification
+on: [pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  database:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [sqlite, pgsql, mysql]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, pdo_pgsql, pdo_mysql, bcmath, dom, fileinfo, gd, intl, mbstring, pcntl, xml, zip
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - name: Install PostgreSQL tools
+        if: matrix.engine == 'pgsql'
+        run: sudo apt-get update -qq && sudo apt-get install -y postgresql-16
+      - name: Verify MySQL tools
+        if: matrix.engine == 'mysql'
+        run: mysqld --version && mysqldump --version
+      - name: Native suite on a fresh database
+        run: bash scripts/qualification/rehearse.sh "${{ matrix.engine }}" suite
+      - name: Concurrent HTTP requests and database restore
+        if: ${{ !cancelled() && matrix.engine != 'sqlite' }}
+        run: bash scripts/qualification/rehearse.sh "${{ matrix.engine }}" journey

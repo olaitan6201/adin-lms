@@ -5,9 +5,9 @@
 }
 
 .portal-header, .portal-drawer {
-    background: var(--portal-paper);
-    color: #1a1a18;
-    border-inline-end: 1px solid var(--portal-line);
+    background: var(--portal-ink);
+    color: white;
+    border-inline-end: 1px solid var(--portal-ink);
 }
 
 .portal-header {
@@ -40,10 +40,10 @@
 .portal-sidebar, .portal-nav { display: flex; flex: 1; flex-direction: column; }
 .portal-nav { gap: 1.35rem; padding: 1.35rem .65rem .75rem; }
 .nav-group { display: grid; gap: .12rem; }
-.nav-account { margin-top: auto; border-top: 1px solid var(--portal-line); padding-top: 1rem; }
+.nav-account { margin-top: auto; border-top: 1px solid #ffffff55; padding-top: 1rem; }
 .nav-caption {
     padding: 0 .8rem .55rem;
-    color: var(--portal-muted);
+    color: white;
     font: 650 .72rem/1.4 system-ui, sans-serif;
     letter-spacing: .11em;
     text-transform: uppercase;
@@ -56,10 +56,9 @@
     border-radius: .3rem;
     gap: .7rem;
 }
-.portal-nav svg { flex: none; color: var(--portal-ink); }
-.portal-nav a:hover, .portal-exit:hover { background: #ebece5; text-decoration: underline; }
-.portal-nav [aria-current] { background: var(--portal-ink); color: white; font-weight: 700; box-shadow: inset 3px 0 var(--portal-accent); }
-.portal-nav [aria-current] svg { color: inherit; }
+.portal-nav svg { flex: none; color: inherit; }
+.portal-nav a:hover, .portal-exit:hover { background: #ffffff22; text-decoration: underline; }
+.portal-nav a[aria-current] { background: var(--portal-paper); color: var(--portal-ink); font-weight: 700; box-shadow: inset 3px 0 var(--portal-accent); }
 .portal-exit { text-align: start; }
 .portal-menu { display: none; }
 .portal-close, .portal-menu { cursor: pointer; border: 1px solid currentColor; }

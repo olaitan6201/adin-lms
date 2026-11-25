@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 
-type Profile = Record<'matric_number' | 'source_name' | 'source_email' | 'status', string | null>;
+type Profile = Record<'matric_number' | 'source_name' | 'source_email' | 'status' | 'photo', string | null>;
 type Session = {
     session: string;
     programme: string;
@@ -30,38 +30,42 @@ export default function StudentHistory({
     records: Entry[];
 }) {
     return (
-        <main className="mx-auto max-w-2xl space-y-5 px-6 py-12">
+        <main className="portal-page">
             <Head title="Academic history" />
-            <Link className="underline" href="/courses">
+            <Link className="desk-link" href="/courses">
                 My courses
             </Link>
-            <h1 className="text-3xl font-semibold">Academic history</h1>
-            <p>
+            <header className="desk-heading"><p className="portal-kicker">Student record</p>
+            <h1 className="portal-title">Academic history</h1>
+            {student.photo && <img src={student.photo} className="h-24 w-24 rounded object-cover" alt="Student profile photograph" />}
+            <p className="break-words">
                 {[student.source_name, student.matric_number, student.source_email, student.status]
                     .filter(Boolean)
                     .join(' · ') || 'Awaiting student profile.'}
-            </p>
-            <h2 className="text-xl font-semibold">Academic sessions</h2>
+            </p></header>
+            <div className="desk-grid"><section className="portal-panel desk-shelf"><h2 className="desk-section">Academic sessions</h2>
             {sessions.length ? (
                 <ul>
                     {sessions.map((s) => (
-                        <li key={s.session}>
-                            {s.session}: {s.programme}, level {s.level} · {s.department}, {s.faculty}
+                        <li key={s.session} className="py-3">
+                            <p className="portal-kicker">{s.session}</p><strong>{s.programme}</strong>
+                            <p>Level {s.level} · {s.department}, {s.faculty}</p>
                         </li>
                     ))}
                 </ul>
             ) : (
                 <p>No session records received.</p>
             )}
-            <h2 className="text-xl font-semibold">Offerings and released results</h2>
+            </section><section><h2 className="desk-section">Offerings and released results</h2>
             {records.length ? (
                 <ul className="divide-y">
                     {records.map((r) => (
                         <li key={r.id} className="py-3">
-                            <strong>{r.title ?? r.external_offering_id}</strong> · {r.status}
+                            <p className="portal-kicker break-words">{r.external_offering_id} · {r.status}</p>
+                            {r.title && <strong>{r.title}</strong>}
                             <p>
                                 {r.result
-                                    ? `Released: ${Number(r.result.total_percent)}% (${r.result.grade})`
+                                    ? `Released: ${r.result.total_percent}% (${r.result.grade})`
                                     : 'No released result'}
                             </p>
                         </li>
@@ -70,6 +74,7 @@ export default function StudentHistory({
             ) : (
                 <p>No registrations received.</p>
             )}
+            </section></div>
         </main>
     );
 }

@@ -42,11 +42,7 @@ export function SetupExam({ id }: { id: string }) {
                             Matching pairs (one left =&gt; right pair per line)
                             <textarea name={`${n}[pairs]`} />
                         </label>
-                        <Field
-                            optional
-                            label="Exact accepted answer (legacy objective input)"
-                            name={`${n}[key]`}
-                        />
+                        <Field optional label="Exact accepted answer (legacy objective input)" name={`${n}[key]`} />
                         <Field type="number" name={`${n}[points]`} label="Possible points" />
                         <Check name={`${n}[draw]`} label="Draw randomly from this topic" />
                     </fieldset>

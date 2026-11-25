@@ -42,7 +42,9 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     value={item.kind}
                     onChange={(event) => onChange({ kind: event.target.value as ItemKind })}
                 >
-                    {itemKinds.map((kind) => <option key={kind}>{kind}</option>)}
+                    {itemKinds.map((kind) => (
+                        <option key={kind}>{kind}</option>
+                    ))}
                 </select>
             </label>
             <label>

@@ -1,32 +1,16 @@
+import { emptyItem, emptyPolicy, type PolicyDefinition } from './policyDefaults';
 import { useState } from 'react';
 import { Post } from './Fields';
 import { PolicyItemFields, type PolicyItem } from './PolicyItemFields';
 
-export type PolicyDefinition = {
-    rounding: string;
-    boundaries: { minimum: string; grade: string }[];
-    items: PolicyItem[];
+export type { PolicyDefinition } from './policyDefaults';
+
+type SetupBookProps = {
+    url: string;
+    policy?: PolicyDefinition;
 };
 
-let nextItemKey = 0;
-
-const emptyItem = (): PolicyItem => ({
-    clientKey: `new-${++nextItemKey}`,
-    title: '',
-    kind: 'assignment',
-    maximum: '',
-    weight: '100',
-    rubric: '',
-    criteria: [],
-});
-
-const emptyPolicy = (): PolicyDefinition => ({
-    rounding: 'half_up',
-    boundaries: [{ minimum: '0', grade: '' }],
-    items: [emptyItem()],
-});
-
-export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinition }) {
+export function SetupBook({ url, policy }: SetupBookProps) {
     const [data, setData] = useState<PolicyDefinition>(() => policy ?? emptyPolicy());
     const updateItem = (index: number, patch: Partial<PolicyItem>) => {
         setData((current) => ({
@@ -34,6 +18,7 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
             items: current.items.map((item, i) => (i === index ? { ...item, ...patch } : item)),
         }));
     };
+
     const updateBoundary = (index: number, patch: Partial<PolicyDefinition['boundaries'][number]>) => {
         setData((current) => ({
             ...current,
@@ -44,7 +29,10 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
     return (
         <Post url={url} button={policy ? 'Amend approved policy' : 'Activate gradebook'}>
             <h2>{policy ? 'Amend assessment policy' : 'Configure assessment policy'}</h2>
-            <p>Item weights must total exactly 100%. Amendments create a new policy version and preserve earlier results.</p>
+            <p>
+                Item weights must total exactly 100%. Amendments create a new policy version and preserve earlier
+                results.
+            </p>
             <label>
                 Rounding to two decimals
                 <select
@@ -92,10 +80,12 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
                     {data.boundaries.length > 1 && (
                         <button
                             type="button"
-                            onClick={() => setData({
-                                ...data,
-                                boundaries: data.boundaries.filter((_, i) => i !== index),
-                            })}
+                            onClick={() =>
+                                setData({
+                                    ...data,
+                                    boundaries: data.boundaries.filter((_, i) => i !== index),
+                                })
+                            }
                         >
                             Remove boundary {index + 1}
                         </button>
@@ -105,10 +95,12 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
             <button
                 type="button"
                 disabled={data.boundaries.length >= 40}
-                onClick={() => setData({
-                    ...data,
-                    boundaries: [...data.boundaries, { minimum: '', grade: '' }],
-                })}
+                onClick={() =>
+                    setData({
+                        ...data,
+                        boundaries: [...data.boundaries, { minimum: '', grade: '' }],
+                    })
+                }
             >
                 Add boundary
             </button>
@@ -119,10 +111,12 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
                     item={item}
                     removable={!item.id && data.items.length > 1}
                     onChange={(patch) => updateItem(index, patch)}
-                    onRemove={() => setData({
-                        ...data,
-                        items: data.items.filter((_, i) => i !== index),
-                    })}
+                    onRemove={() =>
+                        setData({
+                            ...data,
+                            items: data.items.filter((_, i) => i !== index),
+                        })
+                    }
                 />
             ))}
             <button

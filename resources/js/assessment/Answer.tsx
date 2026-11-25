@@ -1,3 +1,4 @@
+import { saveAnswer } from './saveAnswer';
 import { useEffect, useRef, useState } from 'react';
 import type { MatchingItem, QuestionKind } from './contracts';
 
@@ -7,7 +8,10 @@ export type Question = {
     kind: QuestionKind;
     prompt: string;
     options: string[];
-    matching?: { left: MatchingItem[]; right: MatchingItem[] };
+    matching?: {
+        left: MatchingItem[];
+        right: MatchingItem[];
+    };
     value: AnswerValue;
     revision: number;
 };
@@ -39,28 +43,7 @@ export function Answer({
             setBusy(true);
             setMessage('Saving…');
             try {
-                const token = decodeURIComponent(
-                    document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
-                );
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'X-XSRF-TOKEN': token,
-                    },
-                    body: JSON.stringify({ answer: value, revision: revision.current }),
-                });
-                if (!response.ok)
-                    throw new Error(
-                        response.status === 409
-                            ? 'Paper changed or closed. Copy your draft before reloading.'
-                            : response.status === 422
-                              ? 'Check the matching selections; each option can be used once.'
-                              : 'Save failed. Retry before submitting.',
-                    );
-
-                const data = (await response.json()) as { revision: number };
+                const data = await saveAnswer(url, value, revision.current);
                 revision.current = data.revision;
                 setSaved(value);
                 setMessage(latest.current === value ? 'Saved' : 'Unsaved');
@@ -79,6 +62,7 @@ export function Answer({
         setValue(next);
         setMessage(next === saved && !busy ? 'Saved' : 'Unsaved');
     };
+
     const matching = typeof value === 'object' ? value : {};
     const match = (left: string, right: string) => {
         const next = { ...matching };
@@ -90,6 +74,7 @@ export function Answer({
             });
             next[left] = right;
         }
+
         edit(next);
     };
 
@@ -111,7 +96,9 @@ export function Answer({
                                     <option
                                         key={right.id}
                                         value={right.id}
-                                        disabled={Object.entries(matching).some(([left, selected]) => left !== item.id && selected === right.id)}
+                                        disabled={Object.entries(matching).some(
+                                            ([left, selected]) => left !== item.id && selected === right.id,
+                                        )}
                                     >
                                         {right.label}
                                     </option>
@@ -126,19 +113,29 @@ export function Answer({
                     {q.options.length ? (
                         <select disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
                             <option value="">Select an answer</option>
-                            {q.options.map((option) => <option key={option}>{option}</option>)}
+                            {q.options.map((option) => (
+                                <option key={option}>{option}</option>
+                            ))}
                         </select>
                     ) : (
-                        <textarea disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)} />
+                        <textarea
+                            disabled={!active}
+                            value={String(value)}
+                            onChange={(event) => edit(event.target.value)}
+                        />
                     )}
                 </label>
             )}
             <span role="status">{message}</span>
             {failed && (
-                <button onClick={() => {
-                    setFailed(false);
-                    setRetry((current) => current + 1);
-                }}>Retry save</button>
+                <button
+                    onClick={() => {
+                        setFailed(false);
+                        setRetry((current) => current + 1);
+                    }}
+                >
+                    Retry save
+                </button>
             )}
         </section>
     );

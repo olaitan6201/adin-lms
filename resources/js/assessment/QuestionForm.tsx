@@ -108,11 +108,15 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                         </label>
                     )}
                     {Object.entries(errors).map(([key, error]) => (
-                        <p role="alert" key={key}>{error}</p>
+                        <p role="alert" key={key}>
+                            {error}
+                        </p>
                     ))}
                     <div className="flex flex-wrap items-center gap-4">
                         <SubmitButton processing={processing}>{submitLabel}</SubmitButton>
-                        <Link href={cancelHref} className="underline">Cancel</Link>
+                        <Link href={cancelHref} className="underline">
+                            Cancel
+                        </Link>
                     </div>
                     {recentlySuccessful && <p role="status">Saved.</p>}
                 </>

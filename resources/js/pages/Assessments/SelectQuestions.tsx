@@ -8,7 +8,10 @@ type Props = {
     maximum: string;
     questions: BankQuestion[];
     bank: string;
-    topics: { id: string; topic: string }[];
+    topics: {
+        id: string;
+        topic: string;
+    }[];
 };
 
 export default function SelectQuestions({ item, title, maximum, questions, bank, topics }: Props) {
@@ -22,10 +25,7 @@ export default function SelectQuestions({ item, title, maximum, questions, bank,
             <header>
                 <p className="portal-kicker">{title}</p>
                 <h1 className="portal-title text-3xl font-semibold">Select bank questions</h1>
-                <p>
-                    Choose fixed revisions or draw unused questions from a topic. The total must equal{' '}
-                    {maximum}.
-                </p>
+                <p>Choose fixed revisions or draw unused questions from a topic. The total must equal {maximum}.</p>
             </header>
             <QuestionPicker item={item} maximum={maximum} questions={questions} topics={topics} />
         </main>

@@ -54,8 +54,13 @@ final class TimedReleaseCapture
             ->where('action', CommunityAuditAction::LessonPrerequisiteChanged->value)
             ->where('occurred_at', '>=', $at)->orderBy('occurred_at')->orderBy('id');
         foreach ($changes->cursor() as $change) {
-            if ($change->occurred_at->gt($at) || $change->details['microsecond'] > 0) {
-                return $change->details['previous'];
+            $details = $change->details ?? AuditLog::where('subject_key', $change->id)
+                ->where('action', CommunityAuditAction::PrerequisiteHistoryReconciled->value)->first()?->details;
+            if (! is_array($details) || ! array_key_exists('previous', $details) || ! isset($details['microsecond'])) {
+                throw new \RuntimeException("Missing rule history for {$change->id}; run community:reconcile-rule before retry.");
+            }
+            if ($change->occurred_at->gt($at) || $details['microsecond'] > 0) {
+                return $details['previous'];
             }
         }
 

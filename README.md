@@ -16,6 +16,14 @@ Prioritise improvements that complete a real teaching workflow in Adin. For exam
 
 ## Local setup
 
+If a delayed material notice reports “Missing rule history” after upgrading from the
+intermediate `1409944` build, use a trusted backup or change record to establish the
+previous prerequisite and the edit time. Run `php artisan community:reconcile-rule
+<change-uuid> <prior-lesson-uuid-or-none> <microsecond> <evidence-reference>` as an
+operator. This appends evidence; it does not change the lesson or send a notice.
+Let the scheduled worker retry, or use `php artisan queue:retry <failed-job-uuid>`
+if its retries were exhausted. Do not guess a missing rule or time.
+
 Use PHP 8.3+ with Composer and PDO SQLite, and Node.js 24 with npm. From a fresh checkout:
 
 ```sh

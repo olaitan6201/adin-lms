@@ -33,10 +33,12 @@ class SubmissionMarkRequest extends FormRequest
             if ($validator->errors()->isNotEmpty()) {
                 return;
             }
+
             $version = $this->route('version');
             if (! $version instanceof SubmissionVersion) {
                 return;
             }
+
             $item = $version->submission->assignment->item;
             $data = $validator->getData();
             $rubric = $item->rubric['criteria'] ?? [];
@@ -44,6 +46,7 @@ class SubmissionMarkRequest extends FormRequest
                 if (($data['points'] ?? null) !== null) {
                     $validator->errors()->add('points', 'Rubric marks derive points from the selected levels.');
                 }
+
                 if (($data['selections'] ?? null) === null) {
                     $validator->errors()->add('selections', 'Select a level for every rubric criterion.');
                 } else {
@@ -56,12 +59,15 @@ class SubmissionMarkRequest extends FormRequest
 
                 return;
             }
+
             if (($data['points'] ?? null) === null) {
                 $validator->errors()->add('points', 'Enter the total points for this item.');
             }
+
             if (($data['selections'] ?? null) !== null) {
                 $validator->errors()->add('selections', 'This item does not use a scored rubric.');
             }
+
             if (($data['points'] ?? null) !== null
                 && BigDecimal::of((string) $data['points'])->isGreaterThan((string) $item->maximum_score)) {
                 $validator->errors()->add('points', 'Points exceed the item maximum.');

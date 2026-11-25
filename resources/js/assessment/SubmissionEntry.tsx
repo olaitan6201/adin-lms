@@ -1,7 +1,6 @@
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
-import { Textarea } from '@/components/ui/textarea';
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Form } from '@inertiajs/react';
 
@@ -17,41 +16,41 @@ interface Props {
 
 export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
     return (
-        <section>
-            <h2>Submit your work</h2>
-            <Form action={url} method="post">
+        <section className="min-w-0 space-y-3">
+            <h2 className="text-xl font-semibold tracking-tight">Submit your work</h2>
+            <Form action={url} method="post" className="grid min-w-0 gap-4 py-2">
                 {({ processing, errors, wasSuccessful }) => (
                     <FormFeedback errors={errors}>
                         {formats.includes('txt') && (
-                            <label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Answer
-                                <Textarea name="body" />
-                            </label>
+                                <ValidatedTextarea name="body" />
+                            </Label>
                         )}
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Attach submission
-                            <Input type="file" name="script" accept={formats.map((f) => `.${f}`).join(',')} />
-                        </label>
+                            <ValidatedInput type="file" name="script" accept={formats.map((f) => `.${f}`).join(',')} />
+                        </Label>
                         {groupWork && (
-                            <label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Study group
-                                <NativeSelect name="group_id" required>
+                                <ValidatedSelect name="group_id" required>
                                     {groups.map((group) => (
                                         <option value={group.id} key={group.id}>
                                             {group.name}
                                         </option>
                                     ))}
-                                </NativeSelect>
-                            </label>
+                                </ValidatedSelect>
+                            </Label>
                         )}
                         {groupWork && !groups.length && (
                             <p>Ask your lecturer to assign you to a study group before submitting.</p>
                         )}
-                        <Button disabled={processing || (groupWork && !groups.length)}>
+                        <Button type="submit" disabled={processing || (groupWork && !groups.length)}>
                             {processing ? 'Submitting…' : 'Submit revision'}
                         </Button>
                         <p role="status">
-                            {wasSuccessful && <>Revision received. <a href="#submissions">View submission history</a></>}
+                            {wasSuccessful && <>Revision received. <a className="text-primary underline underline-offset-4" href="#submissions">View submission history</a></>}
                         </p>
                     </FormFeedback>
                 )}

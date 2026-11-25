@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import '../../assessment/assessment.css';
+import { ValidatedInput } from '../../assessment/ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Head } from '@inertiajs/react';
 import { Post, Field, Check } from '../../assessment/Fields';
 
@@ -34,21 +34,21 @@ export default function MarkPaper({
     history: Revision[];
 }) {
     return (
-        <main className="portal-page assessment-page">
+        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
             <Head title="Review examination" />
-            <header className="assessment-heading">
-                <p className="portal-kicker">Marking workspace</p>
-                <h1 className="portal-title">Review examination</h1>
+            <header className="space-y-3 border-b pb-5">
+                <p className="text-sm font-medium text-muted-foreground">Marking workspace</p>
+                <h1 className="text-3xl font-semibold tracking-tight">Review examination</h1>
                 <p>Award points for each written or practical answer. Objective points are included automatically.</p>
             </header>
             <Post key={revision} url={`/attempts/${attempt}/review`} button="Record final mark">
                 <input type="hidden" name="base_revision" value={revision} />
                 {questions.map((q, i) => (
-                    <article key={q.id}>
-                        <h2>
+                    <article key={q.id} className="space-y-2 border-t py-4">
+                        <h2 className="text-xl font-semibold tracking-tight">
                             Question {i + 1} · {q.prompt}
                         </h2>
-                        <pre>{q.answer || 'No response submitted.'}</pre>
+                        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3">{q.answer || 'No response submitted.'}</pre>
                         {q.objective ? (
                             <p>
                                 Automatic award: {q.awarded} / {q.possible}
@@ -56,9 +56,9 @@ export default function MarkPaper({
                         ) : (
                             <>
                                 {q.marking_guide && <p>Marking guide: {q.marking_guide}</p>}
-                                <label>
+                                <Label className="grid min-w-0 gap-2 leading-normal">
                                     Question {i + 1} points (out of {q.possible})
-                                    <Input
+                                    <ValidatedInput
                                         type="number"
                                         name={`awards[${q.id}]`}
                                         min="0"
@@ -67,7 +67,7 @@ export default function MarkPaper({
                                         step="0.00000001"
                                         required
                                     />
-                                </label>
+                                </Label>
                             </>
                         )}
                     </article>
@@ -76,11 +76,11 @@ export default function MarkPaper({
                 <Check name="release" label="Return score to learner" />
             </Post>
             {!!history.length && (
-                <section>
-                    <h2>Mark history</h2>
+                <section className="min-w-0 space-y-3">
+                    <h2 className="text-xl font-semibold tracking-tight">Mark history</h2>
                     {history.map((h) => (
                         <details key={h.revision}>
-                            <summary>
+                            <summary className="cursor-pointer py-2 font-medium">
                                 Score revision {h.revision} · {h.reason}
                             </summary>
                             <ol>

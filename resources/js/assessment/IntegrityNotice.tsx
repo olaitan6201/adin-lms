@@ -22,7 +22,8 @@ export function IntegrityNotice({
         return observeVisibility(attempt, () => setUnconfirmed(attempt));
     }, [active, attempt, policy.observe_visibility]);
     return (
-        <aside aria-label="Exam conditions">
+        <aside aria-label="Exam conditions" className="space-y-2 rounded-md bg-muted p-4 text-sm">
+            <h2 className="font-semibold">Exam conditions</h2>
             {policy.observe_visibility && (
                 <p>
                     This exam records when the page becomes hidden. Your lecturer reviews the context; a signal never

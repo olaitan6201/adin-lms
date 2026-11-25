@@ -1,5 +1,5 @@
-import { NativeSelect } from '@/components/ui/native-select';
-import { Textarea } from '@/components/ui/textarea';
+import { ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ExamWindow } from './ExamWindow';
 import { useState } from 'react';
@@ -19,33 +19,33 @@ export function SetupExam({ id }: { id: string }) {
                 const n = `questions[${i}]`;
 
                 return (
-                    <fieldset key={i}>
-                        <legend>Slot {i + 1}</legend>
+                    <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4" key={i}>
+                        <legend className="px-1 text-base font-semibold">Slot {i + 1}</legend>
                         <Field name={`${n}[topic]`} label="Question bank topic" />
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Question type
-                            <NativeSelect name={`${n}[kind]`}>
+                            <ValidatedSelect name={`${n}[kind]`}>
                                 {questionKinds.map((k) => (
                                     <option key={k}>{k}</option>
                                 ))}
-                            </NativeSelect>
-                        </label>
-                        <label>
+                            </ValidatedSelect>
+                        </Label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Prompt
-                            <Textarea required name={`${n}[prompt]`} />
-                        </label>
-                        <label>
+                            <ValidatedTextarea required name={`${n}[prompt]`} />
+                        </Label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Choices (one per line for MCQ and true/false)
-                            <Textarea name={`${n}[options]`} />
-                        </label>
-                        <label>
+                            <ValidatedTextarea name={`${n}[options]`} />
+                        </Label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Accepted answers (one per line; MCQ/TF use one choice)
-                            <Textarea name={`${n}[accepted]`} />
-                        </label>
-                        <label>
+                            <ValidatedTextarea name={`${n}[accepted]`} />
+                        </Label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Matching pairs (one left =&gt; right pair per line)
-                            <Textarea name={`${n}[pairs]`} />
-                        </label>
+                            <ValidatedTextarea name={`${n}[pairs]`} />
+                        </Label>
                         <Field optional label="Exact accepted answer (legacy objective input)" name={`${n}[key]`} />
                         <Field type="number" name={`${n}[points]`} label="Possible points" />
                         <Check name={`${n}[draw]`} label="Draw randomly from this topic" />

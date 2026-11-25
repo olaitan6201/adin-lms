@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,7 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
     }, {});
 
     return (
-        <main className="portal-page mx-auto max-w-4xl space-y-6 px-5 py-10">
+        <main className="mx-auto w-full min-w-0 wrap-anywhere max-w-4xl space-y-6 px-5 py-10">
             <Head title="Question bank" />
             <nav aria-label="Assessment navigation" className="flex flex-wrap gap-5 underline">
                 <Link href={`/courses/${offering}/assessments`}>Assessments</Link>
@@ -34,16 +35,16 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                 </Link>
             </nav>
             <header>
-                <p className="portal-kicker">Course assessment authoring</p>
-                <h1 className="portal-title text-3xl font-semibold">Question bank</h1>
+                <p className="text-sm font-medium text-muted-foreground">Course assessment authoring</p>
+                <h1 className="text-3xl font-semibold tracking-tight">Question bank</h1>
                 <p>Edits create a new revision. Existing examination papers keep their fixed versions.</p>
             </header>
             <form action={base} method="get" className="grid gap-3 rounded border p-4 sm:grid-cols-3">
-                <label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Search prompts
                     <Input name="q" defaultValue={filters.q} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Type
                     <NativeSelect name="kind" defaultValue={filters.kind ?? ''}>
                         <option value="">All types</option>
@@ -53,8 +54,8 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                             </option>
                         ))}
                     </NativeSelect>
-                </label>
-                <label>
+                </Label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Topic
                     <NativeSelect name="topic" defaultValue={filters.topic ?? ''}>
                         <option value="">All topics</option>
@@ -64,8 +65,8 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                             </option>
                         ))}
                     </NativeSelect>
-                </label>
-                <Button className="justify-self-start">
+                </Label>
+                <Button type="submit" className="justify-self-start">
                     Filter questions
                 </Button>
             </form>
@@ -79,7 +80,7 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                         <h3 className="text-lg font-semibold">{topic}</h3>
                         {entries.map((question) => (
                             <article key={question.id} className="space-y-2 border-b py-4">
-                                <p className="portal-kicker">
+                                <p className="text-sm font-medium text-muted-foreground">
                                     {question.kind} · revision {question.revision}
                                 </p>
                                 <p className="whitespace-pre-wrap">{question.prompt}</p>

@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { NativeDialog } from '@/components/ui/native-dialog';
+import {
+    Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
 import { router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -12,8 +14,8 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
     const [sending, setSending] = useState(false);
     const [error, setError] = useState('');
     const lock = useRef(false);
-    const dialog = useRef<HTMLDialogElement>(null);
-    const trigger = useRef<HTMLButtonElement>(null);
+    const [open, setOpen] = useState(false);
+    const returnButton = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         const timer = window.setTimeout(() => setExpired(true), Math.max(0, deadline - Date.now()));
         const update = () => setOnline(navigator.onLine);
@@ -48,25 +50,41 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
         });
     }
     return (
-        <>
-            <Button type="button" ref={trigger} aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>
-                Review final submission
-            </Button>
-            <NativeDialog className="w-[min(28rem,90vw)] border shadow-xl" ref={dialog} aria-labelledby="review-title"
-                onCancel={(event) => { if (lock.current) event.preventDefault(); }}
-                onClose={() => trigger.current?.focus()}>
-                <p className="portal-kicker">Examination paper</p>
-                <h2 id="review-title">Review final submission</h2>
-                <p id="review-summary">Saved answers: {answered} answered · {total - answered} unanswered.</p>
-                <p id="review-consequence" className="my-3">Submitting ends this attempt. You cannot change your answers afterward.</p>
-                <p role="status">{error || reason}</p>
-                <div className="mt-4 flex flex-wrap gap-3">
-                    <Button variant="outline" type="button" autoFocus aria-describedby="review-summary review-consequence" disabled={sending} onClick={() => dialog.current?.close()}>Return to paper</Button>
+        <Dialog open={open} onOpenChange={(next) => { if (!lock.current) setOpen(next); }}>
+            <DialogTrigger asChild>
+                <Button type="button">Review final submission</Button>
+            </DialogTrigger>
+            <DialogContent
+                showCloseButton={false}
+                onOpenAutoFocus={(event) => {
+                    event.preventDefault();
+                    returnButton.current?.focus();
+                }}
+            >
+                <DialogHeader>
+                    <DialogTitle>Review final submission</DialogTitle>
+                    <DialogDescription>
+                        <span id="review-summary" className="block">
+                            Saved answers: {answered} answered · {total - answered} unanswered.
+                        </span>
+                        <span id="review-consequence" className="mt-2 block">
+                            Submitting ends this attempt. You cannot change your answers afterward.
+                        </span>
+                    </DialogDescription>
+                </DialogHeader>
+                <p role="status" className="text-sm empty:hidden">{error || reason}</p>
+                <DialogFooter className="flex-col">
+                    <DialogClose asChild>
+                        <Button ref={returnButton} variant="outline" type="button"
+                            aria-describedby="review-summary review-consequence" disabled={sending}>
+                            Return to paper
+                        </Button>
+                    </DialogClose>
                     <Button variant="destructive" type="button" disabled={Boolean(reason || error) || sending} onClick={submit}>
                         {sending ? 'Submitting…' : 'Submit final answers'}
                     </Button>
-                </div>
-            </NativeDialog>
-        </>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

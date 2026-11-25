@@ -1,8 +1,8 @@
-import { NativeSelect } from '@/components/ui/native-select';
+import { ValidatedSelect } from '../../assessment/ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Head, Link } from '@inertiajs/react';
 import { Field, Post } from '../../assessment/Fields';
 import type { Grade } from '../../assessment/ResultRevisions';
-import '../../assessment/assessment.css';
 
 type Input = {
     item: string;
@@ -53,23 +53,23 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
     const pending = grade.moderation_status === 'pending';
     const approved = grade.moderation_status === 'approved';
     return (
-        <main className="portal-page assessment-page">
+        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
             <Head title="Moderation evidence" />
-            <Link href={desk}>Back to assessments</Link>
-            <header className="assessment-heading">
-                <p className="portal-kicker">Private moderation · Revision {grade.revision}</p>
-                <h1 className="portal-title">Review result for {learner}</h1>
+            <Link className="text-primary underline underline-offset-4" href={desk}>Back to assessments</Link>
+            <header className="space-y-3 border-b pb-5">
+                <p className="text-sm font-medium text-muted-foreground">Private moderation · Revision {grade.revision}</p>
+                <h1 className="text-3xl font-semibold tracking-tight">Review result for {learner}</h1>
                 <p>
                     {grade.total_percent}% · Grade {grade.grade} ·{' '}
                     {grade.published_at ? 'Published' : grade.moderation_status.replaceAll('_', ' ')}
                 </p>
             </header>
-            <section>
-                <h2>Component marks</h2>
+            <section className="min-w-0 space-y-3">
+                <h2 className="text-xl font-semibold tracking-tight">Component marks</h2>
                 <p>These are the score revisions used when this result was calculated.</p>
-                <ul className="assessment-evidence">
+                <ul className="divide-y">
                     {inputs.map((input, index) => (
-                        <li key={index}>
+                        <li key={index} className="grid gap-2 py-3 sm:grid-cols-3">
                             <strong>{input.item}</strong>
                             <span>
                                 {input.points} / {input.maximum} points
@@ -77,8 +77,8 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                             <small>
                                 Weight {input.weight}% · Score revision {input.score_revision}
                             </small>
-                            <details className="assessment-provenance">
-                                <summary>Marking record</summary>
+                            <details className="sm:col-span-full">
+                                <summary className="cursor-pointer py-2 font-medium">Marking record</summary>
                                 <p>
                                     {input.marker ?? 'Automatic score'} · {input.reason}
                                 </p>
@@ -93,7 +93,7 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                     ))}
                 </ul>
                 <details>
-                    <summary>Grading policy · version {policy.version}</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Grading policy · version {policy.version}</summary>
                     <p>Rounding: {policy.rounding_rule.replaceAll('_', ' ')}</p>
                     <ul>
                         {boundaries.map((b) => (
@@ -108,20 +108,20 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                 <p>A newer result has replaced this revision. Return to assessments to review it.</p>
             )}
             {!superseded && !grade.published_at && (pending || approved) && (
-                <section>
-                    <h2>{pending ? 'Moderation decision' : 'Release result'}</h2>
+                <section className="min-w-0 space-y-3">
+                    <h2 className="text-xl font-semibold tracking-tight">{pending ? 'Moderation decision' : 'Release result'}</h2>
                     <Post url={`/grades/${grade.id}/review`} button={pending ? 'Record decision' : 'Publish result'}>
                         {pending ? (
-                            <label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Decision
-                                <NativeSelect name="decision" aria-label="Decision" required defaultValue="">
+                                <ValidatedSelect name="decision" aria-label="Decision" required defaultValue="">
                                     <option value="" disabled>
                                         Choose a decision
                                     </option>
                                     <option value="correct">Request correction</option>
                                     <option value="approve">Approve</option>
-                                </NativeSelect>
-                            </label>
+                                </ValidatedSelect>
+                            </Label>
                         ) : (
                             <>
                                 <input type="hidden" name="decision" value="publish" />
@@ -132,8 +132,8 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                     </Post>
                 </section>
             )}
-            <section>
-                <h2>Revision history</h2>
+            <section className="min-w-0 space-y-3">
+                <h2 className="text-xl font-semibold tracking-tight">Revision history</h2>
                 <ol>
                     {history.map((e, i) => (
                         <li key={i}>

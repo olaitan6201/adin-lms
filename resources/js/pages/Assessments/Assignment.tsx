@@ -1,5 +1,4 @@
 import { CriterionFeedback, type CriterionScore } from '../../assessment/CriterionFeedback';
-import '../../assessment/assessment.css';
 import { Head } from '@inertiajs/react';
 import { AssignmentLimits } from '../../assessment/AssignmentLimits';
 import { SubmissionEntry } from '../../assessment/SubmissionEntry';
@@ -52,36 +51,36 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
     const individualSubmissionComplete = !a.group_work && !a.editable && rows.length > 0;
     const url = `/assignments/${a.id}`;
     const download = (id: string, text: string) => (
-        <a key={id} href={`${url}/files/${id}`}>
+        <a className="block w-fit text-primary underline underline-offset-4" key={id} href={`${url}/files/${id}`}>
             {text}
         </a>
     );
 
     return (
-        <main className="portal-page assessment-page">
+        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
             <Head title={title} />
-            <header className="assessment-heading">
-                <p className="portal-kicker">
+            <header className="space-y-3 border-b pb-5">
+                <p className="text-sm font-medium text-muted-foreground">
                     {marker ? 'Marking workspace' : a.group_work ? 'Group assignment' : 'Individual assignment'}
                 </p>
-                <h1 className="portal-title">{title}</h1>
-                <nav aria-label="Assignment sections">
-                    <a href="#submissions">Submission history</a>
+                <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+                <nav aria-label="Assignment sections" className="flex flex-wrap gap-x-5 gap-y-2">
+                    <a className="text-primary underline underline-offset-4" href="#submissions">Submission history</a>
                 </nav>
             </header>
-            <section aria-label="Assignment brief">
-                <h2>Assignment brief</h2>
-                <p className="assessment-prose">{a.instructions}</p>
-                <a href={`${url}/instructions`}>Download instructions (.txt)</a>
+            <section aria-label="Assignment brief" className="space-y-3">
+                <h2 className="text-xl font-semibold tracking-tight">Assignment brief</h2>
+                <p className="max-w-prose whitespace-pre-wrap">{a.instructions}</p>
+                <a className="text-primary underline underline-offset-4" href={`${url}/instructions`}>Download instructions (.txt)</a>
                 <AssignmentLimits assignment={a} />
                 {references.map((id) => download(id, 'Download reference'))}
                 {rubric && (rubric.guide || rubric.criteria?.length) ? (
                     <details>
-                        <summary>Marking criteria</summary>
+                        <summary className="cursor-pointer py-2 font-medium">Marking criteria</summary>
                         <p>{rubric.guide}</p>
                         {rubric.criteria?.map((c) => (
                             <div key={c.id}>
-                                <h3>{c.title}</h3>
+                                <h3 className="font-semibold">{c.title}</h3>
                                 <p>{c.description}</p>
                                 <ul>
                                     {c.levels.map((l) => (
@@ -100,9 +99,9 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                 </p>
             </section>
             {!marker && individualSubmissionComplete && (
-                <section aria-label="Submission received">
-                    <h2>Your submission</h2>
-                    <p role="status">Revision received. <a href="#submissions">View submission history</a></p>
+                <section aria-label="Submission received" className="space-y-2 rounded-md bg-muted p-4">
+                    <h2 className="text-xl font-semibold tracking-tight">Your submission</h2>
+                    <p role="status">Revision received. <a className="text-primary underline underline-offset-4" href="#submissions">View submission history</a></p>
                     <p>This assignment accepts one submission.</p>
                 </section>
             )}
@@ -110,24 +109,24 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                 <SubmissionEntry url={url} formats={a.accepted_formats} groupWork={a.group_work} groups={groups} />
             )}
             {marker && (
-                <section>
-                    <h2>Pending submissions</h2>
+                <section className="min-w-0 space-y-3">
+                    <h2 className="text-xl font-semibold tracking-tight">Pending submissions</h2>
                     <p>{pending.length ? pending.join(', ') : 'All learners have submitted.'}</p>
                 </section>
             )}
-            <h2 id="submissions">Submission history</h2>
+            <h2 id="submissions" className="scroll-mt-4 text-xl font-semibold tracking-tight">Submission history</h2>
             {!rows.length && <p>No submissions yet.</p>}
             {rows.map((r) => (
-                <article key={r.id} id={`submission-${r.id}`}>
-                    <h3>
+                <article key={r.id} id={`submission-${r.id}`} className="min-w-0 space-y-3 border-t pt-4">
+                    <h3 className="font-semibold">
                         Revision {r.revision} · {r.late ? 'Late' : 'On time'}
                     </h3>
                     {marker && <p>Recipients: {r.recipients.join(', ')}</p>}
                     <p>Receipt: <code>{r.receipt}</code></p>
-                    <p>{r.body}</p>
+                    <p className="whitespace-pre-wrap">{r.body}</p>
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (
-                        <div key={s.id}>
+                        <div key={s.id} className="space-y-2 border-l-2 pl-3">
                             Mark: {s.points} · Score revision {s.revision} ·{' '}
                             {s.released_at ? 'Returned' : 'Private draft'}
                             {s.feedback && <p>{s.feedback}</p>}

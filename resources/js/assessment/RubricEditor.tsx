@@ -1,6 +1,6 @@
+import { ValidatedInput, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 export type RubricLevel = {
     label: string;
     points: string;
@@ -46,38 +46,38 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
         ]);
 
     return (
-        <fieldset>
-            <legend>Scored marking rubric</legend>
+        <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4">
+            <legend className="px-1 text-base font-semibold">Scored marking rubric</legend>
             <p>
                 Criterion maxima must add up to the assessment maximum. Leave the rubric empty to enter a total mark
                 directly.
             </p>
             {criteria.map((criterion, criterionIndex) => (
-                <fieldset key={criterionIndex}>
-                    <legend>Criterion {criterionIndex + 1}</legend>
-                    <label>
+                <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4" key={criterionIndex}>
+                    <legend className="px-1 text-base font-semibold">Criterion {criterionIndex + 1}</legend>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Criterion title
-                        <Input
+                        <ValidatedInput
                             required
                             name={`items[${index}][criteria][${criterionIndex}][title]`}
                             value={criterion.title}
                             onChange={(event) => updateCriterion(criterionIndex, { title: event.target.value })}
                         />
-                    </label>
-                    <label>
+                    </Label>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Criterion guidance
-                        <Textarea
+                        <ValidatedTextarea
                             name={`items[${index}][criteria][${criterionIndex}][description]`}
                             value={criterion.description}
                             onChange={(event) => updateCriterion(criterionIndex, { description: event.target.value })}
                         />
-                    </label>
+                    </Label>
                     {criterion.levels.map((level, levelIndex) => (
-                        <fieldset key={levelIndex}>
-                            <legend>Level {levelIndex + 1}</legend>
-                            <label>
+                        <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4" key={levelIndex}>
+                            <legend className="px-1 text-base font-semibold">Level {levelIndex + 1}</legend>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Level label
-                                <Input
+                                <ValidatedInput
                                     required
                                     name={`items[${index}][criteria][${criterionIndex}][levels][${levelIndex}][label]`}
                                     value={level.label}
@@ -85,10 +85,10 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                                         updateLevel(criterionIndex, levelIndex, { label: event.target.value })
                                     }
                                 />
-                            </label>
-                            <label>
+                            </Label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Level points
-                                <Input
+                                <ValidatedInput
                                     required
                                     type="number"
                                     min="0"
@@ -100,17 +100,17 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                                         updateLevel(criterionIndex, levelIndex, { points: event.target.value })
                                     }
                                 />
-                            </label>
-                            <label>
+                            </Label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Level guidance
-                                <Textarea
+                                <ValidatedTextarea
                                     name={`items[${index}][criteria][${criterionIndex}][levels][${levelIndex}][description]`}
                                     value={level.description}
                                     onChange={(event) =>
                                         updateLevel(criterionIndex, levelIndex, { description: event.target.value })
                                     }
                                 />
-                            </label>
+                            </Label>
                             {criterion.levels.length > 2 && (
                                 <Button
                                     variant="outline" type="button"

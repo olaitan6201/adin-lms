@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, Link } from '@inertiajs/react';
@@ -20,7 +21,7 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
     const subjective = kind === 'essay' || kind === 'programming' || kind === 'practical';
 
     return (
-        <Form action={action} method={method} className="grid gap-4 rounded border p-5">
+        <Form action={action} method={method} className="grid min-w-0 gap-4 rounded-lg border p-4 sm:p-5 [&_button[type=submit]]:h-auto [&_button[type=submit]]:min-h-9 [&_button[type=submit]]:whitespace-normal">
             {({ processing, errors, recentlySuccessful }) => (
                 <>
                     <PortalField
@@ -31,7 +32,7 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                         defaultValue={initial?.topic}
                         error={errors.topic}
                     />
-                    <label>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Question type
                         <NativeSelect
                             name="kind"
@@ -48,8 +49,8 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                             <option value="programming">Programming</option>
                             <option value="practical">Practical</option>
                         </NativeSelect>
-                    </label>
-                    <label>
+                    </Label>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Prompt
                         <Textarea
                             name="prompt"
@@ -58,9 +59,9 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                             maxLength={12000}
                             defaultValue={initial?.prompt}
                         />
-                    </label>
+                    </Label>
                     {choices && (
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Choices (one per line)
                             <Textarea
                                 name="options"
@@ -68,10 +69,10 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                                 rows={4}
                                 defaultValue={initial?.options}
                             />
-                        </label>
+                        </Label>
                     )}
                     {accepted && (
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             {choices ? 'Accepted answer (must match a choice)' : 'Accepted answers (one per line)'}
                             <Textarea
                                 name="accepted"
@@ -79,10 +80,10 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                                 rows={choices ? 2 : 4}
                                 defaultValue={initial?.accepted}
                             />
-                        </label>
+                        </Label>
                     )}
                     {kind === 'matching' && (
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Matching pairs (one left =&gt; right pair per line)
                             <Textarea
                                 name="pairs"
@@ -90,10 +91,10 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                                 rows={6}
                                 defaultValue={initial?.pairs}
                             />
-                        </label>
+                        </Label>
                     )}
                     {subjective && (
-                        <label>
+                        <Label className="grid min-w-0 gap-2 leading-normal">
                             Marking guide
                             <Textarea
                                 name="guide"
@@ -101,7 +102,7 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                                 maxLength={5000}
                                 defaultValue={initial?.guide}
                             />
-                        </label>
+                        </Label>
                     )}
                     {Object.entries(errors).map(([key, error]) => (
                         <p role="alert" key={key}>

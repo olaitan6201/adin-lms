@@ -1,5 +1,4 @@
 import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
-import '../../assessment/assessment.css';
 import { Head, Link } from '@inertiajs/react';
 import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';
 import { Post, type Member } from '../../assessment/Fields';
@@ -25,13 +24,13 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
     const who = (id: string) => roster.find((m) => m.id === id)?.name;
 
     return (
-        <main className="portal-page assessment-page">
+        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
             <Head title="Assessments" />
-            <header className="assessment-heading">
-                <p className="portal-kicker">
+            <header className="space-y-3 border-b pb-5">
+                <p className="text-sm font-medium text-muted-foreground">
                     {teacher ? 'Teaching workspace' : officer ? 'Examinations office' : 'Course assessment'}
                 </p>
-                <h1 className="portal-title">Assessments and results</h1>
+                <h1 className="text-3xl font-semibold tracking-tight">Assessments and results</h1>
                 <p>
                     {teacher
                         ? 'Prepare assessments, review submissions and calculate results.'
@@ -39,10 +38,10 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                           ? 'Configure policy and review the marks supporting each result.'
                           : 'Open your assignments and exams, then follow returned marks and published results.'}
                 </p>
-                <nav aria-label="Assessment sections">
-                    {teacher && <Link href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>}
-                    {teacher && <Link href={`/courses/${offering}/question-banks`}>Question banks</Link>}
-                    <a href="#result-revisions">Result history</a>
+                <nav aria-label="Assessment sections" className="flex flex-wrap gap-x-5 gap-y-2">
+                    {teacher && <Link className="text-primary underline underline-offset-4" href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>}
+                    {teacher && <Link className="text-primary underline underline-offset-4" href={`/courses/${offering}/question-banks`}>Question banks</Link>}
+                    <a className="text-primary underline underline-offset-4" href="#result-revisions">Result history</a>
                 </nav>
             </header>
             {!book &&
@@ -53,7 +52,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                 ))}
             {officer && policy && (
                 <details>
-                    <summary>Amend grading policy · version {policy.version}</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Amend grading policy · version {policy.version}</summary>
                     <SetupBook
                         key={policy.id}
                         url={`/courses/${offering}/assessments`}
@@ -85,7 +84,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
             ))}
             {book && teacher && (
                 <details>
-                    <summary>Compute results</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Compute results</summary>
                     {roster.map((m) => (
                         <Post key={m.id} url={`/gradebooks/${book}/compute/${m.id}`} button={`Compute ${m.name}`} />
                     ))}

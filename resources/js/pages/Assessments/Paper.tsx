@@ -1,4 +1,3 @@
-import '../../assessment/assessment.css';
 import { Head } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 
@@ -27,18 +26,20 @@ export default function Paper({ attempt, questions, title, integrity }: Props) {
 
     return (
         <main
-            className="portal-page assessment-page"
+            className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10"
             onCopy={(event) => {
                 if (active && integrity.prevent_copy) event.preventDefault();
             }}
         >
             <Head title={title} />
-            <p className="portal-kicker">Examination paper</p>
-            <h1 className="portal-title">{title}</h1>
-            <p>
-                Status: {attempt.state} · Deadline: {new Date(attempt.expires_at).toLocaleString()}
-            </p>
-            <p>Answers save online. Wait for Saved before leaving.</p>
+            <header className="space-y-2 border-b pb-5">
+                <p className="text-sm font-medium text-muted-foreground">Examination paper</p>
+                <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+                <p>
+                    Status: {attempt.state} · Deadline: {new Date(attempt.expires_at).toLocaleString()}
+                </p>
+                <p>Answers save online. Wait for Saved before leaving.</p>
+            </header>
             <IntegrityNotice policy={integrity} active={active} attempt={attempt.id} />
             {questions.map((q) => (
                 <Answer

@@ -1,4 +1,5 @@
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ExamWindow } from './ExamWindow';
 import { PortalField } from '../components/PortalForm';
 
@@ -26,10 +27,10 @@ export function ExamWindowControls({ errors }: { errors: Record<string, string> 
                 defaultValue="1"
                 error={errors.max_attempts}
             />
-            <label className="flex items-center gap-2">
-                <NativeCheckbox name="shuffle" value="1" />
+            <Label className="flex items-center gap-2">
+                <Checkbox name="shuffle" value="1" />
                 Shuffle choices and matching options
-            </label>
+            </Label>
         </>
     );
 }

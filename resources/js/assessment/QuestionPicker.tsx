@@ -1,7 +1,7 @@
+import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { FormFeedback } from '@/components/ui/form-feedback';
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { selectionTotal } from './selectionPoints';
 import { ExamWindowControls } from './ExamWindowControls';
@@ -31,7 +31,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
     const total = selectionTotal([...Object.values(points), ...draws]);
 
     return (
-        <Form action={`/assessment-items/${item}/exam`} method="post" className="grid gap-4 rounded border p-5">
+        <Form action={`/assessment-items/${item}/exam`} method="post" className="grid min-w-0 gap-4 rounded-lg border p-4 sm:p-5 [&_button[type=submit]]:h-auto [&_button[type=submit]]:min-h-9 [&_button[type=submit]]:whitespace-normal">
             {({ processing, errors, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     <ExamWindowControls errors={errors} />
@@ -42,15 +42,15 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             const checked = points[question.id] !== undefined;
                             return (
                                 <article key={question.id} className="grid gap-3 border-b pb-4">
-                                    <label className="flex items-start gap-2">
-                                        <NativeCheckbox
+                                    <Label className="flex items-start gap-2">
+                                        <Checkbox
                                             name={`selections[${index}][version_id]`}
                                             value={question.id}
                                             checked={checked}
-                                            onChange={(event) =>
+                                            onCheckedChange={(selected) =>
                                                 setPoints((current) => {
                                                     const next = { ...current };
-                                                    if (event.target.checked) next[question.id] = '1';
+                                                    if (selected === true) next[question.id] = '1';
                                                     else delete next[question.id];
 
                                                     return next;
@@ -62,10 +62,10 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                             {question.revision}
                                             <span className="mt-1 block whitespace-pre-wrap">{question.prompt}</span>
                                         </span>
-                                    </label>
-                                    <label className="grid min-w-0 gap-1">
+                                    </Label>
+                                    <Label className="grid min-w-0 gap-1">
                                         Possible points
-                                        <Input
+                                        <ValidatedInput
                                             type="number"
                                             min="0.00000001"
                                             max="1000000"
@@ -81,7 +81,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                                 }))
                                             }
                                         />
-                                    </label>
+                                    </Label>
                                 </article>
                             );
                         })}
@@ -90,19 +90,19 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                         <legend className="px-2 font-semibold">Random topic slots</legend>
                         {draws.map((value, i) => (
                             <div key={i} className="grid gap-3 border-b pb-4 sm:grid-cols-2">
-                                <label className="grid min-w-0 gap-1">
+                                <Label className="grid min-w-0 gap-1">
                                     Topic for draw {i + 1}
-                                    <NativeSelect required name={`draws[${i}][bank_id]`}>
+                                    <ValidatedSelect required name={`draws[${i}][bank_id]`}>
                                         {topics.map((b) => (
                                             <option key={b.id} value={b.id}>
                                                 {b.topic}
                                             </option>
                                         ))}
-                                    </NativeSelect>
-                                </label>
-                                <label className="grid min-w-0 gap-1">
+                                    </ValidatedSelect>
+                                </Label>
+                                <Label className="grid min-w-0 gap-1">
                                     Points for draw {i + 1}
-                                    <Input
+                                    <ValidatedInput
                                         max="1000000"
                                         name={`draws[${i}][points]`}
                                         type="number"
@@ -112,7 +112,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                         value={value}
                                         onChange={(e) => setDraws(draws.map((s, n) => (n === i ? e.target.value : s)))}
                                     />
-                                </label>
+                                </Label>
                             </div>
                         ))}
                         <div className="flex flex-wrap gap-3">

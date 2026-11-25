@@ -1,7 +1,6 @@
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
-import { Textarea } from '@/components/ui/textarea';
 import { itemKinds, type ItemKind } from './contracts';
 import { RubricEditor, type RubricCriteria } from './RubricEditor';
 
@@ -26,22 +25,22 @@ interface Props {
 
 export function PolicyItemFields({ index, item, removable, onChange, onRemove }: Props) {
     return (
-        <fieldset>
-            <legend>Assessment {index + 1}</legend>
+        <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4">
+            <legend className="px-1 text-base font-semibold">Assessment {index + 1}</legend>
             {item.id && <input type="hidden" name={`items[${index}][id]`} value={item.id} />}
-            <label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Title
-                <Input
+                <ValidatedInput
                     required
                     maxLength={191}
                     name={`items[${index}][title]`}
                     value={item.title}
                     onChange={(event) => onChange({ title: event.target.value })}
                 />
-            </label>
-            <label>
+            </Label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Type
-                <NativeSelect
+                <ValidatedSelect
                     name={`items[${index}][kind]`}
                     value={item.kind}
                     onChange={(event) => onChange({ kind: event.target.value as ItemKind })}
@@ -49,11 +48,11 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     {itemKinds.map((kind) => (
                         <option key={kind}>{kind}</option>
                     ))}
-                </NativeSelect>
-            </label>
-            <label>
+                </ValidatedSelect>
+            </Label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Maximum points
-                <Input
+                <ValidatedInput
                     required
                     type="number"
                     min="0.00000001"
@@ -62,10 +61,10 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     value={item.maximum}
                     onChange={(event) => onChange({ maximum: event.target.value })}
                 />
-            </label>
-            <label>
+            </Label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Weight (%)
-                <Input
+                <ValidatedInput
                     required
                     type="number"
                     min="0"
@@ -75,16 +74,16 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     value={item.weight}
                     onChange={(event) => onChange({ weight: event.target.value })}
                 />
-            </label>
-            <label>
+            </Label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Marking guidance
-                <Textarea
+                <ValidatedTextarea
                     maxLength={10000}
                     name={`items[${index}][rubric]`}
                     value={item.rubric}
                     onChange={(event) => onChange({ rubric: event.target.value })}
                 />
-            </label>
+            </Label>
             {item.kind === 'assignment' && (
                 <RubricEditor
                     index={index}

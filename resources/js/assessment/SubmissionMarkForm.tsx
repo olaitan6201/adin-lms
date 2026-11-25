@@ -1,6 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
-import { Textarea } from '@/components/ui/textarea';
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Check, Field, Post } from './Fields';
 
 export type Rubric = {
@@ -26,17 +25,17 @@ type SubmissionMarkFormProps = {
 export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps) {
     return (
         <details>
-            <summary>Mark this revision</summary>
+            <summary className="cursor-pointer py-2 font-medium">Mark this revision</summary>
             <Post url={`/submission-versions/${version}/marks`} button="Record mark">
                 {rubric?.criteria?.length ? (
                     rubric.criteria.map((criterion, i) => (
-                        <fieldset key={criterion.id}>
-                            <legend>{criterion.title}</legend>
+                        <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4" key={criterion.id}>
+                            <legend className="px-1 text-base font-semibold">{criterion.title}</legend>
                             <p>{criterion.description}</p>
                             <input type="hidden" name={`selections[${i}][criterion]`} value={criterion.id} />
-                            <label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Performance level
-                                <NativeSelect required name={`selections[${i}][level]`} defaultValue="">
+                                <ValidatedSelect required name={`selections[${i}][level]`} defaultValue="">
                                     <option value="" disabled>
                                         Select a level
                                     </option>
@@ -46,26 +45,26 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                                             {l.description ? ` — ${l.description}` : ''}
                                         </option>
                                     ))}
-                                </NativeSelect>
-                            </label>
-                            <label>
+                                </ValidatedSelect>
+                            </Label>
+                            <Label className="grid min-w-0 gap-2 leading-normal">
                                 Criterion feedback
-                                <Textarea name={`selections[${i}][feedback]`} />
-                            </label>
+                                <ValidatedTextarea name={`selections[${i}][feedback]`} />
+                            </Label>
                         </fieldset>
                     ))
                 ) : (
                     <Field label="Points" name="points" type="number" />
                 )}
-                <label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Feedback
-                    <Textarea name="feedback" />
-                </label>
+                    <ValidatedTextarea name="feedback" />
+                </Label>
                 <Field label="Reason for this mark" name="reason" />
-                <label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Marked copy (.pdf or .txt)
-                    <Input type="file" name="script" accept=".pdf,.txt" />
-                </label>
+                    <ValidatedInput type="file" name="script" accept=".pdf,.txt" />
+                </Label>
                 <Check name="release" label="Return this mark and feedback to the recipients" />
             </Post>
         </details>

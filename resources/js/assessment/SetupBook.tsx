@@ -1,7 +1,6 @@
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
-import { Textarea } from '@/components/ui/textarea';
 import { emptyItem, emptyPolicy, type PolicyDefinition } from './policyDefaults';
 import { useState } from 'react';
 import { Post } from './Fields';
@@ -32,14 +31,14 @@ export function SetupBook({ url, policy }: SetupBookProps) {
 
     return (
         <Post url={url} button={policy ? 'Amend approved policy' : 'Activate gradebook'}>
-            <h2>{policy ? 'Amend assessment policy' : 'Configure assessment policy'}</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{policy ? 'Amend assessment policy' : 'Configure assessment policy'}</h2>
             <p>
                 Item weights must total exactly 100%. Amendments create a new policy version and preserve earlier
                 results.
             </p>
-            <label>
+            <Label className="grid min-w-0 gap-2 leading-normal">
                 Rounding to two decimals
-                <NativeSelect
+                <ValidatedSelect
                     name="rounding"
                     value={data.rounding}
                     onChange={(event) => setData({ ...data, rounding: event.target.value })}
@@ -47,20 +46,20 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     <option value="half_up">Half up</option>
                     <option value="half_even">Half even</option>
                     <option value="floor">Round down</option>
-                </NativeSelect>
-            </label>
+                </ValidatedSelect>
+            </Label>
             {policy && (
-                <label>
+                <Label className="grid min-w-0 gap-2 leading-normal">
                     Reason for amendment
-                    <Textarea required name="reason" maxLength={2000} />
-                </label>
+                    <ValidatedTextarea required name="reason" maxLength={2000} />
+                </Label>
             )}
             {data.boundaries.map((boundary, index) => (
-                <fieldset key={index}>
-                    <legend>Boundary {index + 1}</legend>
-                    <label>
+                <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4" key={index}>
+                    <legend className="px-1 text-base font-semibold">Boundary {index + 1}</legend>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Minimum percent
-                        <Input
+                        <ValidatedInput
                             required
                             type="number"
                             min="0"
@@ -70,17 +69,17 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                             value={boundary.minimum}
                             onChange={(event) => updateBoundary(index, { minimum: event.target.value })}
                         />
-                    </label>
-                    <label>
+                    </Label>
+                    <Label className="grid min-w-0 gap-2 leading-normal">
                         Grade label
-                        <Input
+                        <ValidatedInput
                             required
                             maxLength={30}
                             name={`boundaries[${index}][grade]`}
                             value={boundary.grade}
                             onChange={(event) => updateBoundary(index, { grade: event.target.value })}
                         />
-                    </label>
+                    </Label>
                     {data.boundaries.length > 1 && (
                         <Button
                             variant="outline" type="button"

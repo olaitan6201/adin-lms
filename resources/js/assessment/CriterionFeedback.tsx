@@ -10,7 +10,7 @@ export type CriterionScore = {
 export function CriterionFeedback({ scores }: { scores: CriterionScore[] }) {
     if (!scores.length) return null;
     return (
-        <Table regionLabel="Criterion marks">
+        <Table aria-label="Criterion marks">
             <TableCaption>Criterion marks and feedback</TableCaption>
             <TableHeader>
                 <TableRow>
@@ -26,7 +26,7 @@ export function CriterionFeedback({ scores }: { scores: CriterionScore[] }) {
                         <TableHead scope="row">{score.criterion_title}</TableHead>
                         <TableCell>{score.level_label}</TableCell>
                         <TableCell>{score.points}</TableCell>
-                        <TableCell>{score.feedback ?? '—'}</TableCell>
+                        <TableCell className="whitespace-normal">{score.feedback ?? '—'}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

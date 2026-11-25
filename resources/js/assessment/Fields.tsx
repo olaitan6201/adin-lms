@@ -1,7 +1,7 @@
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
@@ -14,11 +14,11 @@ interface PostProps {
 
 export function Post({ url, button, children }: PostProps) {
     return (
-        <Form action={url} method="post">
+        <Form action={url} method="post" className="grid min-w-0 gap-4 py-2 [&_button:not([role])]:h-auto [&_button:not([role])]:min-h-9 [&_button:not([role])]:max-w-full [&_button:not([role])]:w-fit [&_button:not([role])]:whitespace-normal">
             {({ processing, errors, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     {children}
-                    <Button disabled={processing}>{processing ? 'Saving…' : button}</Button>
+                    <Button type="submit" disabled={processing}>{processing ? 'Saving…' : button}</Button>
                     <p aria-live="polite">{recentlySuccessful ? 'Saved.' : ''}</p>
                 </FormFeedback>
             )}
@@ -40,16 +40,16 @@ export function Field({
     optional?: boolean;
 }) {
     return (
-        <label>
+        <Label className="grid min-w-0 gap-2 leading-normal">
             {label}
-            <Input
+            <ValidatedInput
                 name={name}
                 type={type}
                 defaultValue={value}
                 required={!optional}
                 step={type === 'number' ? 'any' : undefined}
             />
-        </label>
+        </Label>
     );
 }
 
@@ -60,10 +60,10 @@ interface CheckProps {
 
 export function Check({ name, label }: CheckProps) {
     return (
-        <label>
-            <NativeCheckbox name={name} value="1" />
+        <Label className="flex items-center gap-3 leading-normal">
+            <Checkbox name={name} value="1" />
             {label}
-        </label>
+        </Label>
     );
 }
 
@@ -82,15 +82,15 @@ export type Member = {
 };
 export function Roster({ members }: { members: Member[] }) {
     return (
-        <label>
+        <Label className="grid min-w-0 gap-2 leading-normal">
             Learner
-            <NativeSelect name="enrolment" required>
+            <ValidatedSelect name="enrolment" required>
                 {members.map((m) => (
                     <option key={m.id} value={m.id}>
                         {m.name}
                     </option>
                 ))}
-            </NativeSelect>
-        </label>
+            </ValidatedSelect>
+        </Label>
     );
 }

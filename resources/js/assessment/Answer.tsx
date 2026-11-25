@@ -1,3 +1,5 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -85,64 +87,66 @@ export function Answer({
     };
 
     return (
-        <section>
-            {q.kind === 'matching' && q.matching ? (
-                <fieldset>
-                    <legend>{q.prompt}</legend>
-                    {q.matching.left.map((item) => (
-                        <label key={item.id}>
-                            {item.label}
-                            <NativeSelect
-                                disabled={!active}
-                                value={matching[item.id] ?? ''}
-                                onChange={(event) => match(item.id, event.target.value)}
-                            >
-                                <option value="">Select a match</option>
-                                {q.matching?.right.map((right) => (
-                                    <option
-                                        key={right.id}
-                                        value={right.id}
-                                        disabled={Object.entries(matching).some(
-                                            ([left, selected]) => left !== item.id && selected === right.id,
-                                        )}
-                                    >
-                                        {right.label}
-                                    </option>
+        <Card>
+            <CardContent className="grid min-w-0 gap-3">
+                {q.kind === 'matching' && q.matching ? (
+                    <fieldset className="grid min-w-0 gap-4 rounded-lg border p-4">
+                        <legend className="px-1 text-base font-semibold">{q.prompt}</legend>
+                        {q.matching.left.map((item) => (
+                            <Label className="grid min-w-0 gap-2 leading-normal" key={item.id}>
+                                {item.label}
+                                <NativeSelect
+                                    disabled={!active}
+                                    value={matching[item.id] ?? ''}
+                                    onChange={(event) => match(item.id, event.target.value)}
+                                >
+                                    <option value="">Select a match</option>
+                                    {q.matching?.right.map((right) => (
+                                        <option
+                                            key={right.id}
+                                            value={right.id}
+                                            disabled={Object.entries(matching).some(
+                                                ([left, selected]) => left !== item.id && selected === right.id,
+                                            )}
+                                        >
+                                            {right.label}
+                                        </option>
+                                    ))}
+                                </NativeSelect>
+                            </Label>
+                        ))}
+                    </fieldset>
+                ) : (
+                    <Label className="grid min-w-0 gap-2 leading-normal">
+                        {q.prompt}
+                        {q.options.length ? (
+                            <NativeSelect disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
+                                <option value="">Select an answer</option>
+                                {q.options.map((option) => (
+                                    <option key={option}>{option}</option>
                                 ))}
                             </NativeSelect>
-                        </label>
-                    ))}
-                </fieldset>
-            ) : (
-                <label>
-                    {q.prompt}
-                    {q.options.length ? (
-                        <NativeSelect disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
-                            <option value="">Select an answer</option>
-                            {q.options.map((option) => (
-                                <option key={option}>{option}</option>
-                            ))}
-                        </NativeSelect>
-                    ) : (
-                        <Textarea
-                            disabled={!active}
-                            value={String(value)}
-                            onChange={(event) => edit(event.target.value)}
-                        />
-                    )}
-                </label>
-            )}
-            <span role="status">{message}</span>
-            {failed && (
-                <Button
-                    onClick={() => {
-                        setFailed(false);
-                        setRetry((current) => current + 1);
-                    }}
-                >
-                    Retry save
-                </Button>
-            )}
-        </section>
+                        ) : (
+                            <Textarea
+                                disabled={!active}
+                                value={String(value)}
+                                onChange={(event) => edit(event.target.value)}
+                            />
+                        )}
+                    </Label>
+                )}
+                <span className="text-sm text-muted-foreground" role="status">{message}</span>
+                {failed && (
+                    <Button
+                        onClick={() => {
+                            setFailed(false);
+                            setRetry((current) => current + 1);
+                        }}
+                    >
+                        Retry save
+                    </Button>
+                )}
+            </CardContent>
+        </Card>
     );
 }

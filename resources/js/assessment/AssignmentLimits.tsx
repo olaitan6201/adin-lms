@@ -20,7 +20,7 @@ function uploadLimit(bytes: number) {
 export function AssignmentLimits({ assignment }: { assignment: Limits }) {
     return (
         <>
-            <dl className="my-4 grid gap-3 border-y border-[var(--portal-line)] py-3 sm:grid-cols-3">
+            <dl className="my-4 grid gap-3 border-y border-border py-3 sm:grid-cols-3">
                 <div>
                     <dt className="font-semibold">Opens</dt>
                     <dd><LearnerTime instant={assignment.opens_at} /></dd>

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\StudentStatus;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,7 +16,7 @@ class StudentFactory extends Factory
             'external_student_id' => 'STU-'.fake()->unique()->uuid(),
             'user_id' => User::factory(),
             'matric_number' => fake()->unique()->bothify('DEMO/########'),
-            'status' => 'active',
+            'status' => StudentStatus::Active,
         ];
     }
 }

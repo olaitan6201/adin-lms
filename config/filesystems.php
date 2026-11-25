@@ -1,5 +1,18 @@
 <?php
 
+$s3 = [
+    'driver' => 's3',
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+    'url' => env('AWS_URL'),
+    'endpoint' => env('AWS_ENDPOINT'),
+    'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+    'throw' => false,
+    'report' => false,
+];
+
 return [
 
     /*
@@ -30,6 +43,16 @@ return [
 
     'disks' => [
 
+        'academic' => [
+            ...match (env('ACADEMIC_STORAGE_DRIVER', 'local')) {
+                'local' => ['driver' => 'local', 'root' => storage_path('app/private')],
+                's3' => [...$s3, 'stream_reads' => true],
+                default => throw new InvalidArgumentException('ACADEMIC_STORAGE_DRIVER must be local or s3.'),
+            },
+            'visibility' => 'private',
+            'directory_visibility' => 'private',
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -47,18 +70,7 @@ return [
             'report' => false,
         ],
 
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
-            'report' => false,
-        ],
+        's3' => $s3,
 
     ],
 

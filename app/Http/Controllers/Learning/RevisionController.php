@@ -68,14 +68,14 @@ final class RevisionController
             $types = $caption ? ['text/vtt'] : [...ResourceFileFormat::INLINE_IMAGES, ...ResourceFileFormat::INLINE_MEDIA];
             abort_unless(in_array($file->media_type, $types, true), 404);
 
-            return Storage::disk('local')->response($file->object_key, $file->filename, [
+            return Storage::disk('academic')->response($file->object_key, $file->filename, [
                 'Content-Type' => $file->media_type,
                 'X-Content-Type-Options' => 'nosniff',
                 'Cache-Control' => 'private, no-store',
             ]);
         }
 
-        return Storage::disk('local')->download($file->object_key, $file->filename, [
+        return Storage::disk('academic')->download($file->object_key, $file->filename, [
             'Content-Type' => 'application/octet-stream',
             'X-Content-Type-Options' => 'nosniff',
             'Cache-Control' => 'private, no-store',

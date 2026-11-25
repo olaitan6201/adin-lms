@@ -37,7 +37,7 @@ class IndividualSubmissionTest extends AssessmentCase
 
     public function test_reference_and_marked_downloads_require_current_access_and_release(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $this->setupItems(['assignment']);
         $item = AssessmentItem::firstOrFail();
         $this->post("/assessment-items/$item->id/assignment", [

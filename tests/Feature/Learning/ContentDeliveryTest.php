@@ -67,7 +67,7 @@ class ContentDeliveryTest extends LearningTestCase
 
     public function test_revision_download_rechecks_scope_publication_schedule_and_permission(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $lesson = Module::whereOfferingId($this->offering->id)->sole();
         $url = $this->base.'/lessons/'.$lesson->id.'/materials';
         $data = ['title' => 'Practical', 'download_allowed' => 1];
@@ -79,7 +79,7 @@ class ContentDeliveryTest extends LearningTestCase
         $material = LearningMaterial::whereTitle('Practical')->sole();
         $version = MaterialVersion::whereMaterialId($material->id)->sole();
         $direct = route('learning.download', [$this->offering, $version]);
-        Storage::disk('local')->assertExists($version->file->object_key);
+        Storage::disk('academic')->assertExists($version->file->object_key);
         $this->actingAs($this->learner)->get($direct)->assertDownload('lab.py');
         $other = Offering::whereExternalOfferingId('DEMO-CSC102-2026-1')->sole();
         $this->get(route('learning.download', [$other, $version]))->assertNotFound();

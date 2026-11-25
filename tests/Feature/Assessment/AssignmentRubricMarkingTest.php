@@ -13,7 +13,7 @@ class AssignmentRubricMarkingTest extends ScoredAssignmentCase
 {
     public function test_scored_marks_derive_points_and_append_immutable_criterion_feedback(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         ['version' => $version, 'rubric' => $rubric] = $this->scoredAssignment();
         $url = "/submission-versions/$version->id/marks";
         $selections = $this->selections($rubric);
@@ -36,7 +36,7 @@ class AssignmentRubricMarkingTest extends ScoredAssignmentCase
                 'script' => UploadedFile::fake()->createWithContent('draft.txt', 'Must not be stored'),
             ])->assertSessionHasErrors();
             $this->assertDatabaseCount('assessment_scores', 0);
-            $this->assertSame([], Storage::disk('local')->allFiles());
+            $this->assertSame([], Storage::disk('academic')->allFiles());
         }
 
         $this->as($this->marker)->post($url, [
@@ -48,7 +48,7 @@ class AssignmentRubricMarkingTest extends ScoredAssignmentCase
         $score = AssessmentScore::firstOrFail();
         $this->assertTrue(BigDecimal::of((string) $score->points)->isEqualTo('6'));
         $this->assertSame('Good structure; improve sourcing.', $score->feedback);
-        $this->assertNotNull($score->marked_file_id);
+        $this->assertSame('Marker comments', Storage::disk('academic')->get($score->markedFile->object_key));
         $this->assertNull($score->released_at);
         $this->assertDatabaseCount('assessment_criterion_feedback', 2);
         $this->assertDatabaseHas('assessment_criterion_feedback', [

@@ -12,7 +12,7 @@ class CaptionDeliveryTest extends LearningTestCase
 {
     public function test_timed_captions_and_transcript_follow_private_revision_access(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $lesson = Module::where('offering_id', $this->offering->id)->sole();
         $url = $this->base.'/lessons/'.$lesson->id.'/materials';
         $vtt = "WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nDistance is displacement over time.\n";
@@ -22,7 +22,7 @@ class CaptionDeliveryTest extends LearningTestCase
             'file' => UploadedFile::fake()->createWithContent('lab.wav', $wav),
             'caption' => UploadedFile::fake()->createWithContent('lab.vtt', 'No timed captions'),
         ])->assertSessionHasErrors('caption');
-        $this->assertCount(0, Storage::disk('local')->allFiles());
+        $this->assertCount(0, Storage::disk('academic')->allFiles());
         $this->post($url, $data + [
             'file' => UploadedFile::fake()->createWithContent('lab.wav', $wav),
             'caption' => UploadedFile::fake()->createWithContent('lab.vtt', $vtt),

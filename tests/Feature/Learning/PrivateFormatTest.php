@@ -13,7 +13,7 @@ class PrivateFormatTest extends LearningTestCase
 {
     public function test_office_archive_image_and_pdf_resources_survive_private_delivery(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $module = Module::whereOfferingId($this->offering->id)->sole();
         $url = route('learning.revisions.store', [$this->offering, $module]);
         $zip = UploadedFile::fake()->create('draft.zip');

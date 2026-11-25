@@ -52,7 +52,7 @@ final class RevisionWriter
             });
         } catch (Throwable $e) {
             foreach ($files as $file) {
-                Storage::disk('local')->delete($file->object_key);
+                Storage::disk('academic')->delete($file->object_key);
             }
 
             throw $e;

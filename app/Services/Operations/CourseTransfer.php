@@ -52,7 +52,7 @@ final class CourseTransfer
             });
         } catch (Throwable $failure) {
             if ($written) {
-                Storage::disk('local')->delete($written);
+                Storage::disk('academic')->delete($written);
             }
 
             throw $failure;

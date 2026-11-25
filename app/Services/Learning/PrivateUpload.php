@@ -31,7 +31,7 @@ final class PrivateUpload
             ])
             ->save();
         throw_unless(
-            Storage::disk('local')->putFileAs(self::DIRECTORY, $upload, basename($key), 'private'),
+            Storage::disk('academic')->putFileAs(self::DIRECTORY, $upload, basename($key), 'private'),
             \RuntimeException::class,
             'Private storage write failed.',
         );

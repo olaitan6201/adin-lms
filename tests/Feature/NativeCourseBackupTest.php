@@ -23,7 +23,7 @@ class NativeCourseBackupTest extends TestCase
 
     public function test_snapshot_preserves_file_bytes_activity_and_release_state_without_learner_data(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $user = $this->operator();
         $source = Offering::factory()->create();
         $target = Offering::factory()->create();
@@ -56,7 +56,7 @@ class NativeCourseBackupTest extends TestCase
         $this->assertSame('Instructions', $revision->body);
         $this->assertNotSame($file->object_key, $revision->file->object_key);
         $this->assertSame('image/png', $revision->file->media_type);
-        $this->assertSame($pixel, Storage::disk('local')->get($revision->file->object_key));
+        $this->assertSame($pixel, Storage::disk('academic')->get($revision->file->object_key));
         $this->assertDatabaseHas('forums', ['offering_id' => $target->id, 'title' => 'Reading circle']);
         $this->assertDatabaseCount('posts', 1);
         $this->assertDatabaseCount('enrolments', 1);
@@ -66,7 +66,7 @@ class NativeCourseBackupTest extends TestCase
 
     public function test_attachment_validation_failure_rolls_back_prior_objects_and_rows(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $this->operator();
         $target = Offering::factory()->create();
         $materials = [];
@@ -85,7 +85,7 @@ class NativeCourseBackupTest extends TestCase
             'lessons' => [['title' => 'Field trip', 'kind' => 'weekly', 'body' => null, 'materials' => $materials]]]));
         $zip->close();
         $this->postJson("/operations/courses/{$target->id}/import", ['package' => $upload])->assertUnprocessable();
-        $this->assertSame([], Storage::disk('local')->allFiles());
+        $this->assertSame([], Storage::disk('academic')->allFiles());
         $this->assertDatabaseCount('modules', 0);
         $this->assertDatabaseCount('files', 0);
         $this->assertDatabaseMissing('audit_logs', ['action' => 'course.imported']);

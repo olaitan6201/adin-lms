@@ -27,7 +27,7 @@ final class PackageAttachments
             TextAssetArchive::reject('Only validated private learning files up to 4 MiB can be backed up.');
         }
 
-        $stream = Storage::disk('local')->readStream($file->object_key);
+        $stream = Storage::disk('academic')->readStream($file->object_key);
         if (! is_resource($stream)) {
             TextAssetArchive::reject('The source attachment is unavailable.');
         }

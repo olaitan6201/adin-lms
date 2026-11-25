@@ -15,11 +15,8 @@ class PrivateScripts
 
     public function store(UploadedFile $upload): File
     {
-        $key = $upload->store(self::DIRECTORY, 'local');
-        abort_unless($key, 503);
-
-        return File::forceCreate([
-            'object_key' => $key,
+        $file = File::forceCreate([
+            'object_key' => self::DIRECTORY.'/'.$upload->hashName(),
             'filename' => mb_substr(
                 preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($upload->getClientOriginalName())),
                 0,
@@ -30,6 +27,9 @@ class PrivateScripts
             'checksum' => hash_file('sha256', $upload->getRealPath()),
             'validation_status' => self::VALIDATED,
         ]);
+        abort_unless(Storage::disk('academic')->putFile(self::DIRECTORY, $upload, 'private'), 503);
+
+        return $file;
     }
 
     public function download(File $file): StreamedResponse
@@ -39,7 +39,7 @@ class PrivateScripts
             404,
         );
 
-        return Storage::disk('local')->download($file->object_key, $file->filename, [
+        return Storage::disk('academic')->download($file->object_key, $file->filename, [
             'Content-Type' => 'application/octet-stream',
             'Cache-Control' => 'private, no-store',
             'X-Content-Type-Options' => 'nosniff',

@@ -36,7 +36,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
 
     private function mixedCourse(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $document = new Dompdf;
         $document->loadHtml('<h1>Field methods</h1><p>Record two observations.</p>');
         $document->render();
@@ -119,7 +119,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
         $assignment = Assignment::where('item_id', $item->id)->sole();
         $file = AssignmentReference::where('assignment_id', $assignment->id)->sole()->file;
         $this->assertSame('Brief.pdf', $file->filename);
-        $this->assertSame($this->pdf, Storage::disk('local')->get($file->object_key));
+        $this->assertSame($this->pdf, Storage::disk('academic')->get($file->object_key));
         $this->assertStringStartsWith('assessments/', $file->object_key);
         $source = Assignment::whereKeyNot($assignment->id)->sole();
         $this->assertEquals($source->due_at, $assignment->due_at);

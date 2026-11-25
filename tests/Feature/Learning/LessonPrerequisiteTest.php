@@ -14,7 +14,7 @@ class LessonPrerequisiteTest extends LearningTestCase
 {
     public function test_only_the_learners_own_completion_unlocks_reading_files_and_completion(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $prior = Module::whereOfferingId($this->offering->id)->sole();
         $payload = ['title' => 'Fieldwork', 'position' => 2, 'kind' => 'chapter', 'published' => 1,
             'body' => 'Private field notes.', 'prerequisite_id' => $prior->id];

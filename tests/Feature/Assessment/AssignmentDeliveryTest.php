@@ -17,7 +17,7 @@ class AssignmentDeliveryTest extends AssessmentCase
 {
     public function test_group_receipts_files_and_marks_follow_the_frozen_recipient_list(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $this->setupItems(['assignment']);
         $item = AssessmentItem::firstOrFail();
         $this->post("/assessment-items/$item->id/assignment", [

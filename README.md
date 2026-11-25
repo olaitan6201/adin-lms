@@ -274,3 +274,11 @@ npm run build
 ```
 
 See [AGENTS.md](AGENTS.md) for engineering rules and the location of the design artifacts.
+
+## Private academic files
+
+`ACADEMIC_STORAGE_DRIVER=local` uses the existing `storage/app/private` tree. For multiple web or worker instances, set it to `s3` on **every** instance. Use a dedicated private bucket (`AWS_BUCKET`, `AWS_DEFAULT_REGION` and credentials or an instance role). For compatible services set `AWS_ENDPOINT` and `AWS_USE_PATH_STYLE_ENDPOINT` as required. Deny anonymous bucket/object access. The framework’s `FILESYSTEM_DISK` does not select academic storage.
+
+To cut over, pause uploads, imports and workers; snapshot the database and private files together. Copy `learning/` and `assessments/` under their exact existing keys to the bucket root. Compare each referenced object's length and SHA-256 against `files.size_bytes` and `files.checksum` (multipart ETags are not checksums). Resolve missing or conflicting copies across old nodes before switching. Refresh configuration caches and restart workers on all nodes. Verify authorized downloads, withdrawal denial and a native export from another instance before resuming writes. Keep the source intact; to revert after new writes, pause again and reconcile new objects back to the old store first. No database key rewrite is required.
+
+To rehearse the storage contract, point `ACADEMIC_STORAGE_DRIVER=s3` and the AWS settings above at a disposable loopback S3 service with a private test bucket. Run `php artisan test --filter=AcademicStorageTest`. The test uses an isolated object prefix, fresh SQLite database and separate application instances; without S3 settings it exercises shared local storage instead.

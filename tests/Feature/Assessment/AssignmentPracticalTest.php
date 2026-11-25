@@ -13,7 +13,7 @@ class AssignmentPracticalTest extends AssessmentCase
 {
     public function test_practical_brief_and_inert_source_download_follow_current_offering_access(): void
     {
-        Storage::fake('local');
+        Storage::fake('academic');
         $this->setupItems(['assignment']);
         $item = AssessmentItem::sole();
         $brief = "Show your working.\nInclude a Python source file.";
@@ -39,6 +39,7 @@ class AssignmentPracticalTest extends AssessmentCase
         $this->assertDatabaseCount('submission_versions', 0);
         $this->post($url, ['script' => UploadedFile::fake()->createWithContent('source.py', $source)])
             ->assertSessionHasNoErrors()->assertRedirect();
+        Storage::disk('academic')->assertExists(SubmissionFile::sole()->file->object_key);
         $download = $this->get("$url/files/".SubmissionFile::sole()->file_id)
             ->assertDownload('source.py')->assertHeader('X-Content-Type-Options', 'nosniff');
         $this->assertSame($source, $download->streamedContent());

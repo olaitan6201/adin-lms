@@ -34,7 +34,8 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         <img src={props.branding.logoFull} alt="" width="42" height="36" className="size-9 shrink-0 object-contain" />
         <span className="text-sm font-semibold leading-tight">{props.branding.institution}</span>
     </Link>;
-    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []} path={path} />;
+    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []}
+        path={path} onCurrentPage={() => setOpen(false)} />;
     return <SidebarProvider>
         <a href="#portal-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:p-3 focus:ring-2">Skip to content</a>
         <div className="sticky top-0 hidden h-svh shrink-0 border-r md:block">

@@ -3,8 +3,8 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 
 export type Destination = { label: string; href: string };
 
-export function SidebarNavigation({ signedIn, academicLinks, path }: {
-    signedIn: boolean; academicLinks: Destination[]; path: string;
+export function SidebarNavigation({ signedIn, academicLinks, path, onCurrentPage }: {
+    signedIn: boolean; academicLinks: Destination[]; path: string; onCurrentPage?: () => void;
 }) {
     const routes = document.body.dataset;
     const groups = signedIn ? [
@@ -25,7 +25,8 @@ export function SidebarNavigation({ signedIn, academicLinks, path }: {
             <SidebarMenu>
                 {links.map(({ label: text, href }) => href && <SidebarMenuItem key={href}>
                     <SidebarMenuButton asChild isActive={href === active}>
-                        <Link href={href} aria-current={href === active ? (path === href ? 'page' : 'location') : undefined}>{text}</Link>
+                        <Link href={href} onClick={path === href ? onCurrentPage : undefined}
+                            aria-current={href === active ? (path === href ? 'page' : 'location') : undefined}>{text}</Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>)}
                 {signedIn && label === 'Personal' && <SidebarMenuItem><SidebarMenuButton asChild>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Learning\ClassStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ClassSession extends DomainModel
@@ -13,6 +14,8 @@ class ClassSession extends DomainModel
     protected function casts(): array
     {
         return [
+            'status' => ClassStatus::class,
+
             'starts_at' => 'immutable_datetime',
             'ends_at' => 'immutable_datetime',
         ];

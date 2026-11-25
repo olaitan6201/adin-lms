@@ -23,17 +23,42 @@ class PrivateFormatTest extends LearningTestCase
         $archive->addFromString('word/document.xml', '<document/>');
         $archive->close();
         $bytes = file_get_contents($zip->getRealPath());
-        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aF70AAAAASUVORK5CYII=');
+        $png = base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aF70AAAAASUVORK5CYII=',
+        );
         $this->actingAs($this->teacher);
-        foreach (['exercise.zip' => $bytes, 'paper.docx' => $bytes, 'figure.png' => $png, 'slides.pdf' => "%PDF-1.7\n%%EOF\n"] as $name => $content) {
-            $this->post($url, ['title' => $name, 'download_allowed' => true, 'file' => UploadedFile::fake()->createWithContent($name, $content)])->assertSessionHasNoErrors()->assertRedirect();
+        foreach (
+            [
+                'exercise.zip' => $bytes,
+                'paper.docx' => $bytes,
+                'figure.png' => $png,
+                'slides.pdf' => "%PDF-1.7\n%%EOF\n",
+            ] as $name => $content
+        ) {
+            $this->post($url, [
+                'title' => $name,
+                'download_allowed' => true,
+                'file' => UploadedFile::fake()->createWithContent($name, $content),
+            ])
+                ->assertSessionHasNoErrors()
+                ->assertRedirect();
         }
-        $this->post($url, ['title' => 'wrong', 'download_allowed' => true, 'file' => UploadedFile::fake()->createWithContent('wrong.xlsx', $bytes)])->assertSessionHasErrors('file');
+
+        $this->post($url, [
+            'title' => 'wrong',
+            'download_allowed' => true,
+            'file' => UploadedFile::fake()->createWithContent('wrong.xlsx', $bytes),
+        ])->assertSessionHasErrors('file');
         $figure = LearningMaterial::whereTitle('figure.png')->sole();
-        $page = $this->actingAs($this->learner)->get($this->base)->assertInertia(fn (Page $p) => $p->has('lessons.0.materials', 5));
+        $page = $this->actingAs($this->learner)
+            ->get($this->base)
+            ->assertInertia(fn (Page $p) => $p->has('lessons.0.materials', 5));
         $materials = collect($page->viewData('page')['props']['lessons'][0]['materials']);
         $image = $materials->firstWhere('id', $figure->id)['versions'][0]['image'];
-        $this->assertSame($png, $this->get($image)->assertHeader('Content-Type', 'image/png')->streamedContent());
+        $this->assertSame(
+            $png,
+            $this->get($image)->assertHeader('Content-Type', 'image/png')->streamedContent(),
+        );
         $module->forceFill(['closes_at' => now()->subMinute()])->save();
         $this->get($image)->assertNotFound();
     }

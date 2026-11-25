@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Learning;
 
+use App\Enums\Learning\ClassStatus;
 use App\Policies\LearningPolicy;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ClassRequest extends FormRequest
 {
@@ -14,7 +16,13 @@ class ClassRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['title' => 'required|string|max:191', 'starts_at' => 'required|date', 'ends_at' => 'required|date|after:starts_at',
-            'meeting_url' => 'nullable|url:https|max:2048', 'recording_material_id' => 'nullable|uuid', 'status' => 'required|in:scheduled,held,cancelled'];
+        return [
+            'title' => 'required|string|max:191',
+            'starts_at' => 'required|date',
+            'ends_at' => 'required|date|after:starts_at',
+            'meeting_url' => 'nullable|url:https|max:2048',
+            'recording_material_id' => 'nullable|uuid',
+            'status' => ['required', Rule::enum(ClassStatus::class)],
+        ];
     }
 }

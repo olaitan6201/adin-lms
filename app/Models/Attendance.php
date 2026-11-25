@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Learning\AttendanceMethod;
+use App\Enums\Learning\AttendanceStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendance extends DomainModel
@@ -13,6 +15,9 @@ class Attendance extends DomainModel
     protected function casts(): array
     {
         return [
+            'status' => AttendanceStatus::class,
+            'method' => AttendanceMethod::class,
+
             'recorded_at' => 'immutable_datetime',
         ];
     }

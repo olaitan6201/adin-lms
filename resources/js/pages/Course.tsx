@@ -12,6 +12,7 @@ export interface Activity {
     at?: string | null;
     dateLabel?: string;
     complete?: boolean;
+    actionable?: boolean;
 }
 
 interface Props {
@@ -26,7 +27,7 @@ export default function Course({ course, teaching, activities, lecturers, outcom
     const visible = teaching || course.status === 'published';
     const title = course.title || course.external_offering_id;
     const lessons = activities.filter((a) => a.type === 'Lesson');
-    const next = lessons.find((a) => !a.complete);
+    const next = activities.find((a) => (a.type === 'Lesson' && !a.complete) || a.actionable);
     const completed = lessons.filter((a) => a.complete).length;
     const base = `/courses/${course.id}`;
 
@@ -43,11 +44,11 @@ export default function Course({ course, teaching, activities, lecturers, outcom
             </header>
             <div className="syllabus-grid">
                 <div>
-                    {visible && !teaching && lessons.length > 0 && (
+                    {visible && !teaching && (lessons.length > 0 || next) && (
                         <section className="study-progress">
                             <h2>{next ? 'Continue learning' : 'Reading complete'}</h2>
-                            <p>{completed} of {lessons.length} available lessons complete</p>
-                            <progress aria-label="Available lessons completed" max={lessons.length} value={completed} />
+                            {lessons.length > 0 && <><p>{completed} of {lessons.length} available lessons complete</p>
+                                <progress aria-label="Available lessons completed" max={lessons.length} value={completed} /></>}
                             {next && <Link href={next.href}>Continue: {next.title} →</Link>}
                         </section>
                     )}

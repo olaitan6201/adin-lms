@@ -3,6 +3,7 @@
 namespace Tests\Feature\Learning;
 
 use App\Models\AssessmentItem;
+use App\Models\Assignment;
 use App\Models\CourseOutcome;
 use App\Models\Examination;
 use App\Models\Forum;
@@ -32,6 +33,10 @@ class CourseOutlineTest extends LearningTestCase
             ->where('activities.4.detail', 'Upcoming · 0% of result')
             ->where('activities.4.href', route('assessment.desk', $this->offering).'#item-'.$item->id)
             ->missing('activities.4.questions')->missing('activities.4.scores'));
+        $this->post(route('assignments.submit', Assignment::sole()), ['body' => 'First measure the distance.'])
+            ->assertSessionHasNoErrors()->assertRedirect();
+        $this->get(route('courses.show', $this->offering))->assertInertia(fn (Page $p) => $p
+            ->where('activities.3.detail', 'Submitted · 100% of result')->where('activities.3.actionable', false));
     }
 
     public function test_outline_combines_released_course_work_and_personal_completion(): void

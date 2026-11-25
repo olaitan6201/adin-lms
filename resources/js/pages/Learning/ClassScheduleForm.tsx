@@ -31,27 +31,15 @@ export function ClassScheduleForm({
                 </label>
                 <label>
                     Ends (local time)
-                    <input
-                        type="datetime-local"
-                        name="ends_at"
-                        required
-                        defaultValue={localInput(session?.ends_at)}
-                    />
+                    <input type="datetime-local" name="ends_at" required defaultValue={localInput(session?.ends_at)} />
                 </label>
                 <label>
                     Meeting link (HTTPS)
-                    <input
-                        type="url"
-                        name="meeting_url"
-                        defaultValue={session?.meeting_url || ''}
-                    />
+                    <input type="url" name="meeting_url" defaultValue={session?.meeting_url || ''} />
                 </label>
                 <label>
                     Recording or alternative
-                    <select
-                        name="recording_material_id"
-                        defaultValue={session?.recording_material_id || ''}
-                    >
+                    <select name="recording_material_id" defaultValue={session?.recording_material_id || ''}>
                         <option value="">None</option>
                         {materials.map((m) => (
                             <option key={m.id} value={m.id}>

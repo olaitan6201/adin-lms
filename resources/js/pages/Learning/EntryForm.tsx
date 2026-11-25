@@ -1,15 +1,13 @@
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
-export function EntryForm({
-    action,
-    label,
-    children,
-}: {
+type EntryFormProps = {
     action: string;
     label: string;
     children?: ReactNode;
-}) {
+};
+
+export function EntryForm({ action, label, children }: EntryFormProps) {
     return (
         <Form
             action={action}

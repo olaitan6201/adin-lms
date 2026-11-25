@@ -21,23 +21,14 @@ export function LessonForm({
     return (
         <details open={startOverview || undefined}>
             <summary>{lesson ? 'Edit lesson or publish' : 'Author a lesson'}</summary>
-            <EntryForm
-                action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`}
-                label="Save lesson"
-            >
+            <EntryForm action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`} label="Save lesson">
                 <label>
                     Title
                     <input name="title" required maxLength={191} defaultValue={lesson?.title} />
                 </label>
                 <label>
                     Order
-                    <input
-                        type="number"
-                        min="1"
-                        name="position"
-                        required
-                        defaultValue={position}
-                    />
+                    <input type="number" min="1" name="position" required defaultValue={position} />
                 </label>
                 <label>
                     Organisation

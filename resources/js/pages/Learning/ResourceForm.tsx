@@ -38,10 +38,7 @@ export function ResourceForm({ action, item }: ResourceFormProps) {
                 </label>
                 <label>
                     Learner downloads
-                    <select
-                        name="download_allowed"
-                        defaultValue={item && !item.download_allowed ? '0' : '1'}
-                    >
+                    <select name="download_allowed" defaultValue={item && !item.download_allowed ? '0' : '1'}>
                         <option value="1">Allowed</option>
                         <option value="0">Disabled</option>
                     </select>

@@ -30,7 +30,8 @@ export default function Classroom({
         <main className="portal-page mx-auto max-w-3xl space-y-5 px-5 py-10">
             <Head title={`${title} · Classroom`} />
             <nav aria-label="Classroom navigation" className="flex flex-wrap gap-4 underline">
-                <Link href={overview}>Course overview</Link><Link href={base}>Lessons and resources</Link>
+                <Link href={overview}>Course overview</Link>
+                <Link href={base}>Lessons and resources</Link>
                 <Link href={board}>Course announcements and questions</Link>
             </nav>
             <header>
@@ -38,23 +39,17 @@ export default function Classroom({
                 <h1 className="portal-title">Classroom and attendance</h1>
             </header>
             <p>
-                My attendance: {percentage === null ? 'No counted classes yet' : `${percentage}%`}
-                . Counted classes are held sessions marked present or absent. Excused, cancelled and unmarked sessions do not lower your percentage.
+                My attendance: {percentage === null ? 'No counted classes yet' : `${percentage}%`}. Counted classes are
+                held sessions marked present or absent. Excused, cancelled and unmarked sessions do not lower your
+                percentage.
             </p>
-            {staff && (
-                <ClassScheduleForm
-                    statuses={classStatuses}
-                    action={`${base}/classes`}
-                    materials={materials}
-                />
-            )}
+            {staff && <ClassScheduleForm statuses={classStatuses} action={`${base}/classes`} materials={materials} />}
             {!sessions.length && <p>No classes scheduled.</p>}
             {sessions.map((s) => (
                 <section key={s.id} id={`class-${s.id}`} className="space-y-2 border-t pt-4">
                     <h2 className="text-xl font-semibold">{s.title}</h2>
                     <p>
-                        {new Date(s.starts_at).toLocaleString()} –{' '}
-                        {new Date(s.ends_at).toLocaleString()} · {s.status}
+                        {new Date(s.starts_at).toLocaleString()} – {new Date(s.ends_at).toLocaleString()} · {s.status}
                     </p>
                     <p>My register: {s.mark || 'Not marked'}</p>
                     {s.meeting_url && (
@@ -65,10 +60,7 @@ export default function Classroom({
                         </p>
                     )}
                     {s.recording_material_id && (
-                        <Link
-                            className="underline"
-                            href={`${base}#resource-${s.recording_material_id}`}
-                        >
+                        <Link className="underline" href={`${base}#resource-${s.recording_material_id}`}>
                             Recording or alternative
                         </Link>
                     )}

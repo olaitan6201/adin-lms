@@ -15,8 +15,7 @@ function playerUrl(href: string): string | null {
     const video =
         url.hostname === 'youtu.be'
             ? url.pathname.slice(1)
-            : ['www.youtube.com', 'youtube.com'].includes(url.hostname) &&
-                url.pathname === '/watch'
+            : ['www.youtube.com', 'youtube.com'].includes(url.hostname) && url.pathname === '/watch'
               ? url.searchParams.get('v')
               : null;
     if (video && /^[A-Za-z0-9_-]{11}$/.test(video)) {
@@ -54,11 +53,7 @@ export function ExternalResource({ href, title }: ExternalResourceProps) {
                             allowFullScreen
                         />
                     ) : (
-                        <button
-                            type="button"
-                            onClick={() => setPlaying(true)}
-                            className="rounded border px-3 py-2"
-                        >
+                        <button type="button" onClick={() => setPlaying(true)} className="rounded border px-3 py-2">
                             Load external video
                         </button>
                     )}

@@ -716,6 +716,30 @@ return new class extends Migration
             $table->unique(['user_id', 'role_id', 'scope_id'], 'role_grants_user_role_scope_uq');
         });
 
+        Schema::create('student_photos', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('student_id')->unique()->constrained('students')->cascadeOnDelete();
+            $table->mediumText('jpeg_base64');
+        });
+
+        Schema::create('scorm_packages', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('offering_id')->constrained();
+            $table->string('title', 160);
+            $table->text('lesson');
+            $table->unique(['offering_id', 'title']);
+        });
+
+        Schema::create('scorm_progress', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('package_id')->constrained('scorm_packages');
+            $table->foreignUuid('enrolment_id')->constrained();
+            $table->text('state');
+            $table->string('grant_hash', 64)->nullable();
+            $table->timestamp('expires_at');
+            $table->unique(['package_id', 'enrolment_id']);
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -817,6 +841,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::drop('failed_jobs');
+        Schema::drop('scorm_progress');
+        Schema::drop('scorm_packages');
+        Schema::drop('student_photos');
         Schema::drop('job_batches');
         Schema::drop('jobs');
         Schema::drop('cache_locks');

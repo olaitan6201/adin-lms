@@ -55,6 +55,7 @@ export default function Course({ course, teaching, activities, lecturers, outcom
                         </section>
                     )}
                     <h2>Course outline</h2>
+                    {teaching && course.status === 'draft' && <p><Link href={`${base}/learning/teaching-plan`}>Teaching plan and academic review</Link></p>}
                     {teaching && <Link href={`${base}/learning?compose=overview`}>Draft a course introduction</Link>}
                     {teaching && activities.length > 1 && <SequenceEditor key={activities.map((a) => a.id).join(',')} activities={activities} action={`${base}/learning/sequence`} />}
                     {!visible ? <p>{course.status === 'archived' ? 'This offering is archived.' : 'Course materials have not been published yet.'}</p>

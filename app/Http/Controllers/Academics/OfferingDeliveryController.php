@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Academics;
 
 use App\Enums\CurriculumStatus;
+use App\Enums\TeachingPlanStatus;
 use App\Http\Requests\OfferingPreparationRequest;
 use App\Models\Offering;
+use App\Models\TeachingPlan;
 use App\Services\Academics\OfferingLifecycle;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Http\RedirectResponse;
@@ -44,6 +46,9 @@ class OfferingDeliveryController
                 ->orderByDesc('semesters.starts_on')
                 ->get(['semesters.id', 'academic_sessions.label', 'semesters.position']),
             'modes' => OfferingLifecycle::MODES,
+            'pendingPlans' => TeachingPlan::join('offerings', 'offerings.id', '=', 'teaching_plans.offering_id')
+                ->where('teaching_plans.status', TeachingPlanStatus::Submitted)
+                ->orderBy('submitted_at')->get(['offering_id', 'external_offering_id', 'revision']),
         ]);
     }
 

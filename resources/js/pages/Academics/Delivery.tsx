@@ -3,7 +3,9 @@ import { OfferingPreparation } from '../../components/academics/OfferingPreparat
 import { Head, Link } from '@inertiajs/react';
 import RecordForm from '../../components/academics/RecordForm';
 
-export default function Delivery({ offerings, entries, terms, modes }: DeliveryProps) {
+type Pending = { offering_id: string; external_offering_id: string; revision: number };
+
+export default function Delivery({ offerings, entries, terms, modes, pendingPlans }: DeliveryProps & { pendingPlans: Pending[] }) {
     return (
         <main className="mx-auto max-w-3xl space-y-5 px-5 py-12">
             <Head title="Offering delivery" />
@@ -12,6 +14,12 @@ export default function Delivery({ offerings, entries, terms, modes }: DeliveryP
             </Link>
             <h1 className="text-3xl font-semibold">Offering delivery</h1>
             <p>Prepare an upstream section, assign its lecturer in the staff directory, then publish.</p>
+            <section className="portal-panel p-4" aria-label="Pending teaching plans">
+                <h2 className="font-semibold">Teaching plans awaiting review</h2>
+                {pendingPlans.length ? <ul>{pendingPlans.map((p) => <li key={p.offering_id}>
+                    <Link className="underline" href={`/courses/${p.offering_id}/learning/teaching-plan`}>Review {p.external_offering_id} · revision {p.revision}</Link>
+                </li>)}</ul> : <p>No teaching plans awaiting review.</p>}
+            </section>
             {!offerings.length && <p>No roster offerings yet.</p>}
             {offerings.map((o) => {
                 const path = `/academics/delivery/${o.id}`;
@@ -32,6 +40,7 @@ export default function Delivery({ offerings, entries, terms, modes }: DeliveryP
                                 {offerings.find((s) => s.id === o.copied_from)?.external_offering_id}
                             </p>
                         )}
+                        <Link className="underline" href={`/courses/${o.id}/learning/teaching-plan`}>Teaching plan history</Link>
                         {prepare && (
                             <>
                                 <OfferingPreparation

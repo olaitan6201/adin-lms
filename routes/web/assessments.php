@@ -11,40 +11,39 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function (): void {
     Route::prefix('courses/{offering}/assessments')->group(function (): void {
         Route::get('/', AssessmentDeskController::class)->name('assessment.desk');
-        Route::post('/', [AssessmentSetupController::class, 'book'])->name('assessment.setup');
+        Route::post('/', [AssessmentSetupController::class, 'book'])->name('assessment.activate');
     });
 
     Route::prefix('assessment-items/{item}')->group(function (): void {
-        Route::post('assignment', [AssessmentSetupController::class, 'assignment'])->name('assessment.items.assignment');
-        Route::post('exam', [ExamAuthorController::class, 'create'])->name('assessment.items.exam');
-        Route::post('score', [GradebookController::class, 'score'])->name('assessment.items.score');
+        Route::post('assignment', [AssessmentSetupController::class, 'assignment'])->name('assessment.assignment.create');
+        Route::post('exam', [ExamAuthorController::class, 'create'])->name('assessment.exam.create');
+        Route::post('score', [GradebookController::class, 'score'])->name('assessment.score.record');
     });
 
     Route::prefix('assignments/{assignment}')->controller(AssignmentController::class)->group(function (): void {
         Route::get('/', 'show')->name('assignments.show');
         Route::post('/', 'submit')->name('assignments.submit');
-        Route::get('files/{file}', 'download')->name('assignments.files.download');
+        Route::get('files/{file}', 'download')->name('assignments.download');
     });
 
-    Route::post('submission-versions/{version}/marks', [AssignmentController::class, 'mark'])
-        ->name('assignments.versions.mark');
+    Route::post('submission-versions/{version}/marks', [AssignmentController::class, 'mark'])->name('assignments.mark');
 
     Route::prefix('examinations/{exam}')->group(function (): void {
-        Route::post('accommodations', [ExamAuthorController::class, 'accommodate'])->name('assessment.accommodations');
-        Route::post('start', [ExamSessionController::class, 'start'])->name('assessment.attempts.start');
+        Route::post('start', [ExamSessionController::class, 'start'])->name('assessment.start');
+        Route::post('accommodations', [ExamAuthorController::class, 'accommodate'])->name('assessment.accommodate');
     });
 
     Route::prefix('attempts/{attempt}')->group(function (): void {
         Route::get('/', [ExamSessionController::class, 'show'])->name('assessment.paper');
-        Route::put('answers/{question}', [ExamSessionController::class, 'save'])->name('assessment.answers.save');
-        Route::post('finish', [ExamSessionController::class, 'finish'])->name('assessment.attempts.finish');
-        Route::get('review', [ExamAuthorController::class, 'script'])->name('assessment.review.show');
-        Route::post('review', [ExamAuthorController::class, 'mark'])->name('assessment.review.mark');
+        Route::put('answers/{question}', [ExamSessionController::class, 'save'])->name('assessment.save');
+        Route::post('finish', [ExamSessionController::class, 'finish'])->name('assessment.finish');
+        Route::get('review', [ExamAuthorController::class, 'script'])->name('assessment.script');
+        Route::post('review', [ExamAuthorController::class, 'mark'])->name('assessment.mark');
     });
 
     Route::controller(GradebookController::class)->group(function (): void {
-        Route::post('gradebooks/{book}/compute/{enrolment}', 'compute')->name('assessment.grades.compute');
-        Route::post('grades/{grade}/review', 'review')->name('assessment.grades.review');
+        Route::post('gradebooks/{book}/compute/{enrolment}', 'compute')->name('assessment.compute');
+        Route::post('grades/{grade}/review', 'review')->name('assessment.moderate');
         Route::get('grades/{grade}/sheet', 'sheet')->name('assessment.sheet');
     });
 });

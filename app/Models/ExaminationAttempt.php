@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Assessment\AttemptState;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExaminationAttempt extends DomainModel
@@ -13,6 +14,7 @@ class ExaminationAttempt extends DomainModel
     protected function casts(): array
     {
         return [
+            'state' => AttemptState::class,
             'started_at' => 'immutable_datetime',
             'expires_at' => 'immutable_datetime',
             'submitted_at' => 'immutable_datetime',

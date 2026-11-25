@@ -37,9 +37,20 @@ abstract class AssessmentCase extends TestCase
         $lecturer = Lecturer::factory()->create();
         $this->marker = $lecturer->user;
         $this->officer = User::factory()->create();
-        TeachingAllocation::factory()->create(['offering_id' => $this->offering->id, 'lecturer_id' => $lecturer->id]);
-        $this->artisan('authority:grant', ['user' => $this->marker->id, 'role' => 'lecturer', 'scope' => 'offering:'.$this->offering->id])->assertSuccessful();
-        $this->artisan('authority:grant', ['user' => $this->officer->id, 'role' => 'examination_officer', 'scope' => 'institution'])->assertSuccessful();
+        TeachingAllocation::factory()->create([
+            'offering_id' => $this->offering->id,
+            'lecturer_id' => $lecturer->id,
+        ]);
+        $this->artisan('authority:grant', [
+            'user' => $this->marker->id,
+            'role' => 'lecturer',
+            'scope' => 'offering:'.$this->offering->id,
+        ])->assertSuccessful();
+        $this->artisan('authority:grant', [
+            'user' => $this->officer->id,
+            'role' => 'examination_officer',
+            'scope' => 'institution',
+        ])->assertSuccessful();
         $this->desk = "/courses/{$this->offering->id}/assessments";
     }
 
@@ -50,8 +61,17 @@ abstract class AssessmentCase extends TestCase
 
     protected function setupItems(array $kinds): void
     {
-        $items = array_map(fn ($kind) => ['kind' => $kind, 'title' => $kind, 'weight' => 100 / count($kinds), 'maximum' => '10'], $kinds);
-        $this->as($this->marker)->post($this->desk, ['rounding' => 'half_up', 'items' => $items, 'boundaries' => [['minimum' => '0', 'grade' => 'F'], ['minimum' => '75', 'grade' => 'A']]])->assertSessionHasNoErrors()->assertRedirect();
+        $items = array_map(fn ($kind) => [
+            'kind' => $kind,
+            'title' => $kind,
+            'weight' => 100 / count($kinds),
+            'maximum' => '10',
+        ], $kinds);
+        $this->as($this->marker)->post($this->desk, [
+            'rounding' => 'half_up',
+            'items' => $items,
+            'boundaries' => [['minimum' => '0', 'grade' => 'F'], ['minimum' => '75', 'grade' => 'A']],
+        ])->assertSessionHasNoErrors()->assertRedirect();
         $this->assertSame(count($items), AssessmentItem::count());
     }
 }

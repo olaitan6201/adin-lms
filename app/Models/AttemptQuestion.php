@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AttemptQuestion extends DomainModel
 {
@@ -15,6 +16,11 @@ class AttemptQuestion extends DomainModel
         return [
             'option_order' => 'array',
         ];
+    }
+
+    public function latestResponse(): HasOne
+    {
+        return $this->hasOne(ExaminationResponse::class, 'attempt_question_id')->orderByDesc('revision');
     }
 
     public function attempt(): BelongsTo

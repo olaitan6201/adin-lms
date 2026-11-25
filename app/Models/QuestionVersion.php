@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Assessment\QuestionKind;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuestionVersion extends DomainModel
@@ -15,6 +16,7 @@ class QuestionVersion extends DomainModel
     protected function casts(): array
     {
         return [
+            'kind' => QuestionKind::class,
             'options' => 'array',
             'marking_key' => 'array',
         ];

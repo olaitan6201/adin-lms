@@ -14,7 +14,8 @@ class ExpireAssessments extends Command
 
     public function handle(ExamSession $sessions): int
     {
-        foreach (ExaminationAttempt::whereNull('submitted_at')->where('expires_at', '<=', now())->lazyById() as $attempt) {
+        foreach (ExaminationAttempt::whereNull('submitted_at')
+            ->where('expires_at', '<=', now())->lazyById() as $attempt) {
             $sessions->finish($attempt);
         }
 

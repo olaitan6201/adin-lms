@@ -8,6 +8,10 @@ class SubmissionRequest extends FormRequest
 {
     public function rules(): array
     {
-        return ['body' => 'nullable|string|max:100000|required_without:script', 'script' => 'nullable|file|max:20480|mimes:pdf,txt', 'group_id' => 'nullable|uuid'];
+        return [
+            'body' => 'nullable|string|max:100000|required_without:script',
+            'script' => AssessmentUpload::RULE,
+            'group_id' => 'nullable|uuid',
+        ];
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Assessment\ModerationStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Grade extends DomainModel
@@ -13,10 +15,19 @@ class Grade extends DomainModel
     protected function casts(): array
     {
         return [
+            'moderation_status' => ModerationStatus::class,
             'moderated_at' => 'immutable_datetime',
             'approved_at' => 'immutable_datetime',
             'published_at' => 'immutable_datetime',
         ];
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->whereNotNull('approved_at')
+            ->whereNotNull('approved_by')
+            ->where('moderation_status', ModerationStatus::Approved)
+            ->where('published_at', '<=', now());
     }
 
     public function enrolment(): BelongsTo

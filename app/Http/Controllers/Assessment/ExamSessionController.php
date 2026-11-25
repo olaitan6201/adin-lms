@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Assessment;
 
+use App\Http\Requests\Assessment\AnswerSaveRequest;
+use App\Http\Resources\Assessment\CandidateQuestionResource;
 use App\Models\AttemptQuestion;
 use App\Models\Examination;
 use App\Models\ExaminationAttempt;
-use App\Models\ExaminationResponse;
 use App\Services\Assessment\ExamSession;
+use App\Services\Assessment\StartAttempt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,9 +17,9 @@ use Inertia\Response;
 
 class ExamSessionController
 {
-    public function start(Request $request, Examination $exam, ExamSession $sessions): RedirectResponse
+    public function start(Request $request, Examination $exam, StartAttempt $start): RedirectResponse
     {
-        return to_route('assessment.paper', $sessions->start($request->user(), $exam));
+        return to_route('assessment.paper', $start->run($request->user(), $exam));
     }
 
     public function show(Request $request, ExaminationAttempt $attempt, ExamSession $sessions): Response
@@ -27,20 +29,36 @@ class ExamSessionController
             $sessions->finish($attempt);
             $attempt->refresh();
         }
-        $questions = AttemptQuestion::with('version:id,prompt,kind')->where('attempt_id', $attempt->id)->orderBy('position')->get()->map(function ($q) {
-            $response = ExaminationResponse::where('attempt_question_id', $q->id)->latest('revision')->first();
 
-            return ['id' => $q->id, 'prompt' => $q->version->prompt, 'options' => $q->option_order, 'value' => $response?->answer['value'] ?? '', 'revision' => $response?->revision ?? 0];
-        });
+        $questions = AttemptQuestion::with(['version:id,prompt', 'latestResponse'])
+            ->where('attempt_id', $attempt->id)
+            ->orderBy('position')
+            ->get();
 
-        return Inertia::render('Assessments/Paper', ['attempt' => $attempt->only('id', 'state', 'expires_at'), 'questions' => $questions, 'title' => $attempt->exam->item->title]);
+        return Inertia::render('Assessments/Paper', [
+            'attempt' => $attempt->only('id', 'expires_at') + ['state' => $attempt->state->value],
+            'questions' => CandidateQuestionResource::collection($questions)->resolve($request),
+            'title' => $attempt->exam->item->title,
+        ]);
     }
 
-    public function save(Request $request, ExaminationAttempt $attempt, string $question, ExamSession $sessions): JsonResponse
-    {
-        $input = $request->validate(['revision' => 'required|integer|min:0', 'answer' => 'present|nullable|string|max:100000']);
+    public function save(
+        AnswerSaveRequest $request,
+        ExaminationAttempt $attempt,
+        string $question,
+        ExamSession $sessions,
+    ): JsonResponse {
+        $input = $request->validated();
 
-        return response()->json(['revision' => $sessions->save($request->user(), $attempt, $question, (int) $input['revision'], (string) $input['answer'])]);
+        $revision = $sessions->save(
+            $request->user(),
+            $attempt,
+            $question,
+            (int) $input['revision'],
+            (string) $input['answer'],
+        );
+
+        return response()->json(['revision' => $revision]);
     }
 
     public function finish(Request $request, ExaminationAttempt $attempt, ExamSession $sessions): RedirectResponse

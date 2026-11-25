@@ -19,10 +19,11 @@ final class ScanAssessmentNotices
         $this->submissions();
     }
 
-    private function assignments(): void
+    public function assignments(?string $id = null): void
     {
         $published = fn ($q) => $q->where('status', 'published');
         $assignments = Assignment::with('item.gradebook')
+            ->when($id, fn ($q) => $q->whereKey($id))
             ->whereHas('item.gradebook.offering', $published)
             ->where('opens_at', '<=', now())
             ->where('closes_at', '>', now());
@@ -43,9 +44,10 @@ final class ScanAssessmentNotices
         }
     }
 
-    private function examinations(): void
+    public function examinations(?string $id = null): void
     {
         $scheduled = Examination::with('item.gradebook')
+            ->when($id, fn ($q) => $q->whereKey($id))
             ->whereHas('item.gradebook.offering', fn ($query) => $query->where('status', 'published'))
             ->where('closes_at', '>', now());
 
@@ -58,9 +60,10 @@ final class ScanAssessmentNotices
         }
     }
 
-    private function releasedResults(): void
+    public function releasedResults(?string $id = null): void
     {
         $scores = AssessmentScore::with(['item.gradebook', 'enrolment.student'])
+            ->when($id, fn ($q) => $q->whereKey($id))
             ->where('released_at', '<=', now())
             ->whereIn('item_id', Examination::select('item_id'))
             ->whereHas('item.gradebook.offering', fn ($q) => $q->where('status', 'published'));
@@ -78,7 +81,7 @@ final class ScanAssessmentNotices
         }
     }
 
-    private function submissions(): void
+    public function submissions(?string $id = null): void
     {
         $submitted = SubmissionVersion::with('submission.assignment.item.gradebook')->where(
             'submitted_at',
@@ -86,7 +89,7 @@ final class ScanAssessmentNotices
             now(),
         );
 
-        foreach ($submitted->lazyById() as $version) {
+        foreach ($submitted->when($id, fn ($q) => $q->whereKey($id))->lazyById() as $version) {
             $teachers = $this->audience->teachers(
                 $version->submission->assignment->item->gradebook->offering_id,
             );

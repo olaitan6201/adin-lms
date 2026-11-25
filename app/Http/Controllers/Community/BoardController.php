@@ -14,6 +14,7 @@ use App\Services\Community\CommunityAudience;
 use App\Services\Community\CommunityBoard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -54,12 +55,12 @@ class BoardController
     public function announce(CommunityBodyRequest $request, Offering $offering): RedirectResponse
     {
         abort_unless($this->audience->teachers($offering->id)->whereKey($request->user()->id)->exists(), 403);
-        Announcement::forceCreate([
+        DB::transaction(fn () => Announcement::forceCreate([
             'offering_id' => $offering->id,
             'author_id' => $request->user()->id,
             'body' => $request->body(),
             'published_at' => now(),
-        ]);
+        ]));
 
         return back();
     }

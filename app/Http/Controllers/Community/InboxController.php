@@ -13,6 +13,7 @@ use App\Services\Authority\ScopedAuthority;
 use App\Services\Community\CommunityBoard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,11 +42,11 @@ class InboxController
     public function announce(CommunityBodyRequest $request, ScopedAuthority $authority): RedirectResponse
     {
         abort_unless($authority->institutionAllows($request->user(), PermissionCode::AccountsManage), 403);
-        Announcement::forceCreate([
+        DB::transaction(fn () => Announcement::forceCreate([
             'author_id' => $request->user()->id,
             'body' => $request->body(),
             'published_at' => now(),
-        ]);
+        ]));
 
         return back();
     }

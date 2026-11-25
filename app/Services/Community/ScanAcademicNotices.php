@@ -19,7 +19,15 @@ final class ScanAcademicNotices
 
     public function run(): void
     {
-        foreach (Offering::where('status', 'published')->lazyById() as $offering) {
+        $this->courses();
+        $this->materials();
+        $this->assessments->run();
+        $this->announcements();
+    }
+
+    public function courses(?string $id = null): void
+    {
+        foreach (Offering::where('status', 'published')->when($id, fn ($q) => $q->whereKey($id))->lazyById() as $offering) {
             $this->outbox->record(
                 $this->audience->learners($offering->id),
                 'course:'.$offering->id,
@@ -27,9 +35,11 @@ final class ScanAcademicNotices
             );
         }
 
-        $this->materials();
-        $this->assessments->run();
-        foreach (Announcement::where('published_at', '<=', now())->lazyById() as $notice) {
+    }
+
+    public function announcements(?string $id = null): void
+    {
+        foreach (Announcement::where('published_at', '<=', now())->when($id, fn ($q) => $q->whereKey($id))->lazyById() as $notice) {
             $members = $notice->offering_id
                 ? $this->audience->members($notice->offering_id)
                 : User::where('status', 'active');
@@ -44,9 +54,10 @@ final class ScanAcademicNotices
         }
     }
 
-    private function materials(): void
+    public function materials(?string $id = null): void
     {
         $versions = MaterialVersion::with('material.module')
+            ->when($id, fn ($q) => $q->whereKey($id))
             ->where('created_at', '<=', now())
             ->whereHas('material.module.offering', fn ($q) => $q->where('status', 'published'));
         foreach ($versions->lazyById() as $version) {

@@ -60,6 +60,11 @@ class CurriculumEditing
 
                 OutcomeMapping::unguarded(fn () => OutcomeMapping::firstOrCreate($data));
                 break;
+            case 'unmap':
+                OutcomeMapping::whereIn('course_outcome_id', CourseOutcome::whereIn(
+                    'curriculum_course_id', $entries->select('id'),
+                )->select('id'))->findOrFail($data['mapping_id'])->delete();
+                break;
             case 'prerequisite':
                 app(CurriculumPrerequisites::class)->add($entry, $data['required_entry_id']);
                 break;

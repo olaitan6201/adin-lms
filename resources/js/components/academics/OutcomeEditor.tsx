@@ -5,8 +5,9 @@ export function OutcomeEditor({
     entries,
     courseOutcomes,
     programmeOutcomes,
+    mappings,
     path,
-}: Pick<CatalogueProps, 'entries' | 'courseOutcomes' | 'programmeOutcomes'> & { path: string }) {
+}: Pick<CatalogueProps, 'entries' | 'courseOutcomes' | 'programmeOutcomes' | 'mappings'> & { path: string }) {
     const choices = entries.map((e) => ({ id: e.id, name: `${e.code}: ${e.title}` }));
     const outcomes = (rows: Outcome[]) => rows.map((o) => ({ id: o.id, name: o.statement }));
     const entryField = field('entry_id', 'Course', choices);
@@ -37,6 +38,11 @@ export function OutcomeEditor({
                     field('programme_outcome_id', 'Programme outcome', outcomes(programmeOutcomes)),
                 ]}
             />
+            {mappings.length > 0 && <RecordForm title="Remove mapping" action={`${path}/unmap`}
+                fields={[field('mapping_id', 'Existing mapping', mappings.map(m => ({
+                    id: m.id,
+                    name: `${courseOutcomes.find(o => o.id === m.course_outcome_id)?.statement} → ${programmeOutcomes.find(o => o.id === m.programme_outcome_id)?.statement}`,
+                })))]} />}
         </details>
     );
 }

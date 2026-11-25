@@ -73,7 +73,7 @@ export default function Catalogue({
                     <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
                     {draft && (
                         <>
-                            <OutcomeEditor {...{ entries, courseOutcomes, programmeOutcomes, path }} />
+                            <OutcomeEditor {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }} />
                             <RecordForm title="Mark reviewed" action={`${path}/review`} />
                         </>
                     )}

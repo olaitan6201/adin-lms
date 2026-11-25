@@ -34,6 +34,7 @@ class CurriculumEntryRequest extends FormRequest
             'prerequisite' => $entry + ['required_entry_id' => 'required|uuid|different:entry_id'],
             'course-outcome' => $entry + $statement,
             'programme-outcome' => $statement,
+            'unmap' => ['mapping_id' => 'required|uuid'],
             'mapping' => ['course_outcome_id' => 'required|uuid', 'programme_outcome_id' => 'required|uuid'],
             default => [],
         };

@@ -40,6 +40,7 @@ export type CatalogueProps = {
     courseOutcomes: Outcome[];
     programmeOutcomes: Outcome[];
     mappings: {
+        id: string;
         course_outcome_id: string;
         programme_outcome_id: string;
     }[];

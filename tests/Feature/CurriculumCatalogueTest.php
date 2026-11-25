@@ -7,6 +7,7 @@ use App\Models\CourseOutcome;
 use App\Models\Curriculum;
 use App\Models\CurriculumCourse;
 use App\Models\Offering;
+use App\Models\OutcomeMapping;
 use App\Models\Programme;
 use App\Models\ProgrammeOutcome;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -97,5 +98,22 @@ class CurriculumCatalogueTest extends TestCase
         $this->assertSame('Foundations', $offering->fresh()->curriculumCourse->title);
         $this->assertDatabaseCount('outcome_mappings', 2);
         $this->assertDatabaseCount('prerequisites', 2);
+        $original = OutcomeMapping::where($mapping)->sole();
+        $copy = OutcomeMapping::whereKeyNot($original->id)->sole();
+        $draftPath = "/academics/curriculum/$draft->id";
+        $this->post("$path/unmap", ['mapping_id' => $original->id])->assertSessionHasErrors('status');
+        $this->post("$draftPath/unmap", ['mapping_id' => $original->id])->assertNotFound();
+        $this->academicUser('quality_assurance_officer');
+        $this->post("$draftPath/unmap", ['mapping_id' => $copy->id])->assertForbidden();
+        $this->academicUser();
+        $this->post("$draftPath/unmap", ['mapping_id' => $copy->id])->assertSessionHasNoErrors();
+        $this->post("$draftPath/programme-outcome", ['statement' => 'Revised outcome'])->assertSessionHasNoErrors();
+        $replacement = ProgrammeOutcome::where('curriculum_id', $draft->id)->where('statement', 'Revised outcome')->sole();
+        $this->post("$draftPath/mapping", [
+            'course_outcome_id' => $copy->course_outcome_id, 'programme_outcome_id' => $replacement->id,
+        ])->assertSessionHasNoErrors();
+        $this->assertDatabaseMissing('outcome_mappings', ['programme_outcome_id' => $copy->programme_outcome_id]);
+        $this->assertDatabaseHas('outcome_mappings', ['id' => $original->id] + $mapping);
+        $this->assertSame($first->id, $offering->fresh()->curriculum_course_id);
     }
 }

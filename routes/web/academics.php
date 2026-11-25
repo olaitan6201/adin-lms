@@ -19,7 +19,7 @@ Route::middleware('auth')->prefix('academics')->name('academics.')->group(functi
         Route::get('/{version?}', 'index')->whereUuid('version')->name('curriculum.show');
         Route::post('/', 'store')->name('curriculum.store');
         Route::post('/{version}/{action}', 'change')->whereUuid('version')->whereIn('action', [
-            'entry', 'prerequisite', 'course-outcome', 'programme-outcome', 'mapping', 'review', 'approve', 'fork',
+            'entry', 'prerequisite', 'course-outcome', 'programme-outcome', 'mapping', 'unmap', 'review', 'approve', 'fork',
         ])->name('curriculum.change');
     });
 

@@ -28,15 +28,17 @@ final class NativeAssessmentSnapshot
             && app(AssessmentItemPolicy::class)->teaches($actor, $offering), 403, 'Assessment packages require exchange permission and teaching authority for this offering.');
     }
 
-    public function collect(Offering $source, User $actor, array $modules, array &$entries): ?array
+    public static function present(Offering $source): bool
     {
-        $book = Gradebook::where('offering_id', $source->id)->first();
-        $course = $source->curriculumCourse?->course_id;
-        if (! $book && ! QuestionBank::where('course_id', $course)->exists()) {
-            return null;
-        }
+        return Gradebook::where('offering_id', $source->id)->exists()
+            || QuestionBank::where('course_id', $source->curriculumCourse?->course_id)->exists();
+    }
+
+    public function collect(Offering $source, User $actor, array $modules, array &$entries): array
+    {
         self::authorize($actor, $source);
-        $banks = new NativeBankSnapshot($course);
+        $book = Gradebook::where('offering_id', $source->id)->first();
+        $banks = new NativeBankSnapshot($source->curriculumCourse?->course_id);
         $policy = null;
         $items = [];
         if ($book) {

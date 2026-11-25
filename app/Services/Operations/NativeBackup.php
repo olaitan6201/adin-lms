@@ -16,6 +16,10 @@ final class NativeBackup
     public function entries(Offering $offering, User $actor): array
     {
         $entries = [];
+        $hasAssessment = NativeAssessmentSnapshot::present($offering);
+        if ($hasAssessment) {
+            NativeAssessmentSnapshot::authorize($actor, $offering);
+        }
         NativeRules::check(! $offering->activity_order && ! ClassSession::where('offering_id', $offering->id)->exists()
             && ! Announcement::where('offering_id', $offering->id)->exists(), 'Custom activity order, class meetings and announcements cannot be backed up.');
         $modules = [];
@@ -67,7 +71,7 @@ final class NativeBackup
             $forums[] = $forum->title;
         }
 
-        $assessment = (new NativeAssessmentSnapshot)->collect($offering, $actor, $modules, $entries);
+        $assessment = $hasAssessment ? (new NativeAssessmentSnapshot)->collect($offering, $actor, $modules, $entries) : null;
         $manifest = ['format' => $assessment ? 'adin-course-3' : 'adin-course-2', 'lessons' => $lessons, 'forums' => $forums];
         if ($assessment) {
             $manifest['assessment'] = $assessment;

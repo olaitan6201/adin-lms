@@ -84,6 +84,8 @@ class NativeAssessmentPackageTest extends AssessmentCase
         $path = "/operations/courses/{$this->offering->id}/export/native";
         $this->getJson($path)->assertForbidden();
         $this->as($this->officer)->getJson($path)->assertForbidden();
+        $this->artisan('authority:grant', ['user' => $this->officer->id, 'role' => 'institutional_admin', 'scope' => 'institution'])->assertSuccessful();
+        $this->getJson($path)->assertForbidden();
         $this->authorizeExchange();
         $download = $this->as($this->marker)->get($path)->assertOk()->assertDownload();
         $package = UploadedFile::fake()->createWithContent('Course.zip', $download->getContent());
@@ -138,6 +140,20 @@ class NativeAssessmentPackageTest extends AssessmentCase
         $this->postJson("/operations/courses/$target->id/import", ['package' => UploadedFile::fake()->createWithContent('same.zip', $download->getContent())])->assertConflict();
         $this->assertDatabaseMissing('modules', ['offering_id' => $target->id]);
         $this->assertDatabaseCount('files', 2);
+        $package = UploadedFile::fake()->createWithContent('broken.zip', $download->getContent());
+        $zip = new ZipArchive;
+        $zip->open($package->getPathname());
+        $manifest = json_decode($zip->getFromName('backup.json'), true, flags: JSON_THROW_ON_ERROR);
+        foreach ($manifest['assessment']['items'] as &$item) {
+            if ($item['kind'] === 'exam') {
+                $item['definition']['slots'][0]['fixed'] = [0, 500, 0];
+            }
+        }
+        $zip->addFromString('backup.json', json_encode($manifest, JSON_THROW_ON_ERROR));
+        $zip->close();
+        $this->postJson("/operations/courses/$target->id/import", ['package' => $package])->assertUnprocessable();
+        $this->assertDatabaseMissing('gradebooks', ['offering_id' => $target->id]);
+        $this->assertDatabaseMissing('audit_logs', ['action' => 'course.imported', 'subject_key' => $target->id]);
         $foreign = QuestionBank::forceCreate(['topic' => 'Other department', 'course_id' => CurriculumCourse::factory()->create()->course_id]);
         ExamSlot::whereNotNull('draw_from_bank_id')->update(['draw_from_bank_id' => $foreign->id]);
         $this->getJson($path)->assertUnprocessable()->assertJsonValidationErrors('package');

@@ -9,11 +9,15 @@ function lecturerCode(login: string): string {
         throw new Error('Missing browser fixture directory.');
     }
 
-    return execFileSync('php', [
-        '-r',
-        'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
-        join(run, `${login}.factor`),
-    ], { encoding: 'utf8' });
+    return execFileSync(
+        'php',
+        [
+            '-r',
+            'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
+            join(run, `${login}.factor`),
+        ],
+        { encoding: 'utf8' },
+    );
 }
 
 async function signIn(page: Page, login: string): Promise<void> {
@@ -47,7 +51,7 @@ test('lecturer study-group history is reachable at the shared anchor', async ({ 
     await expect(page.getByRole('heading', { name: 'Study groups', exact: true })).toBeVisible();
 
     await page.getByText('New study group', { exact: true }).click();
-    const create = page.locator('details').filter({has: page.getByText('New study group', {exact: true})});
+    const create = page.locator('details').filter({ has: page.getByText('New study group', { exact: true }) });
     await create.getByLabel('Group name').fill(name);
     await create.getByLabel('Ada Demo', { exact: true }).check();
     await page.getByRole('button', { name: 'Create study group', exact: true }).click();
@@ -55,7 +59,9 @@ test('lecturer study-group history is reachable at the shared anchor', async ({ 
 
     await page.getByText(`${name} · Edit membership`, { exact: true }).focus();
     await page.keyboard.press('Enter');
-    const editor = page.locator('details').filter({has: page.getByText(`${name} · Edit membership`, {exact: true})});
+    const editor = page
+        .locator('details')
+        .filter({ has: page.getByText(`${name} · Edit membership`, { exact: true }) });
     await editor.getByText('Membership history', { exact: true }).click();
     await expect(page.getByText(`Created as “${name}”.`, { exact: true })).toBeVisible();
 

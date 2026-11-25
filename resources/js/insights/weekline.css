@@ -2,7 +2,10 @@
     --wl-rule: var(--portal-line);
     color: #1a1a18;
 }
-.portal-workspace:has(.weekline) { background: var(--portal-paper); }
+.portal-workspace:has(.weekline) {
+    background-color: #f4f7f1;
+    min-height: 100dvh;
+}
 .weekline .wl-heading h1, .weekline .portal-title {
     margin: .15em 0;
     font: 730 clamp(2rem, 4.5vw, 3.75rem)/1.06 system-ui, sans-serif;

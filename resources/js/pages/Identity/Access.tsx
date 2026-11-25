@@ -2,11 +2,23 @@ import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { DeskHeading } from '../../components/academics/DeskHeading';
 
-type Grant = { id: string; role: string; scope: string; permissions: string[] };
+type Grant = {
+    id: string;
+    role: string;
+    scope: string;
+    permissions: string[];
+};
 type Props = {
-    account: { id: string; full_name: string; email: string };
+    account: {
+        id: string;
+        full_name: string;
+        email: string;
+    };
     editable: boolean;
-    roles: { code: string; scope: string }[];
+    roles: {
+        code: string;
+        scope: string;
+    }[];
     grants: Grant[];
 };
 const label = (value: string) => value.split('_').join(' ');
@@ -47,12 +59,7 @@ export default function Access({ account, editable, grants, roles }: Props) {
                         <>
                             <label>
                                 Assign role{' '}
-                                <select
-                                    name="role"
-                                    required
-                                    value={role}
-                                    onChange={(e) => selectRole(e.target.value)}
-                                >
+                                <select name="role" required value={role} onChange={(e) => selectRole(e.target.value)}>
                                     <option value="">Choose a role</option>
                                     {roles.map((r) => (
                                         <option key={r.code} value={r.code}>

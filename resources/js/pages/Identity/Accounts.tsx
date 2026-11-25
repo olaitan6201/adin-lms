@@ -2,7 +2,12 @@ import { Form, Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../../components/academics/RecordForm';
 import { DeskHeading } from '../../components/academics/DeskHeading';
 
-type Account = { id: string; full_name: string; email: string; status: string };
+type Account = {
+    id: string;
+    full_name: string;
+    email: string;
+    status: string;
+};
 type Props = {
     accounts: Account[];
     self: string;
@@ -60,8 +65,7 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                                                 value={a.status === 'active' ? 'suspended' : 'active'}
                                             />
                                             <button disabled={processing} className="underline">
-                                                {a.status === 'active' ? 'Suspend' : 'Reactivate'}{' '}
-                                                {a.full_name}
+                                                {a.status === 'active' ? 'Suspend' : 'Reactivate'} {a.full_name}
                                             </button>
                                             {errors.status && <p role="alert">{errors.status}</p>}
                                         </>
@@ -72,8 +76,7 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                     </li>
                 ))}
             </ul>
-            {previous && <Link href={previous}>Previous page</Link>}{' '}
-            {next && <Link href={next}>Next page</Link>}
+            {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
         </main>
     );
 }

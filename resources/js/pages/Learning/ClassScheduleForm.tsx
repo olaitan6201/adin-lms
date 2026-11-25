@@ -15,7 +15,7 @@ export function ClassScheduleForm({
     return (
         <details>
             <summary>{session ? 'Edit session' : 'Schedule a class'}</summary>
-            <EntryForm action={action} label="Save session">
+            <EntryForm action={action} label="Save session" originalTimes={session}>
                 <label>
                     Class title
                     <input name="title" required defaultValue={session?.title} />

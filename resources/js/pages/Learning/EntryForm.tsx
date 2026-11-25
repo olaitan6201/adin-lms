@@ -4,10 +4,11 @@ import type { ReactNode } from 'react';
 type EntryFormProps = {
     action: string;
     label: string;
+    originalTimes?: Partial<Record<'starts_at' | 'ends_at' | 'opens_at' | 'closes_at', string | null>>;
     children?: ReactNode;
 };
 
-export function EntryForm({ action, label, children }: EntryFormProps) {
+export function EntryForm({ action, label, children, originalTimes }: EntryFormProps) {
     return (
         <Form
             action={action}
@@ -15,9 +16,12 @@ export function EntryForm({ action, label, children }: EntryFormProps) {
             className="my-4 grid max-w-xl gap-3 [&_input]:border [&_select]:border [&_textarea]:border [&_label]:grid"
             transform={(data) => {
                 const result = { ...data };
-                for (const field of ['starts_at', 'ends_at', 'opens_at', 'closes_at']) {
+                for (const field of ['starts_at', 'ends_at', 'opens_at', 'closes_at'] as const) {
                     if (typeof result[field] === 'string' && result[field]) {
-                        result[field] = new Date(result[field]).toISOString();
+                        const original = originalTimes?.[field];
+                        result[field] = original && result[field] === localInput(original)
+                            ? original
+                            : new Date(result[field]).toISOString();
                     }
                 }
 

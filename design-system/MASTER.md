@@ -1,5 +1,7 @@
 # Adin learning portal — product design contract
 
+Current direction: [ADR 0001 — stock shadcn/ui rebuild](../docs/adr/0001-ui-rebuild.md). It supersedes the earlier editorial and Weekline styling described below.
+
 **Scope:** the Laravel/Inertia LMS. This is a design and acceptance contract, not a claim of university brand approval. Admissions and official registration remain upstream. The runtime design tokens live in `resources/css/`; the asset configuration lives in `config/branding.php`.
 
 ## Visual direction

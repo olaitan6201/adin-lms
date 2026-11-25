@@ -1,103 +1,67 @@
-import { NativeDialog } from '@/components/ui/native-dialog';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sidebar, SidebarContent, SidebarHeader, SidebarProvider } from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ConnectionStatus } from './ConnectionStatus';
-import { SidebarNavigation } from './SidebarNavigation';
-
-type AcademicLink = {
-    label: string;
-    href: string;
-};
+import { SidebarNavigation, type Destination } from './SidebarNavigation';
 
 export function PortalLayout({ children }: { children: ReactNode }) {
     const { url, props } = usePage<{
-        signedIn: boolean;
-        branding: { institution: string; logoWhite: string };
-        academicLinks?: AcademicLink[];
+        signedIn: boolean; branding: { institution: string; logoFull: string }; academicLinks?: Destination[];
     }>();
     const path = url.split(/[?#]/)[0];
-    const previousPath = useRef(path);
+    const previous = useRef(path);
     const content = useRef<HTMLDivElement>(null);
-    const drawer = useRef<HTMLDialogElement>(null);
-    const [expanded, setExpanded] = useState(false);
-
-    const brand = props.branding;
-
+    const close = useRef<HTMLButtonElement>(null);
+    const navigated = useRef(false);
+    const [open, setOpen] = useState(false);
     useEffect(() => {
-        if (previousPath.current !== path) {
-            drawer.current?.close();
-            content.current?.focus({ preventScroll: true });
-            setExpanded(false);
-            previousPath.current = path;
-        }
+        if (previous.current === path) return;
+        previous.current = path;
+        navigated.current = true;
+        setOpen(false);
+        content.current?.focus({ preventScroll: true });
     }, [path]);
-
     useEffect(() => {
-        const desktop = window.matchMedia('(min-width: 58rem)');
-        const closeOnDesktop = () => {
-            if (desktop.matches && drawer.current?.open) {
-                drawer.current.close();
-                content.current?.focus();
-            }
-        };
-        desktop.addEventListener('change', closeOnDesktop);
-        return () => desktop.removeEventListener('change', closeOnDesktop);
+        const query = window.matchMedia('(min-width: 48rem)');
+        const resize = () => { if (query.matches) setOpen(false); };
+        query.addEventListener('change', resize);
+        return () => query.removeEventListener('change', resize);
     }, []);
-
-    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []}
-        path={path} close={() => drawer.current?.close()} />;
-
-    return (
-        <div className="portal-shell">
-            <a href="#portal-content" className="portal-skip">
-                Skip to content
-            </a>
-            <header className="portal-header">
-                <div className="portal-bar">
-                    <Link
-                        href={props.signedIn ? '/dashboard' : '/'}
-                        className="portal-brand"
-                        aria-label={`${brand.institution} home`}
-                    >
-                        <img src={brand.logoWhite} width="44" height="44" alt="" />
-                        <span>
-                            {brand.institution}
-                            <small>Learning management system</small>
-                        </span>
-                    </Link>
-                    <Button
-                        variant="ghost" type="button"
-                        className="portal-menu"
-                        aria-expanded={expanded}
-                        aria-controls="portal-drawer"
-                        aria-haspopup="dialog"
-                        onClick={() => {
-                            drawer.current?.showModal();
-                            setExpanded(true);
-                        }}
-                    >
-                        Menu
-                    </Button>
-                </div>
-                <div className="portal-sidebar">{navigation}</div>
-            </header>
-            <NativeDialog id="portal-drawer" className="portal-drawer" aria-label="Portal menu" ref={drawer}
-                onClose={() => setExpanded(false)}
-                onClick={(event) => {
-                    if (event.target === event.currentTarget && event.clientX >= event.currentTarget.getBoundingClientRect().right) {
-                        event.currentTarget.close();
-                    }
-                }}>
-                <div className="drawer-heading"><strong>{brand.institution}</strong>
-                    <Button variant="ghost" type="button" className="portal-close" onClick={() => drawer.current?.close()}>Close menu</Button>
-                </div>
-                {navigation}
-            </NativeDialog>
-            <div className="portal-workspace">
-                <ConnectionStatus />
-                <div id="portal-content" tabIndex={-1} ref={content}>{children}</div>
-            </div>
+    const brand = <Link href={props.signedIn ? '/dashboard' : '/'} aria-label={`${props.branding.institution} home`}
+        className="flex min-w-0 items-center gap-3 rounded-md px-2 py-1 focus-visible:ring-2 focus-visible:ring-ring">
+        <img src={props.branding.logoFull} alt="" width="42" height="36" className="size-9 shrink-0 object-contain" />
+        <span className="text-sm font-semibold leading-tight">{props.branding.institution}</span>
+    </Link>;
+    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []} path={path} />;
+    return <SidebarProvider>
+        <a href="#portal-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:p-3 focus:ring-2">Skip to content</a>
+        <div className="sticky top-0 hidden h-svh shrink-0 border-r md:block">
+            <Sidebar collapsible="none">
+                <SidebarHeader>{brand}</SidebarHeader>
+                <SidebarContent>{navigation}</SidebarContent>
+            </Sidebar>
         </div>
-    );
+        <div className="min-w-0 flex-1">
+            <header className="flex items-center justify-between gap-2 border-b px-4 py-2 md:hidden">
+                {brand}
+                <Sheet open={open} onOpenChange={value => { if (value) navigated.current = false; setOpen(value); }}>
+                    <SheetTrigger asChild><Button variant="outline" size="sm">Menu</Button></SheetTrigger>
+                    <SheetContent side="left" showCloseButton={false} className="overflow-y-auto"
+                        onOpenAutoFocus={event => { event.preventDefault(); close.current?.focus(); }}
+                        onCloseAutoFocus={event => { if (navigated.current) { event.preventDefault(); content.current?.focus(); } }}>
+                        <SheetHeader>
+                            <SheetTitle>Portal menu</SheetTitle>
+                            <SheetDescription>{props.branding.institution}</SheetDescription>
+                            <SheetClose asChild><Button ref={close} variant="outline" size="sm">Close menu</Button></SheetClose>
+                        </SheetHeader>
+                        {navigation}
+                    </SheetContent>
+                </Sheet>
+            </header>
+            <ConnectionStatus />
+            <div id="portal-content" tabIndex={-1} ref={content} className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        </div>
+    </SidebarProvider>;
 }

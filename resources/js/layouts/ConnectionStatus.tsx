@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type ConnectionState = 'online' | 'offline' | 'reconnected';
 
@@ -25,8 +26,8 @@ export function ConnectionStatus() {
     }, []);
 
     return (
-        <div role="status" className="portal-status">
-            {notices[connection]}
+        <div role="status">
+            {notices[connection] && <Alert role="presentation"><AlertDescription>{notices[connection]}</AlertDescription></Alert>}
         </div>
     );
 }

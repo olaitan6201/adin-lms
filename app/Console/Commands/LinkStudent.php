@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Services\Roster\LinkStudentAccount;
 
 #[Signature('roster:link {student : Upstream student ID} {user : Verified local user ID}')]
 #[Description('Bind a verified institutional student to their existing LMS account')]
@@ -15,22 +14,10 @@ class LinkStudent extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(LinkStudentAccount $accounts): int
     {
         $id = strtolower($this->argument('user'));
-        $linked = Str::isUuid($id) && DB::transaction(function () use ($id) {
-            $user = DB::table('users')->where('id', $id)->lockForUpdate()->first();
-            $student = DB::table('students')->where('external_student_id', $this->argument('student'))->lockForUpdate()->first();
-            if (! $user || ! $student || ($student->user_id !== null && $student->user_id !== $id)) {
-                return false;
-            }
-            if (DB::table('students')->where('user_id', $id)->where('id', '!=', $student->id)->exists()) {
-                return false;
-            }
-            DB::table('students')->where('id', $student->id)->update(['user_id' => $id, 'updated_at' => now()]);
-
-            return true;
-        });
+        $linked = $accounts->bind($this->argument('student'), $id);
         if (! $linked) {
             $this->error('Unknown student/account or conflicting identity link.');
 

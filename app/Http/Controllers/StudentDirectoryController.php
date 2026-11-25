@@ -30,6 +30,7 @@ class StudentDirectoryController extends Controller
             'students' => $students->items(), 'q' => $search,
             'next' => $students->nextPageUrl(), 'previous' => $students->previousPageUrl(),
             'manage' => $authority->institutionAllows($request->user(), 'academics.manage'),
+            'link' => $authority->institutionAllows($request->user(), 'accounts.manage') && $authority->institutionAllows($request->user(), 'academics.manage'),
             'receipt' => $request->session()->get('roster_receipt'),
         ]);
     }

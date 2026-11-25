@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Inertia\Testing\AssertableInertia;
 use Tests\Support\AcademicAccess;
@@ -25,6 +26,12 @@ class InstitutionDirectoryTest extends TestCase
         $this->assertDatabaseMissing('enrolments', ['status' => 'withdrawn']);
         $this->post($url, $upload($csv."S1,CS102,withdrawn,2\n"))->assertSessionHasNoErrors();
         $student = Student::sole();
+        $user = User::factory()->create();
+        $identity = ['account' => $user->email, 'student' => 'S1'];
+        $this->post('/students/link', $identity)->assertSessionHasErrors('verified');
+        $this->post('/students/link', $identity + ['verified' => true])->assertSessionHasNoErrors();
+        $this->post('/students/link', ['account' => User::factory()->create()->email, 'verified' => true] + $identity)->assertSessionHasErrors('account');
+        $this->assertSame($user->id, $student->fresh()->user_id);
         $this->get('/students?q=S1')->assertInertia(fn (AssertableInertia $p) => $p->where('students.0.id', $student->id));
         $this->get(route('students.history', $student))->assertInertia(fn (AssertableInertia $p) => $p
             ->where('records.0.status', 'registered')->where('records.1.status', 'withdrawn'));
@@ -33,5 +40,6 @@ class InstitutionDirectoryTest extends TestCase
         $this->get('/students')->assertForbidden();
         $this->get(route('students.history', $student))->assertForbidden();
         $this->post($url, $upload($csv))->assertForbidden();
+        $this->post('/students/link', $identity + ['verified' => true])->assertForbidden();
     }
 }

@@ -61,7 +61,9 @@ test('assignment opens, accepts a revision, and returns the lecturer’s mark', 
         await learner.getByRole('button', { name: 'Submit revision' }).press('Enter');
         await expect(learner.getByText('Revision received.', { exact: false })).toBeVisible();
         await page.reload();
-        await page.getByText('Mark this revision', { exact: true }).press('Enter');
+        const mark = page.getByRole('button', { name: 'Mark this revision', exact: true });
+        await mark.press('Enter');
+        await expect(mark).toHaveAttribute('aria-expanded', 'true');
         await page.getByLabel('Points', { exact: true }).fill('11');
         await page.getByLabel('Feedback', { exact: true }).fill('Clear, achievable steps.');
         await page.getByLabel('Reason for this mark').fill('Accurate planning sequence');

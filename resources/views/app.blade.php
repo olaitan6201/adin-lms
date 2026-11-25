@@ -11,7 +11,8 @@
     @vite('resources/js/app.tsx')
     @inertiaHead
 </head>
-<body data-palette="{{ config('branding.palette') }}" data-courses="{{ route('courses.index', [], false) }}" data-profile="{{ route('profile.edit', [], false) }}"
+<body class="**:data-[slot=button]:transition-colors **:data-[slot=progress-indicator]:transition-transform **:data-[slot=sidebar-rail]:transition-none motion-reduce:**:transition-none! motion-reduce:**:animate-none!"
+      data-palette="{{ config('branding.palette') }}" data-courses="{{ route('courses.index', [], false) }}" data-profile="{{ route('profile.edit', [], false) }}"
       data-inbox="{{ route('community.inbox', [], false) }}"
       data-dashboard="{{ route('insights.dashboard', [], false) }}" data-reports="{{ route('insights.reports', [], false) }}"
       data-search="{{ Route::has('mobile.search') ? route('mobile.search', [], false) : '' }}">

@@ -79,3 +79,21 @@
         @apply bg-background text-foreground;
     }
 }
+
+[data-palette='navy'] {
+    --primary: #19385b;
+    --accent: #e0e9f2;
+    --ring: var(--primary);
+    --sidebar-primary: var(--primary);
+    --sidebar-accent: var(--accent);
+    --sidebar-ring: var(--primary);
+}
+
+[data-palette='teal'] {
+    --primary: #134e4a;
+    --accent: #d8eae5;
+    --ring: var(--primary);
+    --sidebar-primary: var(--primary);
+    --sidebar-accent: var(--accent);
+    --sidebar-ring: var(--primary);
+}

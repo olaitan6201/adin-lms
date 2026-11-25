@@ -55,3 +55,13 @@ test('offline navigation never replays a submission or displays a cached private
     await page.getByRole('link', { name: /reconnect/i }).click();
     await expect(page.getByRole('heading', { name: 'My study desk' })).toBeVisible();
 });
+
+test('registry actions respect reduced motion without changing their stock source', async ({ page }) => {
+    await page.goto('/login');
+    const submit = page.getByRole('button', { name: 'Sign in', exact: true });
+    await expect(submit).toHaveAttribute('data-slot', 'button');
+    const transition = () => submit.evaluate(el => getComputedStyle(el).transitionProperty);
+    expect(await transition()).not.toBe('all');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect.poll(transition).toBe('none');
+});

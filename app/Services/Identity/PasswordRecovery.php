@@ -3,6 +3,7 @@
 namespace App\Services\Identity;
 
 use App\Models\User;
+use App\Services\Security\WebSessions;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,7 @@ class PasswordRecovery
                 $user->auth_version++;
                 $user->setRememberToken(Str::random(60));
                 $user->save();
+                WebSessions::revokeAll($user);
                 event(new PasswordReset($user));
             });
 

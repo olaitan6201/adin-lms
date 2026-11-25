@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Identity;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Enums\RoleCode;
 use App\Enums\ScopeType;
+use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Faculty;
 use App\Models\Offering;
@@ -14,6 +13,7 @@ use App\Models\User;
 use App\Services\Authority\ChangeRoleGrant;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -60,7 +60,7 @@ class AccountGrantsController extends Controller
         if ($scope !== ScopeType::Institution && ! $id) {
             throw ValidationException::withMessages(['reference' => "Unknown {$scope->value} reference."]);
         }
-        $this->changes->apply($account->id, $role, $scope->key($id), false, $request->user()->id);
+        $this->change($request, $account, fn () => $this->changes->apply($account->id, $role, $scope->key($id), false, $request->user()->id));
 
         return back();
     }
@@ -68,8 +68,10 @@ class AccountGrantsController extends Controller
     public function destroy(Request $request, User $account, string $grant): RedirectResponse
     {
         $this->authorizeAccess($request, $account);
-        $record = RoleGrant::where('user_id', $account->id)->findOrFail($grant);
-        $this->changes->apply($account->id, $record->role->code, $record->accessScope->scope_key, true, $request->user()->id);
+        $this->change($request, $account, function () use ($request, $account, $grant): void {
+            $record = RoleGrant::where('user_id', $account->id)->findOrFail($grant);
+            $this->changes->apply($account->id, $record->role->code, $record->accessScope->scope_key, true, $request->user()->id);
+        });
 
         return back();
     }
@@ -77,5 +79,16 @@ class AccountGrantsController extends Controller
     private function authorizeAccess(Request $request, ?User $target = null): void
     {
         abort_unless($this->authority->institutionAllows($request->user(), 'grants.manage') && $target?->id !== $request->user()->id, 403);
+    }
+
+    private function change(Request $request, User $target, \Closure $operation): void
+    {
+        DB::transaction(function () use ($request, $target, $operation): void {
+            $actor = User::whereKey([$target->id, $request->user()->id])->orderBy('id')
+                ->lockForUpdate()->get()->find($request->user()->id);
+            abort_unless($actor?->status === 'active' && $actor->auth_version === $request->user()->auth_version, 403);
+            $this->authorizeAccess($request, $target);
+            $operation();
+        }, 3);
     }
 }

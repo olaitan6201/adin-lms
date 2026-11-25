@@ -44,6 +44,7 @@ class AccountLifecycleTest extends TestCase
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $user->id])->assertFailed();
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();
         $this->assertDatabaseHas('users', ['id' => $user->id, 'status' => 'suspended']);
+        $this->assertDatabaseMissing('auth_sessions', ['user_id' => $user->id, 'revoked_at' => null]);
         $this->artisan('identity:account', ['action' => 'reactivate', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();
         $this->get('/courses')->assertRedirect(route('login'));
         $this->assertGuest();

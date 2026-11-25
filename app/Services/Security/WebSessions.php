@@ -12,6 +12,11 @@ use Illuminate\Support\Str;
 
 class WebSessions
 {
+    public static function revokeAll(User $user): void
+    {
+        AuthSession::where('user_id', $user->id)->whereNull('revoked_at')->update(['revoked_at' => now()]);
+    }
+
     public function start(Request $request, User $user): void
     {
         $token = Str::random(64);

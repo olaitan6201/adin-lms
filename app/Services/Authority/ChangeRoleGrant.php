@@ -12,6 +12,7 @@ use App\Models\Offering;
 use App\Models\Role;
 use App\Models\RoleGrant;
 use App\Models\User;
+use App\Services\Security\WebSessions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -43,6 +44,7 @@ class ChangeRoleGrant
                 : RoleGrant::unguarded(fn () => RoleGrant::firstOrCreate($key))->wasRecentlyCreated;
             if ($changed) {
                 $user->increment('auth_version');
+                WebSessions::revokeAll($user);
                 AuditLog::forceCreate([
                     'subject_key' => 'user:'.$user->id, 'occurred_at' => now(),
                     'action' => $revoke ? 'role.revoked' : 'role.granted',

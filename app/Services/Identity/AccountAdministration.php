@@ -5,9 +5,10 @@ namespace App\Services\Identity;
 use App\Enums\PermissionCode;
 use App\Jobs\SendAccountResetLink;
 use App\Models\AuditLog;
-use App\Models\User;
 use App\Models\RoleGrant;
+use App\Models\User;
 use App\Services\Authority\ScopedAuthority;
+use App\Services\Security\WebSessions;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
@@ -52,6 +53,7 @@ class AccountAdministration
                 $user->auth_version++;
                 $user->setRememberToken(null);
                 $user->save();
+                WebSessions::revokeAll($user);
                 Password::broker()->deleteToken($user);
                 $this->record($actorId, $user, $suspend ? 'account.suspended' : 'account.reactivated');
             }

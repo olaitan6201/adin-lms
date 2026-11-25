@@ -107,6 +107,7 @@ class ExamAuthorController
         if (is_string($answer)) {
             return $answer;
         }
+
         $matching = $question->version->marking_key['matching'] ?? [];
         $left = array_column($matching['left'] ?? [], 'label', 'id');
         $right = array_column($matching['right'] ?? [], 'label', 'id');

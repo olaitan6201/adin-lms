@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { LearnerTime } from '../components/LearnerTime';
 import { ReleasedWork, type Release } from './ReleasedWork';
 import './weekline.css';
+import './study-desk.css';
 
 export type AgendaItem = {
     title: string;
@@ -40,28 +41,38 @@ export function StudyWeek({ name, courses, queue, releases }: {
     name: string; courses: DeskCourse[]; queue: AgendaItem[]; releases: Release[];
 }) {
     const today = new Date();
+    const featured = courses.find((c) => c.code === queue[0]?.context) ?? courses[0];
     return (
-        <main className="portal-page weekline">
+        <main className="portal-page weekline study-desk">
             <Head title="My study desk" />
             <header className="wl-heading">
                 <div><p className="portal-kicker">Student planner / {name}</p><h1>My study desk</h1></div>
                 <p className="wl-date">{today.toLocaleDateString(undefined, { dateStyle: 'full' })}</p>
             </header>
             <WeekStrip queue={queue} today={today} />
-                <section aria-labelledby="agenda-heading">
-                    <h2 id="agenda-heading">Your timetable</h2>
-                    <p className="desk-note">Up to 12 upcoming or still-open items, in date order.</p>
+            <div className="wl-grid">
+                <section className="wl-focus">
+                    <p className="wl-label">{featured ? `Course workspace / ${featured.code}` : 'Course registration'}</p>
+                    <h2>{featured?.title ?? 'No registered courses yet'}</h2>
+                    <p>{featured ? 'Open your course outline, lessons and activities.' : 'Your courses appear here after registration is updated.'}</p>
+                    <Link className="wl-button" href={featured?.href ?? '/courses'}>{featured ? 'Open course workspace' : 'View my courses'} →</Link>
+                </section>
+                <section className="wl-panel" aria-labelledby="agenda-heading">
+                    <p className="wl-label">Personal agenda</p>
+                    <h2 id="agenda-heading">Coming up</h2>
+                    <p className="desk-note">Next 12 tasks, in date order</p>
                     {queue.length ? <ol className="wl-agenda">
                         {queue.map((task, i) => <li key={`${task.href}:${i}`}>
-                            <div className="wl-when">{task.at ? <LearnerTime instant={task.at} /> : 'Unscheduled'}</div>
-                            <div><small>{task.kind} · {task.context}</small><h3>{task.title}</h3></div>
+                            <small>{task.kind} · {task.context}</small>
+                            <h3>{task.title}</h3>
+                            {task.at && <LearnerTime instant={task.at} />}
                             <Link href={task.href} className="desk-link">{task.action}<span aria-hidden="true"> →</span></Link>
                         </li>)}
                     </ol> : <p>No assignments, exams or scheduled classes to show.</p>}
                 </section>
+            </div>
             <section className="wl-shelf">
                 <h2>Your courses</h2>
-                {!courses.length && <p>Your courses appear here after registration is updated.</p>}
                 <ul>{courses.map((course) => <li key={course.href}><Link href={course.href}>
                     <small>{course.code}</small><strong>{course.title}</strong>
                 </Link></li>)}</ul>

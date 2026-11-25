@@ -15,6 +15,26 @@ class InfrastructureDeskTest extends TestCase
 {
     use OperationsAccess, RefreshDatabase;
 
+    public function test_runner_outcomes_are_separate_from_operator_reports_and_fail_closed(): void
+    {
+        $this->operator(RoleCode::IctAdmin);
+        $this->withoutVite();
+        $file = tempnam(sys_get_temp_dir(), 's18-backup-');
+        try {
+            config(['operations.backup_status_file' => $file, 'operations.backup_max_age_hours' => 1]);
+            file_put_contents($file, '{"state":"snapshot","run":"invalid private payload"}');
+            $this->get('/operations')->assertInertia(fn (Page $p) => $p->where('infrastructure.backup', ['state' => 'unavailable']));
+            foreach (['failed', 'snapshot'] as $state) {
+                file_put_contents($file, json_encode(['state' => $state, 'run' => 'job-101', 'finished_at' => now()->subHours(2)->timestamp]));
+                $this->get('/operations')->assertInertia(fn (Page $p) => $p->where('infrastructure.backup.state', $state)
+                    ->where('infrastructure.backup.overdue', true)->where('infrastructure.backup.run', 'job-101')
+                    ->where('infrastructure.receipts', []));
+            }
+        } finally {
+            unlink($file);
+        }
+    }
+
     public function test_controls_are_restricted_and_only_provisioned_references_are_saved(): void
     {
         $settings = ['storage_mib' => 1, 'probe_ms' => 100, 'bridge_slot' => 'standby'];

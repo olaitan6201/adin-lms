@@ -2,6 +2,7 @@ import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
 
 export type Infrastructure = {
+    backup: { state: string; run?: string; finished_at?: string; overdue?: boolean | null };
     settings: {
         storage_mib: number;
         probe_ms: number;
@@ -81,6 +82,15 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                 )}
             </Form>
             <h2 className="text-xl font-semibold">Backup and restore evidence</h2>
+            <div aria-label="Backup runner outcome">
+                <h3 className="font-semibold">Latest backup job</h3>
+                <p>{data.backup.state === 'snapshot' ? 'Encrypted snapshot checksums verified' :
+                    data.backup.state === 'failed' ? 'Backup failed — investigate the host alert' :
+                    data.backup.state === 'not_configured' ? 'Host monitoring is not configured' : 'Host report unavailable or invalid'}</p>
+                {data.backup.finished_at && <p>{data.backup.run} · {new Date(data.backup.finished_at).toLocaleString()} · {
+                    data.backup.overdue === null ? 'No freshness target configured' : data.backup.overdue ? 'Report overdue' : 'Within reporting interval'
+                }</p>}
+            </div>
             <p>Record the external job or rehearsal ticket after inspecting it. These receipts are operator reports.</p>
             <Form action="/operations/backup-evidence" method="post">
                 {({ errors, processing, recentlySuccessful }) => (

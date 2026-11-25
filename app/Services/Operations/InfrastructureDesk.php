@@ -49,6 +49,7 @@ final class InfrastructureDesk
 
         return [
             'settings' => $this->settings(),
+            'backup' => (new BackupMonitor)->reading(),
             'measured' => now()->toIso8601String(),
             'bytes' => (int) File::sum('size_bytes'),
             'probe' => $probe,

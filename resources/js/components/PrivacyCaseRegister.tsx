@@ -57,8 +57,12 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         <Input id="opening-reference" name="reference" required maxLength={64}
                             aria-invalid={errors.reference ? true : undefined} aria-describedby="reference-format" />
                         <small id="reference-format">{errors.reference && `${errors.reference} `}Use letters, numbers, underscores or hyphens only.</small>
-                        <OperationsInput label="Affected account UUID (required except for breaches)" name="subject_id"
-                            error={errors.subject_id && 'Enter the affected account’s existing UUID from the restricted case system.'} />
+                        <label htmlFor="opening-subject">Affected account UUID (required except for breaches)</label>
+                        <Input id="opening-subject" name="subject_id" aria-invalid={errors.subject_id ? true : undefined}
+                            aria-describedby="opening-subject-help" />
+                        <small id="opening-subject-help" className={errors.subject_id ? 'text-destructive' : undefined}>
+                            Enter the affected account’s existing UUID from the restricted case system.
+                        </small>
                         <Button disabled={processing}>
                             Open case
                         </Button>

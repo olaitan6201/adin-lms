@@ -6,6 +6,23 @@
 
 Use an institutional editorial hierarchy: a legible masthead, compact navigation, clear academic titles, and ruled sequences of work. The primary object is a course, assessment or decision—not a metric card. Forest green carries identity and primary actions. Warm gold is an accent on appropriately contrasting surfaces, not small text on white. Keep status understandable without colour. The initial palette is sampled from a secondary reproduction, not an official brand manual. Do not present an independently drawn product mark as the university crest.
 
+### Brand assets and provenance
+
+The [archived institutional homepage](https://web.archive.org/web/20250221222339id_/https://adin-u.com/)
+identifies `nlogo.png` and `nlogo2.png` in the university's December 2023 uploads.
+The live site failed DNS resolution during implementation; the archived image
+files were unavailable. A [recruitment reproduction](https://www.myjobmag.com/company_logo/9493c189bb67d923e595876de033945eadin-open-university-logo.png)
+provided colour reference only: forest `#005D22`, gold `#D6B469` and ink `#1A1A18`.
+No third-party watermark was removed or deployed. The masthead rules are an LMS
+design choice, not an asserted institutional pattern.
+
+The [asset manifest](../public/brand/adin/identity.json) identifies the **portal
+fallback** and the full, compact and white variants (transparent SVG and PNG).
+Use the white version on forest and the colour version on paper. Keep the
+visible institution name even when showing just the compact book mark. Replace
+the fallback with the institution's approved originals and record provenance
+before describing any of these assets as official.
+
 ## Workspaces
 
 | Entry | User’s first decision | Required destination |

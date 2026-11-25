@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\DB;
 require dirname(__DIR__, 2).'/vendor/autoload.php';
 $app = require dirname(__DIR__, 2).'/bootstrap/app.php';
 $app->make(Kernel::class)->bootstrap();
+set_exception_handler(static function (Throwable $failure): never {
+    fwrite(STDERR, $failure->getMessage().PHP_EOL);
+    exit(1);
+});
 $root = getenv('QA_ROOT');
 $pg = DB::getDriverName() === 'pgsql';
 $socket = $pg ? DB::connection()->getConfig('host') : DB::connection()->getConfig('unix_socket');

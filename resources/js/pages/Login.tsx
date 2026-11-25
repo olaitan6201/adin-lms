@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { useRef } from 'react';
+import { useRef, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
 
 interface LoginProps {
@@ -7,7 +7,10 @@ interface LoginProps {
     institutionSignIn: string | null;
 }
 
+type Credentials = { email: string; password: string };
+
 export default function Login({ passwordReset, institutionSignIn }: LoginProps) {
+    const form = useRef<ComponentRef<typeof Form<Credentials>>>(null);
     const identifier = useRef<HTMLInputElement>(null);
     const password = useRef<HTMLInputElement>(null);
     return (
@@ -28,13 +31,17 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                 )}
                 {passwordReset && <p role="status">Your password has been set. Sign in with your new password.</p>}
                 <Form
+                    ref={form}
                     action="/login"
                     method="post"
-                    resetOnError={['password']}
                     className="grid gap-4"
                     onError={(errors) => {
                         const firstInvalid = errors.email ? identifier : password;
-                        requestAnimationFrame(() => firstInvalid.current?.focus());
+                        requestAnimationFrame(() => {
+                            // Clear after focus moves so the old field's caret does not interrupt the error.
+                            firstInvalid.current?.focus();
+                            form.current?.reset('password');
+                        });
                     }}
                 >
                     {({ errors, processing }) => (

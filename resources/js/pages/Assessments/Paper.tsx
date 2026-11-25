@@ -52,10 +52,7 @@ export default function Paper({ attempt, questions, title, integrity }: Props) {
                 />
             ))}
             {active && (
-                <button
-                    disabled={dirty.length > 0}
-                    onClick={() => router.post(`/attempts/${attempt.id}/finish`)}
-                >
+                <button disabled={dirty.length > 0} onClick={() => router.post(`/attempts/${attempt.id}/finish`)}>
                     Submit final answers
                 </button>
             )}

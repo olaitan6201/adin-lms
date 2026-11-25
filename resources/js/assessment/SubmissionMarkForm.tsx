@@ -6,11 +6,21 @@ export type Rubric = {
         id: string;
         title: string;
         description?: string;
-        levels: { id: string; label: string; points: string; description?: string }[];
+        levels: {
+            id: string;
+            label: string;
+            points: string;
+            description?: string;
+        }[];
     }[];
 };
 
-export function SubmissionMarkForm({ version, rubric }: { version: string; rubric: Rubric | null }) {
+type SubmissionMarkFormProps = {
+    version: string;
+    rubric: Rubric | null;
+};
+
+export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps) {
     return (
         <details>
             <summary>Mark this revision</summary>

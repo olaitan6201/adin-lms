@@ -4,7 +4,11 @@ import type { BankQuestion } from '../../assessment/contracts';
 
 type Props = {
     offering: string;
-    filters: { q?: string; kind?: string; topic?: string };
+    filters: {
+        q?: string;
+        kind?: string;
+        topic?: string;
+    };
     topics: string[];
     questions: BankQuestion[];
     kinds: string[];
@@ -22,7 +26,9 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
             <Head title="Question bank" />
             <nav aria-label="Assessment navigation" className="flex flex-wrap gap-5 underline">
                 <Link href={`/courses/${offering}/assessments`}>Assessments</Link>
-                <Link href={base} aria-current="page">Question bank</Link>
+                <Link href={base} aria-current="page">
+                    Question bank
+                </Link>
             </nav>
             <header>
                 <p className="portal-kicker">Course assessment authoring</p>
@@ -38,31 +44,55 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                     Type
                     <select name="kind" defaultValue={filters.kind ?? ''} className="block w-full rounded border p-2">
                         <option value="">All types</option>
-                        {kinds.map((kind) => <option key={kind} value={kind}>{kind}</option>)}
+                        {kinds.map((kind) => (
+                            <option key={kind} value={kind}>
+                                {kind}
+                            </option>
+                        ))}
                     </select>
                 </label>
                 <label>
                     Topic
                     <select name="topic" defaultValue={filters.topic ?? ''} className="block w-full rounded border p-2">
                         <option value="">All topics</option>
-                        {topics.map((topic) => <option key={topic} value={topic}>{topic}</option>)}
+                        {topics.map((topic) => (
+                            <option key={topic} value={topic}>
+                                {topic}
+                            </option>
+                        ))}
                     </select>
                 </label>
-                <button className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white">Filter questions</button>
+                <button className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white">
+                    Filter questions
+                </button>
             </form>
             <section aria-labelledby="browse-title">
-                <h2 id="browse-title" className="text-xl font-semibold">Browse latest revisions</h2>
+                <h2 id="browse-title" className="text-xl font-semibold">
+                    Browse latest revisions
+                </h2>
                 {!questions.length && <p>No questions match these filters.</p>}
                 {Object.entries(groups).map(([topic, entries]) => (
                     <section key={topic} className="mt-5">
                         <h3 className="text-lg font-semibold">{topic}</h3>
                         {entries.map((question) => (
                             <article key={question.id} className="space-y-2 border-b py-4">
-                                <p className="portal-kicker">{question.kind} · revision {question.revision}</p>
+                                <p className="portal-kicker">
+                                    {question.kind} · revision {question.revision}
+                                </p>
                                 <p className="whitespace-pre-wrap">{question.prompt}</p>
                                 <div className="flex flex-wrap gap-5">
-                                    <Link href={`/courses/${offering}/questions/${question.question_id}`} className="underline">Preview</Link>
-                                    <Link href={`/courses/${offering}/questions/${question.question_id}/edit`} className="underline">Edit as new revision</Link>
+                                    <Link
+                                        href={`/courses/${offering}/questions/${question.question_id}`}
+                                        className="underline"
+                                    >
+                                        Preview
+                                    </Link>
+                                    <Link
+                                        href={`/courses/${offering}/questions/${question.question_id}/edit`}
+                                        className="underline"
+                                    >
+                                        Edit as new revision
+                                    </Link>
                                 </div>
                             </article>
                         ))}
@@ -70,7 +100,9 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                 ))}
             </section>
             <section aria-labelledby="author-title">
-                <h2 id="author-title" className="text-xl font-semibold">Author a question</h2>
+                <h2 id="author-title" className="text-xl font-semibold">
+                    Author a question
+                </h2>
                 <QuestionForm action={base} submitLabel="Create question" cancelHref={base} />
             </section>
         </main>

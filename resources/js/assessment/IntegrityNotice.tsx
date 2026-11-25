@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 
-export type IntegrityPolicy = { observe_visibility?: boolean; prevent_copy?: boolean };
+export type IntegrityPolicy = {
+    observe_visibility?: boolean;
+    prevent_copy?: boolean;
+};
 
 export function IntegrityNotice({
     policy,
@@ -13,8 +16,10 @@ export function IntegrityNotice({
 }) {
     useEffect(() => {
         if (!active || !policy.observe_visibility) return;
+
         const changed = () => {
             if (!document.hidden) return;
+
             const token = decodeURIComponent(document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
             void fetch(`/attempts/${attempt}/visibility-signal`, {
                 method: 'POST',
@@ -22,6 +27,7 @@ export function IntegrityNotice({
                 headers: { Accept: 'application/json', 'X-XSRF-TOKEN': token },
             }).catch(() => {});
         };
+
         document.addEventListener('visibilitychange', changed);
         return () => document.removeEventListener('visibilitychange', changed);
     }, [active, attempt, policy.observe_visibility]);
@@ -29,8 +35,8 @@ export function IntegrityNotice({
         <aside aria-label="Exam conditions">
             {policy.observe_visibility && (
                 <p>
-                    This exam records when the page becomes hidden. Your lecturer reviews the context; a
-                    signal never changes your mark.
+                    This exam records when the page becomes hidden. Your lecturer reviews the context; a signal never
+                    changes your mark.
                 </p>
             )}
             {policy.prevent_copy && (

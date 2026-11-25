@@ -2,7 +2,11 @@ import { Head, Link } from '@inertiajs/react';
 import '../../assessment/assessment.css';
 
 type Offerings = {
-    data: { code: string; title: string | null; href: string }[];
+    data: {
+        code: string;
+        title: string | null;
+        href: string;
+    }[];
     prev_page_url: string | null;
     next_page_url: string | null;
 };

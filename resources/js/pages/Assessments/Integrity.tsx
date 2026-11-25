@@ -16,7 +16,11 @@ type Props = {
     title: string;
     policy: IntegrityPolicy;
     locked: boolean;
-    signals: { data: Signal[]; prev_page_url: string | null; next_page_url: string | null };
+    signals: {
+        data: Signal[];
+        prev_page_url: string | null;
+        next_page_url: string | null;
+    };
 };
 
 export default function Integrity({ exam, title, policy, locked, signals }: Props) {
@@ -28,8 +32,8 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                 <p className="portal-kicker">Invigilation · {title}</p>
                 <h1 className="portal-title">Exam conditions</h1>
                 <p>
-                    Set browser controls before the first attempt. These controls cannot verify identity or
-                    monitor other devices.
+                    Set browser controls before the first attempt. These controls cannot verify identity or monitor
+                    other devices.
                 </p>
             </header>
             {locked ? (
@@ -37,8 +41,8 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                     <h2>Conditions in effect</h2>
                     <p>An attempt has started. Conditions are now fixed for this exam.</p>
                     <p>
-                        Page visibility recording: {policy.observe_visibility ? 'on' : 'off'} · Copy
-                        restriction: {policy.prevent_copy ? 'on' : 'off'}
+                        Page visibility recording: {policy.observe_visibility ? 'on' : 'off'} · Copy restriction:{' '}
+                        {policy.prevent_copy ? 'on' : 'off'}
                     </p>
                 </section>
             ) : (
@@ -53,12 +57,7 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                         Record when the exam page becomes hidden
                     </label>
                     <label>
-                        <input
-                            type="checkbox"
-                            name="prevent_copy"
-                            value="1"
-                            defaultChecked={policy.prevent_copy}
-                        />
+                        <input type="checkbox" name="prevent_copy" value="1" defaultChecked={policy.prevent_copy} />
                         Prevent copying from the active exam page
                     </label>
                 </Post>
@@ -66,8 +65,8 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
             <section>
                 <h2>Visibility observations</h2>
                 <p>
-                    A hidden page may mean the learner locked their screen or used an accessibility tool.
-                    Review context before drawing conclusions. Marks are never changed here.
+                    A hidden page may mean the learner locked their screen or used an accessibility tool. Review context
+                    before drawing conclusions. Marks are never changed here.
                 </p>
                 {!signals.data.length && <p>No observations recorded.</p>}
                 {signals.data.map((s) => (

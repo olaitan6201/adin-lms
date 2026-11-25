@@ -1,32 +1,19 @@
+import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
 import '../../assessment/assessment.css';
 import { Head, Link } from '@inertiajs/react';
 import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';
-import { SetupAssignment } from '../../assessment/SetupAssignment';
-import { SetupExam } from '../../assessment/SetupExam';
-import { acceptsDirectScores, type ItemKind } from '../../assessment/contracts';
-import { Field, Post, Roster, WindowFields, type Member } from '../../assessment/Fields';
+import { Post, type Member } from '../../assessment/Fields';
 import { ResultRevisions, type Grade } from '../../assessment/ResultRevisions';
 
-type Item = {
-    id: string;
-    title: string;
-    kind: ItemKind;
-    assignment: string | null;
-    exam: string | null;
-    returned: number | null;
-    maximum_score: string;
-    weight_percent: string;
-    rubric: { guide?: string; criteria?: PolicyDefinition['items'][number]['criteria'] } | null;
-    attempts: {
-        id: string;
-        enrolment_id: string;
-        ordinal: number;
-    }[];
-};
 type Props = {
     offering: string;
     book: string | null;
-    policy: (Omit<PolicyDefinition, 'items'> & {id: string; version: number}) | null;
+    policy:
+        | (Omit<PolicyDefinition, 'items'> & {
+              id: string;
+              version: number;
+          })
+        | null;
     items: Item[];
     grades: Grade[];
     teacher: boolean;
@@ -53,9 +40,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                           : 'Open your assignments and exams, then follow returned marks and published results.'}
                 </p>
                 <nav aria-label="Assessment sections">
-                    {teacher && (
-                        <Link href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>
-                    )}
+                    {teacher && <Link href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>}
                     {teacher && <Link href={`/courses/${offering}/question-banks`}>Question banks</Link>}
                     <a href="#result-revisions">Result history</a>
                 </nav>
@@ -66,92 +51,43 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                 ) : (
                     <p>No assessments configured.</p>
                 ))}
-            {officer && policy && <details>
-                <summary>Amend grading policy · version {policy.version}</summary>
-                <SetupBook key={policy.id} url={`/courses/${offering}/assessments`} policy={{
-                    ...policy, items: items.map(i => ({
-                        id: i.id, title: i.title, kind: i.kind, weight: String(i.weight_percent),
-                        maximum: String(i.maximum_score), rubric: i.rubric?.guide ?? '',
-                        criteria: i.rubric?.criteria ?? [],
-                    })),
-                }} />
-            </details>}
+            {officer && policy && (
+                <details>
+                    <summary>Amend grading policy · version {policy.version}</summary>
+                    <SetupBook
+                        key={policy.id}
+                        url={`/courses/${offering}/assessments`}
+                        policy={{
+                            ...policy,
+                            items: items.map((i) => ({
+                                id: i.id,
+                                title: i.title,
+                                kind: i.kind,
+                                weight: String(i.weight_percent),
+                                maximum: String(i.maximum_score),
+                                rubric: i.rubric?.guide ?? '',
+                                criteria: i.rubric?.criteria ?? [],
+                            })),
+                        }}
+                    />
+                </details>
+            )}
             {items.map((i) => (
-                <section className="portal-panel assessment-item" key={i.id} id={`item-${i.id}`}>
-                    <p className="portal-kicker">{i.kind}</p>
-                    <h2>{i.title}</h2>
-                    <p>
-                        {i.weight_percent}% of result · Maximum {i.maximum_score} points
-                    </p>
-                    <p>{i.rubric?.guide}</p>
-                    {i.returned !== null && <p>Returned score: {i.returned}</p>}
-                    {i.kind === 'assignment' &&
-                        (i.assignment && (teacher || learner) ? (
-                            <Link href={`/assignments/${i.assignment}`}>View assignment</Link>
-                        ) : teacher ? (
-                            <SetupAssignment id={i.id} />
-                        ) : null)}
-                    {i.kind === 'exam' && (
-                        <>
-                            {!i.exam && teacher && (
-                                <Link href={`/assessment-items/${i.id}/questions/select`}>
-                                    Assemble from the question bank
-                                </Link>
-                            )}
-                            {!i.exam && teacher && <SetupExam id={i.id} />}{' '}
-                            {i.exam && teacher && (
-                                <Link href={`/examinations/${i.exam}/integrity`}>
-                                    Exam conditions and observations
-                                </Link>
-                            )}
-                            {i.exam && learner && (
-                                <Post url={`/examinations/${i.exam}/start`} button="Start or resume exam" />
-                            )}
-                            {i.attempts.map((a) => (
-                                <p key={a.id}>
-                                    <Link href={`/attempts/${a.id}/review`}>
-                                        Review {who(a.enrolment_id)} · attempt {a.ordinal}
-                                    </Link>
-                                </p>
-                            ))}
-                            {i.exam && officer && (
-                                <details>
-                                    <summary>Individual accommodation</summary>
-                                    <Post
-                                        url={`/examinations/${i.exam}/accommodations`}
-                                        button="Approve override"
-                                    >
-                                        <Roster members={roster} />
-                                        <WindowFields />
-                                        <Field
-                                            type="number"
-                                            name="duration_seconds"
-                                            label="Duration in seconds"
-                                        />
-                                        <Field type="number" name="max_attempts" label="Attempt cap" />
-                                    </Post>
-                                </details>
-                            )}
-                        </>
-                    )}
-                    {teacher && acceptsDirectScores(i.kind) && (
-                        <Post url={`/assessment-items/${i.id}/score`} button="Record score">
-                            <Roster members={roster} />
-                            <Field label="Points" type="number" name="points" />
-                            <Field label="Reason" name="reason" />
-                        </Post>
-                    )}
-                </section>
+                <AssessmentItemPanel
+                    key={i.id}
+                    item={i}
+                    teacher={teacher}
+                    learner={learner}
+                    officer={officer}
+                    roster={roster}
+                    who={who}
+                />
             ))}
             {book && teacher && (
                 <details>
                     <summary>Compute results</summary>
                     {roster.map((m) => (
-                        <Post
-                            key={m.id}
-                            url={`/gradebooks/${book}/compute/${m.id}`}
-                            button={`Compute ${m.name}`}
-                        />
+                        <Post key={m.id} url={`/gradebooks/${book}/compute/${m.id}`} button={`Compute ${m.name}`} />
                     ))}
                 </details>
             )}

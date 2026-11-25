@@ -6,14 +6,21 @@ export function QuestionPreviewView({ question }: { question: QuestionDetail }) 
     return (
         <article className="space-y-4 rounded border p-5">
             <header>
-                <p className="portal-kicker">{question.topic} · revision {question.revision}</p>
+                <p className="portal-kicker">
+                    {question.topic} · revision {question.revision}
+                </p>
                 <h2 className="text-2xl font-semibold">{question.prompt}</h2>
             </header>
             {question.options && (
                 <section>
                     <h3 className="font-semibold">Choices</h3>
                     <ul className="list-disc pl-5">
-                        {question.options.split('\n').filter(Boolean).map((choice) => <li key={choice}>{choice}</li>)}
+                        {question.options
+                            .split('\n')
+                            .filter(Boolean)
+                            .map((choice) => (
+                                <li key={choice}>{choice}</li>
+                            ))}
                     </ul>
                 </section>
             )}
@@ -46,7 +53,9 @@ export function QuestionPreviewView({ question }: { question: QuestionDetail }) 
                 <h3 className="font-semibold">Revision history</h3>
                 <ul className="list-disc pl-5">
                     {question.history.map((version) => (
-                        <li key={version.id}>Revision {version.revision}: {version.prompt}</li>
+                        <li key={version.id}>
+                            Revision {version.revision}: {version.prompt}
+                        </li>
                     ))}
                 </ul>
             </section>

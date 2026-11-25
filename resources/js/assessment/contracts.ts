@@ -34,7 +34,10 @@ export type QuestionFormValues = {
     pairs: string;
     guide: string;
 };
-export type MatchingItem = { id: string; label: string };
+export type MatchingItem = {
+    id: string;
+    label: string;
+};
 export type QuestionDetail = QuestionFormValues & {
     id: string;
     question_id: string;
@@ -49,5 +52,9 @@ export type QuestionDetail = QuestionFormValues & {
             pairs: Record<string, string>;
         };
     };
-    history: { id: string; revision: number; prompt: string }[];
+    history: {
+        id: string;
+        revision: number;
+        prompt: string;
+    }[];
 };

@@ -2,7 +2,12 @@ import { Head, Link } from '@inertiajs/react';
 import { QuestionPreviewView } from '../../assessment/QuestionPreviewView';
 import type { QuestionDetail } from '../../assessment/contracts';
 
-export default function QuestionPreview({ offering, question }: { offering: string; question: QuestionDetail }) {
+type QuestionPreviewProps = {
+    offering: string;
+    question: QuestionDetail;
+};
+
+export default function QuestionPreview({ offering, question }: QuestionPreviewProps) {
     const bank = `/courses/${offering}/question-banks`;
 
     return (

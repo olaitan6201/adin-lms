@@ -14,9 +14,7 @@ export function Post({ url, button, children }: PostProps) {
                 <>
                     {children}
                     <button disabled={processing}>{button}</button>
-                    <p aria-live="polite">
-                        {recentlySuccessful ? 'Saved.' : Object.values(errors).join(' ')}
-                    </p>
+                    <p aria-live="polite">{recentlySuccessful ? 'Saved.' : Object.values(errors).join(' ')}</p>
                 </>
             )}
         </Form>

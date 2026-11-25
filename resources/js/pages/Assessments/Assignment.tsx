@@ -18,7 +18,12 @@ type Row = {
         marked_file_id: string | null;
         revision: number;
         released_at: string | null;
-        criteria: { criterion_title: string; level_label: string; points: string; feedback: string | null }[];
+        criteria: {
+            criterion_title: string;
+            level_label: string;
+            points: string;
+            feedback: string | null;
+        }[];
     }[];
 };
 type Props = {
@@ -44,16 +49,7 @@ type Props = {
     }[];
     references: string[];
 };
-export default function Assignment({
-    assignment: a,
-    title,
-    rubric,
-    marker,
-    rows,
-    groups,
-    references,
-    pending,
-}: Props) {
+export default function Assignment({ assignment: a, title, rubric, marker, rows, groups, references, pending }: Props) {
     const url = `/assignments/${a.id}`;
     const download = (id: string, text: string) => (
         <a key={id} href={`${url}/files/${id}`}>
@@ -66,11 +62,7 @@ export default function Assignment({
             <Head title={title} />
             <header className="assessment-heading">
                 <p className="portal-kicker">
-                    {marker
-                        ? 'Marking workspace'
-                        : a.group_work
-                          ? 'Group assignment'
-                          : 'Individual assignment'}
+                    {marker ? 'Marking workspace' : a.group_work ? 'Group assignment' : 'Individual assignment'}
                 </p>
                 <h1 className="portal-title">{title}</h1>
                 <nav aria-label="Assignment sections">
@@ -82,8 +74,7 @@ export default function Assignment({
                 <p className="assessment-prose">{a.instructions}</p>
                 <a href={`${url}/instructions`}>Download instructions (.txt)</a>
                 <p>
-                    Due {new Date(a.due_at).toLocaleString()} · Closes{' '}
-                    {new Date(a.closes_at).toLocaleString()}
+                    Due {new Date(a.due_at).toLocaleString()} · Closes {new Date(a.closes_at).toLocaleString()}
                 </p>
                 {references.map((id) => download(id, 'Download reference'))}
                 {rubric && (rubric.guide || rubric.criteria?.length) ? (
@@ -106,8 +97,7 @@ export default function Assignment({
                     </details>
                 ) : null}
                 <p>
-                    Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()}{' '}
-                    bytes
+                    Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()} bytes
                 </p>
                 <p>
                     {a.editable ? 'Revisions accepted.' : 'One submission only.'}{' '}
@@ -136,14 +126,15 @@ export default function Assignment({
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (
                         <div key={s.id}>
-                            Mark: {s.points} · Score revision {s.revision} · {s.released_at ? 'Returned' : 'Private draft'}
+                            Mark: {s.points} · Score revision {s.revision} ·{' '}
+                            {s.released_at ? 'Returned' : 'Private draft'}
                             {s.feedback && <p>{s.feedback}</p>}
                             {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
                             <ul>
                                 {s.criteria.map((c, i) => (
                                     <li key={i}>
-                                        <strong>{c.criterion_title}</strong>: {c.level_label} · {c.points}{' '}
-                                        points. {c.feedback}
+                                        <strong>{c.criterion_title}</strong>: {c.level_label} · {c.points} points.{' '}
+                                        {c.feedback}
                                     </li>
                                 ))}
                             </ul>

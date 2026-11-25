@@ -9,6 +9,11 @@ class PrivateMessageResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return ['id' => $this->id, 'body' => $this->body, 'sender' => $this->sender->only('full_name'), 'recipient' => $this->recipient->only('full_name')];
+        return [
+            'id' => $this->id,
+            'body' => $this->body,
+            'sender' => $this->sender->only('full_name'),
+            'recipient' => $this->recipient->only('full_name'),
+        ];
     }
 }

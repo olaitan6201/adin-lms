@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PostModerationState;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Post extends DomainModel
@@ -13,6 +14,7 @@ class Post extends DomainModel
     protected function casts(): array
     {
         return [
+            'moderation_state' => PostModerationState::class,
             'posted_at' => 'immutable_datetime',
         ];
     }

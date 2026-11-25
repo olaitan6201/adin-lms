@@ -8,7 +8,6 @@ use Database\Seeders\AuthoritySeeder;
 use Database\Seeders\DemoCampusSeeder;
 use Database\Seeders\DemoStaffAuthoritySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 abstract class CommunityTestCase extends TestCase
@@ -19,10 +18,6 @@ abstract class CommunityTestCase extends TestCase
     {
         parent::setUp();
         $this->withoutVite();
-        if (! Route::has('community.inbox')) {
-            Route::middleware('web')->group(base_path('routes/web/community.php'));
-            Route::getRoutes()->refreshNameLookups();
-        }
         $this->seed([DemoCampusSeeder::class, AuthoritySeeder::class, DemoStaffAuthoritySeeder::class]);
         $this->withSession(['security.mfa_user' => $this->person('lecturer')->id]);
     }

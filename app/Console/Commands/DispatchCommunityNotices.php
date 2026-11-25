@@ -16,7 +16,7 @@ class DispatchCommunityNotices extends Command
     public function handle(ScanAcademicNotices $scanner): int
     {
         $scanner->run();
-        $due = NotificationDelivery::where('channel', 'email')->where('status', 'pending')->where('next_attempt_at', '<=', now());
+        $due = NotificationDelivery::dueEmails();
         foreach ($due->lazyById() as $delivery) {
             DeliverCommunityEmail::dispatch($delivery->id);
         }

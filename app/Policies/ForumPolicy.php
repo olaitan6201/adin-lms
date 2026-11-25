@@ -12,7 +12,8 @@ class ForumPolicy
 
     public function view(User $user, Forum $forum): bool
     {
-        return $this->moderate($user, $forum) || $this->audience->learners($forum->offering_id, $forum->group_id)->whereKey($user->id)->exists();
+        return $this->moderate($user, $forum) ||
+            $this->audience->learners($forum->offering_id, $forum->group_id)->whereKey($user->id)->exists();
     }
 
     public function moderate(User $user, Forum $forum): bool

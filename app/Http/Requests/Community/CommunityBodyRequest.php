@@ -6,8 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CommunityBodyRequest extends FormRequest
 {
+    public function body(): string
+    {
+        return $this->validated('body');
+    }
+
     public function rules(): array
     {
-        return ['body' => ['required', 'string', 'max:10000'], 'parent_id' => ['nullable', 'uuid']];
+        return ['body' => ['required', 'string', 'max:10000']];
     }
 }

@@ -3,33 +3,49 @@
 namespace App\Services\Community;
 
 use App\Enums\EnrolmentStatus;
+use App\Enums\RoleCode;
+use App\Enums\ScopeType;
+use App\Models\Enrolment;
 use App\Models\GroupMember;
 use App\Models\RoleGrant;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 final class CommunityAudience
 {
+    /** @return Builder<User> */
     public function learners(string $offering, ?string $group = null): Builder
     {
-        return User::where('status', 'active')->whereHas('student.enrolments', function (Builder $q) use ($offering, $group): void {
-            $q->where('offering_id', $offering)->where('status', EnrolmentStatus::Registered);
-            if ($group !== null) {
-                $q->whereIn('id', GroupMember::select('enrolment_id')->where('group_id', $group)
-                    ->whereHas('group', fn (Builder $g) => $g->where('offering_id', $offering)));
-            }
-        });
+        $registrations = Enrolment::where('offering_id', $offering)->where('status', EnrolmentStatus::Registered);
+        if ($group !== null) {
+            $groupMembers = GroupMember::where('group_id', $group)
+                ->whereHas('group', fn (Builder $groups) => $groups->where('offering_id', $offering));
+            $registrations->whereIn('id', $groupMembers->select('enrolment_id'));
+        }
+
+        $students = Student::whereIn('id', $registrations->select('student_id'));
+
+        return User::where('status', 'active')->whereIn('id', $students->select('user_id'));
     }
 
+    /** @return Builder<User> */
     public function teachers(string $offering): Builder
     {
-        return User::where('status', 'active')->whereHas('lecturer.allocations', fn (Builder $q) => $q->where('offering_id', $offering))
-            ->whereIn('id', RoleGrant::select('user_id')->whereHas('role', fn ($q) => $q->where('code', 'lecturer'))
-                ->whereHas('accessScope', fn ($q) => $q->where('scope_key', 'offering:'.$offering)));
+        $grants = RoleGrant::whereHas('role', fn (Builder $roles) => $roles->where('code', RoleCode::Lecturer))
+            ->whereHas('accessScope', fn (Builder $scopes) => $scopes->where('scope_key', ScopeType::Offering->key($offering)));
+
+        return User::where('status', 'active')
+            ->whereIn('id', $grants->select('user_id'))
+            ->whereHas('lecturer.allocations', fn (Builder $allocations) => $allocations->where('offering_id', $offering));
     }
 
+    /** @return Builder<User> */
     public function members(string $offering): Builder
     {
-        return User::whereIn('id', $this->learners($offering)->select('id')->union($this->teachers($offering)->select('id')));
+        $learners = $this->learners($offering)->select('id');
+        $teachers = $this->teachers($offering)->select('id');
+
+        return User::whereIn('id', $learners->union($teachers));
     }
 }

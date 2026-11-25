@@ -12,6 +12,33 @@ use Illuminate\Support\Facades\DB;
 
 final class EventCaptureTest extends CommunityTestCase
 {
+    public function test_delayed_material_notice_requires_completion_by_the_release_instant(): void
+    {
+        $course = $this->course();
+        $prior = Module::factory()->create(['offering_id' => $course->id, 'position' => 2]);
+        $lesson = Module::factory()->create([
+            'offering_id' => $course->id, 'position' => 3, 'prerequisite_id' => $prior->id,
+        ]);
+        $opens = now()->addHour()->startOfSecond();
+        $resource = LearningMaterial::factory()->create([
+            'module_id' => $lesson->id, 'opens_at' => $opens, 'closes_at' => $opens->copy()->addHour(),
+        ]);
+        $version = MaterialVersion::factory()->create(['material_id' => $resource->id]);
+        $eligible = $this->person('ada');
+        $late = $this->person('tunde');
+        $complete = route('learning.complete', [$course, $prior]);
+        $this->travelTo($opens);
+        $this->actingAs($eligible)->post($complete)->assertRedirect();
+        $this->travel(2)->hours();
+        $this->actingAs($late)->post($complete)->assertRedirect();
+        $this->artisan('community:notify')->assertSuccessful();
+
+        $notices = Notification::where('event_key', 'material:'.$version->id);
+        $this->assertSame([$eligible->id], $notices->pluck('recipient_id')->all());
+        $this->assertSame(['email'], DB::table('notification_deliveries')
+            ->whereIn('notification_id', $notices->select('id'))->pluck('channel')->all());
+    }
+
     public function test_publication_survives_unpublishing_between_scans_but_not_rollback(): void
     {
         $course = $this->course();

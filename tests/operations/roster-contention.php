@@ -23,7 +23,7 @@ $importer = app(ImportRosterFile::class);
 if (($argv[1] ?? null) === 'contender') {
     echo DB::scalar($pg ? 'SELECT pg_backend_pid()' : 'SELECT CONNECTION_ID()'), PHP_EOL;
     flush();
-    echo $importer->import($root.'/registered.csv'), PHP_EOL;
+    echo $importer->import($root.'/batch.csv'), PHP_EOL;
     exit;
 }
 
@@ -35,6 +35,7 @@ $waitQuery = $pg
     ? 'SELECT EXISTS(SELECT 1 FROM pg_locks WHERE pid=? AND NOT granted)'
     : 'SELECT EXISTS(SELECT 1 FROM performance_schema.data_lock_waits w
         JOIN performance_schema.threads t ON t.thread_id=w.requesting_thread_id WHERE t.processlist_id=?)';
+file_put_contents($root.'/batch.csv', "student_id,offering_id,status,revision\nRACE-2,RACE-2,registered,1\nRACE-1,RACE-1,registered,1\n");
 $original = null;
 foreach (['registered' => 1, 'withdrawn' => 2] as $state => $revision) {
     DB::beginTransaction();
@@ -53,7 +54,7 @@ foreach (['registered' => 1, 'withdrawn' => 2] as $state => $revision) {
     DB::commit();
     $changes = trim(stream_get_contents($pipes[1]));
     fclose($pipes[1]);
-    if (proc_close($proc) !== 0 || ! $waiting || $changes !== '0') {
+    if (proc_close($proc) !== 0 || ! $waiting || $changes !== ($state === 'registered' ? '1' : '0')) {
         throw new RuntimeException('Expected observed contender lock wait and replay no-op.');
     }
     $student = DB::table('students')->where('external_student_id', 'RACE-1')->sole();

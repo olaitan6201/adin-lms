@@ -62,10 +62,10 @@ final class ImportRosterFile
         DB::table('students')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_student_id' => $student] + $timestamps);
         $studentId = DB::table('students')->where('external_student_id', $student)->lockForUpdate()->firstOrFail()->id;
         DB::table('offerings')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_offering_id' => $offering] + $timestamps);
-        $offeringId = DB::table('offerings')->where('external_offering_id', $offering)->value('id');
+        $offeringId = DB::table('offerings')->where('external_offering_id', $offering)->lockForUpdate()->firstOrFail()->id;
         $key = ['student_id' => $studentId, 'offering_id' => $offeringId];
         $query = DB::table('enrolments')->where($key);
-        $current = $query->first();
+        $current = $query->lockForUpdate()->first();
         if ($current && $current->source_revision >= $revision) {
             if ((int) $current->source_revision === $revision && $current->status !== $status->value) {
                 throw new DomainException("Record {$record}: conflicting status at the same revision.");

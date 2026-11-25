@@ -41,9 +41,14 @@ export default function Course({ course, teaching, modules }: Props) {
                     Course board
                 </Link>
                 {visible && (
-                    <Link href={`/courses/${course.id}/learning`} className="underline">
-                        Lessons and materials
-                    </Link>
+                    <>
+                        <Link href={`/courses/${course.id}/learning`} className="underline">
+                            Lessons and materials
+                        </Link>
+                        <Link href={`/courses/${course.id}/assessments`} className="underline">
+                            Assessments
+                        </Link>
+                    </>
                 )}
             </nav>
             {!visible && (

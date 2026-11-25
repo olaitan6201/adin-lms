@@ -28,8 +28,6 @@ cleanup() {
 trap cleanup EXIT
 mkdir "$QA_ROOT"/{app,socket}
 git archive "$revision" | tar -x -C "$QA_ROOT/app"
-mkdir -p "$QA_ROOT/app/tests/operations"
-cp tests/operations/{engines.sh,fixture.php,journey.py,reconcile.sql,roster-contention.php} "$QA_ROOT/app/tests/operations/"
 cp -a --reflink=auto vendor "$QA_ROOT/app/"
 cd "$QA_ROOT/app"
 source tests/operations/engines.sh

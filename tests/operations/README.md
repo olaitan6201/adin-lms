@@ -13,7 +13,7 @@ bash tests/operations/rehearse.sh mysql extended
 /usr/bin/python3 tests/operations/smtp_drill.py
 ```
 
-Each invocation uses `git archive HEAD`, the working harness, a private dependency copy and a fresh temporary directory. No developer `.env` or incoming service configuration is imported. The server databases use new socket-only instances; the four-worker PHP development server listens on a temporary loopback port. Exit status is nonzero on failed assertions. The database, session data and logical dump are deleted on exit. Keep stdout for the tested commit, engine, HTTP observations and restore duration.
+Each database invocation uses `git archive HEAD` including its fixtures, a private dependency copy and a fresh temporary directory. No developer `.env` or incoming service configuration is imported. The server databases use new socket-only instances; the four-worker PHP development server listens on a temporary loopback port. Exit status is nonzero on failed assertions. The database, session data and logical dump are deleted on exit. Keep stdout for the tested commit, engine, HTTP observations and restore duration.
 
 **Fixture:** two separately authenticated, enrolled learners on the same published offering, one objective question and one allowed attempt each. Both clients start together; each also issues a duplicate concurrent start. Each saves one answer, receives a conflict on a stale revision, reconnects, submits twice and checks the attempt limit. After logical restore to a different database, the harness reconciles persisted attempt and question IDs with the HTTP receipts, checks answer revisions and values, timestamps, one private score per learner, and compares the rows to the pre-restore state.
 

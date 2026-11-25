@@ -39,9 +39,9 @@ restore_and_compare() {
     echo "Logical database restore only: $(( ($(date +%s%N) - start) / 1000000 )) ms"
     for db in qa_source qa_restored; do
         if [[ $DB_CONNECTION == pgsql ]]; then
-            "$pg/psql" -XAt -F $'\t' -v ON_ERROR_STOP=1 -d "$db" -f scripts/qualification/reconcile.sql
+            "$pg/psql" -XAt -F $'\t' -v ON_ERROR_STOP=1 -d "$db" -f tests/operations/reconcile.sql
         else
-            "${my[@]}" "$db" < scripts/qualification/reconcile.sql
+            "${my[@]}" "$db" < tests/operations/reconcile.sql
         fi > "$QA_ROOT/$db.rows"
     done
     cmp "$QA_ROOT"/{qa_source,qa_restored}.rows

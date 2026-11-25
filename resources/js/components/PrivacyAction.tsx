@@ -26,7 +26,6 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
         const path = mode === 'refer' ? 'incidents' : mode === 'approve' ? `${subject}/approvals` : `${subject}/execute/${approval}`;
         fields.delete('subject');
         fields.delete('approval');
-        if (mode === 'execute') fields.delete('reference');
         setErrors({});
         setResult('');
         setBusy(true);

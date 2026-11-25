@@ -57,10 +57,10 @@ class PrivacyCaseFileTest extends TestCase
         $decision = ['stage' => 'open', 'reference' => 'RELEASE-1'];
         $this->postJson($release, $decision)->assertForbidden();
         $this->operator();
-        $this->postJson("$base/execute/$id")->assertConflict();
+        $this->postJson("$base/execute/$id", ['reference' => 'DEL-1'])->assertConflict();
         $this->assertDatabaseCount('privacy_consents', 1);
         $this->post($release, $decision)->assertRedirect();
-        $this->postJson("$base/execute/$id")->assertExactJson(['deleted' => 1]);
+        $this->postJson("$base/execute/$id", ['reference' => 'DEL-1'])->assertExactJson(['deleted' => 1]);
     }
 
     public function test_access_case_requires_subject_and_records_review_before_delivery(): void
@@ -81,9 +81,9 @@ class PrivacyCaseFileTest extends TestCase
             $this->post("/operations/privacy/cases/{$case->id}", ['stage' => $stage, 'reference' => "ACCESS-E$index"])->assertRedirect();
             if ($index === 0) {
                 $id = $this->postJson("$base/approvals", $scope)->assertCreated()->json('approval');
-                $this->postJson("$base/execute/$id")->assertForbidden();
+                $this->postJson("$base/execute/$id", ['reference' => 'ACCESS-1'])->assertForbidden();
                 $this->operator();
-                $this->postJson("$base/execute/$id")->assertOk()->assertJsonCount(1, 'registrations')
+                $this->postJson("$base/execute/$id", ['reference' => 'ACCESS-1'])->assertOk()->assertJsonCount(1, 'registrations')
                     ->assertJsonPath('registrations.0.external_student_id', $student->external_student_id)
                     ->assertJsonMissingPath('registrations.0.source_email');
             }

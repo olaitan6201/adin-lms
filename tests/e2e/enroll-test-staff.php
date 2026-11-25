@@ -57,6 +57,10 @@ foreach (['desktop', 'phone'] as $project) {
     $operator = User::factory()->create(['email' => "privacy-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($operator->id, RoleCode::SuperAdmin, 'institution', false);
     file_put_contents($run."/privacy-{$project}.factor", app(TotpEnrollment::class)->issue($operator), LOCK_EX);
+    $executor = User::factory()->create(['email' => "privacy-executor-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($executor->id, RoleCode::SuperAdmin, 'institution', false);
+    file_put_contents($run."/privacy-executor-{$project}.factor", app(TotpEnrollment::class)->issue($executor), LOCK_EX);
+    file_put_contents($run."/privacy-subject-{$project}", $guardian->id, LOCK_EX);
     foreach (Student::orderBy('id')->limit(2)->get() as $linked) {
         GuardianAccess::forceCreate([
             'student_id' => $linked->id, 'guardian_id' => $guardian->id,

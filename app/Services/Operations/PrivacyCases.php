@@ -11,6 +11,7 @@ use App\Models\PrivacyCaseFile;
 use App\Models\PrivacyConsent;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 final class PrivacyCases
 {
@@ -35,10 +36,14 @@ final class PrivacyCases
     }
 
     /** @return array<string,mixed> */
-    public function execute(User $operator, User $subject, string $approvalId): array
+    public function execute(User $operator, User $subject, string $approvalId, string $reference): array
     {
-        return DB::transaction(function () use ($operator, $subject, $approvalId): array {
+        return DB::transaction(function () use ($operator, $subject, $approvalId, $reference): array {
             $approval = $this->lockExecutableApproval($operator, $subject, $approvalId);
+            if (($approval->details['reference'] ?? null) !== $reference) {
+                throw ValidationException::withMessages(['reference' => 'Enter the case reference recorded on this approval receipt.']);
+            }
+
             $value = $approval->details['operation'] ?? null;
             $operation = is_string($value) ? PrivacyOperation::tryFrom($value) : null;
             abort_if($operation === null, 409, 'Unrecognised privacy approval.');

@@ -34,11 +34,14 @@ class OperationsPrivacyTest extends TestCase
         $this->post('/operations/retention', ['days' => 2])->assertRedirect('/operations');
         $base = "/operations/privacy/{$subject->id}";
         $id = $this->postJson("$base/approvals", ['operation' => 'purge', 'reference' => 'CASE-01'])->assertCreated()->json('approval');
-        $this->postJson("$base/execute/$id")->assertForbidden();
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-01'])->assertForbidden();
         $this->operator();
-        $this->postJson("/operations/privacy/{$other->id}/execute/$id")->assertNotFound();
-        $this->postJson("$base/execute/$id")->assertExactJson(['deleted' => 1]);
-        $this->postJson("$base/execute/$id")->assertConflict();
+        $this->postJson("/operations/privacy/{$other->id}/execute/$id", ['reference' => 'CASE-01'])->assertNotFound();
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-OTHER'])->assertUnprocessable()->assertJsonValidationErrors('reference');
+        $this->assertSame(1, PrivacyConsent::where('user_id', $subject->id)->whereNotNull('withdrawn_at')->count());
+        $this->assertDatabaseMissing('audit_logs', ['action' => 'privacy.executed', 'subject_key' => $id]);
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-01'])->assertExactJson(['deleted' => 1]);
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-01'])->assertConflict();
         $this->assertSame(1, PrivacyConsent::where('user_id', $subject->id)->whereNull('withdrawn_at')->count());
         $this->assertSame(1, PrivacyConsent::where('user_id', $other->id)->count());
         $this->assertDatabaseHas('audit_logs', ['action' => 'privacy.executed', 'subject_key' => $id]);
@@ -52,7 +55,10 @@ class OperationsPrivacyTest extends TestCase
         $this->operator();
         $id = $this->postJson("$base/approvals", ['operation' => 'export', 'reference' => 'CASE-02'])->assertCreated()->json('approval');
         $this->operator();
-        $this->postJson("$base/execute/$id", ['include' => 'credentials'])->assertOk()
+        $this->postJson("$base/execute/$id")->assertUnprocessable()->assertJsonValidationErrors('reference');
+        $this->postJson("$base/execute/$id", ['reference' => 'case-02'])->assertUnprocessable()->assertJsonMissingPath('account');
+        $this->assertDatabaseMissing('audit_logs', ['action' => 'privacy.executed', 'subject_key' => $id]);
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-02', 'include' => 'credentials', 'operation' => 'purge'])->assertOk()
             ->assertExactJson(['account' => $subject->fresh()->only(['id', 'full_name', 'email', 'status']), 'consents' => []]);
     }
 
@@ -82,11 +88,11 @@ class OperationsPrivacyTest extends TestCase
             'action' => 'privacy.approved',
             'subject_key' => $subject->id,
             'occurred_at' => now(),
-            'details' => ['operation' => 'retired-operation', 'days' => 1],
+            'details' => ['operation' => 'retired-operation', 'reference' => 'CASE-LEGACY', 'days' => 1],
         ]);
 
         $this->operator();
-        $this->postJson("/operations/privacy/{$subject->id}/execute/{$legacy->id}")->assertConflict();
+        $this->postJson("/operations/privacy/{$subject->id}/execute/{$legacy->id}", ['reference' => 'CASE-LEGACY'])->assertConflict();
         $this->assertDatabaseHas('privacy_consents', ['user_id' => $subject->id]);
         $this->assertDatabaseMissing('audit_logs', ['action' => 'privacy.executed', 'subject_key' => $legacy->id]);
     }
@@ -103,9 +109,9 @@ class OperationsPrivacyTest extends TestCase
         $export = $this->postJson("$base/approvals", ['operation' => 'export', 'reference' => 'CASE-04'])->assertCreated()->json('approval');
         $this->operator();
         $this->post('/operations/retention', ['days' => 1])->assertRedirect();
-        $this->postJson("$base/execute/$id")->assertConflict();
+        $this->postJson("$base/execute/$id", ['reference' => 'CASE-03'])->assertConflict();
         $this->travel(25)->hours();
-        $this->postJson("$base/execute/$export")->assertConflict();
+        $this->postJson("$base/execute/$export", ['reference' => 'CASE-04'])->assertConflict();
         $this->assertDatabaseMissing('audit_logs', ['action' => 'privacy.executed']);
     }
 }

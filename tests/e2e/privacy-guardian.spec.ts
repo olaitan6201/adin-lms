@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 async function signIn(page: Page, login: string) {
     await page.goto('/login');
@@ -41,7 +42,7 @@ test('guardian can switch between two approved records using the displayed refer
     }
 });
 
-test('privacy case corrections focus the rejected field and preserve valid entries', async ({ page }, info) => {
+test('privacy case corrections focus the rejected field and preserve valid entries', async ({ page, browser }, info) => {
     await signIn(page, `privacy-${info.project.name}`);
     await page.goto('/operations/privacy');
     const reference = page.getByLabel('External case reference');
@@ -79,6 +80,32 @@ test('privacy case corrections focus the rejected field and preserve valid entri
     await expect(account).toBeFocused();
     await expect(account).toHaveAccessibleDescription(/check the subject account UUID/i);
     await expect(approve.getByLabel('Case reference')).toHaveValue(`CASE-${info.project.name}`);
+    const subjectId = readFileSync(join(process.env.PORTAL_E2E_RUN!, `privacy-subject-${info.project.name}`), 'utf8');
+    await account.fill(subjectId);
+    await approve.getByRole('button').press('Enter');
+    const approval = (await approve.getByRole('status').innerText()).match(/[a-f0-9-]{36}/)![0];
+    const executor = await browser.newPage({ baseURL: info.project.use.baseURL, viewport: page.viewportSize()! });
+    try {
+        await signIn(executor, `privacy-executor-${info.project.name}`);
+        await executor.goto('/operations/privacy');
+        const execute = executor.getByRole('heading', { name: 'Execute an approval' }).locator('..');
+        const caseReference = execute.getByLabel('Case reference on the approval receipt');
+        await execute.getByLabel('Subject account UUID').fill(subjectId);
+        await execute.getByLabel('Approval UUID').fill(approval);
+        await caseReference.fill('DIFFERENT-CASE');
+        await execute.getByRole('checkbox').check();
+        await execute.getByRole('button').press('Enter');
+        await expect(caseReference).toBeFocused();
+        await expect(caseReference).toHaveAccessibleDescription(/case reference recorded on this approval/);
+        await expect(execute.getByRole('status')).toHaveCount(0);
+        await caseReference.fill(`CASE-${info.project.name}`);
+        await execute.getByRole('checkbox').check();
+        await execute.getByRole('button').press('Enter');
+        await expect(execute.getByRole('status')).toHaveText('Approved action completed.');
+        await expect(execute.locator('pre')).toContainText(`guardian-${info.project.name}@demo.example.test`);
+    } finally {
+        await executor.close();
+    }
     await page.getByLabel('Incident reference').fill(`INC-${info.project.name}`);
     await page.getByRole('button', { name: 'Record referral' }).press('Enter');
     await expect(page.getByText(/^Referral receipt:/)).toBeVisible();

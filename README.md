@@ -223,6 +223,15 @@ editing the initial migration does not upgrade a database that already ran it.
   all browsers use `php artisan security:revoke-sessions <user-uuid>`.
   Authorised ICT users can inspect authentication outcomes at `/security/login-events`.
 
+### Privacy approval execution
+
+`POST /operations/privacy/{subject}/execute/{approval}` requires the `reference`
+from the approval receipt, including its original letter case. Clients that
+previously sent an empty body must now send it, for example `{"reference":"CASE-01"}`.
+A missing or mismatched reference returns a `422` field error to JSON callers
+and leaves the approval unused. The receipt determines the action; a different
+authorised operator must execute it for the approved subject within 24 hours.
+
 ### Roster pilot
 
 An operator can import registration changes from a UTF-8 CSV (no BOM). Each row is a delta: omission does not withdraw a student. Use stable, case-sensitive student and semester-specific offering IDs; the positive revision increases per student/offering pair. Replays and older revisions are ignored. Invalid rows and same-revision conflicts roll back the whole file.

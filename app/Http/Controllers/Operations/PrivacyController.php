@@ -70,8 +70,10 @@ final class PrivacyController
         return response()->json(['approval' => $approval->id], 201);
     }
 
-    public function execute(Request $request, User $subject, string $approval, PrivacyCases $cases): JsonResponse
+    public function execute(CaseReferenceRequest $request, User $subject, string $approval, PrivacyCases $cases): JsonResponse
     {
-        return response()->json($cases->execute($request->user(), $subject, $approval), 200, ['Cache-Control' => 'private, no-store']);
+        $result = $cases->execute($request->user(), $subject, $approval, $request->validated('reference'));
+
+        return response()->json($result, 200, ['Cache-Control' => 'private, no-store']);
     }
 }

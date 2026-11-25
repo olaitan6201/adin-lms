@@ -23,7 +23,7 @@ final class StudyShelf
         $visits = ReportRelease::lesson($lessons)->join('enrolments as e', 'e.offering_id', '=', 'o.id')->where('e.status', EnrolmentStatus::Registered)
             ->join('students as st', 'st.id', '=', 'e.student_id')->where('st.user_id', $user->id)
             ->leftJoin('lesson_progress as lp', fn ($j) => $j->on('lp.module_id', '=', 'm.id')->on('lp.enrolment_id', '=', 'e.id'))
-            ->selectRaw('count(*) as available, count(lp.completed_at) as completed')->first();
+            ->select([])->selectRaw('count(*) as available, count(lp.completed_at) as completed')->first();
         $notices = DB::table('announcements as n')->leftJoin('offerings as course', 'course.id', '=', 'n.offering_id')
             ->where(fn ($q) => $q->whereNull('n.offering_id')->orWhereIn('n.offering_id', $scope->reorder()->select('o.id')))
             ->where('n.published_at', '<=', now())->orderByDesc('n.published_at')->orderBy('n.id')->limit(5)

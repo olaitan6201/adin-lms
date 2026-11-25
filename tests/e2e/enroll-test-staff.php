@@ -40,7 +40,10 @@ foreach ($authors as $login) {
     app(ChangeRoleGrant::class)->apply($user->id, RoleCode::Lecturer, 'offering:'.$offering->id, false);
 }
 
-foreach (['lecturer', 'officer', ...$authors] as $role) {
+$examOfficer = User::factory()->create(['email' => 'exam-office@demo.example.test']);
+app(ChangeRoleGrant::class)->apply($examOfficer->id, RoleCode::ExaminationOfficer, 'institution', false);
+
+foreach (['lecturer', 'officer', 'exam-office', ...$authors] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
     $secret = app(TotpEnrollment::class)->issue($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);

@@ -13,11 +13,18 @@ final class NativeRestore
 {
     public function store(array $backup, array $entries, Offering $target, User $actor, array &$written): int
     {
+        $modules = [];
+        $assessment = $backup['assessment'] ?? null;
+        $restore = new NativeAssessmentRestore;
+        if ($assessment) {
+            $restore->preflight($assessment, $target, $actor);
+        }
         foreach ($backup['lessons'] as $index => $lesson) {
             $module = Module::forceCreate([
                 'offering_id' => $target->id, 'position' => $index + 1,
                 'kind' => $lesson['kind'], 'title' => $lesson['title'], 'body' => $lesson['body'],
             ]);
+            $modules[$index] = $module->id;
             foreach ($lesson['materials'] as $row) {
                 $material = LearningMaterial::forceCreate([
                     'module_id' => $module->id, 'title' => $row['title'], 'download_allowed' => $row['download'],
@@ -37,6 +44,8 @@ final class NativeRestore
             Forum::forceCreate(['offering_id' => $target->id, 'title' => $title]);
         }
 
-        return count($backup['lessons']) + count($backup['forums']);
+        $count = $assessment ? $restore->store($assessment, $target, $actor, $modules, $entries, $written) : 0;
+
+        return count($backup['lessons']) + count($backup['forums']) + $count;
     }
 }

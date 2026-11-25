@@ -6,6 +6,7 @@ use App\Enums\CoursePackageFormat;
 use App\Enums\Learning\LessonKind;
 use App\Enums\OfferingStatus;
 use App\Enums\OperationsEvent;
+use App\Models\Announcement;
 use App\Models\ClassSession;
 use App\Models\Forum;
 use App\Models\Gradebook;
@@ -23,7 +24,7 @@ final class CourseTransfer
     public function import(User $actor, Offering $offering, string $path): int
     {
         $entries = TextAssetArchive::read($path);
-        $backup = isset($entries['backup.json']) ? (new NativeManifest)->decode($entries) : null;
+        $backup = isset($entries['backup.json']) ? (new NativeManifest)->decode($entries, fn () => NativeAssessmentSnapshot::authorize($actor, $offering)) : null;
         $chapters = $backup ? [] : (new CoursePackage)->unpack($entries);
         $written = [];
 
@@ -31,6 +32,10 @@ final class CourseTransfer
             return DB::transaction(function () use ($actor, $offering, $chapters, $backup, $entries, &$written): int {
                 $target = Offering::whereKey($offering->id)->lockForUpdate()->firstOrFail();
                 $hasModules = Module::where('offering_id', $target->id)->exists();
+                if ($backup) {
+                    abort_if($target->activity_order || Announcement::where('offering_id', $target->id)->exists(),
+                        409, 'Select an empty draft offering without announcements or a custom activity order.');
+                }
                 abort_if($target->status !== OfferingStatus::Draft || $hasModules || Forum::where('offering_id', $target->id)->exists()
                     || Gradebook::where('offering_id', $target->id)->exists() || ClassSession::where('offering_id', $target->id)->exists()
                     || $target->enrolments()->exists(), 409, 'Select an empty draft offering without enrolments, lessons, forums, classes or a gradebook.');
@@ -82,7 +87,7 @@ final class CourseTransfer
     public function export(User $actor, Offering $offering, CoursePackageFormat $format): string
     {
         if ($format === CoursePackageFormat::Native) {
-            $bytes = TextAssetArchive::write((new NativeBackup)->entries($offering));
+            $bytes = TextAssetArchive::write((new NativeBackup)->entries($offering, $actor));
             OperationsAudit::record($actor, OperationsEvent::CourseExported, $offering->id, ['format' => $format->value]);
 
             return $bytes;

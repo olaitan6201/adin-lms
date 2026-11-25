@@ -6,14 +6,20 @@ use App\Enums\Learning\LessonKind;
 
 final class NativeManifest
 {
-    public function decode(array $entries): array
+    public function decode(array $entries, ?\Closure $authorizeAssessment = null): array
     {
-        $manifest = json_decode($entries['backup.json'], true, 12);
+        $manifest = json_decode($entries['backup.json'], true, 20);
         unset($entries['backup.json']);
-        $this->fields($manifest, ['format', 'lessons', 'forums']);
+        $v3 = ($manifest['format'] ?? null) === 'adin-course-3';
+        if ($v3 && $authorizeAssessment !== null) {
+            $authorizeAssessment();
+        }
+        $this->fields($manifest, $v3 ? ['format', 'lessons', 'forums', 'assessment'] : ['format', 'lessons', 'forums']);
         $this->boundedList($manifest['lessons'], 50);
         $this->boundedList($manifest['forums'], 50);
-        if ($manifest['format'] !== 'adin-course-2' || (! $manifest['lessons'] && ! $manifest['forums'])) {
+        if ($v3) {
+            (new NativeAssessmentRules)->validate($manifest['assessment'], count($manifest['lessons']), $entries);
+        } elseif ($manifest['format'] !== 'adin-course-2' || (! $manifest['lessons'] && ! $manifest['forums'])) {
             TextAssetArchive::reject('Expected a non-empty Adin course backup.');
         }
 
@@ -60,14 +66,7 @@ final class NativeManifest
 
         $attachment = $row['attachment'];
         if ($attachment !== null) {
-            $this->fields($attachment, ['name', 'asset', 'sha256']);
-            PackageAttachments::validateName($attachment['name']);
-            $asset = $attachment['asset'];
-            if (! is_string($asset) || ! preg_match('/^asset-[1-9][0-9]?\.bin$/D', $asset)
-                || ! isset($entries[$asset]) || hash('sha256', $entries[$asset]) !== $attachment['sha256']) {
-                TextAssetArchive::reject('Missing, repeated or corrupt attachment.');
-            }
-            unset($entries[$asset]);
+            PackageAttachments::consume($attachment, $entries);
         }
     }
 

@@ -13,6 +13,7 @@ use App\Models\Offering;
 use App\Models\User;
 use App\Policies\LearningPolicy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 final class CourseOutline
@@ -26,7 +27,7 @@ final class CourseOutline
         $completed = $enrolment ? LessonProgress::where('enrolment_id', $enrolment->id)
             ->whereNotNull('completed_at')->pluck('module_id')->flip() : collect();
         $modules = $visible ? Module::where('offering_id', $offering->id)->orderBy('position')
-            ->get(['id', 'kind', 'title', 'opens_at', 'closes_at'])
+            ->get(['id', 'kind', 'title', 'body', 'opens_at', 'closes_at'])
             ->filter(fn ($module) => $staff || $this->policy->released($module))->values() : collect();
         $activities = $modules->map(fn ($module) => [
             'id' => $module->id,
@@ -35,6 +36,10 @@ final class CourseOutline
             'detail' => str_starts_with($module->kind, LessonKind::DRAFT_PREFIX) ? 'Draft'
                 : ($this->policy->released($module) ? 'Available' : 'Outside release window'),
             'complete' => $completed->has($module->id),
+            'readingPreview' => $staff ? null : Str::of($module->body ?? '')
+                ->replaceMatches('/\{\{resource:[a-f0-9-]+\}\}/', '')
+                ->replaceMatches('/\[([^\]]+)\]\([^)]+\)/', '$1')
+                ->squish()->limit(320)->toString(),
             'href' => route('learning.index', $offering).'#lesson-'.$module->id,
         ]);
         if ($visible) {

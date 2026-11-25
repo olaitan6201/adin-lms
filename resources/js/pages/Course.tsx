@@ -15,6 +15,7 @@ export interface Activity {
     dateLabel?: string;
     complete?: boolean;
     actionable?: boolean;
+    readingPreview?: string | null;
 }
 
 interface Props {
@@ -42,7 +43,7 @@ export default function Course({
     const visible = teaching || course.status === 'published';
     const title = course.title || course.external_offering_id;
     const lessons = activities.filter((a) => a.type === 'Lesson');
-    const next = activities.find((a) => (a.type === 'Lesson' && !a.complete) || a.actionable);
+    const next = lessons.find((lesson) => !lesson.complete) ?? activities.find((a) => a.actionable);
     const completed = lessons.filter((a) => a.complete).length;
     const base = `/courses/${course.id}`;
 
@@ -69,18 +70,13 @@ export default function Course({
                         .join(' · ')}
                 </p>
             </header>
-            {!teaching && visible && activities.length > 0 && (
-                <nav aria-label="Course sequence">
-                    <h2>Course outline</h2>
-                    <CourseActivityList activities={activities} />
-                </nav>
-            )}
             <div className="syllabus-grid wl-course-grid">
                 <div>
                     {visible && !teaching && (lessons.length > 0 || next) && (
                         <section className="wl-focus">
                             <p className="wl-label">{next ? `Up next / ${next.type}` : 'Progress'}</p>
                             <h2>{next?.title ?? 'Reading complete'}</h2>
+                            {next?.readingPreview && <p className="wl-reading">{next.readingPreview}</p>}
                             {lessons.length > 0 && (
                                 <>
                                     <p>
@@ -95,6 +91,12 @@ export default function Course({
                             )}
                             {next && <Link className="wl-button" href={next.href}>Open {next.type.toLowerCase()} →</Link>}
                         </section>
+                    )}
+                    {!teaching && visible && activities.length > 0 && (
+                        <nav aria-label="Course sequence">
+                            <h2>Course outline</h2>
+                            <CourseActivityList activities={activities} />
+                        </nav>
                     )}
                     {teaching && <h2>Course outline</h2>}
                     {teaching && course.status === 'draft' && (

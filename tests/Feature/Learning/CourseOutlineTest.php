@@ -54,6 +54,7 @@ class CourseOutlineTest extends LearningTestCase
             ->where('course.title', 'Introduction to Computing')->where('lecturers.0', 'Demo Lecturer')
             ->where('outcomes.0', 'Explain an algorithm')->has('activities', 3)
             ->where('activities.0.id', $lesson->id)->where('activities.0.complete', false)
+            ->where('activities.0.readingPreview', $lesson->body)
             ->where('activities.1.id', $class->id)->where('activities.2.title', 'Reading questions'));
         $this->post($this->base.'/lessons/'.$lesson->id.'/complete')->assertRedirect();
         $this->get($url)->assertInertia(fn (Page $p) => $p->where('activities.0.complete', true));

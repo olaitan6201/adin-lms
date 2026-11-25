@@ -12,7 +12,7 @@ class GradeInputResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'item' => $this->score->item->title,
+            'item' => $this->definition?->title ?? $this->score->item->title,
             'score_revision' => $this->score->revision,
             'points' => (string) $this->score->points,
             'maximum' => (string) $this->maximum_score,

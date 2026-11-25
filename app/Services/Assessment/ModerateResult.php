@@ -8,6 +8,7 @@ use App\Enums\Assessment\ReviewDecision;
 use App\Models\AssessmentScore;
 use App\Models\Enrolment;
 use App\Models\Grade;
+use App\Models\Gradebook;
 use App\Models\GradeInput;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ class ModerateResult
     public function run(Grade $grade, array $data, User $user): void
     {
         DB::transaction(function () use ($grade, $data, $user) {
+            $book = Gradebook::where('offering_id', $grade->enrolment->offering_id)->lockForUpdate()->firstOrFail();
             Enrolment::lockForUpdate()->findOrFail($grade->enrolment_id);
             $grade = Grade::lockForUpdate()->findOrFail($grade->id);
             abort_if(
@@ -30,6 +32,7 @@ class ModerateResult
             $decision = ReviewDecision::from($data['decision']);
 
             if ($decision !== ReviewDecision::Correct) {
+                abort_unless($book->policy_id === $grade->policy_id, 409, 'The grading policy changed. Compute a new result revision.');
                 foreach (GradeInput::with('score')->where('grade_id', $grade->id)->get() as $input) {
                     abort_if(
                         AssessmentScore::where('enrolment_id', $grade->enrolment_id)

@@ -6,8 +6,8 @@ use App\Http\Resources\Assessment\GradeInputResource;
 use App\Models\AuditLog;
 use App\Models\Grade;
 use App\Models\GradeBoundary;
-use App\Models\GradeInput;
 use App\Policies\AssessmentItemPolicy;
+use App\Services\Assessment\FrozenGradeInputs;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class ModerationEvidenceController
     {
         abort_unless($access->examOfficer($request->user()), 404);
         $enrolment = $grade->enrolment;
-        $inputs = GradeInput::where('grade_id', $grade->id)->with('score.item')->orderBy('id')->get();
+        $inputs = app(FrozenGradeInputs::class)->forGrade($grade);
         $response = Inertia::render('Assessments/Moderation', [
             'desk' => route('assessment.desk', $enrolment->offering_id, false),
             'learner' => $enrolment->student->matric_number,

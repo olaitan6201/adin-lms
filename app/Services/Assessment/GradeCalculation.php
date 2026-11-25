@@ -20,6 +20,7 @@ class GradeCalculation
     public function compute(Gradebook $book, Enrolment $enrolment, User $user): Grade
     {
         return DB::transaction(function () use ($book, $enrolment, $user) {
+            $book = Gradebook::lockForUpdate()->findOrFail($book->id);
             Enrolment::where('offering_id', $book->offering_id)->lockForUpdate()->findOrFail($enrolment->id);
             $total = BigRational::zero();
             $weights = BigRational::zero();

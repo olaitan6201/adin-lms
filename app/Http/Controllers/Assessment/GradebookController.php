@@ -11,8 +11,8 @@ use App\Models\Enrolment;
 use App\Models\Grade;
 use App\Models\Gradebook;
 use App\Models\GradeBoundary;
-use App\Models\GradeInput;
 use App\Policies\AssessmentItemPolicy;
+use App\Services\Assessment\FrozenGradeInputs;
 use App\Services\Assessment\GradeCalculation;
 use App\Services\Assessment\ModerateResult;
 use App\Services\Assessment\ScoreLedger;
@@ -78,10 +78,7 @@ class GradebookController
         $staff = $access->teaches($user, $offering) || $access->examOfficer($user);
         abort_unless($ownsResult || $staff, 404);
 
-        $inputs = GradeInput::where('grade_id', $grade->id)
-            ->orderBy('id')
-            ->with('score.item')
-            ->get();
+        $inputs = app(FrozenGradeInputs::class)->forGrade($grade);
         $ledger->audit(AssessmentEvent::GradeExported, $grade->id, $request->user()->id);
 
         return response(json_encode([

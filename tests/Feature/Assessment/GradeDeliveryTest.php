@@ -5,6 +5,8 @@ namespace Tests\Feature\Assessment;
 use App\Models\AssessmentItem;
 use App\Models\Enrolment;
 use App\Models\Grade;
+use App\Models\Gradebook;
+use App\Models\GradingPolicy;
 use Brick\Math\BigDecimal;
 use Inertia\Testing\AssertableInertia as Page;
 
@@ -15,6 +17,24 @@ class GradeDeliveryTest extends AssessmentCase
         $this->as($this->officer->refresh())->get('/examinations-office')->assertInertia(fn (Page $p) => $p
             ->where('offerings.data.0.href', $this->desk)->where('academicLinks.0.href', '/examinations-office'));
         $this->as($this->member->student->user)->get('/examinations-office')->assertForbidden();
+    }
+
+    public function test_previously_approved_result_cannot_publish_under_a_replaced_policy(): void
+    {
+        $this->setupItems(['manual']);
+        $item = AssessmentItem::sole();
+        $this->post("/assessment-items/$item->id/score", [
+            'enrolment' => $this->member->id, 'points' => 8, 'reason' => 'Verified answer',
+        ])->assertRedirect();
+        $this->post("/gradebooks/$item->gradebook_id/compute/{$this->member->id}")->assertRedirect();
+        $grade = Grade::sole();
+        $review = "/grades/$grade->id/review";
+        $this->as($this->officer)->post($review, ['decision' => 'approve', 'reason' => 'Checked'])->assertRedirect();
+        $replacement = GradingPolicy::forceCreate(['name' => 'Revised', 'version' => 2, 'rounding_rule' => 'half_even']);
+        Gradebook::sole()->forceFill(['policy_id' => $replacement->id])->save();
+        $this->post($review, ['decision' => 'publish', 'reason' => 'Release'])->assertConflict();
+        $this->assertNull($grade->refresh()->published_at);
+        $this->as($this->member->student->user)->get("/grades/$grade->id/sheet")->assertNotFound();
     }
 
     public function test_weight_validation_published_boundary_and_regrade_evidence(): void

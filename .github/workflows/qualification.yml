@@ -61,3 +61,6 @@ jobs:
           cp .env.example .env
           php artisan key:generate --no-interaction
           vendor/bin/phpunit --fail-on-skipped
+      - name: Verify concurrent roster replay and exam recovery
+        if: matrix.engine != 'sqlite'
+        run: bash tests/operations/rehearse.sh "${{ matrix.engine }}" extended

@@ -25,6 +25,7 @@ final class InsightsAccessTest extends InsightCase
             'Completed lessons' => 1, 'Active academic sessions' => 1, 'Offerings awaiting approval' => 0] as $name => $expected) {
             $this->assertSame($expected, $metrics[$name], $name);
         }
+
         $this->assertSame(1, $this->data('/reports')['table']['totals']['Offerings awaiting approval']);
         $empty = AcademicSession::factory()->create();
         $this->assertSame([], $this->data("/reports?session=$empty->id")['table']['rows']);
@@ -42,6 +43,7 @@ final class InsightsAccessTest extends InsightCase
         foreach (['/reports', '/reports/export/pdf', '/reports/export/xlsx'] as $url) {
             $this->get($url.$q)->assertNotFound();
         }
+
         $this->actingAs(User::factory()->create());
         $this->assertSame([], $this->data('/reports')['table']['rows']);
     }

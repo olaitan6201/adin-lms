@@ -96,6 +96,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
         foreach (['PRIVATE_SCRIPT', 'PRIVATE_RESPONSE', 'PRIVATE_GRADE', $this->member->id, $this->officer->id, $this->offering->id] as $private) {
             $this->assertStringNotContainsString($private, $manifest);
         }
+
         $zip->close();
         $this->as($this->marker)->postJson("/operations/courses/$target->id/import", ['package' => $package])->assertForbidden();
         $this->authorizeTarget($target);
@@ -121,6 +122,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
         foreach (['submissions', 'submission_versions', 'examination_responses', 'examination_attempts', 'enrolments', 'grades'] as $table) {
             $this->assertDatabaseCount($table, 1);
         }
+
         $newMember = Enrolment::factory()->create(['offering_id' => $target->id]);
         $this->as($newMember->student->user)->get("/assignments/$assignment->id/files/$file->id")->assertDownload('Brief.pdf');
         $this->as($newMember->student->user)->post("/examinations/$exam->id/start")->assertRedirect();
@@ -149,6 +151,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
                 $item['definition']['slots'][0]['fixed'] = [0, 500, 0];
             }
         }
+
         $zip->addFromString('backup.json', json_encode($manifest, JSON_THROW_ON_ERROR));
         $zip->close();
         $this->postJson("/operations/courses/$target->id/import", ['package' => $package])->assertUnprocessable();

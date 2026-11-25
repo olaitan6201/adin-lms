@@ -34,6 +34,7 @@ class CourseSearchTest extends TestCase
         foreach ([$visible, $draft] as $offering) {
             Enrolment::factory()->create(['offering_id' => $offering->id, 'student_id' => $student->id]);
         }
+
         Enrolment::factory()->create(['offering_id' => $foreign->id]);
         Enrolment::factory()->create(['offering_id' => $withdrawn->id, 'student_id' => $student->id, 'status' => 'withdrawn']);
 
@@ -43,6 +44,7 @@ class CourseSearchTest extends TestCase
         foreach (['', '%', '_'] as $term) {
             $this->get('/search?q='.urlencode($term))->assertInertia(fn (AssertableInertia $page) => $page->has('matches', 0));
         }
+
         $this->get('/search?q='.str_repeat('x', 81))->assertSessionHasErrors('q');
     }
 }

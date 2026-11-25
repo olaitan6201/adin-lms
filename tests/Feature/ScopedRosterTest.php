@@ -58,6 +58,7 @@ class ScopedRosterTest extends TestCase
             $lecturer = Lecturer::factory()->create(['user_id' => $user->id]);
             TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $offering->id]);
         }
+
         $this->getJson($url)->assertOk()->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.student_id', $member->student_id)
             ->assertJsonMissingPath('data.0.email');

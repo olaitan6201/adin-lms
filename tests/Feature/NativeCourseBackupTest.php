@@ -45,6 +45,7 @@ class NativeCourseBackupTest extends TestCase
         foreach ([$user->id, $enrolment->id, 'Private student reply', 'Old revision', $file->object_key] as $excluded) {
             $this->assertStringNotContainsString($excluded, $manifest);
         }
+
         $zip->close();
         $this->postJson("/operations/courses/{$target->id}/import", ['package' => $upload])->assertCreated()->assertJsonPath('imported', 2);
         $restored = Module::where('offering_id', $target->id)->sole();
@@ -79,6 +80,7 @@ class NativeCourseBackupTest extends TestCase
             $materials[] = ['title' => 'Exercise', 'url' => null, 'body' => null, 'transcript' => null, 'download' => true,
                 'attachment' => ['name' => $name, 'asset' => $asset, 'sha256' => hash('sha256', $bytes)]];
         }
+
         $zip->addFromString('backup.json', json_encode(['format' => 'adin-course-2', 'forums' => [],
             'lessons' => [['title' => 'Field trip', 'kind' => 'weekly', 'body' => null, 'materials' => $materials]]]));
         $zip->close();

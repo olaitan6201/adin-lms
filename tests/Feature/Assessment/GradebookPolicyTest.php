@@ -31,6 +31,7 @@ class GradebookPolicyTest extends AssessmentCase
         foreach ($item->rubric['criteria'] as $criterion) {
             $maximum = $maximum->plus((string) $criterion['levels'][1]['points']);
         }
+
         $this->assertTrue($maximum->isEqualTo('10'));
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'gradebook.activate',

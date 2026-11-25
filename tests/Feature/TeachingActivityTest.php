@@ -28,6 +28,7 @@ class TeachingActivityTest extends InsightCase
             $this->record('group_members', ['group_id' => $group, 'enrolment_id' => $member->id]);
             LessonProgress::forceCreate(['module_id' => $module->id, 'enrolment_id' => $member->id, 'last_seen' => now(), 'completed_at' => now()]);
         }
+
         $groups = collect($this->data(route('workload.show', $offering))['report']['groups']);
         $this->assertSame(['id' => $group, 'name' => 'Workshop group', 'members' => 1, 'lessons' => 1], $groups->firstWhere('id', $group));
     }
@@ -48,6 +49,7 @@ class TeachingActivityTest extends InsightCase
             $this->record('attendance', ['class_id' => $class, 'user_id' => $attendee->id, 'status' => 'present',
                 'method' => 'manual', 'recorded_by' => $teacher->id, 'recorded_at' => now()->endOfDay()->startOfSecond()]);
         }
+
         $file = $this->record('files', ['object_key' => 'studio', 'filename' => 'studio.pdf', 'media_type' => 'application/pdf',
             'size_bytes' => 10, 'checksum' => str_repeat('a', 64), 'validation_status' => 'clean']);
         $module = Module::factory()->create(['offering_id' => $offering->id, 'position' => 99]);
@@ -56,6 +58,7 @@ class TeachingActivityTest extends InsightCase
             MaterialVersion::factory()->create(['material_id' => $material->id, 'file_id' => $file, 'revision' => $i + 1,
                 'created_by' => $teacher->id, 'created_at' => $time]);
         }
+
         $this->loginAs('officer');
         $props = $this->data($path.'?from=2026-11-25&until=2026-11-25');
         $this->assertSame([['offering' => $offering->external_offering_id, 'registers' => 1, 'uploads' => 1, 'marks' => 1]], $props['rows']);

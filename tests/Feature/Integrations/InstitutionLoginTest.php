@@ -53,9 +53,11 @@ final class InstitutionLoginTest extends TestCase
             if (in_array($fault, ['iss', 'aud', 'sub', 'nonce', 'azp'], true)) {
                 $claims[$fault] = 'other';
             }
+
             if ($fault === 'expired') {
                 $claims['exp'] = time() - 1;
             }
+
             $key = $fault === 'signature' ? new PartnerKey : $this->partner;
 
             return Http::response(['id_token' => JWT::encode($claims, $key->key, 'RS256', 'fixture')]);
@@ -85,6 +87,7 @@ final class InstitutionLoginTest extends TestCase
         if ($fault === 'inactive') {
             $this->account->forceFill(['status' => 'disabled'])->save();
         }
+
         $this->get($url)->assertForbidden();
         $this->get($url)->assertForbidden();
         Http::assertSentCount(1);

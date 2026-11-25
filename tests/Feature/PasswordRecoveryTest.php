@@ -22,6 +22,7 @@ class PasswordRecoveryTest extends TestCase
         foreach (['unknown@example.test', $inactive->email, strtoupper($user->email), $user->email] as $email) {
             $this->post('/forgot-password', compact('email'))->assertRedirect(route('password.request'))->assertSessionHas('link_requested', true);
         }
+
         Notification::assertSentToTimes($user, AccountResetLink::class, 1);
         Notification::assertNothingSentTo($inactive);
         $this->post('/login', ['email' => $inactive->email, 'password' => 'password'])->assertSessionHasErrors('email');

@@ -38,6 +38,7 @@ final class LibraryProfilesTest extends LearningTestCase
         foreach (['staff', 'invalid', 'other'] as $profile) {
             $this->get($this->base.'/library/'.$profile)->assertNotFound();
         }
+
         $this->withdraw();
         $this->get($open)->assertNotFound();
         $this->actingAs(User::factory()->create())->get($this->base)->assertNotFound();

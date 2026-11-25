@@ -35,6 +35,7 @@ trait AssessmentFixture
             $id = $this->record('assessment_items', $attrs + ['title' => $title, 'kind' => 'assignment']);
             $a = $this->record('assignments', $assignment + ['item_id' => $id]);
         }
+
         $sub = $this->record('submissions', ['assignment_id' => $a, 'enrolment_id' => $member]);
         $version = $this->record('submission_versions', ['submission_id' => $sub, 'revision' => 1,
             'receipt' => 'RECEIPT-ONE', 'submitted_at' => now(), 'submitted_by' => $student->id]);

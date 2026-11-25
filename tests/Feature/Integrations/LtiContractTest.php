@@ -33,6 +33,7 @@ final class LtiContractTest extends LearningTestCase
         if (isset($this->file)) {
             unlink($this->file);
         }
+
         parent::tearDown();
     }
 
@@ -85,6 +86,7 @@ final class LtiContractTest extends LearningTestCase
             'scope' => 'openid namesroles', 'response_type' => 'code', 'state' => '', 'nonce' => ''] as $key => $value) {
             $this->get($this->authorization([$key => $value]))->assertForbidden();
         }
+
         $url = $this->authorization();
         $this->withdraw();
         $this->get($url)->assertNotFound();

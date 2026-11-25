@@ -73,12 +73,14 @@ class ScoredAssessmentSchemaTest extends TestCase
         } catch (LogicException) {
             $this->assertSame('Essay', $snapshot->fresh()->title);
         }
+
         try {
             $feedback->forceFill(['points' => '10'])->save();
             $this->fail('Criterion feedback was updated.');
         } catch (LogicException) {
             $this->assertTrue($score->fresh()->points == '7.5');
         }
+
         $this->assertDatabaseCount('grading_policy_items', 1);
         $this->assertDatabaseCount('assessment_criterion_feedback', 1);
     }

@@ -23,6 +23,7 @@ class GradebookAmendmentCalculationTest extends AssessmentCase
                 'reason' => 'Checked evidence',
             ])->assertRedirect();
         }
+
         $book = Gradebook::firstOrFail();
         $compute = "/gradebooks/$book->id/compute/{$this->member->id}";
         $this->as($this->marker)->post($compute)->assertRedirect();

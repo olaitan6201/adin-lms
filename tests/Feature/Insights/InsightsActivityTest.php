@@ -32,12 +32,14 @@ final class InsightsActivityTest extends InsightCase
         foreach (['Released notice' => now(), 'Unpublished notice' => null] as $body => $time) {
             $this->record('announcements', ['offering_id' => $course->id, 'body' => $body, 'author_id' => $ada->id, 'published_at' => $time]);
         }
+
         $rows = $this->data('/reports'.$filter)['table']['rows'];
         $this->assertContains([$course->external_offering_id, 'Attendance', 'Workshop', 'Ada Demo · present'], $rows);
         $text = json_encode($rows);
         foreach (['Upcoming class', 'Released notice', 'First reading'] as $visible) {
             $this->assertStringContainsString($visible, $text);
         }
+
         $this->assertStringNotContainsString('Unpublished notice', $text);
         DB::table('modules')->where('offering_id', $course->id)->update(['kind' => 'draft:chapter']);
         $this->assertStringNotContainsString('First reading', json_encode($this->data('/reports'.$filter)['table']));

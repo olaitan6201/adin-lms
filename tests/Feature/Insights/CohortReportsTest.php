@@ -46,6 +46,7 @@ final class CohortReportsTest extends InsightCase
         foreach (array_chunk(range(1, 501), 75) as $batch) {
             DB::table('classes')->insert(array_map(fn () => ['id' => (string) Str::uuid7()] + $class, $batch));
         }
+
         foreach (['attendance', 'activity'] as $family) {
             $q = '?offering='.$course->id.'&family='.$family;
             $this->assertNotNull($this->data('/reports'.$q)['limitMessage']);
@@ -53,6 +54,7 @@ final class CohortReportsTest extends InsightCase
                 $this->getJson("/reports/export/$format".$q)->assertUnprocessable();
             }
         }
+
         $this->get('/reports/export/pdf?family=completion')->assertDownload();
     }
 }

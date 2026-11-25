@@ -33,6 +33,7 @@ class PrivacyCaseFileTest extends TestCase
         foreach (['open', 'containment_recorded', 'notification_decision_recorded', 'notification_followup_recorded'] as $index => $stage) {
             $this->post($url, ['stage' => $stage, 'reference' => "RECEIPT-$index"])->assertRedirect();
         }
+
         $this->assertSame(PrivacyCaseStage::Closed, $case->fresh()->stage);
         $this->assertDatabaseHas('audit_logs', ['action' => 'privacy.case_advanced', 'subject_key' => $case->id]);
         $this->withoutVite()->get('/operations/privacy')->assertInertia(fn (Page $p) => $p
@@ -87,6 +88,7 @@ class PrivacyCaseFileTest extends TestCase
                     ->assertJsonMissingPath('registrations.0.source_email');
             }
         }
+
         $this->assertSame(PrivacyCaseStage::Closed, $case->fresh()->stage);
     }
 }

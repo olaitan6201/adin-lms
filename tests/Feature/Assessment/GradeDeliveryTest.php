@@ -113,6 +113,7 @@ class GradeDeliveryTest extends AssessmentCase
             $replayed = $replayed->plus(BigDecimal::of($input['points'])
                 ->multipliedBy($input['weight'])->dividedBy($input['maximum'], 8));
         }
+
         $this->assertTrue($replayed->isEqualTo($frozen['total']));
         $this->assertSame($frozen['grade'], collect($frozen['boundaries'])
             ->first(fn ($boundary) => $replayed->isGreaterThanOrEqualTo((string) $boundary['minimum_percent']))['grade']);

@@ -27,6 +27,7 @@ class AccountLifecycleTest extends TestCase
             $this->assertAuthenticatedAs($user);
             $this->post('/logout');
         }
+
         $staff->forceFill(['staff_number' => 'MAT-01'])->save();
         $this->post('/login', ['email' => 'MAT-01', 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->post('/logout');

@@ -19,6 +19,7 @@ final class NoticeRaceTest extends TestCase
         if (! function_exists('pcntl_fork')) {
             $this->markTestSkipped('Requires pcntl for independent connections.');
         }
+
         $path = tempnam(sys_get_temp_dir(), 'notice-race-');
         config(['database.default' => 'notice_race', 'database.connections.notice_race' => [
             'driver' => 'sqlite', 'database' => $path, 'foreign_key_constraints' => true, 'busy_timeout' => 5000,
@@ -53,6 +54,7 @@ final class NoticeRaceTest extends TestCase
                     exit(1);
                 }
             }
+
             $scanner->run();
             pcntl_waitpid($pid, $status);
             fclose($socket);

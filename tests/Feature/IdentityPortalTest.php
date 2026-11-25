@@ -33,6 +33,7 @@ class IdentityPortalTest extends TestCase
             $this->patch("/accounts/$user->id", compact('status'))->assertSessionHasNoErrors();
             $this->assertSame($status, $user->fresh()->status);
         }
+
         foreach ([$admin, $super] as $protected) {
             $this->patch("/accounts/$protected->id", ['status' => 'suspended'])->assertSessionHasErrors('status');
             $this->assertSame('active', $protected->fresh()->status);

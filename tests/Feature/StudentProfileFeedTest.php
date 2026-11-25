@@ -95,8 +95,10 @@ class StudentProfileFeedTest extends TestCase
                         ? '<c r="A1" t="s"><v>0</v></c>'
                         : "<c r=\"$ref\" t=\"inlineStr\"><is><t>$value</t></is></c>";
             }
+
             $sheet .= '</row>';
         }
+
         $zip->addFromString(
             'xl/worksheets/sheet1.xml',
             "<worksheet><sheetData>$sheet</sheetData></worksheet>",

@@ -48,6 +48,7 @@ final class InsightsExportTest extends InsightCase
             $this->assertStringContainsString('Report reading', $text);
             $this->assertStringNotContainsString('RESULT-MERIT', $text);
         }
+
         $this->assertSame(1, $this->data('/reports'.$query)['table']['totals']['Completed lessons']);
         $this->loginAs('officer');
         $this->post($review, ['decision' => 'publish', 'reason' => 'Release'])->assertRedirect();
@@ -57,6 +58,7 @@ final class InsightsExportTest extends InsightCase
             $this->assertStringContainsString('81.25', $text);
             $this->assertStringNotContainsString('8.125', $text);
         }
+
         $this->loginAs('tunde');
         foreach ($download() as $text) {
             $this->assertStringNotContainsString('RESULT-MERIT', $text);
@@ -75,22 +77,27 @@ final class InsightsExportTest extends InsightCase
         foreach (['45.00 mean points', 'PASS', '=Outstanding', 'RECEIPT-ONE'] as $expected) {
             $this->assertStringContainsString($expected, $text);
         }
+
         foreach (['UNRELEASED', 'NOT-MODERATED', 'Tunde Demo', 'CSC102'] as $hidden) {
             $this->assertStringNotContainsString($hidden, $text);
         }
+
         $rows = [$report['columns']];
         foreach ($table['totals'] as $name => $value) {
             $rows[] = ['', 'Total', $name, $value];
         }
+
         array_push($rows, ...$table['rows']);
         $this->assertSame($rows, $this->sheet($q));
         $pdf = $this->pdfText($q);
         foreach ($table['totals'] as $key => $value) {
             $this->assertMatchesRegularExpression('/Total\s+'.preg_quote($key, '/').'\s+'.$value.'\b/', $pdf);
         }
+
         foreach (['PASS', '45.00 mean points', 'RECEIPT-ONE', '=Outstanding'] as $expected) {
             $this->assertStringContainsString($expected, $pdf);
         }
+
         $this->assertStringNotContainsString('UNRELEASED', $pdf);
         $this->assertStringNotContainsString('Tunde', $pdf);
         $this->loginAs('lecturer');
@@ -106,6 +113,7 @@ final class InsightsExportTest extends InsightCase
             $this->assertSame('Total', $row[1]);
             $this->assertSame(0, $row[3]);
         }
+
         $pdf = $this->pdfText($q);
         $this->assertStringContainsString('Registered students', $pdf);
         $this->assertStringNotContainsString('DEMO-CSC', $pdf);

@@ -48,6 +48,7 @@ class RegistrarHistoryContinuityTest extends TestCase
                 ->where('student.status', 'graduated')->where('sessions.0.department', 'Computing')->where('sessions.0.faculty', 'Science (demo)')->where('sessions.0.programme', $correction['name'])
                 ->where('records.0.status', 'withdrawn')->where('records.0.result.grade', 'A')->where('records.1.status', 'registered'));
         }
+
         $this->get(route('courses.show', $course))->assertNotFound();
         $this->assertSame($submission->receipt, $submission->fresh()->receipt);
         $this->assertSame($enrolment->id, $submission->fresh()->submission->enrolment_id);

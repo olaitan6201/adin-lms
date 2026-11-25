@@ -22,6 +22,7 @@ final class InsightTable
         if (count($this->rows) >= ReportLimit::ROWS || $this->detailBytes > 262144) {
             throw new ReportLimit;
         }
+
         $this->rows[] = [$course, $category, $record, (string) $value];
     }
 
@@ -31,6 +32,7 @@ final class InsightTable
         foreach ($this->totals as $key => $value) {
             yield ['', 'Total', $key, $value];
         }
+
         yield from $this->rows;
     }
 }

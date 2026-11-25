@@ -37,12 +37,15 @@ final class MarkExamQuestions
                     if ($points->isGreaterThan((string) $question->possible_points)) {
                         throw ValidationException::withMessages(["awards.$question->id" => 'Award exceeds the question maximum.']);
                     }
+
                     $question->forceFill(['awarded_points' => (string) $points])->save();
                     unset($awards[$question->id]);
                 }
+
                 if ($question->awarded_points === null) {
                     throw ValidationException::withMessages(['awards' => 'Award every subjective question before recording a score.']);
                 }
+
                 $total = $total->plus((string) $question->awarded_points);
                 $snapshot[] = [
                     'question' => $question->id,
@@ -54,9 +57,11 @@ final class MarkExamQuestions
                     'points' => (string) $question->awarded_points,
                 ];
             }
+
             if ($awards !== []) {
                 throw ValidationException::withMessages(['awards' => 'Only subjective questions from this script may be scored.']);
             }
+
             $score = $this->ledger->append($attempt->exam->item, $attempt->enrolment_id, (string) $total,
                 $data['reason'], $marker->id, [
                     'attempt_id' => $attempt->id,

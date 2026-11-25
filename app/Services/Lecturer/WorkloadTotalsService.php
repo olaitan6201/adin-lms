@@ -16,6 +16,7 @@ final class WorkloadTotalsService
         if ($offeringIds->isEmpty()) {
             return collect();
         }
+
         $enrolments = Enrolment::query()
             ->whereIn('offering_id', $offeringIds)
             ->where('status', EnrolmentStatus::Registered->value)

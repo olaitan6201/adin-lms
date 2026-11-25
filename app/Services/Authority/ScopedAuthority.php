@@ -26,6 +26,7 @@ class ScopedAuthority
         if ($permission === null) {
             return false;
         }
+
         $roles = array_values(array_filter(RoleCode::cases(), fn (RoleCode $role) => $role->scope() === ScopeType::Institution));
 
         return $this->hasGrant($user, $permission, ScopeType::Institution->key(), $roles);
@@ -36,11 +37,13 @@ class ScopedAuthority
         if ($this->institutionAllows($user, PermissionCode::RosterRead)) {
             return true;
         }
+
         if ($this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Offering->key($offering->id), [RoleCode::Lecturer])
             && TeachingAllocation::where('offering_id', $offering->id)
                 ->whereHas('lecturer', fn (Builder $query) => $query->where('user_id', $user->id))->exists()) {
             return true;
         }
+
         $department = $offering->curriculumCourse?->course?->department;
 
         return $department !== null && (

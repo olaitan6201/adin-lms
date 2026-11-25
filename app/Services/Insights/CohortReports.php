@@ -24,9 +24,11 @@ final class CohortReports
         foreach ($departments as $department) {
             $table->rows[] = $this->completionRow($department->department ?? 'Unassigned', $department);
         }
+
         if (count($table->rows) === ReportLimit::ROWS) {
             throw new ReportLimit;
         }
+
         $table->rows[] = $this->completionRow($audience === ReportAudience::Institution ? 'Institution total' : 'Selection total', $total);
 
         return $table;

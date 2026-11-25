@@ -37,11 +37,13 @@ final class LibraryProfiles
                 || ! self::publicLink($entry['url'] ?? null)) {
                 continue;
             }
+
             if ($tools && (! self::publicLink($entry['login'] ?? null) || ! self::publicLink($entry['redirect'] ?? null)
                 || ! is_string($entry['client'] ?? null) || $entry['client'] === ''
                 || ! is_string($entry['deployment'] ?? null) || $entry['deployment'] === '')) {
                 continue;
             }
+
             $available[$key] = $entry;
             $available[$key]['membership'] = $instructor && in_array('instructor', $entry['roles'], true) ? 'Instructor' : 'Learner';
         }

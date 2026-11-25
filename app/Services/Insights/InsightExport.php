@@ -32,8 +32,10 @@ final class InsightExport
                 foreach ($row as $index => $value) {
                     $sheet->setCellValueExplicit([$index + 1, $line], $value, is_int($value) ? DataType::TYPE_NUMERIC : DataType::TYPE_STRING);
                 }
+
                 $line++;
             }
+
             $sheet->freezePane('A2');
             (new Xlsx($book))->save('php://output');
             $book->disconnectWorksheets();

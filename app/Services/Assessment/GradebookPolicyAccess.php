@@ -16,6 +16,7 @@ final class GradebookPolicyAccess
         if ($user === null) {
             return false;
         }
+
         if ($this->access->examOfficer($user)) {
             return true;
         }

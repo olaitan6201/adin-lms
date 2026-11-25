@@ -47,6 +47,7 @@ final class TimedReleaseCapture
         if (! $at->isFuture() || $course->status !== OfferingStatus::Published) {
             return;
         }
+
         $this->audience->learners($course->id)->select('id')->chunkById(200, function ($users) use ($course, $kind, $id, $at): void {
             Queue::connection('community_events')->later($at, new ReleaseScheduledNotice(
                 $course->id, $kind, $id, $at->timestamp, $users->modelKeys(),
@@ -61,6 +62,7 @@ final class TimedReleaseCapture
         if ($at->isFuture() || $course?->status !== OfferingStatus::Published || $course->approved_at?->gt($at)) {
             return;
         }
+
         $key = "{$event->kind->value}:{$event->source}";
         if ($event->kind === TimedNotice::Material) {
             $resource = MaterialVersion::find($event->source)?->material;
@@ -68,26 +70,31 @@ final class TimedReleaseCapture
             if ($module?->offering_id !== $course->id || $resource->restrictions || str_starts_with($module->kind, LessonKind::DRAFT_PREFIX)) {
                 return;
             }
+
             foreach ([$module, $resource] as $item) {
                 if ($item->opens_at?->gt($at) || $item->closes_at?->lte($at)) {
                     return;
                 }
             }
+
             $body = 'A new version of course material was released.';
         } else {
             $work = Assignment::find($event->source);
             if ($work?->item->gradebook->offering_id !== $course->id || $work->opens_at->gt($at) || $work->closes_at->lte($at)) {
                 return;
             }
+
             $body = 'A course assignment was released.';
             if ($event->kind === TimedNotice::Deadline) {
                 if (! $at->equalTo(max($work->opens_at, $work->due_at->subDay()))) {
                     return;
                 }
+
                 $key .= ':'.$work->due_at->timestamp;
                 $body = $work->due_at->isPast() ? 'A course assignment deadline has passed.' : 'A course assignment is due within 24 hours.';
             }
         }
+
         $this->outbox->record($this->audience->learners($course->id)->whereKey($event->recipients), $key, $body);
     }
 }

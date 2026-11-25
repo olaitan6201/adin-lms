@@ -20,6 +20,7 @@ class LinkStudentAccount
                 || Student::where('user_id', $account->id)->whereKeyNot($student->id)->exists()) {
                 return false;
             }
+
             if ($student->user_id === null) {
                 $student->forceFill(['user_id' => $account->id])->save();
                 AuditLog::forceCreate(['subject_key' => 'student:'.$student->id, 'actor_id' => $actor?->id,

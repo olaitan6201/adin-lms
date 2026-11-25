@@ -32,12 +32,14 @@ final class LearnerActivity
             foreach ($members->groupBy(fn ($m) => $courses[$m->offering_id]->department ?? 'Unassigned') as $dept => $group) {
                 $table->add('Academic unit', 'Department registrations', $dept, $group->count());
             }
+
             if ($recent = $progress->first()) {
                 $table->add('Activity', 'Latest lesson visit', $recent->title, $recent->last_seen);
             }
 
             return;
         }
+
         $modules = DB::table('modules as m')->whereIn('offering_id', $courses->keys())
             ->when($audience === ReportAudience::Student, ReportRelease::lesson(...))
             ->groupBy('offering_id')->selectRaw('offering_id, count(*) as total')->pluck('total', 'offering_id');
@@ -48,11 +50,13 @@ final class LearnerActivity
             $table->add($courses[$member->offering_id]->label, 'Lesson progress', $member->full_name ?? $member->external_student_id,
                 $completed->get($member->id, 0).' / '.$modules->get($member->offering_id, 0).' lessons');
         }
+
         foreach ($progress as $lesson) {
             $member = $members[$lesson->id];
             $table->add($courses[$member->offering_id]->label, 'Lesson', $lesson->title,
                 ($member->full_name ?? $member->external_student_id).' · '.($lesson->completed_at ? 'Completed' : 'In progress'));
         }
+
         foreach ($attendance as $entry) {
             $member = $members[$entry->id];
             $table->add($courses[$member->offering_id]->label, 'Attendance', $entry->title,

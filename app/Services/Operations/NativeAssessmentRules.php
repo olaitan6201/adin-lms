@@ -19,6 +19,7 @@ final class NativeAssessmentRules
 
             return;
         }
+
         $policy = $data['policy'];
         NativeRules::fields($policy, ['rounding', 'boundaries']);
         NativeRules::check(is_string($policy['rounding']) && RoundingRule::tryFrom($policy['rounding']) !== null);
@@ -31,6 +32,7 @@ final class NativeAssessmentRules
             NativeRules::check(! isset($bounds[$minimum]));
             $bounds[$minimum] = true;
         }
+
         NativeRules::check(isset($bounds[0]));
         $weights = BigDecimal::zero();
         foreach ($data['items'] as $item) {
@@ -47,6 +49,7 @@ final class NativeAssessmentRules
                 default => NativeRules::check($item['definition'] === null),
             };
         }
+
         NativeRules::check($weights->isEqualTo(100), 'Assessment weights must total 100%.');
     }
 
@@ -58,12 +61,14 @@ final class NativeAssessmentRules
         foreach ($row['accepted_formats'] as $format) {
             NativeRules::check(in_array($format, AssessmentUpload::FORMATS, true));
         }
+
         NativeRules::fields($row['late_policy'], ['allow']);
         NativeRules::check(is_bool($row['editable']) && is_bool($row['group_work']) && is_bool($row['late_policy']['allow']));
         NativeRules::check(is_int($row['max_bytes']) && $row['max_bytes'] >= 1 && $row['max_bytes'] <= 20971520);
         foreach (['opens_at', 'due_at', 'closes_at'] as $key) {
             NativeRules::stamp($row[$key]);
         }
+
         NativeRules::check($row['opens_at'] <= $row['due_at'] && $row['due_at'] <= $row['closes_at']);
         NativeRules::rows($row['references'], 10);
         foreach ($row['references'] as $ref) {
@@ -97,9 +102,11 @@ final class NativeAssessmentRules
                 $draws[$b] = ($draws[$b] ?? 0) + 1;
             }
         }
+
         foreach ($draws as $b => $needed) {
             NativeRules::check(count($banks[$b]['questions']) >= $needed + count($used[$b] ?? []), 'Random question pool is too small.');
         }
+
         NativeRules::check($sum->isEqualTo($maximum), 'Exam slots must total the maximum score.');
     }
 }

@@ -22,6 +22,7 @@ final class InstitutionLogin
             $url = $registration[$field] ?? null;
             abort_unless(LibraryProfiles::publicLink($url) && ! str_contains($url, '?') && ! str_contains($url, '#'), 503);
         }
+
         abort_unless(is_string($registration['client'] ?? null) && $registration['client'] !== ''
             && is_array($registration['jwks']['keys'] ?? null) && config('integrations.oidc_secret'), 503);
 
@@ -60,6 +61,7 @@ final class InstitutionLogin
         } catch (ConnectionException) {
             abort(503);
         }
+
         $jwt = $response->json('id_token');
         abort_unless($response->ok() && is_string($jwt) && strlen($jwt) <= 16384, 403);
         $keys = array_filter($reg['jwks']['keys'], fn ($key) => ($key['kty'] ?? null) === 'RSA'
@@ -69,6 +71,7 @@ final class InstitutionLogin
         } catch (\Exception) {
             abort(403);
         }
+
         abort_unless(($claims->iss ?? null) === $reg['issuer'] && ($claims->aud ?? null) === $reg['client']
             && ($claims->azp ?? $reg['client']) === $reg['client'] && ($claims->nonce ?? null) === $ticket['nonce']
             && is_int($claims->iat ?? null) && $claims->iat >= time() - 300 && $claims->iat <= time()
@@ -78,6 +81,7 @@ final class InstitutionLogin
             $access = $response->json('access_token');
             abort_unless(is_string($access) && $claims->at_hash === JWT::urlsafeB64Encode(substr(hash('sha256', $access, true), 0, 16)), 403);
         }
+
         $matches = collect($reg['mappings'] ?? [])->filter(fn ($row) => ($row['issuer'] ?? null) === $claims->iss
             && ($row['subject'] ?? null) === $claims->sub);
         abort_unless($matches->count() === 1 && Str::isUuid($matches->first()['user_id'] ?? ''), 403);

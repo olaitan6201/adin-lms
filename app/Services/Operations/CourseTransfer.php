@@ -36,6 +36,7 @@ final class CourseTransfer
                     abort_if($target->activity_order || Announcement::where('offering_id', $target->id)->exists(),
                         409, 'Select an empty draft offering without announcements or a custom activity order.');
                 }
+
                 abort_if($target->status !== OfferingStatus::Draft || $hasModules || Forum::where('offering_id', $target->id)->exists()
                     || Gradebook::where('offering_id', $target->id)->exists() || ClassSession::where('offering_id', $target->id)->exists()
                     || $target->enrolments()->exists(), 409, 'Select an empty draft offering without enrolments, lessons, forums, classes or a gradebook.');
@@ -53,6 +54,7 @@ final class CourseTransfer
             if ($written) {
                 Storage::disk('local')->delete($written);
             }
+
             throw $failure;
         }
     }
@@ -92,9 +94,11 @@ final class CourseTransfer
 
             return $bytes;
         }
+
         if (Forum::where('offering_id', $offering->id)->exists()) {
             TextAssetArchive::reject('Use the native backup to include forums.');
         }
+
         $entries = [];
         $chapters = [];
         $modules = Module::where('offering_id', $offering->id)->orderBy('position')->limit(51)->cursor();
@@ -111,6 +115,7 @@ final class CourseTransfer
             if (LearningMaterial::where('module_id', $module->id)->exists()) {
                 TextAssetArchive::reject('Use the native backup to include lesson materials.');
             }
+
             $chapters[] = ['title' => $module->title, 'file' => $file, 'links' => []];
         }
 

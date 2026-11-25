@@ -32,6 +32,7 @@ final class ImportRosterFile
                 if ($row === [null] || $row === false) {
                     continue;
                 }
+
                 if (count($row) !== 4 || ! $this->validId($row[0]) || ! $this->validId($row[1])) {
                     throw new DomainException("Record {$record}: expected four fields and valid identifiers.");
                 }
@@ -41,6 +42,7 @@ final class ImportRosterFile
                 if (! $status || ! preg_match('/^[1-9][0-9]{0,8}$/D', $revision)) {
                     throw new DomainException("Record {$record}: invalid status or revision.");
                 }
+
                 $changed += (int) $this->apply($student, $offering, $status, (int) $revision, $record);
             }
 

@@ -17,6 +17,7 @@ final class CaseRegister
             if ($subject !== null) {
                 User::whereKey($subject)->lockForUpdate()->firstOrFail();
             }
+
             $case = PrivacyCaseFile::forceCreate([
                 'kind' => $kind, 'stage' => PrivacyCaseStage::Open, 'reference' => $reference, 'evidence' => $reference,
                 'owner_id' => $actor->id, 'subject_id' => $subject,
@@ -31,6 +32,7 @@ final class CaseRegister
             if ($case->subject_id !== null) {
                 User::whereKey($case->subject_id)->lockForUpdate()->firstOrFail();
             }
+
             $case = PrivacyCaseFile::whereKey($case->id)->lockForUpdate()->firstOrFail();
             $next = $case->kind->next($case->stage);
             abort_if($case->stage !== $expected || $next === null, 409, 'Case has changed; refresh before continuing.');

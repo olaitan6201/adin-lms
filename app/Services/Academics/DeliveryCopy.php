@@ -86,12 +86,14 @@ class DeliveryCopy
         foreach ($resources as $old => $new) {
             $quizLinks['{{resource:'.$old.'}}'] = '{{resource:'.$new.'}}';
         }
+
         foreach (DB::table('modules')->whereIn('id', $modules)->whereNotNull('body')->get(['id', 'body']) as $chapter) {
             $body = strtr($chapter->body, $quizLinks);
             if ($body !== $chapter->body) {
                 DB::table('modules')->where('id', $chapter->id)->update(['body' => $body]);
             }
         }
+
         $target->activity_order = collect($source->activity_order ?? [])->filter(fn ($id) => isset($activityMap[$id]))
             ->map(fn ($id) => $activityMap[$id])->values()->all();
         $target->copied_from = $sourceId;

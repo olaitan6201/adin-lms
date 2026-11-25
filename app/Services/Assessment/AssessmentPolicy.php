@@ -20,6 +20,7 @@ final class AssessmentPolicy
         if ($rounding === null || $rounding === RoundingRule::None) {
             throw ValidationException::withMessages(['rounding' => 'A rounding policy is required.']);
         }
+
         $weights = BigDecimal::zero();
         $items = [];
         foreach ($data['items'] ?? [] as $row) {
@@ -27,6 +28,7 @@ final class AssessmentPolicy
             if ($kind === null) {
                 throw ValidationException::withMessages(['items' => 'Unknown assessment kind.']);
             }
+
             $weights = $weights->plus((string) $row['weight']);
             $items[] = [
                 'id' => $row['id'] ?? null,
@@ -37,9 +39,11 @@ final class AssessmentPolicy
                 'rubric' => self::rubric($row, $kind),
             ];
         }
+
         if ($items === [] || ! $weights->isEqualTo(100)) {
             throw ValidationException::withMessages(['items' => 'Item weights must total 100%.']);
         }
+
         $boundaries = self::boundaries($data['boundaries'] ?? []);
 
         return compact('rounding', 'boundaries', 'items');
@@ -52,6 +56,7 @@ final class AssessmentPolicy
         if ($criteria === []) {
             return ['guide' => $guide];
         }
+
         if ($kind !== ItemKind::Assignment) {
             throw ValidationException::withMessages(['items' => 'Scored rubrics are supported only for assignments.']);
         }
@@ -67,9 +72,11 @@ final class AssessmentPolicy
                 if ($points->isNegative() || $points->isGreaterThan($maximum)) {
                     throw ValidationException::withMessages(['items' => 'Level points exceed the item maximum.']);
                 }
+
                 if ($criterionMaximum->isLessThan($points)) {
                     $criterionMaximum = $points;
                 }
+
                 $levels[] = [
                     'id' => (string) Str::uuid7(),
                     'label' => (string) $level['label'],
@@ -77,9 +84,11 @@ final class AssessmentPolicy
                     'description' => $level['description'] ?? null,
                 ];
             }
+
             if (count($levels) < 2 || count($levels) > self::MAX_LEVELS) {
                 throw ValidationException::withMessages(['items' => 'Each rubric criterion needs two to twenty levels.']);
             }
+
             $total = $total->plus($criterionMaximum);
             $normalized[] = [
                 'id' => (string) Str::uuid7(),
@@ -88,9 +97,11 @@ final class AssessmentPolicy
                 'levels' => $levels,
             ];
         }
+
         if (count($normalized) > self::MAX_CRITERIA) {
             throw ValidationException::withMessages(['items' => 'Too many rubric criteria.']);
         }
+
         if (! $total->isEqualTo($maximum)) {
             throw ValidationException::withMessages(['items' => 'Criterion maxima must total the item maximum.']);
         }
@@ -108,6 +119,7 @@ final class AssessmentPolicy
             $coversZero = $coversZero || $minimum->isZero();
             $boundaries[] = ['minimum' => (string) $minimum, 'grade' => (string) $row['grade']];
         }
+
         if ($boundaries === [] || ! $coversZero) {
             throw ValidationException::withMessages(['boundaries' => 'Grade boundaries must include zero.']);
         }

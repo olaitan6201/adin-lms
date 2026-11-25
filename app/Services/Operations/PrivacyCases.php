@@ -24,6 +24,7 @@ final class PrivacyCases
         if ($operation === PrivacyOperation::RegistrationExtract) {
             $this->requireVerifiedCase($subject, $reference);
         }
+
         if ($operation === PrivacyOperation::Purge) {
             $days = $this->register->days();
             abort_if($days === null, 409, 'No retention period configured.');

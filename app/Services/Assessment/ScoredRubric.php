@@ -24,10 +24,12 @@ final class ScoredRubric
             if (! is_array($selection) || ! is_string($selection['criterion'] ?? null)) {
                 throw ValidationException::withMessages(['selections' => 'Each selection needs a criterion and level.']);
             }
+
             $key = $selection['criterion'];
             if (isset($selected[$key])) {
                 throw ValidationException::withMessages(['selections' => 'A criterion may be selected only once.']);
             }
+
             $selected[$key] = $selection;
         }
 
@@ -38,10 +40,12 @@ final class ScoredRubric
             if ($selection === null) {
                 throw ValidationException::withMessages(['selections' => 'Select a level for every rubric criterion.']);
             }
+
             $level = collect($criterion['levels'])->firstWhere('id', $selection['level'] ?? null);
             if ($level === null) {
                 throw ValidationException::withMessages(['selections' => 'The selected level does not belong to this criterion.']);
             }
+
             $total = $total->plus((string) $level['points']);
             $feedback[] = [
                 'criterion_key' => $criterion['id'],
@@ -55,6 +59,7 @@ final class ScoredRubric
                 'position' => $position,
             ];
         }
+
         if (count($selected) !== count($criteria)) {
             throw ValidationException::withMessages(['selections' => 'Selections contain an unknown rubric criterion.']);
         }

@@ -16,6 +16,7 @@ final class CourseActivity
         foreach ($courses as $course) {
             $table->add($course->label, 'Course', $course->title ?? 'Unlinked offering', $course->status);
         }
+
         $table->totals['Courses'] = $courses->count();
         $published = $courses->where('status', OfferingStatus::Published->value);
         if ($audience !== ReportAudience::Student) {
@@ -24,6 +25,7 @@ final class CourseActivity
                 ->join('users as u', 'u.id', '=', 'l.user_id')->where('u.status', 'active')
                 ->whereIn('ta.offering_id', $published->keys())->distinct()->count('l.id');
         }
+
         if ($audience->isAggregate()) {
             $today = now()->toDateString();
             $table->totals['Active academic sessions'] = $courses->where('starts_on', '<=', $today)
@@ -33,6 +35,7 @@ final class CourseActivity
 
             return;
         }
+
         $materials = DB::table('material_versions as v')
             ->join('learning_materials as resource', 'resource.id', '=', 'v.material_id')
             ->join('modules as m', 'm.id', '=', 'resource.module_id')
@@ -42,13 +45,16 @@ final class CourseActivity
         } else {
             ReportRelease::material($materials);
         }
+
         foreach ($materials->tap(ReportLimit::apply(...))->distinct()->orderBy('resource.title')->get(['resource.id', 'resource.title', 'm.offering_id', 'm.title as lesson']) as $m) {
             $table->add($courses[$m->offering_id]->label, 'Resource', $m->title, $m->lesson);
         }
+
         foreach (DB::table('classes')->tap(ReportLimit::apply(...))->whereIn('offering_id', $ids)->where('status', ClassStatus::Scheduled)
             ->where('starts_at', '>=', now())->orderBy('starts_at')->get(['offering_id', 'title', 'starts_at']) as $class) {
             $table->add($courses[$class->offering_id]->label, 'Upcoming class', $class->title, $class->starts_at);
         }
+
         foreach (DB::table('announcements')->tap(ReportLimit::apply(...))->whereIn('offering_id', $ids)->where('published_at', '<=', now())
             ->orderByDesc('published_at')->get(['offering_id', 'body', 'published_at']) as $notice) {
             $table->add($courses[$notice->offering_id]->label, 'Course notice', $notice->body, $notice->published_at);

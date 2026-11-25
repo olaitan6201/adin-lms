@@ -46,12 +46,14 @@ class ActivateGradebook
         if (collect($data['items'])->contains(fn (array $item): bool => $item['id'] !== null)) {
             throw ValidationException::withMessages(['items' => 'A new gradebook cannot reference existing items.']);
         }
+
         $policy = $this->createPolicy($offering, $data, null, $actor, 'Offering '.$offering->id);
         $book = Gradebook::forceCreate(['offering_id' => $offering->id, 'policy_id' => $policy->id]);
         foreach ($data['items'] as $position => $row) {
             $item = $this->createItem($book, $row);
             $this->snapshot($policy, $item, $row, $position);
         }
+
         $this->ledger->audit(AssessmentEvent::GradebookActivated, $book->id, $actor->id, [
             'policy_id' => $policy->id,
             'version' => $policy->version,
@@ -63,6 +65,7 @@ class ActivateGradebook
         if (blank($reason)) {
             throw ValidationException::withMessages(['reason' => 'Explain why the approved policy is being amended.']);
         }
+
         $previous = GradingPolicy::lockForUpdate()->findOrFail($book->policy_id);
         $items = AssessmentItem::where('gradebook_id', $book->id)->lockForUpdate()->get()->keyBy('id');
         $ids = collect($data['items'])->pluck('id')->filter()->values();
@@ -71,6 +74,7 @@ class ActivateGradebook
             || $ids->diff($items->keys())->isNotEmpty()) {
             throw ValidationException::withMessages(['items' => 'Include every current item exactly once.']);
         }
+
         $name = $previous->offering_id === $offering->id ? $previous->name : 'Offering '.$offering->id;
         $policy = $this->createPolicy($offering, $data, $previous, $actor, $name, $reason);
         foreach ($data['items'] as $position => $row) {
@@ -81,8 +85,10 @@ class ActivateGradebook
                 $this->assertCompatible($item, $row);
                 $item->forceFill($this->attributes($row))->save();
             }
+
             $this->snapshot($policy, $item, $row, $position);
         }
+
         $book->forceFill(['policy_id' => $policy->id])->save();
         $this->ledger->audit(AssessmentEvent::PolicyAmended, $book->id, $actor->id, [
             'previous_policy_id' => $previous->id,

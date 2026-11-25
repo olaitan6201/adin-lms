@@ -22,11 +22,13 @@ final class GuardianPermissions
             if (! $guardian || $guardian->is($actor) || ! $this->authority->institutionAllows($guardian, PermissionCode::ProgressReadApproved)) {
                 throw ValidationException::withMessages(['guardian_email' => 'Enter another active account with the guardian role.']);
             }
+
             $student = Student::where('external_student_id', $reference)->firstOrFail();
             $access = GuardianAccess::where('guardian_id', $guardian->id)->where('student_id', $student->id)->lockForUpdate()->first();
             if ($access && ! $access->revoked_at && in_array('completed_lessons', $access->allowed_fields, true)) {
                 return;
             }
+
             $access ??= new GuardianAccess;
             $access->forceFill(['guardian_id' => $guardian->id, 'student_id' => $student->id,
                 'approved_by' => $actor->id, 'allowed_fields' => ['completed_lessons'], 'revoked_at' => null])->save();

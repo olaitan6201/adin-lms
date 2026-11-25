@@ -69,6 +69,7 @@ final class LecturerWorkloadService
         if ($terms === []) {
             return null;
         }
+
         $selected = $termId === null || $termId === '' ? $terms[0] : collect($terms)->firstWhere('id', $termId);
         if ($selected === null) {
             throw new NotFoundHttpException;

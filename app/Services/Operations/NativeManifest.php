@@ -14,6 +14,7 @@ final class NativeManifest
         if ($v3 && $authorizeAssessment !== null) {
             $authorizeAssessment();
         }
+
         $this->fields($manifest, $v3 ? ['format', 'lessons', 'forums', 'assessment'] : ['format', 'lessons', 'forums']);
         $this->boundedList($manifest['lessons'], 50);
         $this->boundedList($manifest['forums'], 50);

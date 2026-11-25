@@ -46,10 +46,12 @@ class ImportStudentProfiles
 
                     continue;
                 }
+
                 $record = ++$count + 1;
                 if (count($row) < 8 || count($row) > count($header)) {
                     throw new DomainException("Record {$record}: unexpected number of columns.");
                 }
+
                 $data = $this->validatedFields($row, $record);
                 $student = $this->saveProfile($data, $this->academicReferences($data, $record), $record);
                 if (($row[8] ?? '') !== '') {
@@ -57,6 +59,7 @@ class ImportStudentProfiles
                     StudentPhoto::unguarded(fn () => StudentPhoto::updateOrCreate(['student_id' => $student->id], ['jpeg_base64' => $jpeg]));
                 }
             }
+
             if ($header === null) {
                 throw new DomainException('Missing profile sheet header.');
             }
@@ -114,6 +117,7 @@ class ImportStudentProfiles
         } catch (UniqueConstraintViolationException) {
             throw new DomainException("Record {$record}: conflicting student identity.");
         }
+
         $session =
             StudentSession::where('student_id', $student->id)
                 ->where('session_id', $references['session_id'])

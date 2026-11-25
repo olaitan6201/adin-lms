@@ -19,6 +19,7 @@ final class NativeRestore
         if ($assessment) {
             $restore->preflight($assessment, $target, $actor);
         }
+
         foreach ($backup['lessons'] as $index => $lesson) {
             $module = Module::forceCreate([
                 'offering_id' => $target->id, 'position' => $index + 1,
@@ -34,12 +35,14 @@ final class NativeRestore
                 if ($file) {
                     $written[] = $file->object_key;
                 }
+
                 MaterialVersion::forceCreate([
                     'material_id' => $material->id, 'revision' => 1, 'created_at' => now(), 'created_by' => $actor->id,
                     'body' => $row['body'], 'external_url' => $row['url'], 'transcript' => $row['transcript'], 'file_id' => $file?->id,
                 ]);
             }
         }
+
         foreach ($backup['forums'] as $title) {
             Forum::forceCreate(['offering_id' => $target->id, 'title' => $title]);
         }

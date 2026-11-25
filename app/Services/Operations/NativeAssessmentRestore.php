@@ -56,6 +56,7 @@ final class NativeAssessmentRestore
             foreach ($data['policy']['boundaries'] as $boundary) {
                 GradeBoundary::forceCreate(['policy_id' => $policy->id, 'minimum_percent' => $boundary['minimum'], 'grade' => $boundary['grade']]);
             }
+
             $book = Gradebook::forceCreate(['offering_id' => $target->id, 'policy_id' => $policy->id]);
             foreach ($data['items'] as $i => $row) {
                 $fields = ['title' => $row['title'], 'kind' => $row['kind'], 'weight_percent' => $row['weight'],
@@ -80,6 +81,7 @@ final class NativeAssessmentRestore
         foreach (['opens_at', 'due_at', 'closes_at'] as $date) {
             $definition[$date] = Carbon::parse($definition[$date])->setTimezone(config('app.timezone'));
         }
+
         $assignment = Assignment::forceCreate($definition + ['item_id' => $item->id]);
         foreach ($references as $ref) {
             $file = PackageAttachments::restore($ref, $entries[$ref['asset']], true);
@@ -95,6 +97,7 @@ final class NativeAssessmentRestore
         foreach (['opens_at', 'closes_at'] as $date) {
             $definition[$date] = Carbon::parse($definition[$date])->setTimezone(config('app.timezone'));
         }
+
         $exam = Examination::forceCreate($definition + ['item_id' => $item->id]);
         foreach ($slots as $i => $slot) {
             $fixed = null;
@@ -102,6 +105,7 @@ final class NativeAssessmentRestore
                 [$b, $q, $v] = $slot['fixed'];
                 $fixed = $versions[$b][$q][$v];
             }
+
             ExamSlot::forceCreate(['exam_id' => $exam->id, 'position' => $i + 1, 'points' => $slot['points'],
                 'fixed_version_id' => $fixed, 'draw_from_bank_id' => $banks[$slot['draw']] ?? null]);
         }

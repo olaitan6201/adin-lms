@@ -33,6 +33,7 @@ final class NativeQuestionRules
                     foreach ($options as $option) {
                         NativeRules::string($option, 5000);
                     }
+
                     if ($version['key'] !== null || $kind->isObjective()) {
                         if ($kind === QuestionKind::Matching && isset($version['key']['matching'])) {
                             NativeRules::fields($version['key'], ['accepted', 'matching']);
@@ -41,17 +42,20 @@ final class NativeQuestionRules
 
                             continue;
                         }
+
                         if (isset($version['key']['guide'])) {
                             NativeRules::fields($version['key'], ['accepted', 'guide']);
                             NativeRules::check(is_string($version['key']['guide']) && mb_strlen($version['key']['guide']) <= 5000 && ! str_contains($version['key']['guide'], "\0"));
                         } else {
                             NativeRules::fields($version['key'], ['accepted']);
                         }
+
                         NativeRules::rows($version['key']['accepted'], 100, $kind->isObjective() ? 1 : 0);
                         foreach ($version['key']['accepted'] as $answer) {
                             if ($answer !== null || $kind->isObjective()) {
                                 NativeRules::string($answer, 5000);
                             }
+
                             NativeRules::check(! $kind->hasChoices() || in_array($answer, $options, true));
                         }
                     }
@@ -73,6 +77,7 @@ final class NativeQuestionRules
                 $ids[$side][$row['id']] = true;
             }
         }
+
         $pairs = $matching['pairs'];
         NativeRules::check(is_array($pairs) && count($pairs) === count($ids['left']) && count($pairs) === count($ids['right']));
         foreach ($pairs as $left => $right) {

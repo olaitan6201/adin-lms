@@ -34,8 +34,10 @@ final class NativeBankSnapshot
                     $versions[] = $row;
                     $this->versionIndex[$version->id] = [$b, $q, $v];
                 }
+
                 $questions[] = $versions;
             }
+
             $this->banks[] = ['topic' => $bank->topic, 'questions' => $questions];
         }
     }

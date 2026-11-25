@@ -27,6 +27,7 @@ final class ManagementQueue
                 'action' => 'Review failed emails', 'href' => route('community.delivery.failures', [], false), 'at' => null,
             ]);
         }
+
         if ($examOffice) {
             $grades = DB::table('grades as g')->join('enrolments as e', 'e.id', '=', 'g.enrolment_id')
                 ->join('offerings as o', 'o.id', '=', 'e.offering_id')
@@ -41,6 +42,7 @@ final class ManagementQueue
                 ]);
             }
         }
+
         if ($this->authority->institutionAllows($user, PermissionCode::CurriculumApprove)) {
             $versions = DB::table('curricula as c')->join('programmes as p', 'p.id', '=', 'c.programme_id')
                 ->where('c.status', CurriculumStatus::Reviewed)->orderBy('p.name')->orderBy('c.version')->limit(12)
@@ -52,6 +54,7 @@ final class ManagementQueue
                 ]);
             }
         }
+
         if ($this->authority->institutionAllows($user, PermissionCode::OfferingsManage)) {
             $offerings = DB::table('offerings as o')->leftJoin('curriculum_courses as c', 'c.id', '=', 'o.curriculum_course_id')
                 ->where('o.status', OfferingStatus::Draft)->orderBy('o.external_offering_id')->limit(12)

@@ -13,15 +13,18 @@ class ProfilePhotograph
         if (! str_starts_with($input, $prefix) || strlen($input) > 350000) {
             throw $error;
         }
+
         $bytes = base64_decode(substr($input, strlen($prefix)), true);
         $size = $bytes ? @getimagesizefromstring($bytes) : false;
         if (! $size || strlen($bytes) > 262144 || $size[2] !== IMAGETYPE_JPEG || max($size[0], $size[1]) > 1024) {
             throw $error;
         }
+
         $image = @imagecreatefromstring($bytes);
         if (! $image) {
             throw $error;
         }
+
         ob_start();
         try {
             if (! imagejpeg($image, null, 80)) {

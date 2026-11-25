@@ -12,6 +12,7 @@ final class NativeRubric
         if (! isset($rubric['criteria'])) {
             return $rubric;
         }
+
         NativeRules::rows($rubric['criteria'], 50, 1);
         foreach ($rubric['criteria'] as &$criterion) {
             NativeRules::fields($criterion, ['id', 'title', 'description', 'levels']);
@@ -31,12 +32,14 @@ final class NativeRubric
         if ($rubric === null) {
             return;
         }
+
         $scored = isset($rubric['criteria']);
         NativeRules::fields($rubric, $scored ? ['guide', 'criteria'] : ['guide']);
         self::description($rubric['guide'], false);
         if (! $scored) {
             return;
         }
+
         NativeRules::check($kind === 'assignment');
         NativeRules::rows($rubric['criteria'], 50, 1);
         $sum = BigDecimal::zero();
@@ -55,8 +58,10 @@ final class NativeRubric
                     $highest = $points;
                 }
             }
+
             $sum = $sum->plus($highest);
         }
+
         NativeRules::check($sum->isEqualTo($maximum), 'Rubric maxima must equal the assignment maximum.');
     }
 

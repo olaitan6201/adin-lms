@@ -25,6 +25,7 @@ class ChangeRoleGrant
         if ($code === null) {
             throw new InvalidArgumentException('Unknown role.');
         }
+
         DB::transaction(function () use ($userId, $code, $scopeKey, $revoke, $actorId): void {
             $user = Str::isUuid($userId) ? User::lockForUpdate()->find($userId) : null;
             $role = Role::where('code', $code)->first();
@@ -37,6 +38,7 @@ class ChangeRoleGrant
             if (! $scope && $revoke) {
                 return;
             }
+
             $scope ??= AccessScope::unguarded(fn () => AccessScope::firstOrCreate(['scope_key' => $scopeKey], $attributes));
             $key = ['role_id' => $role->id, 'user_id' => $user->id, 'scope_id' => $scope->id];
             $changed = $revoke

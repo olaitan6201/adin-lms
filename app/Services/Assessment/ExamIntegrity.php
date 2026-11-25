@@ -33,6 +33,7 @@ final class ExamIntegrity
             if ((clone $signals)->where('occurred_at', '>', now()->subSeconds(10))->exists() || $signals->count() >= 100) {
                 return;
             }
+
             $this->event(IntegrityEvent::PageHidden, $actor, $attempt->exam_id, $attempt->id);
         });
     }

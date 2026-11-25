@@ -35,6 +35,7 @@ class WebSessions
             if (! $session || $session->revoked_at !== null) {
                 return false;
             }
+
             if ($session->expires_at->lte(now())) {
                 $session->revoked_at = now();
                 $session->save();
@@ -42,6 +43,7 @@ class WebSessions
 
                 return false;
             }
+
             $session->last_seen = now();
             $session->expires_at = now()->addMinutes(config('session.lifetime'));
             $session->save();

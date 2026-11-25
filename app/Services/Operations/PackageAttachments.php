@@ -59,6 +59,7 @@ final class PackageAttachments
         if ($reference) {
             NativeRules::check((bool) preg_match('/\.(pdf|txt)$/iD', $attachment['name']), 'Assignment references must be PDF or text.');
         }
+
         self::withUpload($attachment, $entries[$asset], fn ($upload) => app(ResourceFileFormat::class)->validatedMime($upload));
         unset($entries[$asset]);
     }

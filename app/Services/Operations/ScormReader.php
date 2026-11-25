@@ -48,8 +48,10 @@ final class ScormReader
             if ($folder->hasAttribute('identifierref')) {
                 TextAssetArchive::reject('Expected one cartridge root folder.');
             }
+
             $items = $this->children($folder);
         }
+
         if (isset($items[0]) && $items[0]->localName === 'title') {
             $this->text(array_shift($items));
         }

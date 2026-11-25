@@ -23,6 +23,7 @@ class TotpEnrollment
             if ($factor && ($factor->expires_at === null || $factor->expires_at->isFuture())) {
                 throw new LogicException('An active authenticator or pending enrollment already exists.');
             }
+
             $secret = $this->totp->generateSecretKey();
             $factor ??= new Credential;
             $factor->forceFill([
@@ -55,6 +56,7 @@ class TotpEnrollment
                     return true;
                 }
             }
+
             AuthEvents::record($user, AuthenticationOutcome::ChallengeFailed);
 
             return false;

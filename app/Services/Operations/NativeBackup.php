@@ -20,6 +20,7 @@ final class NativeBackup
         if ($hasAssessment) {
             NativeAssessmentSnapshot::authorize($actor, $offering);
         }
+
         NativeRules::check(! $offering->activity_order && ! ClassSession::where('offering_id', $offering->id)->exists()
             && ! Announcement::where('offering_id', $offering->id)->exists(), 'Custom activity order, class meetings and announcements cannot be backed up.');
         $modules = [];
@@ -76,6 +77,7 @@ final class NativeBackup
         if ($assessment) {
             $manifest['assessment'] = $assessment;
         }
+
         $entries['backup.json'] = json_encode($manifest, JSON_THROW_ON_ERROR);
         NativeRules::check(strlen($entries['backup.json']) <= 1048576, 'Course manifest exceeds 1 MiB.');
         (new NativeManifest)->decode($entries);

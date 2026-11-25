@@ -32,9 +32,11 @@ final class RevisionWriter
                 if ($request->hasFile('file')) {
                     $files['file'] = $this->uploads->store($request->file('file'));
                 }
+
                 if ($request->hasFile('caption')) {
                     $files['caption'] = $this->uploads->store($request->file('caption'), caption: true);
                 }
+
                 $revision = MaterialVersion::where('material_id', $material->id)->max('revision') + 1;
                 new MaterialVersion()
                     ->forceFill([

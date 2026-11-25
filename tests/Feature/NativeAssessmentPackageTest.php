@@ -26,6 +26,7 @@ use Dompdf\Dompdf;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tests\Feature\Assessment\AssessmentCase;
 use ZipArchive;
 
@@ -77,7 +78,9 @@ class NativeAssessmentPackageTest extends AssessmentCase
             'total_percent' => 61, 'grade' => 'C', 'moderation_note' => 'PRIVATE_GRADE']);
     }
 
-    public function test_restores_assessments_to_a_different_course_with_local_ids_and_no_personal_records(): void
+    #[TestWith([false])]
+    #[TestWith([true])]
+    public function test_restores_assessments_to_a_different_course_with_local_ids_and_no_personal_records(bool $legacy): void
     {
         $this->mixedCourse();
         $target = Offering::factory()->create(['curriculum_course_id' => CurriculumCourse::factory()]);
@@ -97,6 +100,12 @@ class NativeAssessmentPackageTest extends AssessmentCase
             $this->assertStringNotContainsString($private, $manifest);
         }
 
+        if ($legacy) {
+            $old = json_decode($manifest, true, flags: JSON_THROW_ON_ERROR);
+            $old['format'] = 'adin-course-3';
+            unset($old['lessons'][0]['materials'][0]['ref']);
+            $zip->addFromString('backup.json', json_encode($old, JSON_THROW_ON_ERROR));
+        }
         $zip->close();
         $this->as($this->marker)->postJson("/operations/courses/$target->id/import", ['package' => $package])->assertForbidden();
         $this->authorizeTarget($target);

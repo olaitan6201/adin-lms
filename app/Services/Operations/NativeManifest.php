@@ -10,17 +10,19 @@ final class NativeManifest
     {
         $manifest = json_decode($entries['backup.json'], true, 20);
         unset($entries['backup.json']);
-        $v3 = ($manifest['format'] ?? null) === 'adin-course-3';
-        if ($v3 && $authorizeAssessment !== null) {
+        $format = $manifest['format'] ?? null;
+        $portable = $format === NativeMaterialReferences::FORMAT;
+        $hasAssessment = $format === 'adin-course-3' || ($portable && array_key_exists('assessment', $manifest));
+        if ($hasAssessment && $authorizeAssessment !== null) {
             $authorizeAssessment();
         }
 
-        $this->fields($manifest, $v3 ? ['format', 'lessons', 'forums', 'assessment'] : ['format', 'lessons', 'forums']);
+        $this->fields($manifest, $hasAssessment ? ['format', 'lessons', 'forums', 'assessment'] : ['format', 'lessons', 'forums']);
         $this->boundedList($manifest['lessons'], 50);
         $this->boundedList($manifest['forums'], 50);
-        if ($v3) {
+        if ($hasAssessment) {
             (new NativeAssessmentRules)->validate($manifest['assessment'], count($manifest['lessons']), $entries);
-        } elseif ($manifest['format'] !== 'adin-course-2' || (! $manifest['lessons'] && ! $manifest['forums'])) {
+        } elseif ((! $portable && $format !== 'adin-course-2') || (! $manifest['lessons'] && ! $manifest['forums'])) {
             TextAssetArchive::reject('Expected a non-empty Adin course backup.');
         }
 
@@ -38,8 +40,9 @@ final class NativeManifest
 
             $this->boundedList($lesson['materials'], 20);
             foreach ($lesson['materials'] as $material) {
-                $this->material($material, $entries);
+                $this->material($material, $entries, $portable);
             }
+            NativeMaterialReferences::validate($lesson, $portable);
         }
 
         if ($entries) {
@@ -49,9 +52,13 @@ final class NativeManifest
         return $manifest;
     }
 
-    private function material(mixed $row, array &$entries): void
+    private function material(mixed $row, array &$entries, bool $portable): void
     {
-        $this->fields($row, ['title', 'body', 'transcript', 'url', 'attachment', 'download']);
+        $keys = ['title', 'body', 'transcript', 'url', 'attachment', 'download'];
+        if ($portable) {
+            $keys[] = 'ref';
+        }
+        $this->fields($row, $keys);
         $this->title($row['title']);
         $this->text($row['body']);
         $this->text($row['transcript']);

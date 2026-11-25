@@ -10,6 +10,7 @@ use App\Models\MaterialVersion;
 use App\Models\Module;
 use App\Models\Offering;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 final class NativeBackup
 {
@@ -33,6 +34,7 @@ final class NativeBackup
             }
 
             $materials = [];
+            $references = [];
             foreach (LearningMaterial::where('module_id', $module->id)->orderBy('id')->limit(21)->cursor() as $material) {
                 if ($material->opens_at || $material->closes_at || $material->restrictions || count($materials) >= 20) {
                     TextAssetArchive::reject('Backups support up to 20 unrestricted, unscheduled materials per lesson.');
@@ -48,7 +50,10 @@ final class NativeBackup
                     TextAssetArchive::reject('The native manifest exceeds 1 MiB.');
                 }
 
+                $ref = (string) Str::uuid();
+                $references[$material->id] = $ref;
                 $materials[] = [
+                    'ref' => $ref,
                     'title' => $material->title, 'download' => $material->download_allowed,
                     'body' => $version->body, 'url' => $version->external_url, 'transcript' => $version->transcript,
                     'attachment' => $version->file ? PackageAttachments::export($version->file, $entries) : null,
@@ -61,7 +66,8 @@ final class NativeBackup
             }
 
             $modules[$module->id] = count($lessons);
-            $lessons[] = ['title' => $module->title, 'kind' => $module->kind, 'body' => $module->body, 'materials' => $materials];
+            $lessons[] = ['title' => $module->title, 'kind' => $module->kind,
+                'body' => NativeMaterialReferences::remap($module->body, $references), 'materials' => $materials];
         }
 
         $forums = [];
@@ -74,7 +80,7 @@ final class NativeBackup
         }
 
         $assessment = $hasAssessment ? (new NativeAssessmentSnapshot)->collect($offering, $actor, $modules, $entries) : null;
-        $manifest = ['format' => $assessment ? 'adin-course-3' : 'adin-course-2', 'lessons' => $lessons, 'forums' => $forums];
+        $manifest = ['format' => NativeMaterialReferences::FORMAT, 'lessons' => $lessons, 'forums' => $forums];
         if ($assessment) {
             $manifest['assessment'] = $assessment;
         }

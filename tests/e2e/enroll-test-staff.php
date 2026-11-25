@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\RoleCode;
+use App\Models\CurriculumCourse;
 use App\Models\Enrolment;
 use App\Models\Lecturer;
 use App\Models\Offering;
@@ -28,6 +29,19 @@ umask(0077);
 $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
 $authors = ['group-desktop', 'group-phone', 'lesson-desktop', 'lesson-phone'];
 foreach (['desktop', 'phone'] as $project) {
+    $exchange = 'exchange-'.$project;
+    $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
+    Student::factory()->create(['user_id' => $reader->id]);
+    $author = User::factory()->create(['email' => $exchange.'@demo.example.test']);
+    $delivery = $offering->only(['semester_id', 'section', 'delivery_mode', 'approved_by', 'approved_at']);
+    $source = Offering::factory()->create($delivery + ['curriculum_course_id' => CurriculumCourse::factory(), 'status' => 'published']);
+    $target = Offering::factory()->create($delivery + ['curriculum_course_id' => CurriculumCourse::factory()]);
+    $lecturer = Lecturer::factory()->create(['user_id' => $author->id]);
+    TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $source->id]);
+    app(ChangeRoleGrant::class)->apply($author->id, RoleCode::InstitutionalAdmin, 'institution', false);
+    $factor = app(TotpEnrollment::class)->issue($author);
+    file_put_contents("$run/$exchange.json", json_encode(['source' => $source->id, 'target' => $target->id, 'factor' => $factor], JSON_THROW_ON_ERROR), LOCK_EX);
+
     $authors[] = 'exam-reviewer-'.$project;
     $candidate = User::factory()->create(['email' => "exam-learner-{$project}@demo.example.test"]);
     $student = Student::factory()->create(['user_id' => $candidate->id, 'matric_number' => "EXAM/{$project}"]);

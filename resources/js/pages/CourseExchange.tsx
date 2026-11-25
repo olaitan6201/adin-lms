@@ -36,7 +36,7 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
             }
             if (importing) {
                 const result = await response.json();
-                setMessage(`Restored ${result.imported} lesson or forum record(s) to ${match?.external_offering_id ?? offering}.`);
+                setMessage(`Restored ${result.imported} course record(s) to ${match?.external_offering_id ?? offering}.`);
                 form.reset();
             } else {
                 const url = URL.createObjectURL(await response.blob());
@@ -80,7 +80,7 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                             <option value="native">Adin course backup</option><option value="scorm">SCORM 1.2 text assets</option>
                         </select>
                     </label>
-                    <p>{format === 'native' ? 'Current lesson text, HTTPS links, PDF, PNG, JPEG and text attachments, plus whole-course forum titles. Earlier revisions, assessments and classes are excluded.' : 'Unscheduled text chapters only. A chapter with linked or attached material cannot be exported in this format.'}</p>
+                    <p>{format === 'native' ? 'Current lessons and attachments, course forums, assignment briefs and reference files, exam definitions and course question banks. Assessment archives contain private answer keys; you need exchange permission and teaching authority for the selected offering.' : 'Unscheduled text chapters only. A chapter with linked or attached material cannot be exported in this format.'}</p>
                     <button className={button} disabled={!valid || busy}>Download package</button>
                 </form>
                 <form onSubmit={(event) => transfer(event, true)} className="portal-panel desk-shelf space-y-4">
@@ -98,6 +98,7 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
             <section className="space-y-2 border-t border-slate-300 pt-4">
                 <h2 className="desk-section">Compatibility limits</h2>
                 <p>Native backups support 50 unscheduled lessons, 20 unrestricted materials per lesson and 50 forums. Files are limited to 4 MiB each, 50 files and 8 MiB expanded in total. Legacy Adin chapter ZIPs are also accepted.</p>
+                <p>Assessment schedules retain their original UTC dates. Review them before opening the draft. All banks in the source curriculum course are included; their topics must be new in the destination course. Fixed questions and random draws retain their links. Custom exam security, custom activity order, class meetings and announcements block export.</p>
                 <p>Common Cartridge 1.1 import maps a single root folder of local plain-text web resources to ordered chapters. Moodle .mbz backups, quizzes and nested sections are unsupported.</p>
                 <p>SCORM 1.2 static text assets become chapters. Executable SCOs are blocked: there is no isolated player or SCORM completion, score or progress tracking.</p>
             </section>

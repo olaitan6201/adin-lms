@@ -9,7 +9,7 @@ use Brick\Math\RoundingMode;
 
 class MatchingCredit
 {
-    public function award(AttemptQuestion $question, mixed $answer): string
+    public function award(AttemptQuestion $question, mixed $answer, RoundingMode $rounding): string
     {
         if ($question->version->kind !== QuestionKind::Matching) {
             $accepted = $question->version->marking_key['accepted'] ?? [];
@@ -42,8 +42,8 @@ class MatchingCredit
 
         return BigDecimal::of($correct)
             ->multipliedBy($question->possible_points)
-            ->dividedBy($pairs, 8, RoundingMode::HalfUp)
-            ->toScale(8, RoundingMode::HalfUp)
+            ->dividedBy($pairs, 8, $rounding)
+            ->toScale(8, $rounding)
             ->toString();
     }
 }

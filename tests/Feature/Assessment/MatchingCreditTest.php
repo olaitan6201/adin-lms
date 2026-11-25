@@ -61,7 +61,24 @@ class MatchingCreditTest extends AssessmentCase
             ->where('questions.0.revision', 1));
     }
 
-    public function test_matching_partial_credit_rounds_half_up_to_eight_decimal_places(): void
+    public function test_shuffled_matching_order_is_frozen_across_reloads(): void
+    {
+        [$attempt, $question, $version] = $this->matchingAttempt([
+            'One' => 'First',
+            'Two' => 'Second',
+            'Three' => 'Third',
+        ], true);
+        $matching = $version->marking_key['matching'];
+        $order = $question->option_order;
+
+        $this->assertEqualsCanonicalizing(array_values($matching['pairs']), $order['right']);
+        $this->get("/attempts/$attempt->id")->assertInertia(fn (Page $page) => $page
+            ->where('questions.0.matching.right.0.id', $order['right'][0])
+            ->where('questions.0.matching.right.1.id', $order['right'][1]));
+        $this->assertSame($order, $question->fresh()->option_order);
+    }
+
+    public function test_matching_partial_credit_rounds_to_eight_decimal_places(): void
     {
         [$attempt, $question, $version] = $this->matchingAttempt([
             'One' => 'First',
@@ -83,7 +100,7 @@ class MatchingCreditTest extends AssessmentCase
         $this->assertSame('6.66666667', (string) AssessmentScore::sole()->points);
     }
 
-    private function matchingAttempt(array $pairs): array
+    private function matchingAttempt(array $pairs, bool $shuffle = false): array
     {
         $this->setupItems(['exam']);
         $item = AssessmentItem::sole();
@@ -104,6 +121,7 @@ class MatchingCreditTest extends AssessmentCase
             'closes_at' => now()->addHour(),
             'duration_seconds' => 600,
             'max_attempts' => 1,
+            'shuffle' => $shuffle,
             'selections' => [['version_id' => $version->id, 'points' => '10']],
         ])->assertSessionHasNoErrors();
         $this->as($this->member->student->user)->post('/examinations/'.Examination::sole()->id.'/start')->assertRedirect();

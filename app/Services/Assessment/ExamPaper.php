@@ -3,6 +3,7 @@
 namespace App\Services\Assessment;
 
 use App\Enums\Assessment\QuestionKind;
+use App\Enums\Assessment\RoundingRule;
 use App\Models\AttemptQuestion;
 use App\Models\ExaminationAttempt;
 use App\Models\ExaminationResponse;
@@ -53,6 +54,8 @@ class ExamPaper
     {
         $total = BigDecimal::zero();
         $manual = false;
+        $rule = $attempt->exam->item->gradebook->policy->rounding_rule;
+        abort_if($rule === RoundingRule::None, 422, 'A rounding policy is required for examination scores.');
         foreach (AttemptQuestion::with('version')->where('attempt_id', $attempt->id)->get() as $q) {
             if (! $q->version->kind->isObjective()) {
                 $manual = true;
@@ -63,7 +66,7 @@ class ExamPaper
             $answer = ExaminationResponse::where('attempt_question_id', $q->id)
                 ->latest('revision')
                 ->first()?->answer['value'] ?? null;
-            $points = $this->matching->award($q, $answer);
+            $points = $this->matching->award($q, $answer, $rule->mode());
             $q->forceFill(['awarded_points' => $points])->save();
             $total = $total->plus($points);
         }

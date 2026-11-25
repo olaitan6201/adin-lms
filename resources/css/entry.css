@@ -1,0 +1,50 @@
+.portal-entry {
+    margin-block: clamp(0.5rem, 5vw, 4rem);
+}
+
+.entry-intro {
+    border-top: 3px double var(--portal-ink);
+    padding-top: 1.4rem;
+}
+
+.entry-intro > p:not(.portal-kicker) {
+    max-width: 42ch;
+    font-size: 1.15rem;
+}
+
+.entry-intro .portal-action,
+.portal-entry aside p {
+    margin-top: 1.25rem;
+}
+
+.entry-form input {
+    background: #fff;
+    border-color: #687167;
+    margin-top: 0.4rem;
+}
+
+.entry-form button {
+    background: var(--portal-ink);
+    min-height: 44px;
+}
+
+@media (min-width: 55rem) {
+    .desk-owner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+    }
+}
+
+@media (max-width: 48rem) {
+    .desk-grid,
+    .portal-entry {
+        grid-template-columns: 1fr;
+    }
+
+    .desk-list li {
+        grid-template-columns: 3rem 1fr;
+        gap: 0.75rem;
+    }
+}

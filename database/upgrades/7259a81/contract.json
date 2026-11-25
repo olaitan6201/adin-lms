@@ -88,7 +88,24 @@
     "failed_jobs"
   ],
   "target": "4775efab714fe6e9a19bac69be4a2de9f115e252502e991954a4b85bac38eace",
-  "migration": "0b0a3195e9820a45758e61af2be59ea01860564f567f420482f724ab82ba5d9f",
+  "migration_files": {
+    "2026_11_25_000001_create_uuid_lms_schema.php": "12985e12e8e1eb6ee2854e847568fcdd2603ec60d1d3fd93a4d03652ccde0f04",
+    "baseline/assessment_planning.php": "16f04ce5c9743770cbd4366c7d3c847709d6c1f3230402ef823cb326461c1429",
+    "baseline/communications.php": "26d6ac9c1735192aa2543770a06390efc35165cec1bb89dd3181e937e4b7e92b",
+    "baseline/coursework.php": "da1b14a6d6b9075b26e8f9aea27d27819b6a13a7554c016def09ac1cea431af5",
+    "baseline/curriculum.php": "3e3e4b06b3f68f6659101e7f98843e9dc9fb9cf63c133c5ca706ac2f47fecb5f",
+    "baseline/examinations.php": "daedd3fc27684d9edbe2c43e2840fbeb006cbc6e882a7223c35a64a9342caf3d",
+    "baseline/framework.php": "b36d96ce3e9bf67ec007e9a02a0c21b09d29ee2c8700f0f8545c569d4824e24f",
+    "baseline/governance.php": "d5ad44a4adb80865f16f197050f632b44b6dc06053f41c1a23f61bf141ea0713",
+    "baseline/grading.php": "bd130acca14a8f1598311999ec794bfd3e89402c912d247bb306373a91252b05",
+    "baseline/identity.php": "8acfc665284ab3cbe2d1572e8a1872bcb50616ddc2fd3b9248a6c4eea4ada842",
+    "baseline/institution.php": "fbf212fc607979457aa9756a9703252750af003635957a7fd9e26eb2ab20170e",
+    "baseline/learning.php": "e465065f904e47566a4a459104dcefcde833734c6910a9d52725e6e8bbec4a7e",
+    "baseline/offerings.php": "6e58509e60a630a304da43745a1697db7eb9aff68ffb23e1489bd5a6fe4cc69a",
+    "baseline/people.php": "b49009610e1afda31d3f1600aaf6c1463d18f490674b11bac0a22afa567ca24f",
+    "baseline/rollback.php": "200f69b7c97712c90a1d6331a9ac0d9e21fb779e98d45f62b4c7166746631c66",
+    "baseline/teaching_resources.php": "57fd89955a899821a0cc76807b4c83c147e9df6d74da292cab043781783ff286"
+  },
   "usage_indexes": {
     "login_events": {"usage_auth_window_idx": ["outcome", "occurred_at", "user_id"]},
     "submission_versions": {"usage_submission_window_idx": ["submitted_at"]},

@@ -4,6 +4,7 @@ require __DIR__.'/Store.php';
 require __DIR__.'/Transfer.php';
 require __DIR__.'/UsageIndexes.php';
 require __DIR__.'/RegistrarReview.php';
+require __DIR__.'/MigrationFiles.php';
 
 const BASELINE = '2026_11_25_000001_create_uuid_lms_schema';
 
@@ -21,17 +22,14 @@ try {
     }
 
     $contract = json_decode(file_get_contents(__DIR__.'/contract.json'), true, flags: JSON_THROW_ON_ERROR);
-    $migration = dirname(__DIR__, 3).'/database/migrations/'.BASELINE.'.php';
-    if (glob(dirname($migration).'/*.php') !== [$migration] || hash_file('sha256', $migration) !== $contract['migration']) {
-        throw new RuntimeException('Unreviewed target migration revision.');
-    }
+    $migration = MigrationFiles::verify(dirname(__DIR__, 2).'/migrations', $contract['migration_files']);
 
     $store = new Store($dsn, (string) getenv('UPGRADE_SOURCE'));
     UsageIndexes::verify($store, $contract['usage_indexes']);
     $transfer = new Transfer($store);
     $manifest = [
         'backup' => hash_file('sha256', $backup),
-        'target_migration' => $contract['migration'],
+        'target_migration' => $migration,
         'location' => hash('sha256', $dsn."\0".getenv('UPGRADE_SOURCE')),
         'next_ids' => $transfer->nextIds(),
     ];

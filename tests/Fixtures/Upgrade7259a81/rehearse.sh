@@ -92,6 +92,23 @@ refuse() {
     echo "Refused: $expected"
 }
 # Probe the isolated candidate only. Never normalize a real migration ledger.
+part=database/migrations/baseline/grading.php
+mv "$part" "$QA_ROOT/reviewed"
+refuse 'Unreviewed target migration revision' plan
+cp "$QA_ROOT/reviewed" "$part"
+echo >> "$part"
+refuse 'Unreviewed target migration revision' "apply:$plan"
+rm "$part"
+ln -s "$QA_ROOT/reviewed" "$part"
+refuse 'Unreviewed target migration layout' "cutover:$plan"
+rm "$part"
+mv "$QA_ROOT/reviewed" "$part"
+touch database/migrations/baseline/.unexpected
+refuse 'Unreviewed target migration layout' plan
+rm database/migrations/baseline/.unexpected
+touch database/migrations/extra.php
+refuse 'Unreviewed target migration layout' plan
+rm database/migrations/extra.php
 legacy_sql() {
     case $DB_CONNECTION in
         sqlite|mysql) DB_DATABASE="$UPGRADE_SOURCE" sql ;;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Assessment;
 use App\Enums\EnrolmentStatus;
 use App\Models\Grade;
 use App\Models\Gradebook;
+use App\Models\GradeBoundary;
 use App\Models\Offering;
 use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\DeskItems;
@@ -50,6 +51,13 @@ class AssessmentDeskController
         return Inertia::render('Assessments/Desk', [
             'offering' => $offering->id,
             'book' => $book?->id,
+            'policy' => $book && $officer ? [
+                'id' => $book->policy_id,
+                'version' => $book->policy->version,
+                'rounding' => $book->policy->rounding_rule->value,
+                'boundaries' => GradeBoundary::where('policy_id', $book->policy_id)->orderBy('minimum_percent')
+                    ->get(['minimum_percent', 'grade'])->map(fn ($b) => ['minimum' => (string) $b->minimum_percent, 'grade' => $b->grade]),
+            ] : null,
             'items' => $items->forViewer($book, $teacher, $learner),
             'grades' => $grades,
             'teacher' => $teacher,

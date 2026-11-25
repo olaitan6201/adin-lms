@@ -23,6 +23,11 @@ class GradeDeliveryTest extends AssessmentCase
     {
         $this->setupItems(['manual']);
         $item = AssessmentItem::sole();
+        $this->as($this->officer)->get($this->desk)->assertInertia(fn (Page $page) => $page
+            ->where('policy.id', $item->gradebook->policy_id)->where('policy.rounding', 'half_up')
+            ->where('policy.boundaries.0.grade', 'F')->where('teacher', false));
+        $this->as($this->member->student->user)->get($this->desk)->assertInertia(fn (Page $page) => $page->where('policy', null));
+        $this->as($this->marker);
         $this->post("/assessment-items/$item->id/score", [
             'enrolment' => $this->member->id, 'points' => 8, 'reason' => 'Verified answer',
         ])->assertRedirect();

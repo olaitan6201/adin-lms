@@ -1,6 +1,6 @@
 import '../../assessment/assessment.css';
 import { Head, Link } from '@inertiajs/react';
-import { SetupBook } from '../../assessment/SetupBook';
+import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';
 import { SetupAssignment } from '../../assessment/SetupAssignment';
 import { SetupExam } from '../../assessment/SetupExam';
 import { acceptsDirectScores, type ItemKind } from '../../assessment/contracts';
@@ -16,7 +16,7 @@ type Item = {
     returned: number | null;
     maximum_score: string;
     weight_percent: string;
-    rubric: { guide?: string } | null;
+    rubric: { guide?: string; criteria?: PolicyDefinition['items'][number]['criteria'] } | null;
     attempts: {
         id: string;
         enrolment_id: string;
@@ -26,6 +26,7 @@ type Item = {
 type Props = {
     offering: string;
     book: string | null;
+    policy: (Omit<PolicyDefinition, 'items'> & {id: string; version: number}) | null;
     items: Item[];
     grades: Grade[];
     teacher: boolean;
@@ -33,7 +34,7 @@ type Props = {
     learner: boolean;
     roster: Member[];
 };
-export default function Desk({ offering, book, items, grades, teacher, officer, learner, roster }: Props) {
+export default function Desk({ offering, book, policy, items, grades, teacher, officer, learner, roster }: Props) {
     const who = (id: string) => roster.find((m) => m.id === id)?.name;
 
     return (
@@ -65,6 +66,16 @@ export default function Desk({ offering, book, items, grades, teacher, officer, 
                 ) : (
                     <p>No assessments configured.</p>
                 ))}
+            {officer && policy && <details>
+                <summary>Amend grading policy · version {policy.version}</summary>
+                <SetupBook key={policy.id} url={`/courses/${offering}/assessments`} policy={{
+                    ...policy, items: items.map(i => ({
+                        id: i.id, title: i.title, kind: i.kind, weight: String(i.weight_percent),
+                        maximum: String(i.maximum_score), rubric: i.rubric?.guide ?? '',
+                        criteria: i.rubric?.criteria ?? [],
+                    })),
+                }} />
+            </details>}
             {items.map((i) => (
                 <section className="portal-panel assessment-item" key={i.id} id={`item-${i.id}`}>
                     <p className="portal-kicker">{i.kind}</p>

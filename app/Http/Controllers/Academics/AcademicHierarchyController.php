@@ -17,8 +17,11 @@ use Inertia\Response;
 
 class AcademicHierarchyController
 {
-    public function index(Request $request, HierarchyVisibility $visibility, ?string $department = null): Response
-    {
+    public function index(
+        Request $request,
+        HierarchyVisibility $visibility,
+        ?string $department = null,
+    ): Response {
         return Inertia::render('Academics/Hierarchy', $visibility->records($request->user(), $department));
     }
 
@@ -33,8 +36,11 @@ class AcademicHierarchyController
         return to_route('academics.index');
     }
 
-    public function destroy(Request $request, ScopedAuthority $authority, Department $department): RedirectResponse
-    {
+    public function destroy(
+        Request $request,
+        ScopedAuthority $authority,
+        Department $department,
+    ): RedirectResponse {
         abort_unless($authority->institutionAllows($request->user(), 'academics.manage'), 403);
         try {
             $department->delete();
@@ -42,7 +48,10 @@ class AcademicHierarchyController
             if (! str_starts_with((string) $error->getCode(), '23')) {
                 throw $error;
             }
-            throw ValidationException::withMessages(['department' => 'This department is referenced by other records.']);
+
+            throw ValidationException::withMessages([
+                'department' => 'This department is referenced by other records.',
+            ]);
         }
 
         return to_route('academics.index');

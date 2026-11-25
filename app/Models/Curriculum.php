@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CurriculumStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -16,6 +17,7 @@ class Curriculum extends DomainModel
     protected function casts(): array
     {
         return [
+            'status' => CurriculumStatus::class,
             'approved_at' => 'immutable_datetime',
         ];
     }

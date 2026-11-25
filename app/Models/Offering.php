@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OfferingStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,6 +21,7 @@ class Offering extends DomainModel
     protected function casts(): array
     {
         return [
+            'status' => OfferingStatus::class,
             'approved_at' => 'immutable_datetime',
         ];
     }

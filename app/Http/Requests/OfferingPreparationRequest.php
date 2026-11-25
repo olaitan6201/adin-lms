@@ -17,8 +17,12 @@ class OfferingPreparationRequest extends FormRequest
     public function rules(): array
     {
         return match ($this->route('action')) {
-            'prepare' => ['curriculum_course_id' => 'required|uuid|exists:curriculum_courses,id', 'semester_id' => 'required|uuid|exists:semesters,id',
-                'section' => 'required|string|max:191', 'delivery_mode' => ['required', Rule::in(OfferingLifecycle::MODES)]],
+            'prepare' => [
+                'curriculum_course_id' => 'required|uuid|exists:curriculum_courses,id',
+                'semester_id' => 'required|uuid|exists:semesters,id',
+                'section' => 'required|string|max:191',
+                'delivery_mode' => ['required', Rule::in(OfferingLifecycle::MODES)],
+            ],
             'copy' => ['source_id' => 'required|uuid|exists:offerings,id'],
             default => [],
         };

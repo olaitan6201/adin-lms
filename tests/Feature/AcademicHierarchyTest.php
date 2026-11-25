@@ -22,11 +22,19 @@ class AcademicHierarchyTest extends TestCase
         $base = '/academics/organisation';
         foreach (['Science', 'Arts'] as $name) {
             $this->post("$base/faculties", ['name' => $name, 'code' => $name])->assertSessionHasNoErrors();
-            $this->post("$base/departments", ['name' => $name, 'code' => $name, 'faculty_id' => Faculty::where('name', $name)->value('id')])->assertSessionHasNoErrors();
+            $this->post("$base/departments", [
+                'name' => $name,
+                'code' => $name,
+                'faculty_id' => Faculty::where('name', $name)->value('id'),
+            ])->assertSessionHasNoErrors();
         }
+
         $department = Department::firstOrFail();
         $programme = ['department_id' => $department->id, 'code' => 'CS', 'name' => 'Computing'];
-        $this->post("$base/programmes", ['department_id' => (string) Str::uuid7()] + $programme)->assertSessionHasErrors('department_id');
+        $this->post(
+            "$base/programmes",
+            ['department_id' => (string) Str::uuid7()] + $programme,
+        )->assertSessionHasErrors('department_id');
         $this->post("$base/programmes", $programme)->assertSessionHasNoErrors();
         $this->delete("/academics/departments/$department->id")->assertSessionHasErrors('department');
         $this->assertTrue(Programme::sole()->department->is($department));
@@ -35,7 +43,9 @@ class AcademicHierarchyTest extends TestCase
         foreach (['2026', '2027'] as $label) {
             $this->post("$base/sessions", ['label' => $label] + $semester)->assertSessionHasNoErrors();
             $data = ['session_id' => AcademicSession::where('label', $label)->value('id')] + $semester;
-            $this->post("$base/semesters", ['ends_on' => '2025-12-31'] + $data)->assertSessionHasErrors('ends_on');
+            $this->post("$base/semesters", ['ends_on' => '2025-12-31'] + $data)->assertSessionHasErrors(
+                'ends_on',
+            );
             $this->post("$base/semesters", $data)->assertSessionHasNoErrors();
             $this->post("$base/semesters", $data)->assertSessionHasErrors('position');
         }
@@ -45,9 +55,13 @@ class AcademicHierarchyTest extends TestCase
     {
         $own = Department::factory()->create();
         $other = Department::factory()->create();
-        foreach (['dean' => 'faculty:'.$own->faculty_id, 'head_of_department' => 'department:'.$own->id] as $role => $scope) {
+        foreach (
+            ['dean' => 'faculty:'.$own->faculty_id, 'head_of_department' => 'department:'.$own->id] as $role => $scope
+        ) {
             $this->academicUser($role, $scope);
-            $this->get('/academics')->assertInertia(fn (AssertableInertia $p) => $p->has('departments', 1)->where('departments.0.id', $own->id));
+            $this->get('/academics')->assertInertia(
+                fn (AssertableInertia $p) => $p->has('departments', 1)->where('departments.0.id', $own->id),
+            );
             $this->get("/academics/departments/$other->id")->assertNotFound();
             $this->post('/academics/organisation/faculties', [])->assertForbidden();
         }

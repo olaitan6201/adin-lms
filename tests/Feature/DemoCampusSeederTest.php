@@ -33,7 +33,7 @@ class DemoCampusSeederTest extends TestCase
             $this->assertSame('lecturer@demo.example.test', $version->createdBy->email);
         }
 
-        $this->post('/login', ['email' => 'tunde@demo.example.test', 'password' => 'password'])->assertRedirect(route('courses.index'));
+        $this->post('/login', ['email' => 'tunde@demo.example.test', 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->get('/courses')->assertInertia(fn (AssertableInertia $page) => $page
             ->has('courses', 1)->where('courses.0.external_offering_id', 'DEMO-CSC101-2026-1'));
         $withdrawn = Offering::where('external_offering_id', 'DEMO-CSC102-2026-1')->sole();

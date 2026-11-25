@@ -2,7 +2,7 @@
     "id": "/",
     "name": "Proposed Adin Open University Learning Portal",
     "short_name": "Adin LMS",
-    "start_url": "/",
+    "start_url": "/dashboard",
     "scope": "/",
     "display": "standalone",
     "background_color": "#ffffff",

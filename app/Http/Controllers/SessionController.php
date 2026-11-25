@@ -28,7 +28,7 @@ class SessionController extends Controller
         $request->session()->regenerate();
         $request->session()->put(EnsureActiveAccount::VERSION, Auth::user()->auth_version);
 
-        return redirect()->intended(route('courses.index'));
+        return redirect()->intended(route('insights.dashboard'));
     }
 
     public function destroy(Request $request): RedirectResponse

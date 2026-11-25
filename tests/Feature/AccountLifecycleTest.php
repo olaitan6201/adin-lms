@@ -23,12 +23,12 @@ class AccountLifecycleTest extends TestCase
         Student::factory()->create(['user_id' => $user->id, 'matric_number' => 'MAT-01']);
         $staff = Lecturer::factory()->create(['user_id' => $user->id, 'staff_number' => 'STAFF-01']);
         foreach ([strtoupper($user->email), 'MAT-01', 'STAFF-01'] as $identifier) {
-            $this->post('/login', ['email' => $identifier, 'password' => 'password'])->assertRedirect(route('courses.index'));
+            $this->post('/login', ['email' => $identifier, 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
             $this->assertAuthenticatedAs($user);
             $this->post('/logout');
         }
         $staff->forceFill(['staff_number' => 'MAT-01'])->save();
-        $this->post('/login', ['email' => 'MAT-01', 'password' => 'password'])->assertRedirect(route('courses.index'));
+        $this->post('/login', ['email' => 'MAT-01', 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->post('/logout');
         $staff->forceFill(['user_id' => User::factory()->create(['status' => 'suspended'])->id])->save();
         $this->post('/login', ['email' => 'MAT-01', 'password' => 'password'])->assertSessionHasErrors('email');
@@ -40,14 +40,14 @@ class AccountLifecycleTest extends TestCase
         $admin = $this->administrator();
         $student = Student::factory()->create();
         $user = $student->user;
-        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('courses.index'));
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $user->id])->assertFailed();
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();
         $this->assertDatabaseHas('users', ['id' => $user->id, 'status' => 'suspended']);
         $this->artisan('identity:account', ['action' => 'reactivate', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();
         $this->get('/courses')->assertRedirect(route('login'));
         $this->assertGuest();
-        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('courses.index'));
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->assertDatabaseHas('students', ['id' => $student->id, 'user_id' => $user->id]);
     }
 

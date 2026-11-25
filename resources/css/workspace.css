@@ -1,0 +1,42 @@
+.portal-page { max-width: 76rem; margin: auto; padding: clamp(1.5rem, 4vw, 3.75rem) clamp(1rem, 4vw, 3rem) 4rem; }
+.portal-kicker { font: 700 .75rem/1.5 system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--portal-ink); }
+.portal-title { font: 500 clamp(2.5rem, 5.3vw, 4.8rem)/1.06 Georgia, 'Times New Roman', serif; letter-spacing: -.045em; margin-block: .35em .22em; }
+.portal-panel { border: 1px solid var(--portal-line); background: #fff; padding: clamp(1rem, 2.4vw, 1.8rem); }
+.portal-action { display: inline-flex; align-items: center; min-height: 44px; background: var(--portal-ink); color: white; padding: .65rem 1.25rem; font-weight: 650; }
+.portal-action:hover { text-decoration: underline; }
+.desk-heading { position: relative; border-bottom: 3px double var(--portal-ink); padding-bottom: 1.6rem; }
+.desk-owner { color: var(--portal-muted); margin-top: .8rem; font-size: .9rem; }
+.desk-grid, .portal-entry { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(17rem, 1fr); align-items: start; gap: clamp(1.5rem, 5vw, 4.5rem); }
+.desk-grid { margin-top: 2rem; }
+.desk-section { font: 500 clamp(1.45rem, 2.5vw, 2.1rem)/1.2 Georgia, serif; letter-spacing: -.025em; }
+.desk-note { color: var(--portal-muted); font-size: .92rem; }
+.desk-section + .desk-note { margin-top: .35rem; }
+.desk-list { margin-top: 1.25rem; }
+.desk-list li { display: grid; grid-template-columns: 3.5rem 1fr; gap: 1rem; padding: 1.2rem 0 .7rem; border-top: 1px solid var(--portal-line); }
+.desk-list h3 { font-size: 1.25rem; font-weight: 650; margin-block: .18rem; }
+.desk-stamp { align-self: start; padding: .35rem .2rem; border-top: 3px solid var(--portal-accent); background: #f1f0e7; text-align: center; }
+.desk-stamp small, .desk-stamp strong { display: block; }
+.desk-stamp small { font-size: .72rem; font-weight: 650; text-transform: uppercase; }
+.desk-stamp strong { font: 500 1.8rem/1.12 Georgia, serif; }
+.desk-link { display: flex; align-items: center; width: fit-content; min-height: 44px; color: var(--portal-ink); font-weight: 650; text-decoration: underline; text-underline-offset: .2em; gap: .4em; }
+.desk-shelf { border-top: 4px solid var(--portal-accent); }
+.desk-shelf ul { margin-top: 1rem; }
+.desk-shelf li { border-bottom: 1px solid var(--portal-line); }
+.desk-shelf li a { display: block; padding-block: .9rem; font-weight: 650; }
+.desk-shelf li a:hover { text-decoration: underline; }
+.desk-shelf small { display: block; font-size: .8rem; color: var(--portal-muted); font-weight: 500; }
+.desk-shelf > .desk-link { margin-top: .6rem; }
+.desk-empty { margin-top: 1rem; padding-block: 1rem; border-block: 1px solid var(--portal-line); }
+.portal-entry { margin-block: clamp(.5rem, 5vw, 4rem); }
+.entry-intro { border-top: 3px double var(--portal-ink); padding-top: 1.4rem; }
+.entry-intro > p:not(.portal-kicker) { max-width: 42ch; font-size: 1.15rem; }
+.entry-intro .portal-action, .portal-entry aside p { margin-top: 1.25rem; }
+.entry-form input { background: #fff; border-color: #687167; margin-top: .4rem; }
+.entry-form button { background: var(--portal-ink); min-height: 44px; }
+@media (min-width: 55rem) {
+    .desk-owner { position: absolute; top: 0; right: 0; margin: 0; }
+}
+@media (max-width: 48rem) {
+    .desk-grid, .portal-entry { grid-template-columns: 1fr; }
+    .desk-list li { grid-template-columns: 3rem 1fr; gap: .75rem; }
+}

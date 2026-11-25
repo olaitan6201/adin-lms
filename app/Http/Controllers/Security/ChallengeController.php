@@ -25,6 +25,6 @@ class ChallengeController extends Controller
         $request->session()->regenerate(true);
         $request->session()->put('security.mfa_user', $request->user()->id);
 
-        return to_route('courses.index');
+        return to_route('insights.dashboard');
     }
 }

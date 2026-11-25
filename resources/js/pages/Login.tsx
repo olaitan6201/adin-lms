@@ -3,11 +3,14 @@ import { PortalField, SubmitButton } from '../components/PortalForm';
 
 export default function Login({ passwordReset }: { passwordReset: boolean }) {
     return (
-        <main className="mx-auto max-w-md px-6 py-16">
+        <main className="portal-page portal-entry">
             <Head title="Sign in" />
-            <h1 className="mb-6 text-3xl font-semibold">
-                Sign in to {document.body.dataset.institution}
-            </h1>
+            <header className="entry-intro">
+                <p className="portal-kicker">Learning portal</p>
+                <h1 className="portal-title">Sign in</h1>
+                <p>Use your institutional account to open your academic workspace.</p>
+            </header>
+            <section aria-label="Account details" className="portal-panel desk-shelf entry-form">
             {passwordReset && (
                 <p role="status">
                     Your password has been set. Sign in with your new password.
@@ -45,6 +48,7 @@ export default function Login({ passwordReset }: { passwordReset: boolean }) {
             <Link className="mt-4 inline-block underline" href="/forgot-password">
                 Forgot your password?
             </Link>
+            </section>
         </main>
     );
 }

@@ -37,7 +37,7 @@ class PrivilegedSessionTest extends TestCase
         $this->get('/security/challenge')->assertOk()->assertDontSee($secret);
         $this->get('/courses')->assertRedirect(route('security.challenge'));
         $code = $this->code($secret);
-        $this->post('/security/challenge', ['code' => $code])->assertSessionHasNoErrors()->assertRedirect(route('courses.index'));
+        $this->post('/security/challenge', ['code' => $code])->assertSessionHasNoErrors()->assertRedirect(route('insights.dashboard'));
         $this->assertNull($factor->fresh()->expires_at);
         $this->get('/security/login-events')->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Security/LoginHistory')->has('events.0', fn (AssertableInertia $row) => $row

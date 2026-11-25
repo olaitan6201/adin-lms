@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        Inertia::share('signedIn', Inertia::always(fn () => auth()->check()));
         Inertia::share('academicLinks', Inertia::always(fn () => app(AcademicNavigation::class)->forUser(request()->user())));
     }
 }

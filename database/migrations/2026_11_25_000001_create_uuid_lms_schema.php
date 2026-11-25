@@ -332,7 +332,14 @@ return new class extends Migration
         });
 
         Schema::create('grading_policies', function (Blueprint $table): void {
-            $table->uuid('id')->primary();
+            $table->uuid('id');
+            $table->primary('id');
+            $table->foreignUuid('offering_id')->nullable()->constrained('offerings');
+            $table->foreignUuid('supersedes_id')->nullable()->constrained('grading_policies');
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->timestampTz('created_at')->nullable();
+            $table->text('amendment_reason')->nullable();
+            $table->index(['offering_id', 'version'], 'grading_policies_offering_version_idx');
             $table->string('name');
             $table->integer('version');
             $table->string('rounding_rule');
@@ -536,6 +543,36 @@ return new class extends Migration
             $table->unique(['item_id', 'enrolment_id', 'revision'], 'assessment_scores_item_enrolment_revision_uq');
         });
 
+        Schema::create('grading_policy_items', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('policy_id')->constrained('grading_policies');
+            $table->foreignUuid('assessment_item_id')->constrained('assessment_items');
+            $table->unsignedInteger('position');
+            $table->string('title');
+            $table->string('kind');
+            $table->decimal('weight_percent', 24, 8);
+            $table->decimal('maximum_score', 24, 8);
+            $table->json('rubric')->nullable();
+            $table->unique(['policy_id', 'assessment_item_id'], 'grading_policy_items_policy_item_uq');
+            $table->index(['policy_id', 'position'], 'grading_policy_items_policy_position_idx');
+        });
+
+        Schema::create('assessment_criterion_feedback', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('score_id')->constrained('assessment_scores');
+            $table->string('criterion_key');
+            $table->string('criterion_title');
+            $table->text('criterion_description')->nullable();
+            $table->string('level_key');
+            $table->string('level_label');
+            $table->text('level_description')->nullable();
+            $table->decimal('points', 24, 8);
+            $table->text('feedback')->nullable();
+            $table->unsignedInteger('position');
+            $table->unique(['score_id', 'criterion_key'], 'assessment_criterion_feedback_score_criterion_uq');
+            $table->index(['score_id', 'position'], 'assessment_criterion_feedback_score_position_idx');
+        });
+
         Schema::create('grades', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->foreignUuid('enrolment_id')->constrained('enrolments');
@@ -640,6 +677,18 @@ return new class extends Migration
             $table->index(['subject_key', 'occurred_at'], 'audit_logs_subject_key_occurred_at_idx');
             $table->index(['attempt_id', 'occurred_at'], 'audit_logs_attempt_id_occurred_at_idx');
             $table->index(['actor_id', 'occurred_at'], 'audit_logs_actor_id_occurred_at_idx');
+        });
+
+        Schema::create('privacy_case_files', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->string('reference')->unique();
+            $table->string('kind');
+            $table->string('stage');
+            $table->string('evidence');
+            $table->foreignUuid('owner_id')->constrained('users');
+            $table->foreignUuid('subject_id')->nullable()->constrained('users');
+            $table->timestampsTz();
+            $table->index(['subject_id', 'kind', 'stage'], 'privacy_cases_subject_kind_stage_idx');
         });
 
         Schema::create('privacy_consents', function (Blueprint $table): void {
@@ -777,6 +826,7 @@ return new class extends Migration
         Schema::drop('role_grants');
         Schema::drop('access_scopes');
         Schema::drop('privacy_consents');
+        Schema::drop('privacy_case_files');
         Schema::drop('audit_logs');
         Schema::drop('system_configuration');
         Schema::drop('notification_deliveries');
@@ -787,6 +837,8 @@ return new class extends Migration
         Schema::drop('announcements');
         Schema::drop('grade_inputs');
         Schema::drop('grades');
+        Schema::drop('assessment_criterion_feedback');
+        Schema::drop('grading_policy_items');
         Schema::drop('assessment_scores');
         Schema::drop('examination_responses');
         Schema::drop('attempt_questions');

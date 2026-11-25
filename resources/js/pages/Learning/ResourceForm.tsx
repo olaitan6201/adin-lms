@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { EntryForm } from './EntryForm';
 import { AvailabilityFields } from './AvailabilityFields';
 import type { Material } from './contracts';
@@ -14,34 +17,34 @@ export function ResourceForm({ action, item }: ResourceFormProps) {
             <EntryForm action={action} label="Save revision">
                 <label>
                     Resource title
-                    <input name="title" required maxLength={191} defaultValue={item?.title} />
+                    <Input name="title" required maxLength={191} defaultValue={item?.title} />
                 </label>
                 <label>
                     Resource text
-                    <textarea name="body" />
+                    <Textarea name="body" />
                 </label>
                 <label>
                     External resource or quiz (HTTPS)
-                    <input type="url" name="external_url" />
+                    <Input type="url" name="external_url" />
                 </label>
                 <label>
                     Private attachment (up to 50 MiB)
-                    <input name="file" type="file" />
+                    <Input name="file" type="file" />
                 </label>
                 <label>
                     English captions (WebVTT, up to 1 MiB)
-                    <input name="caption" type="file" accept=".vtt,text/vtt" />
+                    <Input name="caption" type="file" accept=".vtt,text/vtt" />
                 </label>
                 <label>
                     Transcript or descriptive alternative
-                    <textarea name="transcript" rows={4} />
+                    <Textarea name="transcript" rows={4} />
                 </label>
                 <label>
                     Learner downloads
-                    <select name="download_allowed" defaultValue={item && !item.download_allowed ? '0' : '1'}>
+                    <NativeSelect name="download_allowed" defaultValue={item && !item.download_allowed ? '0' : '1'}>
                         <option value="1">Allowed</option>
                         <option value="0">Disabled</option>
-                    </select>
+                    </NativeSelect>
                 </label>
                 <AvailabilityFields item={item} />
             </EntryForm>

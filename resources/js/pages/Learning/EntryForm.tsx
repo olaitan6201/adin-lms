@@ -1,3 +1,5 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
@@ -29,18 +31,13 @@ export function EntryForm({ action, label, children, originalTimes }: EntryFormP
             }}
         >
             {({ errors, processing, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     {children}
-                    {Object.entries(errors).map(([field, message]) => (
-                        <p role="alert" key={field}>
-                            {field}: {message}
-                        </p>
-                    ))}
-                    <button className="w-fit rounded border px-3 py-2" disabled={processing}>
+                    <Button disabled={processing}>
                         {processing ? 'Saving…' : label}
-                    </button>
+                    </Button>
                     {recentlySuccessful && <span role="status">Saved.</span>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );

@@ -1,3 +1,6 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 export type RubricLevel = {
     label: string;
     points: string;
@@ -54,7 +57,7 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                     <legend>Criterion {criterionIndex + 1}</legend>
                     <label>
                         Criterion title
-                        <input
+                        <Input
                             required
                             name={`items[${index}][criteria][${criterionIndex}][title]`}
                             value={criterion.title}
@@ -63,7 +66,7 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                     </label>
                     <label>
                         Criterion guidance
-                        <textarea
+                        <Textarea
                             name={`items[${index}][criteria][${criterionIndex}][description]`}
                             value={criterion.description}
                             onChange={(event) => updateCriterion(criterionIndex, { description: event.target.value })}
@@ -74,7 +77,7 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                             <legend>Level {levelIndex + 1}</legend>
                             <label>
                                 Level label
-                                <input
+                                <Input
                                     required
                                     name={`items[${index}][criteria][${criterionIndex}][levels][${levelIndex}][label]`}
                                     value={level.label}
@@ -85,7 +88,7 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                             </label>
                             <label>
                                 Level points
-                                <input
+                                <Input
                                     required
                                     type="number"
                                     min="0"
@@ -100,7 +103,7 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                             </label>
                             <label>
                                 Level guidance
-                                <textarea
+                                <Textarea
                                     name={`items[${index}][criteria][${criterionIndex}][levels][${levelIndex}][description]`}
                                     value={level.description}
                                     onChange={(event) =>
@@ -109,8 +112,8 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                                 />
                             </label>
                             {criterion.levels.length > 2 && (
-                                <button
-                                    type="button"
+                                <Button
+                                    variant="outline" type="button"
                                     onClick={() =>
                                         updateCriterion(criterionIndex, {
                                             levels: criterion.levels.filter((_, i) => i !== levelIndex),
@@ -118,12 +121,12 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                                     }
                                 >
                                     Remove level {levelIndex + 1}
-                                </button>
+                                </Button>
                             )}
                         </fieldset>
                     ))}
-                    <button
-                        type="button"
+                    <Button
+                        variant="outline" type="button"
                         disabled={criterion.levels.length >= 20}
                         onClick={() =>
                             updateCriterion(criterionIndex, {
@@ -132,15 +135,15 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                         }
                     >
                         Add level to criterion {criterionIndex + 1}
-                    </button>
-                    <button type="button" onClick={() => onChange(criteria.filter((_, i) => i !== criterionIndex))}>
+                    </Button>
+                    <Button variant="outline" type="button" onClick={() => onChange(criteria.filter((_, i) => i !== criterionIndex))}>
                         Remove criterion {criterionIndex + 1}
-                    </button>
+                    </Button>
                 </fieldset>
             ))}
-            <button type="button" disabled={criteria.length >= 50} onClick={addCriterion}>
+            <Button variant="outline" type="button" disabled={criteria.length >= 50} onClick={addCriterion}>
                 Add criterion to assessment {index + 1}
-            </button>
+            </Button>
         </fieldset>
     );
 }

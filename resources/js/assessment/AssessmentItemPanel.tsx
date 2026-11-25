@@ -1,4 +1,5 @@
 import { ExamWindow } from './ExamWindow';
+import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import type { PolicyDefinition } from './SetupBook';
 import { SetupAssignment } from './SetupAssignment';
@@ -47,7 +48,9 @@ export function AssessmentItemPanel({ item: i, teacher, learner, officer, roster
             {i.returned !== null && <p>Returned score: {i.returned}</p>}
             {i.kind === 'assignment' &&
                 (i.assignment && (teacher || learner) ? (
-                    <Link href={`/assignments/${i.assignment}`}>View assignment</Link>
+                    <Button asChild>
+                        <Link href={`/assignments/${i.assignment}`}>View assignment</Link>
+                    </Button>
                 ) : teacher ? (
                     <SetupAssignment id={i.id} />
                 ) : null)}

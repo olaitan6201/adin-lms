@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Form, Head, Link } from '@inertiajs/react';
 
 type CourseMatch = {
@@ -48,7 +50,7 @@ export default function CourseSearch(props: SearchProps) {
                             Course search
                         </label>
                         <div className="course-search-controls">
-                            <input
+                            <Input
                                 id="course-query"
                                 type="search"
                                 name="q"
@@ -58,7 +60,7 @@ export default function CourseSearch(props: SearchProps) {
                                 aria-invalid={Boolean(errors.q)}
                                 aria-describedby={errors.q ? 'search-error' : undefined}
                             />
-                            <button className="portal-action" disabled={processing}>{processing ? 'Searching…' : 'Search'}</button>
+                            <Button disabled={processing}>{processing ? 'Searching…' : 'Search'}</Button>
                         </div>
                         {errors.q && (
                             <p id="search-error" role="alert">

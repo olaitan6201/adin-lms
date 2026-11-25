@@ -1,3 +1,7 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { emptyItem, emptyPolicy, type PolicyDefinition } from './policyDefaults';
 import { useState } from 'react';
 import { Post } from './Fields';
@@ -35,7 +39,7 @@ export function SetupBook({ url, policy }: SetupBookProps) {
             </p>
             <label>
                 Rounding to two decimals
-                <select
+                <NativeSelect
                     name="rounding"
                     value={data.rounding}
                     onChange={(event) => setData({ ...data, rounding: event.target.value })}
@@ -43,12 +47,12 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     <option value="half_up">Half up</option>
                     <option value="half_even">Half even</option>
                     <option value="floor">Round down</option>
-                </select>
+                </NativeSelect>
             </label>
             {policy && (
                 <label>
                     Reason for amendment
-                    <textarea required name="reason" maxLength={2000} />
+                    <Textarea required name="reason" maxLength={2000} />
                 </label>
             )}
             {data.boundaries.map((boundary, index) => (
@@ -56,7 +60,7 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     <legend>Boundary {index + 1}</legend>
                     <label>
                         Minimum percent
-                        <input
+                        <Input
                             required
                             type="number"
                             min="0"
@@ -69,7 +73,7 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     </label>
                     <label>
                         Grade label
-                        <input
+                        <Input
                             required
                             maxLength={30}
                             name={`boundaries[${index}][grade]`}
@@ -78,8 +82,8 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                         />
                     </label>
                     {data.boundaries.length > 1 && (
-                        <button
-                            type="button"
+                        <Button
+                            variant="outline" type="button"
                             onClick={() =>
                                 setData({
                                     ...data,
@@ -88,12 +92,12 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                             }
                         >
                             Remove boundary {index + 1}
-                        </button>
+                        </Button>
                     )}
                 </fieldset>
             ))}
-            <button
-                type="button"
+            <Button
+                variant="outline" type="button"
                 disabled={data.boundaries.length >= 40}
                 onClick={() =>
                     setData({
@@ -103,7 +107,7 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                 }
             >
                 Add boundary
-            </button>
+            </Button>
             {data.items.map((item, index) => (
                 <PolicyItemFields
                     key={item.id ?? item.clientKey ?? `new-${index}`}
@@ -119,13 +123,13 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     }
                 />
             ))}
-            <button
-                type="button"
+            <Button
+                variant="outline" type="button"
                 disabled={data.items.length >= 100}
                 onClick={() => setData({ ...data, items: [...data.items, emptyItem()] })}
             >
                 Add assessment
-            </button>
+            </Button>
         </Post>
     );
 }

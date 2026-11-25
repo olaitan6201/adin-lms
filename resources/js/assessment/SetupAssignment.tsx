@@ -1,18 +1,26 @@
-import { Check, Field, Post, WindowFields } from './Fields';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
+import { Check, Field, Post } from './Fields';
 
 export function SetupAssignment({ id }: { id: string }) {
     return (
         <Post url={`/assessment-items/${id}/assignment`} button="Open assignment">
             <label>
                 Instructions
-                <textarea name="instructions" required />
+                <Textarea name="instructions" required />
             </label>
-            <WindowFields />
-            <Field label="Due (server time)" name="due_at" type="datetime-local" />
+            <fieldset>
+                <legend>Submission window</legend>
+                <div className="grid gap-3 md:grid-cols-3">
+                    <Field label="Opens (server time)" name="opens_at" type="datetime-local" />
+                    <Field label="Due (server time)" name="due_at" type="datetime-local" />
+                    <Field label="Closes (server time)" name="closes_at" type="datetime-local" />
+                </div>
+            </fieldset>
             <Field label="Maximum file size in bytes" name="max_bytes" type="number" value="1048576" />
             <label>
                 Accepted formats
-                <select multiple name="formats[]" defaultValue={['pdf', 'txt']} required>
+                <NativeSelect multiple name="formats[]" defaultValue={['pdf', 'txt']} required>
                     {[
                         'txt',
                         'pdf',
@@ -31,7 +39,7 @@ export function SetupAssignment({ id }: { id: string }) {
                     ].map((format) => (
                         <option key={format}>{format}</option>
                     ))}
-                </select>
+                </NativeSelect>
             </label>
             <Check name="allow_late" label="Allow late submissions until close" />
             <Check name="group_work" label="Group work" />

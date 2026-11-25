@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { Check, Field, Post } from './Fields';
 
 export type Rubric = {
@@ -33,7 +36,7 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                             <input type="hidden" name={`selections[${i}][criterion]`} value={criterion.id} />
                             <label>
                                 Performance level
-                                <select required name={`selections[${i}][level]`} defaultValue="">
+                                <NativeSelect required name={`selections[${i}][level]`} defaultValue="">
                                     <option value="" disabled>
                                         Select a level
                                     </option>
@@ -43,11 +46,11 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                                             {l.description ? ` — ${l.description}` : ''}
                                         </option>
                                     ))}
-                                </select>
+                                </NativeSelect>
                             </label>
                             <label>
                                 Criterion feedback
-                                <textarea name={`selections[${i}][feedback]`} />
+                                <Textarea name={`selections[${i}][feedback]`} />
                             </label>
                         </fieldset>
                     ))
@@ -56,12 +59,12 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                 )}
                 <label>
                     Feedback
-                    <textarea name="feedback" />
+                    <Textarea name="feedback" />
                 </label>
                 <Field label="Reason for this mark" name="reason" />
                 <label>
                     Marked copy (.pdf or .txt)
-                    <input type="file" name="script" accept=".pdf,.txt" />
+                    <Input type="file" name="script" accept=".pdf,.txt" />
                 </label>
                 <Check name="release" label="Return this mark and feedback to the recipients" />
             </Post>

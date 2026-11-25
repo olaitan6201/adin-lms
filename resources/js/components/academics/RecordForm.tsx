@@ -1,3 +1,7 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
 import { Form } from '@inertiajs/react';
 
 export type Choice = {
@@ -28,16 +32,15 @@ export default function RecordForm({
     return (
         <Form action={action} method={method} className="my-3 grid gap-3 border-l-2 border-teal-800 pl-4">
             {({ processing, errors, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     {fields.map((f) => (
                         <label key={f.name}>
                             {f.label}
                             {f.options ? (
-                                <select
+                                <NativeSelect
                                     name={f.name}
                                     required={!f.optional}
                                     defaultValue={f.initial ?? ''}
-                                    className="block w-full rounded border p-2"
                                 >
                                     <option value="">Select an option</option>
                                     {f.options.map((o) => (
@@ -45,10 +48,9 @@ export default function RecordForm({
                                             {o.name}
                                         </option>
                                     ))}
-                                </select>
+                                </NativeSelect>
                             ) : (
-                                <input
-                                    className="block w-full rounded border p-2"
+                                <Input
                                     type={f.type ?? 'text'}
                                     name={f.name}
                                     defaultValue={f.initial}
@@ -57,19 +59,11 @@ export default function RecordForm({
                             )}
                         </label>
                     ))}
-                    {Object.entries(errors).map(([k, v]) => (
-                        <p role="alert" key={k}>
-                            {v}
-                        </p>
-                    ))}
-                    <button
-                        className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white"
-                        disabled={processing}
-                    >
+                    <Button disabled={processing}>
                         {title}
-                    </button>
+                    </Button>
                     {recentlySuccessful && <p role="status">Saved.</p>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );

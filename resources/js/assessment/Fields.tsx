@@ -1,3 +1,7 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { FormFeedback } from '@/components/ui/form-feedback';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
@@ -11,11 +15,11 @@ export function Post({ url, button, children }: PostProps) {
     return (
         <Form action={url} method="post">
             {({ processing, errors, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     {children}
-                    <button disabled={processing}>{button}</button>
-                    <p aria-live="polite">{recentlySuccessful ? 'Saved.' : Object.values(errors).join(' ')}</p>
-                </>
+                    <Button disabled={processing}>{processing ? 'Saving…' : button}</Button>
+                    <p aria-live="polite">{recentlySuccessful ? 'Saved.' : ''}</p>
+                </FormFeedback>
             )}
         </Form>
     );
@@ -37,7 +41,7 @@ export function Field({
     return (
         <label>
             {label}
-            <input
+            <Input
                 name={name}
                 type={type}
                 defaultValue={value}
@@ -79,13 +83,13 @@ export function Roster({ members }: { members: Member[] }) {
     return (
         <label>
             Learner
-            <select name="enrolment" required>
+            <NativeSelect name="enrolment" required>
                 {members.map((m) => (
                     <option key={m.id} value={m.id}>
                         {m.name}
                     </option>
                 ))}
-            </select>
+            </NativeSelect>
         </label>
     );
 }

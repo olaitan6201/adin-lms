@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
 import { EntryForm, localInput } from './EntryForm';
 import type { Choice, Session } from './contracts';
 
@@ -18,11 +20,11 @@ export function ClassScheduleForm({
             <EntryForm action={action} label="Save session" originalTimes={session}>
                 <label>
                     Class title
-                    <input name="title" required defaultValue={session?.title} />
+                    <Input name="title" required defaultValue={session?.title} />
                 </label>
                 <label>
                     Starts (local time)
-                    <input
+                    <Input
                         type="datetime-local"
                         name="starts_at"
                         required
@@ -31,30 +33,30 @@ export function ClassScheduleForm({
                 </label>
                 <label>
                     Ends (local time)
-                    <input type="datetime-local" name="ends_at" required defaultValue={localInput(session?.ends_at)} />
+                    <Input type="datetime-local" name="ends_at" required defaultValue={localInput(session?.ends_at)} />
                 </label>
                 <label>
                     Meeting link (HTTPS)
-                    <input type="url" name="meeting_url" defaultValue={session?.meeting_url || ''} />
+                    <Input type="url" name="meeting_url" defaultValue={session?.meeting_url || ''} />
                 </label>
                 <label>
                     Recording or alternative
-                    <select name="recording_material_id" defaultValue={session?.recording_material_id || ''}>
+                    <NativeSelect name="recording_material_id" defaultValue={session?.recording_material_id || ''}>
                         <option value="">None</option>
                         {materials.map((m) => (
                             <option key={m.id} value={m.id}>
                                 {m.title}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
                 <label>
                     Status
-                    <select name="status" defaultValue={session?.status}>
+                    <NativeSelect name="status" defaultValue={session?.status}>
                         {statuses.map((s) => (
                             <option key={s}>{s}</option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
             </EntryForm>
         </details>

@@ -1,3 +1,7 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
 import { Form } from '@inertiajs/react';
 
 export type DepartmentOption = {
@@ -9,19 +13,19 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
     return (
         <Form action="/staff" method="post" className="grid gap-3 rounded border p-4">
             {({ errors, processing, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">Register a lecturer</h2>
                     <label>
                         Staff number{' '}
-                        <input className="block w-full border p-2" name="staff_number" maxLength={191} required />
+                        <Input name="staff_number" maxLength={191} required />
                     </label>
                     <label>
                         Verified account email{' '}
-                        <input className="block w-full border p-2" type="email" name="account_email" required />
+                        <Input type="email" name="account_email" required />
                     </label>
                     <label>
                         Department{' '}
-                        <select className="block w-full border p-2" name="department_id" required defaultValue="">
+                        <NativeSelect name="department_id" required defaultValue="">
                             <option value="" disabled>
                                 Select department
                             </option>
@@ -30,22 +34,17 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                                     {d.name}
                                 </option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     </label>
                     <label>
                         <input type="checkbox" name="verified" value="1" required /> I verified this account against the
                         staff record.
                     </label>
-                    {Object.entries(errors).map(([key, value]) => (
-                        <p role="alert" key={key}>
-                            {value}
-                        </p>
-                    ))}
-                    <button className="bg-teal-900 p-2 text-white" disabled={processing}>
+                    <Button disabled={processing}>
                         Register lecturer
-                    </button>
+                    </Button>
                     {recentlySuccessful && <p role="status">Lecturer registered.</p>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );
@@ -55,31 +54,26 @@ export function ChangeAllocation() {
     return (
         <Form action="/staff/allocations" method="post" className="grid gap-3 rounded border p-4">
             {({ errors, processing, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">Teaching allocation</h2>
                     <label>
-                        Staff number <input name="staff_number" className="border p-2" required />
+                        Staff number <Input name="staff_number" required />
                     </label>
                     <label>
-                        Upstream offering ID <input name="offering" className="border p-2" required />
+                        Upstream offering ID <Input name="offering" required />
                     </label>
                     <label>
                         Action{' '}
-                        <select className="border p-2" name="operation">
+                        <NativeSelect name="operation">
                             <option value="assign">Assign</option>
                             <option value="remove">Remove</option>
-                        </select>
+                        </NativeSelect>
                     </label>
-                    {Object.entries(errors).map(([key, value]) => (
-                        <p role="alert" key={key}>
-                            {value}
-                        </p>
-                    ))}
-                    <button className="bg-teal-900 p-2 text-white" disabled={processing}>
+                    <Button disabled={processing}>
                         Update allocation
-                    </button>
+                    </Button>
                     {recentlySuccessful && <p role="status">Allocation saved.</p>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );

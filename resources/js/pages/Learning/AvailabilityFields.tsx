@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/input';
 import { localInput } from './EntryForm';
 
 interface AvailabilityWindow {
@@ -10,11 +11,11 @@ export function AvailabilityFields({ item }: { item?: AvailabilityWindow }) {
         <>
             <label>
                 Available from (local time)
-                <input name="opens_at" type="datetime-local" defaultValue={localInput(item?.opens_at)} />
+                <Input name="opens_at" type="datetime-local" defaultValue={localInput(item?.opens_at)} />
             </label>
             <label>
                 Available until (local time)
-                <input name="closes_at" type="datetime-local" defaultValue={localInput(item?.closes_at)} />
+                <Input name="closes_at" type="datetime-local" defaultValue={localInput(item?.closes_at)} />
             </label>
         </>
     );

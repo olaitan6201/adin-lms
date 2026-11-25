@@ -69,3 +69,16 @@ foreach (['lecturer', 'officer', 'exam-office', 'report-qa', 'brand-desktop', 'b
     $secret = app(TotpEnrollment::class)->issue($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);
 }
+
+foreach (['desktop', 'phone'] as $project) {
+    $course = Offering::factory()->create(['curriculum_course_id' => $offering->curriculum_course_id]);
+    $teacher = User::where('email', "exam-reviewer-{$project}@demo.example.test")->sole();
+    $student = Student::where('matric_number', "EXAM/{$project}")->sole();
+    TeachingAllocation::factory()->create([
+        'offering_id' => $course->id,
+        'lecturer_id' => Lecturer::where('user_id', $teacher->id)->sole()->id,
+    ]);
+    app(ChangeRoleGrant::class)->apply($teacher->id, RoleCode::Lecturer, 'offering:'.$course->id, false);
+    Enrolment::factory()->create(['student_id' => $student->id, 'offering_id' => $course->id]);
+    file_put_contents($run.'/assignment-'.$project.'.course', $course->id);
+}

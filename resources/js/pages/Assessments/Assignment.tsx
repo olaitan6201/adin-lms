@@ -1,3 +1,4 @@
+import { CriterionFeedback, type CriterionScore } from '../../assessment/CriterionFeedback';
 import '../../assessment/assessment.css';
 import { Head } from '@inertiajs/react';
 import { AssignmentLimits } from '../../assessment/AssignmentLimits';
@@ -19,12 +20,7 @@ type Row = {
         marked_file_id: string | null;
         revision: number;
         released_at: string | null;
-        criteria: {
-            criterion_title: string;
-            level_label: string;
-            points: string;
-            feedback: string | null;
-        }[];
+        criteria: CriterionScore[];
     }[];
 };
 type Props = {
@@ -53,6 +49,7 @@ type Props = {
 };
 
 export default function Assignment({ assignment: a, title, rubric, marker, rows, groups, references, pending }: Props) {
+    const individualSubmissionComplete = !a.group_work && !a.editable && rows.length > 0;
     const url = `/assignments/${a.id}`;
     const download = (id: string, text: string) => (
         <a key={id} href={`${url}/files/${id}`}>
@@ -102,7 +99,14 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                     {a.late_policy.allow ? 'Late work accepted until close.' : 'No late submissions.'}
                 </p>
             </section>
-            {!marker && (
+            {!marker && individualSubmissionComplete && (
+                <section aria-label="Submission received">
+                    <h2>Your submission</h2>
+                    <p role="status">Revision received. <a href="#submissions">View submission history</a></p>
+                    <p>This assignment accepts one submission.</p>
+                </section>
+            )}
+            {!marker && !individualSubmissionComplete && (
                 <SubmissionEntry url={url} formats={a.accepted_formats} groupWork={a.group_work} groups={groups} />
             )}
             {marker && (
@@ -128,14 +132,7 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                             {s.released_at ? 'Returned' : 'Private draft'}
                             {s.feedback && <p>{s.feedback}</p>}
                             {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
-                            <ul>
-                                {s.criteria.map((c, i) => (
-                                    <li key={i}>
-                                        <strong>{c.criterion_title}</strong>: {c.level_label} · {c.points} points.{' '}
-                                        {c.feedback}
-                                    </li>
-                                ))}
-                            </ul>
+                            <CriterionFeedback scores={s.criteria} />
                         </div>
                     ))}
                     {marker && <SubmissionMarkForm version={r.id} rubric={rubric} />}

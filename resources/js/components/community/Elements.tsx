@@ -1,3 +1,6 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { Form, Head, Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
@@ -38,14 +41,13 @@ export function EntryForm({
     return (
         <Form action={action} method="post" resetOnSuccess className="grid gap-3 rounded border p-4">
             {({ processing, errors, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">{title}</h2>
                     {children}
                     {body && (
                         <label>
                             Message
-                            <textarea
-                                className="block w-full border p-2"
+                            <Textarea
                                 name="body"
                                 required
                                 maxLength={10000}
@@ -53,19 +55,11 @@ export function EntryForm({
                             />
                         </label>
                     )}
-                    {Object.entries(errors).map(([key, value]) => (
-                        <p role="alert" key={key}>
-                            {value}
-                        </p>
-                    ))}
-                    <button
-                        className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white"
-                        disabled={processing}
-                    >
+                    <Button disabled={processing}>
                         {title}
-                    </button>
+                    </Button>
                     {recentlySuccessful && <p role="status">Saved.</p>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );

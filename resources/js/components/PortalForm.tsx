@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useId, type ComponentProps } from 'react';
 
 type FieldProps = Omit<ComponentProps<'input'>, 'id'> & {
@@ -14,15 +16,14 @@ export function PortalField({ label, error, announceError = true, 'aria-describe
     return (
         <div>
             <label htmlFor={id}>{label}</label>
-            <input
+            <Input
                 {...input}
                 id={id}
-                className="block w-full border p-2"
                 aria-invalid={error ? true : undefined}
                 aria-describedby={description}
             />
             {error && (
-                <p id={errorId} role={announceError ? 'alert' : undefined}>
+                <p className="mt-1 text-sm text-destructive" id={errorId} role={announceError ? 'alert' : undefined}>
                     {error}
                 </p>
             )}
@@ -37,8 +38,8 @@ type SubmitButtonProps = {
 
 export function SubmitButton({ children, processing }: SubmitButtonProps) {
     return (
-        <button type="submit" className="bg-teal-900 p-2 text-white" disabled={processing}>
+        <Button type="submit" disabled={processing}>
             {children}
-        </button>
+        </Button>
     );
 }

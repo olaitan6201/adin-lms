@@ -50,9 +50,9 @@
     align-items: center;
 }
 
-.assessment-page input:not([type='checkbox']),
-.assessment-page textarea,
-.assessment-page select {
+.assessment-page input:not([type='checkbox']):not([data-slot]),
+.assessment-page textarea:not([data-slot]),
+.assessment-page select:not([data-slot]) {
     min-height: 44px;
     max-width: 100%;
     min-width: 0;
@@ -62,7 +62,7 @@
     padding: 0.5rem;
 }
 
-.assessment-page button {
+.assessment-page button:not([data-slot]) {
     width: fit-content;
     min-height: 44px;
     padding: 0.45rem 0.9rem;
@@ -77,7 +77,7 @@
     cursor: default;
 }
 
-.assessment-page a {
+.assessment-page a:not([data-slot]) {
     color: var(--portal-ink);
     text-decoration: underline;
     text-underline-offset: 0.2em;

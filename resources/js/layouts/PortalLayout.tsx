@@ -1,3 +1,5 @@
+import { NativeDialog } from '@/components/ui/native-dialog';
+import { Button } from '@/components/ui/button';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ConnectionStatus } from './ConnectionStatus';
@@ -64,8 +66,8 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                             <small>Learning management system</small>
                         </span>
                     </Link>
-                    <button
-                        type="button"
+                    <Button
+                        variant="ghost" type="button"
                         className="portal-menu"
                         aria-expanded={expanded}
                         aria-controls="portal-drawer"
@@ -76,11 +78,11 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                         }}
                     >
                         Menu
-                    </button>
+                    </Button>
                 </div>
                 <div className="portal-sidebar">{navigation}</div>
             </header>
-            <dialog id="portal-drawer" className="portal-drawer" aria-label="Portal menu" ref={drawer}
+            <NativeDialog id="portal-drawer" className="portal-drawer" aria-label="Portal menu" ref={drawer}
                 onClose={() => setExpanded(false)}
                 onClick={(event) => {
                     if (event.target === event.currentTarget && event.clientX >= event.currentTarget.getBoundingClientRect().right) {
@@ -88,10 +90,10 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                     }
                 }}>
                 <div className="drawer-heading"><strong>{brand.institution}</strong>
-                    <button type="button" className="portal-close" onClick={() => drawer.current?.close()}>Close menu</button>
+                    <Button variant="ghost" type="button" className="portal-close" onClick={() => drawer.current?.close()}>Close menu</Button>
                 </div>
                 {navigation}
-            </dialog>
+            </NativeDialog>
             <div className="portal-workspace">
                 <ConnectionStatus />
                 <div id="portal-content" tabIndex={-1} ref={content}>{children}</div>

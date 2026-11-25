@@ -1,3 +1,7 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { itemKinds, type ItemKind } from './contracts';
 import { RubricEditor, type RubricCriteria } from './RubricEditor';
 
@@ -27,7 +31,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
             {item.id && <input type="hidden" name={`items[${index}][id]`} value={item.id} />}
             <label>
                 Title
-                <input
+                <Input
                     required
                     maxLength={191}
                     name={`items[${index}][title]`}
@@ -37,7 +41,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
             </label>
             <label>
                 Type
-                <select
+                <NativeSelect
                     name={`items[${index}][kind]`}
                     value={item.kind}
                     onChange={(event) => onChange({ kind: event.target.value as ItemKind })}
@@ -45,11 +49,11 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     {itemKinds.map((kind) => (
                         <option key={kind}>{kind}</option>
                     ))}
-                </select>
+                </NativeSelect>
             </label>
             <label>
                 Maximum points
-                <input
+                <Input
                     required
                     type="number"
                     min="0.00000001"
@@ -61,7 +65,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
             </label>
             <label>
                 Weight (%)
-                <input
+                <Input
                     required
                     type="number"
                     min="0"
@@ -74,7 +78,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
             </label>
             <label>
                 Marking guidance
-                <textarea
+                <Textarea
                     maxLength={10000}
                     name={`items[${index}][rubric]`}
                     value={item.rubric}
@@ -90,9 +94,9 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                 />
             )}
             {removable && (
-                <button type="button" onClick={onRemove}>
+                <Button variant="outline" type="button" onClick={onRemove}>
                     Remove assessment {index + 1}
-                </button>
+                </Button>
             )}
         </fieldset>
     );

@@ -1,6 +1,9 @@
 import { EntryForm } from './Elements';
 
-type MembershipChange = { enrolment_id: string; label: string };
+type MembershipChange = {
+    enrolment_id: string;
+    label: string;
+};
 
 export type GroupHistory = {
     id: string;
@@ -21,7 +24,10 @@ export type Group = {
     history: GroupHistory[];
 };
 
-export type Registration = { id: string; label: string };
+export type Registration = {
+    id: string;
+    label: string;
+};
 
 function MembershipHistory({ entries }: { entries: GroupHistory[] }) {
     if (!entries.length) {
@@ -31,19 +37,19 @@ function MembershipHistory({ entries }: { entries: GroupHistory[] }) {
     return (
         <ol className="space-y-4">
             {entries.map((entry) => {
-                const rename = entry.details.name_before === null
-                    ? `Created as “${entry.details.name_after}”.`
-                    : entry.details.name_before !== entry.details.name_after
-                        ? `Renamed from “${entry.details.name_before}” to “${entry.details.name_after}”.`
-                        : 'Membership updated.';
+                const rename =
+                    entry.details.name_before === null
+                        ? `Created as “${entry.details.name_after}”.`
+                        : entry.details.name_before !== entry.details.name_after
+                          ? `Renamed from “${entry.details.name_before}” to “${entry.details.name_after}”.`
+                          : 'Membership updated.';
 
                 return (
                     <li key={entry.id} className="border-t pt-3">
                         <p className="text-sm text-gray-600">
-                            <time dateTime={entry.occurred_at}>
-                                {new Date(entry.occurred_at).toLocaleString()}
-                            </time>
-                            {' · '}{entry.actor}
+                            <time dateTime={entry.occurred_at}>{new Date(entry.occurred_at).toLocaleString()}</time>
+                            {' · '}
+                            {entry.actor}
                         </p>
                         <p>{rename}</p>
                         {entry.details.added.length > 0 && (
@@ -73,14 +79,41 @@ function MembershipHistory({ entries }: { entries: GroupHistory[] }) {
     );
 }
 
-export function GroupManager({ base, groups, registrations }: { base: string; groups: Group[]; registrations: Registration[] }) {
+export function GroupManager({
+    base,
+    groups,
+    registrations,
+}: {
+    base: string;
+    groups: Group[];
+    registrations: Registration[];
+}) {
     const editor = (team?: Group) => (
-        <EntryForm action={`${base}/groups${team ? `/${team.id}` : ''}`} title={team ? 'Save membership' : 'Create study group'} body={false}>
-            <label>Group name<input className="block w-full border p-2" name="name" required maxLength={191} defaultValue={team?.name} /></label>
-            <fieldset><legend>Registered learners</legend>
-                {registrations.map(person => (
+        <EntryForm
+            action={`${base}/groups${team ? `/${team.id}` : ''}`}
+            title={team ? 'Save membership' : 'Create study group'}
+            body={false}
+        >
+            <label>
+                Group name
+                <input
+                    className="block w-full border p-2"
+                    name="name"
+                    required
+                    maxLength={191}
+                    defaultValue={team?.name}
+                />
+            </label>
+            <fieldset>
+                <legend>Registered learners</legend>
+                {registrations.map((person) => (
                     <label key={person.id} className="flex items-center gap-2 py-1">
-                        <input type="checkbox" name="members[]" value={person.id} defaultChecked={team?.members.some(member => member.enrolment_id === person.id)} />
+                        <input
+                            type="checkbox"
+                            name="members[]"
+                            value={person.id}
+                            defaultChecked={team?.members.some((member) => member.enrolment_id === person.id)}
+                        />
                         {person.label}
                     </label>
                 ))}
@@ -90,9 +123,11 @@ export function GroupManager({ base, groups, registrations }: { base: string; gr
 
     return (
         <section id="study-groups" aria-labelledby="study-groups-heading" className="space-y-3">
-            <h2 id="study-groups-heading" className="text-xl font-semibold">Study groups</h2>
+            <h2 id="study-groups-heading" className="text-xl font-semibold">
+                Study groups
+            </h2>
             {!groups.length && <p>No study groups yet.</p>}
-            {groups.map(team => (
+            {groups.map((team) => (
                 <details key={team.id}>
                     <summary className="cursor-pointer py-2">{team.name} · Edit membership</summary>
                     {editor(team)}
@@ -102,7 +137,10 @@ export function GroupManager({ base, groups, registrations }: { base: string; gr
                     </details>
                 </details>
             ))}
-            <details><summary className="cursor-pointer py-2">New study group</summary>{editor()}</details>
+            <details>
+                <summary className="cursor-pointer py-2">New study group</summary>
+                {editor()}
+            </details>
         </section>
     );
 }

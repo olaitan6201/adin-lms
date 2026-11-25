@@ -13,9 +13,11 @@ return new class extends Migration
         if (! in_array($driver, ['pgsql', 'sqlite', 'mysql'], true)) {
             throw new LogicException('Unsupported LMS database engine.');
         }
+
         if ($driver === 'mysql' && version_compare(DB::connection()->getServerVersion(), '8.0.16', '<')) {
             throw new LogicException('MySQL 8.0.16 or later is required for enforced CHECK constraints.');
         }
+
         if (Schema::hasTable('users')) {
             throw new LogicException('Install this baseline in a new database; preserve existing pilot data.');
         }
@@ -846,6 +848,7 @@ return new class extends Migration
 
             return;
         }
+
         foreach (['INSERT', 'UPDATE'] as $event) {
             DB::statement("CREATE TRIGGER {$table}_valid_{$event} BEFORE {$event} ON {$table}
                 WHEN NOT ({$newRowCondition}) BEGIN SELECT RAISE(ABORT, 'Invalid {$table} row'); END");

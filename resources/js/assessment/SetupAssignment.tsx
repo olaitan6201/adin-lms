@@ -13,8 +13,8 @@ export function SetupAssignment({ id }: { id: string }) {
             <label>
                 Accepted formats
                 <select multiple name="formats[]" defaultValue={['pdf', 'txt']} required>
-                    <option>pdf</option>
-                    <option>txt</option>
+                    {['txt', 'pdf', 'csv', 'json', 'py', 'c', 'cpp', 'java', 'js', 'ts', 'sql', 'zip', 'docx', 'xlsx'].map(format =>
+                        <option key={format}>{format}</option>)}
                 </select>
             </label>
             <Check name="allow_late" label="Allow late submissions until close" />

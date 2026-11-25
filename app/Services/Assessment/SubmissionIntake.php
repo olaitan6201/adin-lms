@@ -12,6 +12,7 @@ use App\Models\SubmissionRecipient;
 use App\Models\SubmissionVersion;
 use App\Models\User;
 use App\Policies\AssessmentItemPolicy;
+use App\Services\Learning\ResourceFileFormat;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -56,13 +57,17 @@ class SubmissionIntake
             );
             abort_if(
                 $file && ($file->getSize() > $assignment->max_bytes || ! in_array(
-                    $file->guessExtension(),
+                    strtolower($file->getClientOriginalExtension()),
                     $assignment->accepted_formats,
                     true,
                 )),
                 422,
                 'File outside assignment limits.',
             );
+            if ($file) {
+                app(ResourceFileFormat::class)->validatedMime($file);
+            }
+
             $key = [
                 'assignment_id' => $assignment->id,
                 'group_id' => $group,

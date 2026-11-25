@@ -70,7 +70,8 @@ class AssignmentController
         });
 
         return Inertia::render('Assessments/Assignment', [
-            'assignment' => $assignment->only('id', 'instructions', 'group_work', 'due_at', 'closes_at'),
+            'assignment' => $assignment->only('id', 'instructions', 'group_work', 'due_at', 'closes_at',
+                'accepted_formats', 'max_bytes', 'editable', 'late_policy'),
             'title' => $item->title,
             'marker' => $marker,
             'pending' => $pending,

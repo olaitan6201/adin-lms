@@ -10,7 +10,7 @@ class SubmissionRequest extends FormRequest
     {
         return [
             'body' => 'nullable|string|max:100000|required_without:script',
-            'script' => AssessmentUpload::RULE,
+            'script' => 'nullable|file|max:20480',
             'group_id' => 'nullable|uuid',
         ];
     }

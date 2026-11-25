@@ -24,6 +24,10 @@ type Props = {
         group_work: boolean;
         due_at: string;
         closes_at: string;
+        accepted_formats: string[];
+        max_bytes: number;
+        editable: boolean;
+        late_policy: {allow: boolean};
     };
     title: string;
     marker: boolean;
@@ -54,23 +58,29 @@ export default function Assignment({
         <main className="assessment-page">
             <Head title={title} />
             <h1>{title}</h1>
-            <p>{a.instructions}</p>
+            <section aria-label="Assignment brief">
+            <h2>Assignment brief</h2>
+            <p className="assessment-prose">{a.instructions}</p>
+            <a href={`${url}/instructions`}>Download instructions (.txt)</a>
             <p>
                 Due {new Date(a.due_at).toLocaleString()} · Closes{' '}
                 {new Date(a.closes_at).toLocaleString()}
             </p>
             {references.map((id) => download(id, 'Download reference'))}
+            <p>Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()} bytes</p>
+            <p>{a.editable ? 'Revisions accepted.' : 'One submission only.'} {a.late_policy.allow ? 'Late work accepted until close.' : 'No late submissions.'}</p>
+            </section>
             {!marker && (
                 <Form action={url} method="post">
                     {({ processing, errors }) => (
                         <>
-                            <label>
+                            {a.accepted_formats.includes('txt') && <label>
                                 Answer
                                 <textarea name="body" />
-                            </label>
+                            </label>}
                             <label>
-                                Attach PDF or text
-                                <input type="file" name="script" accept=".pdf,.txt" />
+                                Attach submission
+                                <input type="file" name="script" accept={a.accepted_formats.map(f => `.${f}`).join(',')} />
                             </label>
                             {a.group_work && (
                                 <label>
@@ -84,7 +94,8 @@ export default function Assignment({
                                     </select>
                                 </label>
                             )}
-                            <button disabled={processing}>Submit revision</button>
+                            {a.group_work && !groups.length && <p>Ask your lecturer to assign you to a study group before submitting.</p>}
+                            <button disabled={processing || (a.group_work && !groups.length)}>Submit revision</button>
                             <p role="alert">{Object.values(errors).join(' ')}</p>
                         </>
                     )}

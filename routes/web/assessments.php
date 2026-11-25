@@ -3,6 +3,7 @@
 use App\Http\Controllers\Assessment\AssessmentDeskController;
 use App\Http\Controllers\Assessment\AssessmentSetupController;
 use App\Http\Controllers\Assessment\AssignmentController;
+use App\Http\Controllers\Assessment\AssignmentInstructionsController;
 use App\Http\Controllers\Assessment\ExamAuthorController;
 use App\Http\Controllers\Assessment\ExamSessionController;
 use App\Http\Controllers\Assessment\GradebookController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function (): void {
 
     Route::prefix('assignments/{assignment}')->controller(AssignmentController::class)->group(function (): void {
         Route::get('/', 'show')->name('assignments.show');
+        Route::get('instructions', AssignmentInstructionsController::class)->name('assignments.instructions');
         Route::post('/', 'submit')->name('assignments.submit');
         Route::get('files/{file}', 'download')->name('assignments.download');
     });

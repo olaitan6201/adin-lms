@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Assessment;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AssignmentSetupRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class AssignmentSetupRequest extends FormRequest
             'due_at' => 'required|date|after_or_equal:opens_at',
             'closes_at' => 'required|date|after_or_equal:due_at',
             'formats' => 'required|array|min:1',
-            'formats.*' => 'required|in:pdf,txt',
+            'formats.*' => ['required', 'distinct', Rule::in(AssessmentUpload::FORMATS)],
             'max_bytes' => 'required|integer|between:1,20971520',
             'reference' => AssessmentUpload::RULE,
             'editable' => 'nullable|boolean',

@@ -2,20 +2,22 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\Assignment;
+use App\Models\Department;
 use App\Models\Enrolment;
 use App\Models\Grade;
 use App\Models\GradingPolicy;
 use App\Models\Offering;
+use App\Models\Programme;
 use App\Models\Student;
 use App\Models\SubmissionVersion;
 use Database\Seeders\DemoCampusSeeder;
 use Database\Seeders\DemoTeachingWeekSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Inertia\Testing\AssertableInertia;
 use Tests\Support\AcademicAccess;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class RegistrarHistoryContinuityTest extends TestCase
 {
@@ -37,9 +39,13 @@ class RegistrarHistoryContinuityTest extends TestCase
         $upload = fn (string $text) => ['feed' => UploadedFile::fake()->createWithContent('registrar.csv', $text)];
         $this->post('/students/feeds/registrations', $upload("student_id,offering_id,status,revision\nDEMO-ADA,DEMO-CSC101-2026-1,withdrawn,2"))->assertSessionHasNoErrors();
         $this->post('/students/feeds/profiles', $upload("student_id,matric_number,name,email,programme,level,session,status\nDEMO-ADA,ADA/001,Ada,ada@example.test,DEMO-BSC,100 (demo),2026/27 (demo),graduated"))->assertSessionHasNoErrors();
+        $programme = Programme::where('code', 'DEMO-BSC')->sole();
+        $correction = ['name' => 'BSc Computing Sciences', 'department_id' => $programme->department_id, 'code' => $programme->code];
+        $this->patch("/academics/organisation/programmes/$programme->id", ['department_id' => Department::factory()->create()->id] + $correction)->assertSessionHasErrors('department_id');
+        $this->patch("/academics/organisation/programmes/$programme->id", $correction)->assertSessionHasNoErrors();
         foreach ([$admin, $student->user] as $reader) {
             $this->actingAs($reader)->get(route('students.history', $student))->assertInertia(fn (AssertableInertia $p) => $p
-                ->where('student.status', 'graduated')->where('sessions.0.department', 'Computing')->where('sessions.0.faculty', 'Science (demo)')
+                ->where('student.status', 'graduated')->where('sessions.0.department', 'Computing')->where('sessions.0.faculty', 'Science (demo)')->where('sessions.0.programme', $correction['name'])
                 ->where('records.0.status', 'withdrawn')->where('records.0.result.grade', 'A')->where('records.1.status', 'registered'));
         }
         $this->get(route('courses.show', $course))->assertNotFound();

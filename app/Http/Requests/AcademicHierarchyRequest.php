@@ -33,15 +33,15 @@ class AcademicHierarchyRequest extends FormRequest
                     'programmes' => ['department_id' => 'required|uuid|exists:departments,id'],
                     default => [],
                 },
-            'levels' => ['label' => ['required','string','max:191',$unique('academic_levels','label')]],
-            'sessions' => ['label' => ['required','string','max:191',$unique('academic_sessions','label')]] + $dates,
+            'levels' => ['label' => ['required', 'string', 'max:191', $unique('academic_levels', 'label')]],
+            'sessions' => ['label' => ['required', 'string', 'max:191', $unique('academic_sessions', 'label')]] + $dates,
             'semesters' => [
                 'session_id' => 'required|uuid|exists:academic_sessions,id',
                 'position' => [
                     'required',
                     'integer',
                     'min:1',
-                    $unique('semesters','position')->where('session_id', $this->string('session_id')->toString()),
+                    $unique('semesters', 'position')->where('session_id', $this->string('session_id')->toString()),
                 ],
             ] + $dates,
         };

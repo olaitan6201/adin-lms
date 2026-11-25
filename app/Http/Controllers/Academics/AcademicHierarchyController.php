@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Academics;
 
 use App\Http\Requests\AcademicHierarchyRequest;
-use App\Models\Department;
 use App\Models\AuditLog;
+use App\Models\Department;
 use App\Services\Academics\HierarchyVisibility;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Database\QueryException;
@@ -39,11 +39,24 @@ class AcademicHierarchyController
 
     public function update(AcademicHierarchyRequest $request, string $kind, string $record): RedirectResponse
     {
-        $table = in_array($kind, ['levels','sessions'], true) ? 'academic_'.$kind : $kind;
+        $table = in_array($kind, ['levels', 'sessions'], true) ? 'academic_'.$kind : $kind;
         DB::transaction(function () use ($request, $table, $record): void {
             $query = DB::table($table)->where('id', $record);
             $before = (array) (clone $query)->lockForUpdate()->firstOrFail();
             $data = $request->validated();
+            if ($table === 'programmes' && $before['department_id'] !== $data['department_id']
+                && (DB::table('student_sessions')->where('programme_id', $record)->exists()
+                    || DB::table('curricula')->where('programme_id', $record)->where('status', 'approved')->exists())) {
+                throw ValidationException::withMessages(['department_id' => 'This programme has recorded history. Create a successor programme for the new department.']);
+            }
+            if ($table === 'departments' && $before['faculty_id'] !== $data['faculty_id']
+                && DB::table('programmes')->where('department_id', $record)->exists()) {
+                throw ValidationException::withMessages(['faculty_id' => 'This department has linked programmes. Preserve their faculty and create a successor department.']);
+            }
+            if ($table === 'semesters' && $before['session_id'] !== $data['session_id']
+                && DB::table('offerings')->where('semester_id', $record)->exists()) {
+                throw ValidationException::withMessages(['session_id' => 'This semester already has offerings. Keep their original academic session.']);
+            }
             $query->update($data);
             AuditLog::forceCreate(['actor_id' => $request->user()->id, 'subject_key' => "$table:$record",
                 'action' => 'organisation.corrected', 'occurred_at' => now(),

@@ -40,35 +40,40 @@ export function ReportFilters({ path, filters, options, family }: Props) {
     }
 
     return (
-        <form onSubmit={apply} className="flex flex-wrap items-end gap-4 rounded border border-slate-300 p-4">
-            {fields.map(({ name, label, empty }) => {
-                const selected = filters[name];
-                const choices = options[name];
-                const missing = selected && !choices.some((choice) => choice.id === selected);
+        <details className="border-b border-[var(--portal-line)]">
+            <summary className="cursor-pointer py-3 font-semibold">Report filters</summary>
+            <form aria-label="Report filters" onSubmit={apply} className="grid gap-4 pb-4 sm:grid-cols-3">
+                {fields.map(({ name, label, empty }) => {
+                    const selected = filters[name];
+                    const choices = options[name];
+                    const missing = selected && !choices.some((choice) => choice.id === selected);
 
-                return (
-                    <label key={name} className="grid min-w-0 gap-1 font-medium">
-                        {label}
-                        <select
-                            name={name}
-                            defaultValue={selected ?? ''}
-                            className="max-w-full rounded border border-slate-500 bg-white p-2"
-                        >
-                            <option value="">{empty}</option>
-                            {missing && <option value={selected}>No matching records</option>}
-                            {choices.map((choice) => (
-                                <option value={choice.id} key={choice.id}>
-                                    {choice.label}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                );
-            })}
-            <button className="rounded bg-teal-800 px-4 py-2 text-white">Apply filters</button>
-            <Link href={family ? `${path}?family=${family}` : path} className="py-2 underline">
-                Clear filters
-            </Link>
-        </form>
+                    return (
+                        <label key={name} className="grid min-w-0 gap-1 font-medium">
+                            {label}
+                            <select
+                                name={name}
+                                defaultValue={selected ?? ''}
+                                className="min-h-11 w-full min-w-0 rounded border border-slate-500 bg-white p-2"
+                            >
+                                <option value="">{empty}</option>
+                                {missing && <option value={selected}>No matching records</option>}
+                                {choices.map((choice) => (
+                                    <option value={choice.id} key={choice.id}>
+                                        {choice.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    );
+                })}
+                <div className="flex flex-wrap items-center gap-4 sm:col-span-3">
+                    <button className="portal-action">Apply filters</button>
+                    <Link href={family ? `${path}?family=${family}` : path} className="py-2 underline">
+                        Clear filters
+                    </Link>
+                </div>
+            </form>
+        </details>
     );
 }

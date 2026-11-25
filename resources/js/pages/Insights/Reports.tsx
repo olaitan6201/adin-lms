@@ -26,6 +26,8 @@ type Family = keyof typeof names;
 type Props = {
     family: Family;
     audience: string;
+    reportScope: string | null;
+    canViewInstitutionUsage: boolean;
     filters: Filters;
     options: Options | null;
     columns: string[];
@@ -36,30 +38,46 @@ type Props = {
     limitMessage: string | null;
 };
 
-export default function Reports({ family, audience, filters, options, columns, table, limitMessage }: Props) {
+export default function Reports({ family, audience, reportScope, canViewInstitutionUsage, filters, options, columns, table, limitMessage }: Props) {
     const path = (base: string, selected: Family) => `${base}?${new URLSearchParams({
         ...(selected === 'institution-usage' ? {} : filters), family: selected,
     })}`;
+    const active = Object.keys(filters).length;
+    const count = table.rows.length;
+    // Completion always includes a totals row, even when no offering matches.
+    const hasRecords = family === 'completion' ? count > 1 : count > 0;
+    const summary = !reportScope ? 'No reporting scope assigned.'
+        : limitMessage || (hasRecords ? `${count} report ${count === 1 ? 'row' : 'rows'}`
+            : active ? 'No records match these filters.' : 'No records for this report yet.');
     return (
-        <main className="mx-auto max-w-6xl space-y-6 px-5 py-8">
+        <main className="portal-page min-w-0 space-y-4">
             <Head title="Academic reports" />
-            <header>
-                <p>{audience}</p>
-                <h1 className="text-3xl font-semibold">Academic reports</h1>
+            <header className="border-b border-[var(--portal-line)] pb-4">
+                <p className="portal-kicker">{audience} · Academic reports</p>
+                <h1 id="report-title" tabIndex={-1} className="portal-title">{names[family]}</h1>
+                {reportScope && <p>Scope: {reportScope}</p>}
+                <p className="font-semibold" role={limitMessage ? 'alert' : 'status'}>{summary}</p>
+                {!reportScope && <p>Contact your academic office if you expected access to course reports.</p>}
+                {active > 0 && <Link className="inline-block py-1 underline" href={`/reports?family=${family}`}>
+                    Clear {active} applied {active === 1 ? 'filter' : 'filters'}
+                </Link>}
             </header>
-            <nav aria-label="Report types" className="flex flex-wrap gap-4 border-b pb-3">
-                {(Object.keys(names) as Family[]).filter(key => key !== 'institution-usage' || audience === 'Institution').map((key) => (
-                    <Link
-                        key={key}
-                        href={path('/reports', key)}
-                        aria-current={key === family ? 'page' : undefined}
-                        className={key === family ? 'font-bold' : 'underline'}
-                    >
-                        {names[key]}
-                    </Link>
-                ))}
-            </nav>
-            {options && <ReportFilters
+            <details key={family} className="border-b border-[var(--portal-line)]">
+                <summary className="cursor-pointer py-3 font-semibold">Change report type</summary>
+                <nav aria-label="Report types" className="flex flex-wrap gap-x-4 pb-3">
+                    {(Object.keys(names) as Family[]).filter(key => key !== 'institution-usage' || canViewInstitutionUsage).map((key) => (
+                        <Link
+                            key={key}
+                            href={path('/reports', key)}
+                            aria-current={key === family ? 'page' : undefined}
+                            className={`py-2 ${key === family ? 'font-bold' : 'underline'}`}
+                        >
+                            {names[key]}
+                        </Link>
+                    ))}
+                </nav>
+            </details>
+            {options && reportScope && <ReportFilters
                 key={path('/reports', family)}
                 path="/reports"
                 filters={filters}
@@ -67,13 +85,8 @@ export default function Reports({ family, audience, filters, options, columns, t
                 family={family}
             />}
             <section aria-labelledby="report-title" className="space-y-3">
-                <h2 id="report-title" className="text-xl font-semibold">
-                    {names[family]}
-                </h2>
-                <p>{descriptions[family]}</p>
-                {limitMessage ? (
-                    <p role="alert">{limitMessage}</p>
-                ) : (
+                {reportScope && <p>{descriptions[family]}</p>}
+                {!limitMessage && reportScope && (
                     <>
                         {Object.keys(table.totals).length > 0 && (
                             <details>
@@ -89,14 +102,18 @@ export default function Reports({ family, audience, filters, options, columns, t
                             </details>
                         )}
                         {family === 'institution-usage' && <UsageMeasures rows={table.rows} />}
-                        {table.rows.length ? (
+                        {family !== 'institution-usage' && count > 0 && (
+                            <p id="scroll-hint" className="desk-note sm:hidden">Scroll the table sideways to see every column.</p>
+                        )}
+                        {table.rows.length > 0 && (
                             <div
                                 role="region"
                                 aria-label="Report data"
+                                aria-describedby={family === 'institution-usage' ? undefined : 'scroll-hint'}
                                 tabIndex={0}
                                 className={family === 'institution-usage' ? 'hidden overflow-auto sm:block' : 'max-h-[36rem] overflow-auto'}
                             >
-                                <table className="w-full text-left">
+                                <table className="w-full min-w-[36rem] text-left">
                                     <caption className="sr-only">{names[family]}</caption>
                                     <thead className="sticky top-0 bg-slate-100">
                                         <tr>
@@ -120,19 +137,17 @@ export default function Reports({ family, audience, filters, options, columns, t
                                     </tbody>
                                 </table>
                             </div>
-                        ) : (
-                            <p>No records match these filters.</p>
                         )}
-                        <nav aria-label="Download report" className="flex flex-wrap gap-4">
-                            <a className="underline" href={path('/reports/export/pdf', family)}>
-                                Download PDF
-                            </a>
-                            <a className="underline" href={path('/reports/export/xlsx', family)}>
-                                Download Excel
-                            </a>
-                        </nav>
                     </>
                 )}
+                {!limitMessage && <nav aria-label="Download report" className="flex flex-wrap gap-4">
+                    <a className="py-2 underline" href={path('/reports/export/pdf', family)}>
+                        Download PDF
+                    </a>
+                    <a className="py-2 underline" href={path('/reports/export/xlsx', family)}>
+                        Download Excel
+                    </a>
+                </nav>}
             </section>
         </main>
     );

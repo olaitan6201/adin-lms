@@ -8,10 +8,12 @@ test('learner filters a completion report and replies from the course discussion
     await page.getByRole('button', { name: /sign in/i }).click();
     await expect(page).not.toHaveURL(/\/login$/);
     await page.goto('/reports');
+    await page.getByText('Change report type', { exact: true }).press('Enter');
     await page.getByRole('link', { name: 'Course completion' }).focus();
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'Course completion', exact: true })).toBeVisible();
     const select = page.getByLabel('Course offering');
+    await page.getByText('Report filters', { exact: true }).press('Enter');
     await select.selectOption({ label: 'DEMO-CSC101-2026-1' });
     const course = await select.inputValue();
     await page.getByRole('button', { name: 'Apply filters' }).click();

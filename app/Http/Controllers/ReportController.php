@@ -11,6 +11,8 @@ use App\Services\Insights\InsightExport;
 use App\Services\Insights\InsightScope;
 use App\Services\Insights\InsightTable;
 use App\Services\Insights\InstitutionUsage;
+use App\Services\Insights\ReportAudience;
+use App\Services\Insights\ReportContext;
 use App\Services\Insights\ReportLimit;
 use App\Services\Insights\ReportSelection;
 use Inertia\Inertia;
@@ -27,7 +29,7 @@ final class ReportController
         private InstitutionUsage $usage,
     ) {}
 
-    public function page(InsightFilterRequest $request): Response
+    public function page(InsightFilterRequest $request, ReportContext $context): Response
     {
         $filters = $request->safe()->except('family');
         $audience = $this->scope->audience($request->user());
@@ -39,8 +41,13 @@ final class ReportController
             $table = new InsightTable;
         }
 
+        $presentation = $context->forUser($request->user(), $audience);
+
         return Inertia::render('Insights/Reports', [
-            'audience' => $audience->value, 'options' => $request->enum('family', ReportFamily::class) === ReportFamily::InstitutionUsage
+            'audience' => $presentation['label'],
+            'reportScope' => $presentation['scope'],
+            'canViewInstitutionUsage' => $audience === ReportAudience::Institution,
+            'options' => $request->enum('family', ReportFamily::class) === ReportFamily::InstitutionUsage
                 ? null : $this->selection->options($request->user(), $audience, $filters),
             'filters' => $filters, 'family' => $request->input('family', 'activity'),
             'columns' => $table->columns, 'table' => ['rows' => $table->rows, 'totals' => $table->totals],

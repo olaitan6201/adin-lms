@@ -33,30 +33,41 @@ type Props = {
     learner: boolean;
     roster: Member[];
 };
-export default function Desk({
-    offering,
-    book,
-    items,
-    grades,
-    teacher,
-    officer,
-    learner,
-    roster,
-}: Props) {
+export default function Desk({ offering, book, items, grades, teacher, officer, learner, roster }: Props) {
     const who = (id: string) => roster.find((m) => m.id === id)?.name;
 
     return (
-        <main className="assessment-page">
+        <main className="portal-page assessment-page">
             <Head title="Assessments" />
-            <h1>Assessments and results</h1>
+            <header className="assessment-heading">
+                <p className="portal-kicker">
+                    {teacher ? 'Teaching workspace' : officer ? 'Examinations office' : 'Course assessment'}
+                </p>
+                <h1 className="portal-title">Assessments and results</h1>
+                <p>
+                    {teacher
+                        ? 'Prepare assessments, review submissions and calculate results.'
+                        : officer
+                          ? 'Configure policy and review the marks supporting each result.'
+                          : 'Open your assignments and exams, then follow returned marks and published results.'}
+                </p>
+                <nav aria-label="Assessment sections">
+                    {teacher && (
+                        <Link href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>
+                    )}
+                    {teacher && <Link href={`/courses/${offering}/question-banks`}>Question banks</Link>}
+                    <a href="#result-revisions">Result history</a>
+                </nav>
+            </header>
             {!book &&
-                (teacher ? (
+                (teacher || officer ? (
                     <SetupBook url={`/courses/${offering}/assessments`} />
                 ) : (
                     <p>No assessments configured.</p>
                 ))}
             {items.map((i) => (
-                <section key={i.id}>
+                <section className="portal-panel assessment-item" key={i.id} id={`item-${i.id}`}>
+                    <p className="portal-kicker">{i.kind}</p>
                     <h2>{i.title}</h2>
                     <p>
                         {i.weight_percent}% of result · Maximum {i.maximum_score} points
@@ -71,12 +82,19 @@ export default function Desk({
                         ) : null)}
                     {i.kind === 'exam' && (
                         <>
+                            {!i.exam && teacher && (
+                                <Link href={`/assessment-items/${i.id}/questions/select`}>
+                                    Assemble from the question bank
+                                </Link>
+                            )}
                             {!i.exam && teacher && <SetupExam id={i.id} />}{' '}
+                            {i.exam && teacher && (
+                                <Link href={`/examinations/${i.exam}/integrity`}>
+                                    Exam conditions and observations
+                                </Link>
+                            )}
                             {i.exam && learner && (
-                                <Post
-                                    url={`/examinations/${i.exam}/start`}
-                                    button="Start or resume exam"
-                                />
+                                <Post url={`/examinations/${i.exam}/start`} button="Start or resume exam" />
                             )}
                             {i.attempts.map((a) => (
                                 <p key={a.id}>

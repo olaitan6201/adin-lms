@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { Answer, type Question } from '../../assessment/Answer';
 import type { AttemptState } from '../../assessment/contracts';
+import { IntegrityNotice, type IntegrityPolicy } from '../../assessment/IntegrityNotice';
 
 type Props = {
     attempt: {
@@ -13,33 +14,34 @@ type Props = {
     };
     questions: Question[];
     title: string;
+    integrity: IntegrityPolicy;
 };
-export default function Paper({ attempt, questions, title }: Props) {
+export default function Paper({ attempt, questions, title, integrity }: Props) {
     const [dirty, setDirty] = useState<string[]>([]);
     const change = useCallback(
         (id: string, pending: boolean) =>
             setDirty((ids) =>
-                ids.includes(id) === pending
-                    ? ids
-                    : pending
-                      ? [...ids, id]
-                      : ids.filter((x) => x !== id),
+                ids.includes(id) === pending ? ids : pending ? [...ids, id] : ids.filter((x) => x !== id),
             ),
         [],
     );
     const active = attempt.state === 'active';
 
     return (
-        <main className="assessment-page">
+        <main
+            className="portal-page assessment-page"
+            onCopy={(event) => {
+                if (active && integrity.prevent_copy) event.preventDefault();
+            }}
+        >
             <Head title={title} />
-            <h1>{title}</h1>
+            <p className="portal-kicker">Examination paper</p>
+            <h1 className="portal-title">{title}</h1>
             <p>
                 Status: {attempt.state} · Deadline: {new Date(attempt.expires_at).toLocaleString()}
             </p>
-            <p>
-                Answers save online. Wait for Saved before leaving. This browser cannot prevent other
-                apps or verify who is present.
-            </p>
+            <p>Answers save online. Wait for Saved before leaving.</p>
+            <IntegrityNotice policy={integrity} active={active} attempt={attempt.id} />
             {questions.map((q) => (
                 <Answer
                     key={q.id}

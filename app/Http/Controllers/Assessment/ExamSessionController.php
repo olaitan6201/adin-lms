@@ -39,6 +39,10 @@ class ExamSessionController
             'attempt' => $attempt->only('id', 'expires_at') + ['state' => $attempt->state->value],
             'questions' => CandidateQuestionResource::collection($questions)->resolve($request),
             'title' => $attempt->exam->item->title,
+            'integrity' => [
+                'observe_visibility' => (bool) ($attempt->exam->security_policy['observe_visibility'] ?? false),
+                'prevent_copy' => (bool) ($attempt->exam->security_policy['prevent_copy'] ?? false),
+            ],
         ]);
     }
 

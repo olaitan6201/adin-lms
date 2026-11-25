@@ -24,7 +24,7 @@ test('separates slot controls, adds exact points and persists the UTC interval f
         questions(db, topic);
         db.prepare(`INSERT INTO assessment_items (id,gradebook_id,title,kind,weight_percent,maximum_score)
             SELECT ?,gradebook_id,'Fractional paper','exam',0,0.3 FROM assessment_items WHERE title='Computing reflection'`).run(item);
-        await signIn(page, `exam-reviewer-${info.project.name}`);
+        await signIn(page, `exam-setup-${info.project.name}`);
         await page.goto(`/assessment-items/${item}/questions/select`);
         await page.getByLabel('Opens (UTC)').fill('2027-01-05T01:30');
         await page.getByLabel('Closes (UTC)').fill('2027-01-05T02:30');

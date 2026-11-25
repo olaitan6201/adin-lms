@@ -18,6 +18,12 @@ require dirname(__DIR__, 2).'/vendor/autoload.php';
 $app = require dirname(__DIR__, 2).'/bootstrap/app.php';
 $app->make(Kernel::class)->bootstrap();
 
+// Fail the server bootstrap on fixture errors instead of serving a partially seeded database.
+set_exception_handler(static function (Throwable $error): never {
+    fwrite(STDERR, $error->getMessage().PHP_EOL);
+    exit(1);
+});
+
 $run = realpath((string) getenv('PORTAL_E2E_RUN'));
 $sandbox = realpath(base_path('.agent-work/browser-tests'));
 if (! $run || ! $sandbox || ! str_starts_with($run, $sandbox.'/run-')
@@ -26,10 +32,13 @@ if (! $run || ! $sandbox || ! str_starts_with($run, $sandbox.'/run-')
     throw new LogicException('This fixture requires a disposable browser test database.');
 }
 
+require __DIR__.'/workspace-fixtures.php';
+
 umask(0077);
 $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
 $authors = ['group-desktop', 'group-phone', 'lesson-desktop', 'lesson-phone'];
 foreach (['desktop', 'phone'] as $project) {
+    seedWorkspaceFixtures($offering, $project, $run);
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);
@@ -54,6 +63,8 @@ foreach (['desktop', 'phone'] as $project) {
             'allowed_fields' => ['completed_lessons'], 'approved_by' => $operator->id,
         ]);
     }
+    $authors[] = 'assignment-author-'.$project;
+    $authors[] = 'exam-setup-'.$project;
     $authors[] = 'exam-reviewer-'.$project;
     $candidate = User::factory()->create(['email' => "exam-learner-{$project}@demo.example.test"]);
     $student = Student::factory()->create(['user_id' => $candidate->id, 'matric_number' => "EXAM/{$project}"]);
@@ -84,7 +95,7 @@ foreach (['lecturer', 'officer', 'exam-office', 'report-qa', 'brand-desktop', 'b
 
 foreach (['desktop', 'phone'] as $project) {
     $course = Offering::factory()->create(['curriculum_course_id' => $offering->curriculum_course_id]);
-    $teacher = User::where('email', "exam-reviewer-{$project}@demo.example.test")->sole();
+    $teacher = User::where('email', "assignment-author-{$project}@demo.example.test")->sole();
     $student = Student::where('matric_number', "EXAM/{$project}")->sole();
     TeachingAllocation::factory()->create([
         'offering_id' => $course->id,

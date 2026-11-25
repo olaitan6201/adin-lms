@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
-async function signIn(page: Page, account: 'officer' | 'report-qa') {
+async function signIn(page: Page, account: string) {
     await page.goto('/login');
     await page.locator('input[name=email]').fill(`${account}@demo.example.test`);
     const password = page.getByLabel('Password', { exact: true });
@@ -30,7 +30,7 @@ test('QA sees the scope explanation and a recovery action instead of student fil
 
 test('officer can read, filter and export the current report with the keyboard', async ({ page }, info) => {
     test.slow();
-    await signIn(page, 'officer');
+    await signIn(page, `report-officer-${info.project.name}`);
 
     for (const width of info.project.name === 'phone' ? [390, 320] : [1366, 683]) {
         // A 1366 × 844 desktop at 200% browser zoom has a 683 × 422 layout viewport.

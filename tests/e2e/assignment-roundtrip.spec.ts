@@ -10,7 +10,7 @@ async function login(page: Page, account: string) {
     await page.locator('input[name=email]').fill(`${account}@demo.example.test`);
     await page.locator('input[name=password]').fill('password');
     await page.getByRole('button', { name: 'Sign in', exact: true }).press('Enter');
-    if (account.startsWith('exam-reviewer')) {
+    if (account.startsWith('assignment-author')) {
         await expect(page).toHaveURL(/\/security\/challenge$/);
         const otp = execFileSync('php', ['-r',
             'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
@@ -27,7 +27,7 @@ test('assignment opens, accepts a revision, and returns the lecturer’s mark', 
     const project = info.project.name;
     const course = readFileSync(join(run, `assignment-${project}.course`), 'utf8');
     const desk = `/courses/${course}/assessments`;
-    await login(page, `exam-reviewer-${project}`);
+    await login(page, `assignment-author-${project}`);
     await page.goto(desk);
     await page.getByLabel('Grade label').fill('Pass');
     await page.getByLabel('Title', { exact: true }).fill('Study plan');

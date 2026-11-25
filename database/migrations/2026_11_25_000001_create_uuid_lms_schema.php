@@ -93,6 +93,7 @@ return new class extends Migration
             $table->timestampTz('occurred_at');
             $table->string('outcome');
             $table->index(['user_id', 'occurred_at'], 'login_events_user_id_occurred_at_idx');
+            $table->index(['outcome', 'occurred_at', 'user_id'], 'usage_auth_window_idx');
         });
 
         Schema::create('auth_sessions', function (Blueprint $table) use ($driver): void {
@@ -425,6 +426,7 @@ return new class extends Migration
             $table->foreignUuid('submitted_by')->constrained('users');
             $table->text('body')->nullable();
             $table->unique(['submission_id', 'revision'], 'submission_versions_submission_revision_uq');
+            $table->index('submitted_at', 'usage_submission_window_idx');
         });
 
         Schema::create('submission_files', function (Blueprint $table): void {
@@ -506,6 +508,7 @@ return new class extends Migration
             $table->string('state');
             $table->unique(['exam_id', 'enrolment_id', 'ordinal'], 'examination_attempts_exam_enrolment_ordinal_uq');
             $table->index(['state', 'expires_at'], 'examination_attempts_state_expires_at_idx');
+            $table->index('started_at', 'usage_exam_window_idx');
         });
 
         Schema::create('attempt_questions', function (Blueprint $table): void {

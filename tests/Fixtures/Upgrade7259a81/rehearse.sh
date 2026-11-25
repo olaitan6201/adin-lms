@@ -10,10 +10,11 @@ repo=$PWD
 scripts=tests/Fixtures/Upgrade7259a81
 baseline=2026_11_25_000001_create_uuid_lms_schema.php
 old=7259a816a9f17adc19c208ed92e415b12aafd62b
+candidate=$(git rev-parse HEAD)
 mkdir -p .agent-work/redesign/continuity
 export QA_ROOT
 QA_ROOT=$(mktemp -d "$PWD/.agent-work/redesign/continuity/r.XXXXXX")
-mkdir "$QA_ROOT"/{app,socket}
+mkdir "$QA_ROOT"/{app,target,socket}
 source "$repo/$scripts/engines.sh"
 cleanup() {
     if [[ -f "$QA_ROOT/db/postmaster.pid" ]]; then "$pg/pg_ctl" -D "$QA_ROOT/db" -m fast -w stop >/dev/null; fi
@@ -22,6 +23,7 @@ cleanup() {
 }
 trap cleanup EXIT
 git archive "$old" | tar -xC "$QA_ROOT/app"
+git archive "$candidate" | tar -xC "$QA_ROOT/target"
 cp -a --reflink=auto vendor "$QA_ROOT/app/"
 cd "$QA_ROOT/app"
 export APP_ENV=testing LOG_CHANNEL=stderr SESSION_DRIVER=array CACHE_STORE=array BCRYPT_ROUNDS=4
@@ -35,7 +37,7 @@ sql() {
         mysql) "${my[@]}" "$DB_DATABASE" ;;
     esac
 }
-echo "Source $old; target $(sha256sum "$repo/database/migrations/$baseline" | cut -d' ' -f1); $DB_CONNECTION"
+echo "Source $old; candidate $candidate; target $(sha256sum "$QA_ROOT/target/database/migrations/$baseline" | cut -d' ' -f1); $DB_CONNECTION"
 php artisan migrate --seed --no-interaction >/dev/null
 sql < "$repo/$scripts/test-history.sql"
 case $DB_CONNECTION in
@@ -58,17 +60,51 @@ case $DB_CONNECTION in
         sql <<<'ALTER SCHEMA public RENAME TO legacy; CREATE SCHEMA public;'
         export UPGRADE_DSN="pgsql:host=$DB_HOST;dbname=qa_restored" ;;
 esac
-cp "$repo/database/migrations/$baseline" "database/migrations/$baseline"
-php artisan migrate --no-interaction >/dev/null
-cli=(php "$repo/database/upgrades/7259a81/run.php")
+cd "$QA_ROOT/target"
+mv "$QA_ROOT/app/vendor" .
+php artisan migrate --no-interaction
+[[ $(sql <<<'SELECT migration FROM migrations') == "${baseline%.php}" ]]
+cli=(php database/upgrades/7259a81/run.php)
 "${cli[@]}" plan > "$QA_ROOT/plan"
 plan=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["plan"])' "$QA_ROOT/plan")
-if "${cli[@]}" "apply:$(printf '%064d' 0)"; then exit 1; fi
+refuse() {
+    local expected=$1
+    shift
+    if "${cli[@]}" "$@" > "$QA_ROOT/refusal" 2>&1; then return 1; fi
+    grep -F "$expected" "$QA_ROOT/refusal"
+}
+# Probe the isolated candidate only. Never normalize a real migration ledger.
+legacy_sql() {
+    case $DB_CONNECTION in
+        sqlite|mysql) DB_DATABASE="$UPGRADE_SOURCE" sql ;;
+        pgsql) { echo 'SET search_path TO legacy;'; cat; } | sql ;;
+    esac
+}
+legacy_sql <<<"UPDATE migrations SET migration='unexpected_migration' WHERE migration='${baseline%.php}';"
+refuse 'Unexpected source migration history' plan
+legacy_sql <<<"UPDATE migrations SET migration='${baseline%.php}' WHERE migration='unexpected_migration';"
+sql <<<"INSERT INTO migrations(migration,batch) VALUES ('unexpected_migration',2);"
+refuse 'Unexpected target migration history' "apply:$plan"
+sql <<<"DELETE FROM migrations WHERE migration='unexpected_migration';"
+sql <<<'CREATE TABLE unexpected_table (id INTEGER);'
+refuse 'Unexpected target table/column inventory' plan
+sql <<<'DROP TABLE unexpected_table;'
+drop_index() {
+    if [[ $DB_CONNECTION == mysql ]]; then sql <<<"DROP INDEX $1 ON $2;"; else sql <<<"DROP INDEX $1;"; fi
+}
+drop_index usage_auth_window_idx login_events
+sql <<<'CREATE INDEX usage_auth_window_idx ON login_events(user_id,outcome,occurred_at);'
+refuse 'Unexpected target index' plan
+drop_index usage_auth_window_idx login_events
+sql <<<'CREATE INDEX usage_auth_window_idx ON login_events(outcome,occurred_at,user_id);'
+cp "$UPGRADE_BACKUP" "$QA_ROOT/changed"
+echo probe >> "$QA_ROOT/changed"
+UPGRADE_BACKUP="$QA_ROOT/changed" refuse 'Plan changed' "apply:$plan"
 # Late failure after earlier tables have been populated; verify transaction rollback.
 sql <<<'CREATE UNIQUE INDEX rehearsal_reject ON enrolments(status);'
-if "${cli[@]}" "apply:$plan"; then exit 1; fi
+refuse 'copy enrolments: Database error' "apply:$plan"
 [[ $(sql <<<'SELECT COUNT(*) FROM users') == 0 ]]
-if [[ $DB_CONNECTION == mysql ]]; then sql <<<'DROP INDEX rehearsal_reject ON enrolments;'; else sql <<<'DROP INDEX rehearsal_reject;'; fi
+drop_index rehearsal_reject enrolments
 "${cli[@]}" "apply:$plan" > "$QA_ROOT/receipt"
 python3 - "$QA_ROOT" <<'PY'
 import json,sys,pathlib
@@ -88,7 +124,7 @@ AND t.external_student_id='DEMO-TUNDE' AND g.revision=1 AND g.published_at IS NO
 AND g.total_percent=83.12345678 AND s.points=g.total_percent;
 SQL
 ) == 1 ]]
-if "${cli[@]}" "apply:$plan"; then exit 1; fi
+refuse 'is not empty' "apply:$plan"
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id WHERE a.external_offering_id=b.external_offering_id') == 0 ]]
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id') == 1 ]]
 sql <<<"INSERT INTO jobs (queue,payload,attempts,available_at,created_at) VALUES ('probe','{}',0,1,1);"

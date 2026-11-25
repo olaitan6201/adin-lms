@@ -80,5 +80,10 @@
     "failed_jobs"
   ],
   "target": "ba9087e5423ec41f32564f258dccb33caf8e1f3051ddefc5f33c28e01e4cb26e",
-  "migration": "eb71813baf880060a9694dd437f67d28ffc96492aa376a80a68a603d01bfd3b5"
+  "migration": "f309bd78a6c2c5f02fd5a9cded5deb63e4631a378d15a615f247b4ac8533cb20",
+  "usage_indexes": {
+    "login_events": {"usage_auth_window_idx": ["outcome", "occurred_at", "user_id"]},
+    "submission_versions": {"usage_submission_window_idx": ["submitted_at"]},
+    "examination_attempts": {"usage_exam_window_idx": ["started_at"]}
+  }
 }

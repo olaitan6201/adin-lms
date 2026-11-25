@@ -1,6 +1,11 @@
 import { Form } from '@inertiajs/react';
 
-export function RegisterLecturer({ departments }: { departments: { id: string; name: string }[] }) {
+export type DepartmentOption = {
+    id: string;
+    name: string;
+};
+
+export function RegisterLecturer({ departments }: { departments: DepartmentOption[] }) {
     return (
         <Form action="/staff" method="post" className="grid gap-3 rounded border p-4">
             {({ errors, processing, recentlySuccessful }) => (

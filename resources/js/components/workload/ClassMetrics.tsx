@@ -1,6 +1,11 @@
 import type { ClassDetails, ClassTotals, WorkloadTotals } from './contracts';
 
-function Metric({ label, value }: { label: string; value: string }) {
+type MetricProps = {
+    label: string;
+    value: string;
+};
+
+function Metric({ label, value }: MetricProps) {
     return (
         <div className="rounded-lg border border-slate-200 bg-white p-4">
             <dt className="text-sm font-medium text-slate-600">{label}</dt>

@@ -17,17 +17,40 @@ export type ClassTotals = {
 
 export type WorkloadTotals = Omit<ClassTotals, 'average_percent'> & { classes: number };
 
-export type WorkloadClass = ClassDetails & { report_url: string; totals: ClassTotals };
+export type WorkloadClass = ClassDetails & {
+    report_url: string;
+    totals: ClassTotals;
+};
+
+type Term = {
+    id: string;
+    label: string;
+};
+
 export type WorkloadData = {
-    terms: { id: string; label: string }[];
+    terms: Term[];
     selected_term: string | null;
     classes: WorkloadClass[];
     totals: WorkloadTotals;
 };
+
 export type ClassReport = {
     class: ClassDetails;
-    allocation: { lecturer: string; staff_number: string };
+    allocation: {
+        lecturer: string;
+        staff_number: string;
+    };
     totals: ClassTotals;
 };
-export type WorkloadProps =
-    { report: ClassReport; workload?: never } | { report: null; workload: WorkloadData };
+
+type ReportView = {
+    report: ClassReport;
+    workload?: never;
+};
+
+type TermView = {
+    report: null;
+    workload: WorkloadData;
+};
+
+export type WorkloadProps = ReportView | TermView;

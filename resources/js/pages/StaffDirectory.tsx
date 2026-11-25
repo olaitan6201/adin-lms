@@ -1,11 +1,17 @@
 import { Head, Link } from '@inertiajs/react';
 
-import { ChangeAllocation, RegisterLecturer } from '../components/staff/StaffForms';
+import { ChangeAllocation, RegisterLecturer, type DepartmentOption } from '../components/staff/StaffForms';
 
-type Staff = { staff_number: string; full_name: string; department: string; offerings: string[] };
+type Staff = {
+    staff_number: string;
+    full_name: string;
+    department: string;
+    offerings: string[];
+};
+
 type Props = {
     staff: Staff[];
-    departments: { id: string; name: string }[];
+    departments: DepartmentOption[];
     previous: string | null;
     next: string | null;
 };

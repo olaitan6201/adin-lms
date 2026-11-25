@@ -1,13 +1,21 @@
 import { Head, Link } from '@inertiajs/react';
 
 type Profile = Record<'matric_number' | 'source_name' | 'source_email' | 'status', string | null>;
-type Session = { session: string; programme: string; level: string };
+type Session = {
+    session: string;
+    programme: string;
+    level: string;
+};
+
 type Entry = {
     id: string;
     external_offering_id: string;
     title: string | null;
     status: string;
-    result: { grade: string; total_percent: string | number } | null;
+    result: {
+        grade: string;
+        total_percent: string | number;
+    } | null;
 };
 
 export default function StudentHistory({

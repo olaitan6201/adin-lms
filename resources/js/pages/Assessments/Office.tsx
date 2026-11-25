@@ -24,8 +24,7 @@ export default function Office({ offerings }: { offerings: Offerings }) {
             <ul className="assessment-evidence">
                 {offerings.data.map((o) => (
                     <li key={o.href}>
-                        <Link href={o.href}>{o.title ?? o.code}</Link>
-                        <span>{o.code}</span>
+                        <Link href={o.href}>{o.title && `${o.title} · `}{o.code}</Link>
                     </li>
                 ))}
             </ul>

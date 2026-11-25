@@ -29,7 +29,8 @@ class NativeCourseBackupTest extends TestCase
         $target = Offering::factory()->create();
         $lesson = Module::factory()->create(['offering_id' => $source->id, 'kind' => 'draft:topic']);
         $material = LearningMaterial::factory()->create(['module_id' => $lesson->id, 'download_allowed' => false]);
-        $file = app(PrivateUpload::class)->store(UploadedFile::fake()->createWithContent('Notes.txt', 'Field notes'));
+        $pixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j4eQAAAAASUVORK5CYII=', true);
+        $file = app(PrivateUpload::class)->store(UploadedFile::fake()->createWithContent('Plate.png', $pixel));
         MaterialVersion::factory()->create(['material_id' => $material->id, 'body' => 'Old revision']);
         MaterialVersion::factory()->create(['material_id' => $material->id, 'file_id' => $file->id, 'revision' => 2, 'body' => 'Instructions']);
         $forum = Forum::forceCreate(['offering_id' => $source->id, 'title' => 'Reading circle']);
@@ -53,7 +54,8 @@ class NativeCourseBackupTest extends TestCase
         $this->assertFalse($copy->download_allowed);
         $this->assertSame('Instructions', $revision->body);
         $this->assertNotSame($file->object_key, $revision->file->object_key);
-        $this->assertSame('Field notes', Storage::disk('local')->get($revision->file->object_key));
+        $this->assertSame('image/png', $revision->file->media_type);
+        $this->assertSame($pixel, Storage::disk('local')->get($revision->file->object_key));
         $this->assertDatabaseHas('forums', ['offering_id' => $target->id, 'title' => 'Reading circle']);
         $this->assertDatabaseCount('posts', 1);
         $this->assertDatabaseCount('enrolments', 1);

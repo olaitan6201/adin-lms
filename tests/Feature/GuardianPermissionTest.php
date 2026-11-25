@@ -41,11 +41,13 @@ class GuardianPermissionTest extends TestCase
         $this->actingAs($other)->get('/guardian')->assertInertia(fn (AssertableInertia $page) => $page->has('approvals', 0));
         $this->get($detail)->assertForbidden();
         $this->actingAs($guardian)->get('/guardian')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Guardian/Progress')->has('approvals', 1)->where('approvals.0.href', $detail)->missing('student'));
+            ->component('Guardian/Progress')->has('approvals', 1)->where('approvals.0.href', $detail)
+            ->where('approvals.0.reference', substr($approval->id, -8))->missing('student'));
         $this->get('/profile')->assertInertia(fn (AssertableInertia $page) => $page
             ->where('sharedProgressUrl', '/guardian')->where('guardianPermissionsUrl', null));
         $this->get($detail)->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Guardian/Progress')->where('completed_lessons', 0)->missing('student')->missing('grades'));
+            ->component('Guardian/Progress')->where('completed_lessons', 0)->where('reference', substr($approval->id, -8))
+            ->missing('student')->missing('grades'));
         $revoke = route('guardian.permissions.destroy', $approval);
         $this->delete($revoke)->assertForbidden();
         $this->actingAs($admin)->withSession(['security.mfa_user' => $admin->id])->delete($revoke)->assertRedirect($path);

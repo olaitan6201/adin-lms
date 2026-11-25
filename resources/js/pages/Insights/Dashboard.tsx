@@ -23,6 +23,7 @@ type Props = {
     queue: Task[];
     courses: Course[];
     releases: Release[];
+    population: Record<string, number> | null;
     tools: {
         label: string;
         href: string;
@@ -31,7 +32,7 @@ type Props = {
 
 
 
-export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools }: Props) {
+export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools, population }: Props) {
     const desk = workspaceCopy[workspace];
     return (
         <main className="portal-page">
@@ -94,6 +95,16 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                         )}
                     </section>
                     {workspace === 'study' && <ReleasedWork releases={releases} />}
+                    {population && <section className="mt-8 border-t pt-5" aria-labelledby="population-title">
+                        <h2 className="desk-section" id="population-title">Institution census</h2>
+                        <p className="desk-note">Current records, including people and units without course activity.</p>
+                        <dl className="my-3 grid grid-cols-2 gap-3">
+                            {Object.entries(population).map(([label, count]) => <div key={label}>
+                                <dt>{label}</dt><dd className="text-xl font-semibold tabular-nums">{count}</dd>
+                            </div>)}
+                        </dl>
+                        <Link className="desk-link" href="/reports?family=institution-usage">View institution usage</Link>
+                    </section>}
                 </div>
                 <aside className="portal-panel desk-shelf">
                     {tools.length > 0 && (

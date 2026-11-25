@@ -1,7 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
 import { ReportFilters, type Filters, type Options } from '../../insights/ReportFilters';
+import { UsageMeasures } from '../../insights/UsageMeasures';
 
 const names = {
+    'institution-usage': 'Institution usage',
     completion: 'Course completion',
     engagement: 'Lesson engagement',
     attendance: 'Class attendance',
@@ -9,6 +11,7 @@ const names = {
     activity: 'Academic activity',
 };
 const descriptions = {
+    'institution-usage': 'Current institution-wide populations and recorded activity over the past seven days (UTC, start exclusive and end inclusive). A zero means no matching record; credential acceptances are not a measure of time spent learning.',
     completion:
         'Completed registrations divided by current registrations. The total is weighted by registrations. A dash means there is no denominator.',
     engagement:
@@ -24,7 +27,7 @@ type Props = {
     family: Family;
     audience: string;
     filters: Filters;
-    options: Options;
+    options: Options | null;
     columns: string[];
     table: {
         rows: (string | number)[][];
@@ -34,7 +37,9 @@ type Props = {
 };
 
 export default function Reports({ family, audience, filters, options, columns, table, limitMessage }: Props) {
-    const path = (base: string, selected: Family) => `${base}?${new URLSearchParams({ ...filters, family: selected })}`;
+    const path = (base: string, selected: Family) => `${base}?${new URLSearchParams({
+        ...(selected === 'institution-usage' ? {} : filters), family: selected,
+    })}`;
     return (
         <main className="mx-auto max-w-6xl space-y-6 px-5 py-8">
             <Head title="Academic reports" />
@@ -43,7 +48,7 @@ export default function Reports({ family, audience, filters, options, columns, t
                 <h1 className="text-3xl font-semibold">Academic reports</h1>
             </header>
             <nav aria-label="Report types" className="flex flex-wrap gap-4 border-b pb-3">
-                {(Object.keys(names) as Family[]).map((key) => (
+                {(Object.keys(names) as Family[]).filter(key => key !== 'institution-usage' || audience === 'Institution').map((key) => (
                     <Link
                         key={key}
                         href={path('/reports', key)}
@@ -54,13 +59,13 @@ export default function Reports({ family, audience, filters, options, columns, t
                     </Link>
                 ))}
             </nav>
-            <ReportFilters
+            {options && <ReportFilters
                 key={path('/reports', family)}
                 path="/reports"
                 filters={filters}
                 options={options}
                 family={family}
-            />
+            />}
             <section aria-labelledby="report-title" className="space-y-3">
                 <h2 id="report-title" className="text-xl font-semibold">
                     {names[family]}
@@ -83,19 +88,20 @@ export default function Reports({ family, audience, filters, options, columns, t
                                 </dl>
                             </details>
                         )}
+                        {family === 'institution-usage' && <UsageMeasures rows={table.rows} />}
                         {table.rows.length ? (
                             <div
                                 role="region"
                                 aria-label="Report data"
                                 tabIndex={0}
-                                className="max-h-[36rem] overflow-auto"
+                                className={family === 'institution-usage' ? 'hidden overflow-auto sm:block' : 'max-h-[36rem] overflow-auto'}
                             >
                                 <table className="w-full text-left">
                                     <caption className="sr-only">{names[family]}</caption>
                                     <thead className="sticky top-0 bg-slate-100">
                                         <tr>
                                             {columns.map((col) => (
-                                                <th key={col} scope="col" className="p-2">
+                                                <th key={col} scope="col" className={family === 'institution-usage' ? 'whitespace-nowrap p-2' : 'p-2'}>
                                                     {col}
                                                 </th>
                                             ))}

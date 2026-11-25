@@ -12,6 +12,7 @@ final class DashboardWorkspace
     public function __construct(
         private InsightScope $scope,
         private StudentAgenda $agenda,
+        private InstitutionUsage $usage,
         private StudentReleases $releases,
         private MarkingQueue $marking,
         private ManagementQueue $management,
@@ -48,6 +49,7 @@ final class DashboardWorkspace
             'workspace' => $management ? 'management' : ($audience === ReportAudience::Lecturer ? 'teaching' : 'study'),
             'name' => $user->full_name,
             'queue' => $queue,
+            'population' => $audience === ReportAudience::Institution ? $this->usage->population(now('UTC')) : null,
             'releases' => ! $management && $audience === ReportAudience::Student ? $this->releases->latest($user, $scope) : [],
             'courses' => $courses,
             'tools' => $management ? $this->management->tools($user) : [],

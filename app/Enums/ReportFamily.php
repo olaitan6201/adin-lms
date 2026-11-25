@@ -9,4 +9,5 @@ enum ReportFamily: string
     case Engagement = 'engagement';
     case Attendance = 'attendance';
     case Examinations = 'examinations';
+    case InstitutionUsage = 'institution-usage';
 }

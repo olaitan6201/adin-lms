@@ -10,6 +10,7 @@ use App\Services\Insights\ExportFormat;
 use App\Services\Insights\InsightExport;
 use App\Services\Insights\InsightScope;
 use App\Services\Insights\InsightTable;
+use App\Services\Insights\InstitutionUsage;
 use App\Services\Insights\ReportLimit;
 use App\Services\Insights\ReportSelection;
 use Inertia\Inertia;
@@ -23,6 +24,7 @@ final class ReportController
         private CohortReports $cohorts,
         private InsightScope $scope,
         private ReportSelection $selection,
+        private InstitutionUsage $usage,
     ) {}
 
     public function page(InsightFilterRequest $request): Response
@@ -38,7 +40,8 @@ final class ReportController
         }
 
         return Inertia::render('Insights/Reports', [
-            'audience' => $audience->value, 'options' => $this->selection->options($request->user(), $audience, $filters),
+            'audience' => $audience->value, 'options' => $request->enum('family', ReportFamily::class) === ReportFamily::InstitutionUsage
+                ? null : $this->selection->options($request->user(), $audience, $filters),
             'filters' => $filters, 'family' => $request->input('family', 'activity'),
             'columns' => $table->columns, 'table' => ['rows' => $table->rows, 'totals' => $table->totals],
             'limitMessage' => $error,
@@ -57,6 +60,7 @@ final class ReportController
         $audience = $this->scope->audience($user);
 
         return match ($request->enum('family', ReportFamily::class) ?? ReportFamily::Activity) {
+            ReportFamily::InstitutionUsage => $this->usage->report($audience, $filters),
             ReportFamily::Activity => $this->insights->build($user, $filters)->table,
             ReportFamily::Completion => $this->cohorts->completion($user, $audience, $filters),
             ReportFamily::Engagement => $this->cohorts->engagement($user, $audience, $filters),

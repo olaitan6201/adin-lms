@@ -27,8 +27,18 @@ class BuildExamination
             ]);
             $course = $item->courseId();
             $points = BigDecimal::zero();
-            foreach (array_values($data['questions']) as $i => $row) {
-                $this->slots->add($exam, $course, $i, $row);
+            $rows = $data['selections'] ?? $data['questions'];
+            $selected = [];
+            foreach (array_values($rows) as $i => $row) {
+                if (isset($data['selections'])) {
+                    if (in_array($row['version_id'], $selected, true)) {
+                        throw ValidationException::withMessages(['selections' => 'Select each question revision only once.']);
+                    }
+                    $selected[] = $row['version_id'];
+                    $this->slots->selectVersion($exam, $course, $i, $row);
+                } else {
+                    $this->slots->add($exam, $course, $i, $row);
+                }
                 $points = $points->plus((string) $row['points']);
             }
 

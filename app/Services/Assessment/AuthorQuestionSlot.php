@@ -48,6 +48,19 @@ class AuthorQuestionSlot
         ]);
     }
 
+    public function selectVersion(Examination $exam, string $course, int $position, array $row): void
+    {
+        $version = QuestionVersion::whereHas('question.bank', fn ($query) => $query->where('course_id', $course))
+            ->findOrFail($row['version_id']);
+        ExamSlot::forceCreate([
+            'exam_id' => $exam->id,
+            'position' => $position + 1,
+            'points' => $row['points'],
+            'fixed_version_id' => $version->id,
+            'draw_from_bank_id' => null,
+        ]);
+    }
+
     private function choices(string $lines): array
     {
         return array_values(array_unique(preg_split('/\\R/', trim($lines), -1, PREG_SPLIT_NO_EMPTY)));

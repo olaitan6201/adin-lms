@@ -3,13 +3,15 @@ import { PortalField, SubmitButton } from '../components/PortalForm';
 import { AccountTask } from '../components/identity/AccountTask';
 
 type ProfileProps = {
+    sharedProgressUrl: string | null;
+    guardianPermissionsUrl: string | null;
     profile: {
         full_name: string;
         email: string;
     };
 };
 
-export default function Profile({ profile }: ProfileProps) {
+export default function Profile({ profile, sharedProgressUrl, guardianPermissionsUrl }: ProfileProps) {
     return (
         <AccountTask
             context="My account"
@@ -40,6 +42,8 @@ export default function Profile({ profile }: ProfileProps) {
                     </>
                 )}
             </Form>
+            {sharedProgressUrl && <Link className="desk-link" href={sharedProgressUrl}>Shared progress</Link>}
+            {guardianPermissionsUrl && <Link className="desk-link" href={guardianPermissionsUrl}>Manage guardian permissions</Link>}
             <Link className="desk-link" href="/courses">
                 My courses
             </Link>

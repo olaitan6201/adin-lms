@@ -1,7 +1,13 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../../components/academics/DeskHeading';
 
-type Session = { id: string; full_name: string; email: string; last_seen: string; expires_at: string };
+type Session = {
+    id: string;
+    full_name: string;
+    email: string;
+    last_seen: string;
+    expires_at: string;
+};
 export default function Sessions({
     sessions,
     previous,
@@ -15,8 +21,7 @@ export default function Sessions({
         <main className="portal-page space-y-4">
             <Head title="Active sessions" />
             <DeskHeading title="Active sessions" area="ICT operations">
-                Check the account and last active time before revoking a session. That device must then sign
-                in again.
+                Check the account and last active time before revoking a session. That device must then sign in again.
             </DeskHeading>
             {!sessions.length && <p>No active sessions.</p>}
             <ol className="divide-y">
@@ -41,8 +46,7 @@ export default function Sessions({
                     </li>
                 ))}
             </ol>
-            {previous && <Link href={previous}>Previous page</Link>}{' '}
-            {next && <Link href={next}>Next page</Link>}
+            {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
         </main>
     );
 }

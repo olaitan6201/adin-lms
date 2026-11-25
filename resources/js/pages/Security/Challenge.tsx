@@ -13,12 +13,7 @@ export default function Challenge() {
             <p id="code-help" className="desk-note">
                 Enter the current six-digit code, including any leading zero.
             </p>
-            <Form
-                action="/security/challenge"
-                method="post"
-                resetOnError={['code']}
-                className="grid gap-4"
-            >
+            <Form action="/security/challenge" method="post" resetOnError={['code']} className="grid gap-4">
                 {({ errors, processing }) => (
                     <>
                         <PortalField
@@ -42,8 +37,8 @@ export default function Challenge() {
                     Need help with your authenticator?
                 </summary>
                 <p className="desk-note">
-                    For first-time setup, ask ICT for a setup key and add it to your app. If you no
-                    longer have access to your authenticator, contact ICT.
+                    For first-time setup, ask ICT for a setup key and add it to your app. If you no longer have access
+                    to your authenticator, contact ICT.
                 </p>
             </details>
             <Link href="/logout" method="post" as="button" className="portal-action w-fit">

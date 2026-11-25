@@ -34,10 +34,12 @@ export default function LoginHistory({ events, sessionsUrl, previous, next }: Lo
             <header className="desk-heading">
                 <p className="portal-kicker">Institutional security</p>
                 <h1 className="portal-title">Sign-in history</h1>
-                <p>
-                    Review password checks, authenticator activity and session changes across accounts.
-                </p>
-                {sessionsUrl && <Link className="desk-link" href={sessionsUrl}>Manage active sessions</Link>}
+                <p>Review password checks, authenticator activity and session changes across accounts.</p>
+                {sessionsUrl && (
+                    <Link className="desk-link" href={sessionsUrl}>
+                        Manage active sessions
+                    </Link>
+                )}
             </header>
             <section aria-labelledby="activity-heading" className="portal-panel mt-6">
                 <h2 id="activity-heading" className="desk-section">
@@ -47,9 +49,7 @@ export default function LoginHistory({ events, sessionsUrl, previous, next }: Lo
                     <p className="desk-empty">No authentication events recorded on this page.</p>
                 ) : (
                     <>
-                        <p className="desk-note">
-                            Newest first. Times are shown in your local time zone.
-                        </p>
+                        <p className="desk-note">Newest first. Times are shown in your local time zone.</p>
                         <ol className="mt-4 divide-y border-y border-[var(--portal-line)]">
                             {events.map((event) => (
                                 <li className="grid gap-1 py-4 sm:grid-cols-[1fr_auto]" key={event.id}>

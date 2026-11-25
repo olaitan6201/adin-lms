@@ -1,4 +1,5 @@
 /.agents
+/docs/
 /.agent-work/
 *.log
 .DS_Store

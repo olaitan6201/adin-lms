@@ -1,11 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { GroupManager, type Group, type Registration } from '../../components/community/GroupManager';
-import {
-    Announcements,
-    CommunityPage,
-    EntryForm,
-    type Entry,
-} from '../../components/community/Elements';
+import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
 type Props = {
     offering: {
@@ -26,15 +21,7 @@ type Props = {
     announcements: Entry[];
 };
 
-export default function Board({
-    offering,
-    canManage,
-    forums,
-    groups,
-    registrations,
-    members,
-    announcements,
-}: Props) {
+export default function Board({ offering, canManage, forums, groups, registrations, members, announcements }: Props) {
     const base = `/community/courses/${offering.id}`;
 
     return (
@@ -57,12 +44,7 @@ export default function Board({
                 <EntryForm action={`${base}/messages`} title="Send private message">
                     <label>
                         Recipient{' '}
-                        <select
-                            name="recipient_id"
-                            className="max-w-full border p-2"
-                            required
-                            defaultValue=""
-                        >
+                        <select name="recipient_id" className="max-w-full border p-2" required defaultValue="">
                             <option value="" disabled>
                                 Select a participant
                             </option>
@@ -78,19 +60,10 @@ export default function Board({
             {canManage && (
                 <>
                     <GroupManager base={base} groups={groups} registrations={registrations} />
-                    <EntryForm
-                        action={`${base}/announcements`}
-                        title="Publish course announcement"
-                    />
+                    <EntryForm action={`${base}/announcements`} title="Publish course announcement" />
                     <EntryForm action={`${base}/forums`} title="Create discussion" body={false}>
                         <label>
-                            Title{' '}
-                            <input
-                                name="title"
-                                maxLength={191}
-                                required
-                                className="block w-full border p-2"
-                            />
+                            Title <input name="title" maxLength={191} required className="block w-full border p-2" />
                         </label>
                         <label>
                             Audience{' '}

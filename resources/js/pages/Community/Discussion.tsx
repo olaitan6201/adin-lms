@@ -42,36 +42,43 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                                 <p>Reply to a hidden post</p>
                             ))}
                         <p className="whitespace-pre-wrap break-words">{post.body}</p>
-                        <button className="mr-4 py-2 underline" onClick={() => {
-                            setReply(post.id);
-                            composer.current?.querySelector('textarea')?.focus();
-                        }}>Reply to post {i + 1}</button>
+                        <button
+                            className="mr-4 py-2 underline"
+                            onClick={() => {
+                                setReply(post.id);
+                                composer.current?.querySelector('textarea')?.focus();
+                            }}
+                        >
+                            Reply to post {i + 1}
+                        </button>
                         {canModerate && (
-                            <Link
-                                as="button"
-                                className="underline"
-                                method="patch"
-                                href={`${action}/${post.id}/hide`}
-                            >
+                            <Link as="button" className="underline" method="patch" href={`${action}/${post.id}/hide`}>
                                 Hide post {i + 1}
                             </Link>
                         )}
                     </li>
                 ))}
             </ol>
-            <div ref={composer}><EntryForm action={action} title="Post to discussion">
-                <label>
-                    Reply to{' '}
-                    <select name="parent_id" className="border p-2" value={reply} onChange={event => setReply(event.target.value)}>
-                        <option value="">New topic</option>
-                        {posts.map((p, i) => (
-                            <option key={p.id} value={p.id}>
-                                Post {i + 1}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-            </EntryForm></div>
+            <div ref={composer}>
+                <EntryForm action={action} title="Post to discussion">
+                    <label>
+                        Reply to{' '}
+                        <select
+                            name="parent_id"
+                            className="border p-2"
+                            value={reply}
+                            onChange={(event) => setReply(event.target.value)}
+                        >
+                            <option value="">New topic</option>
+                            {posts.map((p, i) => (
+                                <option key={p.id} value={p.id}>
+                                    Post {i + 1}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </EntryForm>
+            </div>
         </CommunityPage>
     );
 }

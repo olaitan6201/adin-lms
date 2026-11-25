@@ -1,10 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {
-    Announcements,
-    CommunityPage,
-    EntryForm,
-    type Entry,
-} from '../../components/community/Elements';
+import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
 type Person = { full_name: string };
 type Props = {
@@ -21,7 +16,11 @@ type Props = {
 export default function Inbox({ notices, messages, announcements, canAnnounce, canRecover }: Props) {
     return (
         <CommunityPage title="Community inbox">
-            {canRecover && <Link className="underline" href="/community/delivery-failures">Review failed email deliveries</Link>}
+            {canRecover && (
+                <Link className="underline" href="/community/delivery-failures">
+                    Review failed email deliveries
+                </Link>
+            )}
             <section>
                 <h2 className="text-xl font-semibold">
                     Notifications ({notices.filter((n) => !n.read_at).length} unread)
@@ -61,12 +60,7 @@ export default function Inbox({ notices, messages, announcements, canAnnounce, c
                     ))}
                 </ul>
             </section>
-            {canAnnounce && (
-                <EntryForm
-                    action="/community/announcements"
-                    title="Publish institutional announcement"
-                />
-            )}
+            {canAnnounce && <EntryForm action="/community/announcements" title="Publish institutional announcement" />}
         </CommunityPage>
     );
 }

@@ -21,6 +21,14 @@ See `README.md` for local setup. Run `php artisan test`, `vendor/bin/pint --test
 
 ## Engineering bar
 
+- In each `routes/web/` module, put imports before route registration. Group
+  endpoints by resource prefix or controller under one common middleware group;
+  keep guest, authenticated and provider callbacks separate where access differs.
+  Name endpoints at declaration and preserve public URLs on refactors.
+- Model closed sets of domain states and audit outcomes with string-backed
+  enums. Cast persisted values at the model and serialize the wire value at
+  the response boundary. Human-readable copy and unique route names are not enums.
+
 - Keep controllers thin. Use Form Requests, policies, API Resources for outbound records, backed enums on string columns, and domain services under `app/Services/<Domain>/`. Split routes by prefix as modules grow. Prefer Laravel facilities before adding packages.
 - Target 150 lines per authored PHP/TS/TSX file, tests included; 200 is the hard review limit. Split by responsibility. One statement per line.
 - Use PHPUnit feature tests at HTTP and persistence boundaries; place React tests beside the module in `__tests__/` when introducing Vitest. Verify material UI changes on mobile and desktop, including keyboard use, empty/error states and WCAG 2.2 AA.

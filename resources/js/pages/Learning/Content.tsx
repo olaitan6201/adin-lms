@@ -48,7 +48,9 @@ export default function Content({
             </header>
             {staff && (
                 <LessonForm
+                    key={lessons.at(-1)?.position ?? 0}
                     startOverview={startOverview}
+                    lessons={lessons}
                     lessonKinds={lessonKinds}
                     quizzes={quizzes}
                     base={base}
@@ -57,6 +59,7 @@ export default function Content({
             )}
             {!lessons.length && <p>No lessons are available yet.</p>}
             {lessons.map((lesson) => {
+                const prior = lesson.locked && lessons.find((item) => item.id === lesson.prerequisite_id);
                 const rendered = new Set<string>();
                 const resource = (id: string) => {
                     const material = lesson.materials.find((m) => m.id === id);
@@ -88,12 +91,16 @@ export default function Content({
                         <h2 className="text-xl font-semibold">
                             {lesson.position}. {lesson.title}
                         </h2>
-                        <Manuscript text={lesson.body} resource={resource} />
+                        {lesson.locked ? (
+                            <p>Locked · {prior ? <>Complete <a href={`#lesson-${prior.id}`}>{prior.title}</a> first.</>
+                                : 'The required earlier lesson is not currently available.'}</p>
+                        ) : <Manuscript text={lesson.body} resource={resource} />}
                         {lesson.materials.filter((m) => !rendered.has(m.id)).map((m) => resource(m.id))}
                         {staff ? (
                             <>
                                 <LessonForm
                                     lessonKinds={lessonKinds}
+                                    lessons={lessons}
                                     quizzes={quizzes}
                                     base={base}
                                     lesson={lesson}
@@ -101,7 +108,7 @@ export default function Content({
                                 />
                                 <ResourceForm action={`${base}/lessons/${lesson.id}/materials`} />
                             </>
-                        ) : preview ? null : lesson.completed_at ? (
+                        ) : preview || lesson.locked ? null : lesson.completed_at ? (
                             <p>Completed {new Date(lesson.completed_at).toLocaleDateString()}</p>
                         ) : (
                             <EntryForm action={`${base}/lessons/${lesson.id}/complete`} label="Mark lesson complete" />

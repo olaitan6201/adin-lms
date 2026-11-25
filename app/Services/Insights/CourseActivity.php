@@ -5,6 +5,7 @@ namespace App\Services\Insights;
 use App\Enums\Learning\ClassStatus;
 use App\Enums\OfferingStatus;
 use App\Models\User;
+use App\Services\Learning\LessonAccess;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +45,7 @@ final class CourseActivity
             $table->totals['My uploaded files'] = (clone $materials)->where('v.created_by', $user->id)->whereNotNull('v.file_id')->count();
         } else {
             ReportRelease::material($materials);
+            $materials->whereIn('m.id', LessonAccess::unlocked($user->id));
         }
 
         foreach ($materials->tap(ReportLimit::apply(...))->distinct()->orderBy('resource.title')->get(['resource.id', 'resource.title', 'm.offering_id', 'm.title as lesson']) as $m) {

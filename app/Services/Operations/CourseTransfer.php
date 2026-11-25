@@ -104,6 +104,9 @@ final class CourseTransfer
         $modules = Module::where('offering_id', $offering->id)->orderBy('position')->limit(51)->cursor();
         $total = 0;
         foreach ($modules as $index => $module) {
+            if ($module->prerequisite_id) {
+                TextAssetArchive::reject('Lesson prerequisites cannot be represented in this package.');
+            }
             $total += strlen($module->body ?? '');
             if ($index >= 50 || $module->kind !== LessonKind::Chapter->value || $module->opens_at || $module->closes_at
                 || $total > TextAssetArchive::MAX_TOTAL_BYTES) {

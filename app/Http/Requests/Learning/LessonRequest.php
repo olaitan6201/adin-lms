@@ -21,6 +21,7 @@ class LessonRequest extends FormRequest
             'kind' => ['required', Rule::enum(LessonKind::class)],
             'published' => 'required|boolean',
             'body' => 'nullable|string|max:250000',
+            'prerequisite_id' => 'nullable|uuid',
             'position' => [
                 'required',
                 'integer',

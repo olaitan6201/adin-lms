@@ -71,7 +71,7 @@ final class ScanAcademicNotices
             }
 
             $this->outbox->record(
-                $this->audience->learners($version->material->module->offering_id),
+                $this->audience->materialLearners($version->material->module),
                 'material:'.$version->id,
                 'A new version of course material is available.',
             );

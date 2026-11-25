@@ -12,6 +12,7 @@ use App\Services\Learning\CourseAssessments;
 use App\Services\Learning\CourseOutline;
 use App\Services\Learning\LessonCatalogue;
 use App\Services\Learning\LessonCompletion;
+use App\Services\Learning\LessonWriter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -52,20 +53,10 @@ final class ContentController
     public function save(
         LessonRequest $request,
         Offering $offering,
+        LessonWriter $writer,
         ?Module $lesson = null,
     ): RedirectResponse {
-        abort_if($lesson && $lesson->offering_id !== $offering->id, 404);
-        ($lesson ?? new Module)
-            ->forceFill([
-                ...$request->safe()->except(['published', 'kind']),
-                'offering_id' => $offering->id,
-                'opens_at' => $request->date('opens_at')?->utc(),
-                'closes_at' => $request->date('closes_at')?->utc(),
-                'kind' => $request
-                    ->enum('kind', LessonKind::class)
-                    ->stored($request->boolean('published')),
-            ])
-            ->saveOrFail();
+        $writer->save($request, $offering, $lesson);
 
         return to_route('learning.index', $offering);
     }
@@ -84,12 +75,7 @@ final class ContentController
         LearningPolicy $policy,
         LessonCompletion $completion,
     ): RedirectResponse {
-        abort_unless(
-            $policy->published($offering) &&
-                $lesson->offering_id === $offering->id &&
-                $policy->released($lesson),
-            404,
-        );
+        abort_unless($lesson->offering_id === $offering->id, 404);
         $completion->complete($policy->enrolment($request->user()->id, $offering)?->id, $lesson);
 
         return to_route('learning.index', $offering);

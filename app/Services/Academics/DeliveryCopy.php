@@ -37,7 +37,13 @@ class DeliveryCopy
         $days = (int) CarbonImmutable::parse($source->semester->starts_on)->diffInDays(
             CarbonImmutable::parse($target->semester->starts_on),
         );
-        $modules = $this->copyRows('modules', 'offering_id', $sourceId, $target->id, days: $days);
+        $modules = $this->copyRows('modules', 'offering_id', $sourceId, $target->id, days: $days, defaults: ['prerequisite_id' => null]);
+        foreach (DB::table('modules')->where('offering_id', $sourceId)->whereNotNull('prerequisite_id')->get() as $lesson) {
+            if (! isset($modules[$lesson->prerequisite_id])) {
+                throw ValidationException::withMessages(['source_id' => 'A prerequisite belongs to another offering.']);
+            }
+            DB::table('modules')->where('id', $modules[$lesson->id])->update(['prerequisite_id' => $modules[$lesson->prerequisite_id]]);
+        }
         $resources = [];
         foreach ($modules as $old => $new) {
             $materials = $this->copyRows('learning_materials', 'module_id', $old, $new, days: $days);

@@ -26,6 +26,8 @@ export interface Material {
     versions: Version[];
 }
 export interface Lesson {
+    locked: boolean;
+    prerequisite_id: string | null;
     published: boolean;
     id: string;
     title: string;

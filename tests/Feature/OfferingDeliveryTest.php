@@ -111,12 +111,14 @@ class OfferingDeliveryTest extends TestCase
         $into = Offering::where('external_offering_id', 'DEMO-CSC101-2026-2')->sole();
         $original = Module::where('offering_id', $from->id)->sole();
         $sourceMaterial = LearningMaterial::where('module_id', $original->id)->sole();
+        Module::factory()->create(['offering_id' => $from->id, 'position' => 2, 'prerequisite_id' => $original->id]);
         $original->forceFill(['body' => '{{resource:'.$sourceMaterial->id.'}}'])->save();
         $from->forceFill(['activity_order' => [$original->id]])->save();
         $path = "/academics/delivery/$into->id/copy";
         $this->post($path, ['source_id' => $from->id])->assertSessionHasNoErrors();
         $this->assertSame($from->id, $into->refresh()->copied_from);
-        $copy = Module::where('offering_id', $into->id)->sole();
+        $copy = Module::where('offering_id', $into->id)->where('position', 1)->sole();
+        $this->assertDatabaseHas('modules', ['offering_id' => $into->id, 'position' => 2, 'prerequisite_id' => $copy->id]);
         $material = LearningMaterial::where('module_id', $copy->id)->sole();
         $this->assertSame('{{resource:'.$material->id.'}}', $copy->body);
         $this->assertSame([$copy->id], $into->activity_order);

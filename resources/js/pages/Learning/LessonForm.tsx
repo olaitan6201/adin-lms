@@ -1,4 +1,5 @@
 import { EntryForm } from './EntryForm';
+import { useState } from 'react';
 import { AvailabilityFields } from './AvailabilityFields';
 import type { Choice, Lesson } from './contracts';
 import { ManuscriptEditor } from './ManuscriptEditor';
@@ -7,6 +8,7 @@ export function LessonForm({
     base,
     lesson,
     position,
+    lessons,
     lessonKinds,
     quizzes,
     startOverview = false,
@@ -14,10 +16,12 @@ export function LessonForm({
     base: string;
     lesson?: Lesson;
     position: number;
+    lessons: Lesson[];
     lessonKinds: string[];
     quizzes: Choice[];
     startOverview?: boolean;
 }) {
+    const [order, setOrder] = useState(position);
     return (
         <details open={startOverview || undefined}>
             <summary>{lesson ? 'Edit lesson or publish' : 'Author a lesson'}</summary>
@@ -28,7 +32,17 @@ export function LessonForm({
                 </label>
                 <label>
                     Order
-                    <input type="number" min="1" name="position" required defaultValue={position} />
+                    <input type="number" min="1" name="position" required defaultValue={position}
+                        onChange={(event) => setOrder(event.currentTarget.valueAsNumber)} />
+                </label>
+                <label>
+                    Require completion of
+                    <select name="prerequisite_id" defaultValue={lesson?.prerequisite_id ?? ''}>
+                        <option value="">No prior lesson</option>
+                        {lessons.filter((prior) => prior.id !== lesson?.id && prior.position < order).map((prior) => (
+                            <option key={prior.id} value={prior.id}>{prior.position}. {prior.title}</option>
+                        ))}
+                    </select>
                 </label>
                 <label>
                     Organisation

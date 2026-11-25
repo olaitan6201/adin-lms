@@ -7,15 +7,23 @@ use App\Enums\RoleCode;
 use App\Enums\ScopeType;
 use App\Models\Enrolment;
 use App\Models\GroupMember;
+use App\Models\Module;
 use App\Models\RoleGrant;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\Learning\LessonAccess;
 use App\Services\Roster\RegistrationInterval;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 
 final class CommunityAudience
 {
+    public function materialLearners(Module $lesson, ?CarbonImmutable $registeredBy = null): Builder
+    {
+        return $this->learners($lesson->offering_id, registeredBy: $registeredBy)
+            ->when($lesson->prerequisite_id, fn ($q) => $q->whereIn('id', LessonAccess::completers($lesson)));
+    }
+
     /** @return Builder<User> */
     public function learners(string $offering, ?string $group = null, ?CarbonImmutable $registeredBy = null): Builder
     {

@@ -15,6 +15,7 @@ export interface Activity {
     dateLabel?: string;
     complete?: boolean;
     actionable?: boolean;
+    locked?: boolean;
     readingPreview?: string | null;
 }
 
@@ -43,7 +44,8 @@ export default function Course({
     const visible = teaching || course.status === 'published';
     const title = course.title || course.external_offering_id;
     const lessons = activities.filter((a) => a.type === 'Lesson');
-    const next = lessons.find((lesson) => !lesson.complete) ?? activities.find((a) => a.actionable);
+    const next = lessons.find((lesson) => !lesson.complete && !lesson.locked)
+        ?? activities.find((a) => a.actionable) ?? lessons.find((lesson) => !lesson.complete);
     const completed = lessons.filter((a) => a.complete).length;
     const base = `/courses/${course.id}`;
 
@@ -76,14 +78,15 @@ export default function Course({
                         <section className="wl-focus">
                             <p className="wl-label">{next ? `Up next / ${next.type}` : 'Progress'}</p>
                             <h2>{next?.title ?? 'Reading complete'}</h2>
+                            {next?.locked && <p>{next.detail}</p>}
                             {next?.readingPreview && <p className="wl-reading">{next.readingPreview}</p>}
                             {lessons.length > 0 && (
                                 <>
                                     <p>
-                                        {completed} of {lessons.length} available lessons complete
+                                        {completed} of {lessons.length} listed lessons complete
                                     </p>
                                     <progress
-                                        aria-label="Available lessons completed"
+                                        aria-label="Listed lessons completed"
                                         max={lessons.length}
                                         value={completed}
                                     />

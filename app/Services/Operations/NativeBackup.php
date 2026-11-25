@@ -27,6 +27,7 @@ final class NativeBackup
         $lessons = [];
         $budget = 0;
         foreach (Module::where('offering_id', $offering->id)->orderBy('position')->limit(51)->cursor() as $module) {
+            NativeRules::check(! $module->prerequisite_id, 'Lesson prerequisites cannot be represented in this backup.');
             if ($module->opens_at || $module->closes_at || count($lessons) >= 50) {
                 TextAssetArchive::reject('Backups support up to 50 unscheduled lessons.');
             }

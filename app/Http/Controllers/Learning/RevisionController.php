@@ -8,6 +8,7 @@ use App\Models\MaterialVersion;
 use App\Models\Module;
 use App\Models\Offering;
 use App\Policies\LearningPolicy;
+use App\Services\Learning\LessonAccess;
 use App\Services\Learning\PrivateUpload;
 use App\Services\Learning\ResourceFileFormat;
 use App\Services\Learning\RevisionWriter;
@@ -47,6 +48,7 @@ final class RevisionController
         abort_unless(
             $staff ||
                 ($policy->released($material->module) &&
+                    LessonAccess::unlocked($request->user()->id)->where('lesson.id', $material->module_id)->exists() &&
                     $policy->released($material) &&
                     $material->download_allowed &&
                     ! MaterialVersion::where('material_id', $material->id)

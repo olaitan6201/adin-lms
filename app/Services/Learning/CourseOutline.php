@@ -29,14 +29,18 @@ final class CourseOutline
         $modules = $visible ? Module::where('offering_id', $offering->id)->orderBy('position')
             ->get(['id', 'kind', 'title', 'body', 'opens_at', 'closes_at'])
             ->filter(fn ($module) => $staff || $this->policy->released($module))->values() : collect();
+        $unlocked = $staff ? $modules->pluck('id')->flip() : LessonAccess::unlocked($user->id)
+            ->where('lesson.offering_id', $offering->id)->pluck('lesson.id')->flip();
         $activities = $modules->map(fn ($module) => [
             'id' => $module->id,
             'type' => 'Lesson',
             'title' => $module->title,
             'detail' => str_starts_with($module->kind, LessonKind::DRAFT_PREFIX) ? 'Draft'
-                : ($this->policy->released($module) ? 'Available' : 'Outside release window'),
+                : (! $unlocked->has($module->id) ? 'Complete the prerequisite lesson first'
+                    : ($this->policy->released($module) ? 'Available' : 'Outside release window')),
             'complete' => $completed->has($module->id),
-            'readingPreview' => $staff ? null : Str::of($module->body ?? '')
+            'locked' => ! $unlocked->has($module->id),
+            'readingPreview' => $staff || ! $unlocked->has($module->id) ? null : Str::of($module->body ?? '')
                 ->replaceMatches('/\{\{resource:[a-f0-9-]+\}\}/', '')
                 ->replaceMatches('/\[([^\]]+)\]\([^)]+\)/', '$1')
                 ->squish()->limit(320)->toString(),

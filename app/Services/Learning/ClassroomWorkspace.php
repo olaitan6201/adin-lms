@@ -22,6 +22,7 @@ final class ClassroomWorkspace
     public function props(Offering $offering, User $user, bool $staff): array
     {
         $materials = LearningMaterial::with('module')
+            ->when(! $staff, fn ($q) => $q->whereIn('module_id', LessonAccess::unlocked($user->id)))
             ->whereHas('module', fn ($q) => $q->where('offering_id', $offering->id))
             ->get()
             ->filter(

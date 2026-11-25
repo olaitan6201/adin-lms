@@ -76,6 +76,7 @@ final class TimedReleaseCapture
             }
 
             $body = 'A new version of course material was released.';
+            $recipients = $this->audience->materialLearners($module, $at);
         } else {
             $work = Assignment::find($event->source);
             if ($work?->item->gradebook->offering_id !== $course->id || $work->opens_at->gt($at) || $work->closes_at->lte($at)) {
@@ -93,6 +94,6 @@ final class TimedReleaseCapture
             }
         }
 
-        $this->outbox->record($this->audience->learners($course->id, registeredBy: $at), $key, $body);
+        $this->outbox->record($recipients ?? $this->audience->learners($course->id, registeredBy: $at), $key, $body);
     }
 }

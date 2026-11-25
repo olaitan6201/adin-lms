@@ -64,6 +64,19 @@ class OperationsPortabilityTest extends TestCase
         $this->getJson("$url/export/native")->assertForbidden();
     }
 
+    public function test_exports_refuse_to_drop_lesson_prerequisites(): void
+    {
+        $this->operator(RoleCode::InstitutionalAdmin);
+        $course = Offering::factory()->create();
+        $prior = Module::factory()->create(['offering_id' => $course->id, 'position' => 1, 'kind' => 'chapter']);
+        Module::factory()->create(['offering_id' => $course->id, 'position' => 2, 'kind' => 'chapter', 'prerequisite_id' => $prior->id]);
+        foreach (['native', 'scorm'] as $format) {
+            $this->getJson("/operations/courses/$course->id/export/$format")->assertUnprocessable()
+                ->assertJsonValidationErrors('package');
+        }
+        $this->assertDatabaseMissing('audit_logs', ['action' => 'course.exported', 'subject_key' => $course->id]);
+    }
+
     public function test_invalid_packages_leave_the_target_unchanged(): void
     {
         $source = Offering::factory()->create();

@@ -1,5 +1,6 @@
 import { workspaceCopy } from '../../insights/workspaceCopy';
 import { Head, Link } from '@inertiajs/react';
+import { LearnerTime } from '../../components/LearnerTime';
 import { ReleasedWork, type Release } from '../../insights/ReleasedWork';
 
 type Task = {
@@ -68,14 +69,7 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                                                 <p className="portal-kicker">{task.kind}</p>
                                                 <h3>{task.title}</h3>
                                                 <p className="desk-note">{task.context}</p>
-                                                {date && (
-                                                    <time className="desk-note" dateTime={task.at!}>
-                                                        {date.toLocaleString(undefined, {
-                                                            dateStyle: 'medium',
-                                                            timeStyle: 'short',
-                                                        })}
-                                                    </time>
-                                                )}
+                                                {task.at && <LearnerTime className="desk-note" instant={task.at} />}
                                                 <Link className="desk-link" href={task.href}>
                                                     {task.action}
                                                     <span aria-hidden="true"> →</span>

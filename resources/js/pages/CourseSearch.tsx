@@ -33,16 +33,15 @@ function resultSummary({ term, matches, truncated }: SearchProps): string {
 
 export default function CourseSearch(props: SearchProps) {
     return (
-        <main className="mx-auto max-w-3xl px-6 py-10">
+        <main className="portal-page">
             <Head title="Search my courses" />
-            <header className="space-y-2">
-                <Link href="/courses" className="underline">
-                    My courses
-                </Link>
-                <h1 className="text-3xl font-semibold">Search my courses</h1>
+            <Link href="/courses" className="desk-link">← My courses</Link>
+            <header className="desk-heading">
+                <p className="portal-kicker">Course catalogue</p>
+                <h1 className="portal-title">Search my courses</h1>
                 <p>Find a published course in your current registrations.</p>
             </header>
-            <Form action="/search" method="get" role="search" className="my-6">
+            <Form action="/search" method="get" role="search" className="my-6 max-w-2xl">
                 {({ processing, errors }) => (
                     <>
                         <label htmlFor="course-query" className="block font-semibold">
@@ -59,7 +58,7 @@ export default function CourseSearch(props: SearchProps) {
                                 aria-invalid={Boolean(errors.q)}
                                 aria-describedby={errors.q ? 'search-error' : undefined}
                             />
-                            <button disabled={processing}>{processing ? 'Searching…' : 'Search'}</button>
+                            <button className="portal-action" disabled={processing}>{processing ? 'Searching…' : 'Search'}</button>
                         </div>
                         {errors.q && (
                             <p id="search-error" role="alert">
@@ -73,7 +72,7 @@ export default function CourseSearch(props: SearchProps) {
             <ul className="mt-4 divide-y divide-slate-300">
                 {props.matches.map((course) => (
                     <li key={course.id} className="space-y-1 py-4">
-                        <Link href={`/courses/${course.id}`} className="font-semibold underline">
+                        <Link href={`/courses/${course.id}`} className="desk-link">
                             {course.code} · {course.title}
                         </Link>
                         {course.external_offering_id && <p>{course.external_offering_id}</p>}

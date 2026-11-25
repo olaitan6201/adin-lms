@@ -1,4 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test as base } from '@playwright/test';
+
+const test = base.extend({
+    timezoneId: async ({}, use, info) => {
+        await use(info.project.name === 'phone' ? 'America/New_York' : 'Asia/Kolkata');
+    },
+});
 
 test('a registered learner can find a course and submit a persisted revision', async ({ page }, info) => {
     const learner = info.project.name === 'desktop' ? 'ada' : 'tunde';
@@ -6,24 +12,42 @@ test('a registered learner can find a course and submit a persisted revision', a
 
     await page.goto('/login');
     await page.locator('input[name="email"]').fill(`${learner}@demo.example.test`);
-    await page.locator('input[name="password"]').fill('password');
-    await page.getByRole('button', { name: /sign in/i }).click();
+    const password = page.getByLabel('Password', { exact: true });
+    await password.fill('incorrect-password');
+    await password.press('Enter');
+    const invalid = page.getByLabel('Email, matric number or staff ID');
+    await expect(invalid).toBeFocused();
+    await expect(invalid).toHaveAccessibleDescription(/credentials/i);
+    await expect(password).toHaveValue('');
+    await invalid.press('Tab');
+    await expect(password).toBeFocused();
+    await password.fill('password');
+    await password.press('Enter');
     await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.getByRole('heading', { name: 'My study desk' })).toBeVisible();
     await expect(page.getByText('Computing reflection', { exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: 'View assignment', exact: true })).toBeVisible();
 
-    await page.goto('/search?q=CSC101');
-    await page.getByRole('link', { name: /introduction to computing/i }).click();
+    const due = await page.locator('li').filter({ has: page.getByRole('heading', { name: 'Computing reflection' }) })
+        .locator('time').innerText();
+    expect(due).toMatch(/GMT[+-]\d\d:\d\d/);
+    if (info.project.name === 'phone') await page.getByRole('button', { name: 'Menu', exact: true }).press('Enter');
+    await page.getByRole('link', { name: 'Search courses', exact: true }).press('Enter');
+    await page.getByLabel('Course search', { exact: true }).fill('CSC101');
+    await page.getByLabel('Course search', { exact: true }).press('Enter');
+    await page.getByRole('link', { name: /introduction to computing/i }).press('Enter');
     await expect(page.getByRole('heading', { name: /introduction to computing/i }).first()).toBeVisible();
 
-    await page.getByRole('link', { name: /^assessments$/i }).click();
-    await page
-        .getByRole('link', { name: /view assignment|computing reflection/i })
-        .first()
-        .click();
+    const activity = page.locator('.activity-sequence li').filter({ hasText: 'Computing reflection' });
+    await expect(activity.locator('time')).toHaveText(due);
+    await activity.getByRole('link', { name: 'Computing reflection' }).press('Enter');
+    await expect(page.getByText('Due', { exact: true }).locator('..').locator('time')).toHaveText(due);
+    await expect(page.getByText('Submissions close', { exact: true }).locator('..').locator('time')).toContainText('GMT');
+    await expect(page.getByText(/Maximum 1 MiB \(1,048,576 bytes\)/)).toBeVisible();
     await page.getByLabel('Answer', { exact: true }).fill(reflection);
-    await page.getByRole('button', { name: /submit revision/i }).click();
+    await page.getByRole('button', { name: /submit revision/i }).press('Enter');
+    await expect(page.getByRole('status').filter({ hasText: 'Revision received.' })).toBeVisible();
+    await page.getByRole('link', { name: 'View submission history' }).press('Enter');
     await expect(page.getByText(/receipt:/i).first()).toBeVisible();
 
     await page.reload();

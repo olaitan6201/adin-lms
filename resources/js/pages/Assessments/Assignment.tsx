@@ -1,5 +1,6 @@
 import '../../assessment/assessment.css';
 import { Head } from '@inertiajs/react';
+import { AssignmentLimits } from '../../assessment/AssignmentLimits';
 import { SubmissionEntry } from '../../assessment/SubmissionEntry';
 import { SubmissionMarkForm, type Rubric } from '../../assessment/SubmissionMarkForm';
 
@@ -49,6 +50,7 @@ type Props = {
     }[];
     references: string[];
 };
+
 export default function Assignment({ assignment: a, title, rubric, marker, rows, groups, references, pending }: Props) {
     const url = `/assignments/${a.id}`;
     const download = (id: string, text: string) => (
@@ -73,9 +75,7 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                 <h2>Assignment brief</h2>
                 <p className="assessment-prose">{a.instructions}</p>
                 <a href={`${url}/instructions`}>Download instructions (.txt)</a>
-                <p>
-                    Due {new Date(a.due_at).toLocaleString()} · Closes {new Date(a.closes_at).toLocaleString()}
-                </p>
+                <AssignmentLimits assignment={a} />
                 {references.map((id) => download(id, 'Download reference'))}
                 {rubric && (rubric.guide || rubric.criteria?.length) ? (
                     <details>
@@ -96,9 +96,6 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                         ))}
                     </details>
                 ) : null}
-                <p>
-                    Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()} bytes
-                </p>
                 <p>
                     {a.editable ? 'Revisions accepted.' : 'One submission only.'}{' '}
                     {a.late_policy.allow ? 'Late work accepted until close.' : 'No late submissions.'}
@@ -121,7 +118,7 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                         Revision {r.revision} · {r.late ? 'Late' : 'On time'}
                     </h3>
                     {marker && <p>Recipients: {r.recipients.join(', ')}</p>}
-                    <p>Receipt: {r.receipt}</p>
+                    <p>Receipt: <code>{r.receipt}</code></p>
                     <p>{r.body}</p>
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (

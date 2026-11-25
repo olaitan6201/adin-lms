@@ -6,7 +6,7 @@
     overflow-wrap: anywhere;
 }
 
-.assessment-page h1 {
+.assessment-page h1:not(.portal-title) {
     font-size: clamp(1.65rem, 4vw, 2.4rem);
     font-weight: 700;
     margin-bottom: 1rem;
@@ -78,8 +78,9 @@
 }
 
 .assessment-page a {
-    color: #075985;
+    color: var(--portal-ink);
     text-decoration: underline;
+    text-underline-offset: 0.2em;
     display: inline-block;
     padding: 0.5rem 0;
 }

@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import type { Activity } from '../pages/Course';
+import { LearnerTime } from './LearnerTime';
 
 export function CourseActivityList({ activities }: { activities: Activity[] }) {
     return (
@@ -13,13 +14,7 @@ export function CourseActivityList({ activities }: { activities: Activity[] }) {
                         </small>
                         <Link href={a.href}>{a.title}</Link>
                         {a.at && (
-                            <time dateTime={a.at}>
-                                {a.dateLabel}:{' '}
-                                {new Date(a.at).toLocaleString(undefined, {
-                                    dateStyle: 'medium',
-                                    timeStyle: 'short',
-                                })}
-                            </time>
+                            <p className="desk-note">{a.dateLabel}: <LearnerTime instant={a.at} /></p>
                         )}
                     </div>
                 </li>

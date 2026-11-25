@@ -16,7 +16,7 @@
     margin-bottom: 1.5rem;
 }
 
-.syllabus-title h1 {
+.syllabus-title h1:not(.portal-title) {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 650;
     line-height: 1.12;

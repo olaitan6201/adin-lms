@@ -1,4 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import { useRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
 
 interface LoginProps {
@@ -7,6 +8,8 @@ interface LoginProps {
 }
 
 export default function Login({ passwordReset, institutionSignIn }: LoginProps) {
+    const identifier = useRef<HTMLInputElement>(null);
+    const password = useRef<HTMLInputElement>(null);
     return (
         <main className="portal-page portal-entry">
             <Head title="Sign in" />
@@ -24,10 +27,20 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                     </p>
                 )}
                 {passwordReset && <p role="status">Your password has been set. Sign in with your new password.</p>}
-                <Form action="/login" method="post" resetOnError={['password']} className="grid gap-4">
+                <Form
+                    action="/login"
+                    method="post"
+                    resetOnError={['password']}
+                    className="grid gap-4"
+                    onError={(errors) => {
+                        const firstInvalid = errors.email ? identifier : password;
+                        requestAnimationFrame(() => firstInvalid.current?.focus());
+                    }}
+                >
                     {({ errors, processing }) => (
                         <>
                             <PortalField
+                                ref={identifier}
                                 label="Email, matric number or staff ID"
                                 name="email"
                                 autoComplete="username"
@@ -37,6 +50,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 required
                             />
                             <PortalField
+                                ref={password}
                                 label="Password"
                                 type="password"
                                 name="password"

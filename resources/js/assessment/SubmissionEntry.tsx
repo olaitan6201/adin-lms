@@ -15,7 +15,7 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
         <section>
             <h2>Submit your work</h2>
             <Form action={url} method="post">
-                {({ processing, errors }) => (
+                {({ processing, errors, wasSuccessful }) => (
                     <>
                         {formats.includes('txt') && (
                             <label>
@@ -42,8 +42,13 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
                         {groupWork && !groups.length && (
                             <p>Ask your lecturer to assign you to a study group before submitting.</p>
                         )}
-                        <button disabled={processing || (groupWork && !groups.length)}>Submit revision</button>
+                        <button className="portal-action" disabled={processing || (groupWork && !groups.length)}>
+                            {processing ? 'Submitting…' : 'Submit revision'}
+                        </button>
                         <p role="alert">{Object.values(errors).join(' ')}</p>
+                        <p role="status">
+                            {wasSuccessful && <>Revision received. <a href="#submissions">View submission history</a></>}
+                        </p>
                     </>
                 )}
             </Form>

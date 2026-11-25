@@ -18,6 +18,29 @@ use App\Services\Community\ScanAcademicNotices;
 
 class AcademicNoticeTest extends CommunityTestCase
 {
+    public function test_scheduled_assignment_opening_and_deadline_survive_an_entire_missed_window(): void
+    {
+        $course = $this->course();
+        [$existing] = $this->assessments($course);
+        $item = $existing->item->replicate();
+        $item->save();
+        $future = $existing->replicate()->forceFill([
+            'item_id' => $item->id,
+            'opens_at' => now()->addHours(30), 'due_at' => now()->addHours(31), 'closes_at' => now()->addHours(32),
+        ]);
+        $future->save();
+        $key = 'assignment:'.$future->id;
+        $this->assertDatabaseMissing('notifications', ['event_key' => $key]);
+        $this->assertDatabaseHas('jobs', ['queue' => 'academic-releases']);
+        $this->person('tunde')->student->enrolments()->where('offering_id', $course->id)->update(['status' => 'withdrawn']);
+        $this->travel(33)->hours();
+        $this->artisan('community:notify')->assertSuccessful();
+        $this->artisan('community:notify')->assertSuccessful();
+        foreach ([$key, 'deadline:'.$future->id.':'.$future->due_at->timestamp] as $event) {
+            $this->assertSame([$this->person('ada')->id], Notification::where('event_key', $event)->pluck('recipient_id')->all());
+        }
+    }
+
     public function test_scanning_domain_state_twice_notifies_only_the_correct_people_for_each_event(): void
     {
         $course = $this->course();

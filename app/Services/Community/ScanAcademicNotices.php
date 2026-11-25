@@ -54,10 +54,12 @@ final class ScanAcademicNotices
         }
     }
 
-    public function materials(?string $id = null): void
+    public function materials(?string $id = null, ?string $module = null, ?string $offering = null): void
     {
         $versions = MaterialVersion::with('material.module')
             ->when($id, fn ($q) => $q->whereKey($id))
+            ->when($module, fn ($q) => $q->whereHas('material', fn ($m) => $m->where('module_id', $module)))
+            ->when($offering, fn ($q) => $q->whereHas('material.module', fn ($m) => $m->where('offering_id', $offering)))
             ->where('created_at', '<=', now())
             ->whereHas('material.module.offering', fn ($q) => $q->where('status', 'published'));
         foreach ($versions->lazyById() as $version) {

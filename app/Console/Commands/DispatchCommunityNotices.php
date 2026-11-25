@@ -15,6 +15,14 @@ class DispatchCommunityNotices extends Command
 
     public function handle(ScanAcademicNotices $scanner): int
     {
+        $this->callSilent('queue:work', [
+            'connection' => 'community_events',
+            '--stop-when-empty' => true,
+            '--max-jobs' => 200,
+            '--sleep' => 0,
+            '--tries' => 5,
+            '--backoff' => 60,
+        ]);
         $scanner->run();
         $due = NotificationDelivery::dueEmails();
         foreach ($due->lazyById() as $delivery) {

@@ -31,6 +31,16 @@ return [
 
     'connections' => [
 
+        // Persist release intents on the same connection as the academic source transaction.
+        'community_events' => [
+            'driver' => 'database',
+            'connection' => null,
+            'table' => 'jobs',
+            'queue' => 'academic-releases',
+            'retry_after' => 120,
+            'after_commit' => false,
+        ],
+
         'sync' => [
             'driver' => 'sync',
         ],

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
 import { OperationsInput, CorrectionFocus } from './OperationsFields';
 
@@ -23,9 +24,9 @@ export default function RetentionPolicy({ days: retentionDays }: { days: number 
                             max={3650}
                             required
                         />
-                        <button className="my-2 bg-teal-900 p-2 text-white" disabled={processing}>
+                        <Button className="my-2" disabled={processing}>
                             Save retention period
-                        </button>
+                        </Button>
                         {recentlySuccessful && <p role="status">Retention period saved.</p>}
                     </>
                 )}

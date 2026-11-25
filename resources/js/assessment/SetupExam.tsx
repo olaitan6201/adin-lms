@@ -1,3 +1,6 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { ExamWindow } from './ExamWindow';
 import { useState } from 'react';
 import { Check, Field, Post } from './Fields';
@@ -21,27 +24,27 @@ export function SetupExam({ id }: { id: string }) {
                         <Field name={`${n}[topic]`} label="Question bank topic" />
                         <label>
                             Question type
-                            <select name={`${n}[kind]`}>
+                            <NativeSelect name={`${n}[kind]`}>
                                 {questionKinds.map((k) => (
                                     <option key={k}>{k}</option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </label>
                         <label>
                             Prompt
-                            <textarea required name={`${n}[prompt]`} />
+                            <Textarea required name={`${n}[prompt]`} />
                         </label>
                         <label>
                             Choices (one per line for MCQ and true/false)
-                            <textarea name={`${n}[options]`} />
+                            <Textarea name={`${n}[options]`} />
                         </label>
                         <label>
                             Accepted answers (one per line; MCQ/TF use one choice)
-                            <textarea name={`${n}[accepted]`} />
+                            <Textarea name={`${n}[accepted]`} />
                         </label>
                         <label>
                             Matching pairs (one left =&gt; right pair per line)
-                            <textarea name={`${n}[pairs]`} />
+                            <Textarea name={`${n}[pairs]`} />
                         </label>
                         <Field optional label="Exact accepted answer (legacy objective input)" name={`${n}[key]`} />
                         <Field type="number" name={`${n}[points]`} label="Possible points" />
@@ -49,9 +52,9 @@ export function SetupExam({ id }: { id: string }) {
                     </fieldset>
                 );
             })}
-            <button type="button" onClick={() => setCount(count + 1)}>
+            <Button variant="outline" type="button" onClick={() => setCount(count + 1)}>
                 Add slot
-            </button>
+            </Button>
         </Post>
     );
 }

@@ -1,3 +1,6 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { TeachingProposalForm } from './TeachingProposalForm';
@@ -44,20 +47,18 @@ function Decision({ action }: { action: string }) {
                 <>
                     <label className="grid">
                         Review decision
-                        <select
-                            className="border"
+                        <NativeSelect
                             name="decision"
                             value={decision}
                             onChange={(e) => setDecision(e.target.value)}
                         >
                             <option value="approved">Approve draft lessons</option>
                             <option value="rejected">Reject and request revision</option>
-                        </select>
+                        </NativeSelect>
                     </label>
                     <label className="grid">
                         Review note{decision === 'rejected' && ' (required)'}
-                        <textarea
-                            className="border"
+                        <Textarea
                             name="reason"
                             maxLength={2000}
                             required={decision === 'rejected'}
@@ -68,9 +69,9 @@ function Decision({ action }: { action: string }) {
                             {e}
                         </p>
                     ))}
-                    <button className="portal-action w-fit" disabled={processing}>
+                    <Button disabled={processing}>
                         {processing ? 'Saving…' : 'Record decision'}
-                    </button>
+                    </Button>
                 </>
             )}
         </Form>

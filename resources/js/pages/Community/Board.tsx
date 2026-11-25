@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Input } from '@/components/ui/input';
 import { Link } from '@inertiajs/react';
 import { GroupManager, type Group, type Registration } from '../../components/community/GroupManager';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
@@ -44,7 +46,7 @@ export default function Board({ offering, canManage, forums, groups, registratio
                 <EntryForm action={`${base}/messages`} title="Send private message">
                     <label>
                         Recipient{' '}
-                        <select name="recipient_id" className="max-w-full border p-2" required defaultValue="">
+                        <NativeSelect className="max-w-full" name="recipient_id" required defaultValue="">
                             <option value="" disabled>
                                 Select a participant
                             </option>
@@ -53,7 +55,7 @@ export default function Board({ offering, canManage, forums, groups, registratio
                                     {member.full_name}
                                 </option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     </label>
                 </EntryForm>
             )}
@@ -63,18 +65,18 @@ export default function Board({ offering, canManage, forums, groups, registratio
                     <EntryForm action={`${base}/announcements`} title="Publish course announcement" />
                     <EntryForm action={`${base}/forums`} title="Create discussion" body={false}>
                         <label>
-                            Title <input name="title" maxLength={191} required className="block w-full border p-2" />
+                            Title <Input name="title" maxLength={191} required />
                         </label>
                         <label>
                             Audience{' '}
-                            <select name="group_id" className="max-w-full border p-2">
+                            <NativeSelect className="max-w-full" name="group_id">
                                 <option value="">Whole course</option>
                                 {groups.map((group) => (
                                     <option key={group.id} value={group.id}>
                                         {group.name}
                                     </option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </label>
                     </EntryForm>
                 </>

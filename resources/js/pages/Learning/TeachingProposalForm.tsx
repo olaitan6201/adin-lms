@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { EntryForm } from './EntryForm';
 import type { Plan } from './TeachingPlan';
@@ -16,11 +19,11 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                 <input type="hidden" name="previous_revision" value={previous?.revision ?? 0} />
                 <label>
                     Proposed teaching title
-                    <input name="title" required maxLength={191} defaultValue={previous?.snapshot.title} />
+                    <Input name="title" required maxLength={191} defaultValue={previous?.snapshot.title} />
                 </label>
                 <label>
                     Course introduction and outcomes
-                    <textarea
+                    <Textarea
                         name="introduction"
                         required
                         rows={4}
@@ -33,7 +36,7 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                         <legend>Week {i + 1}</legend>
                         <label>
                             Week {i + 1} title
-                            <input
+                            <Input
                                 name={`weeks[${i}][title]`}
                                 required
                                 maxLength={191}
@@ -42,7 +45,7 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                         </label>
                         <label>
                             Week {i + 1} activities
-                            <textarea
+                            <Textarea
                                 name={`weeks[${i}][body]`}
                                 required
                                 rows={3}
@@ -53,18 +56,17 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                     </fieldset>
                 ))}
                 <div className="flex gap-4">
-                    <button
+                    <Button variant="outline"
                         type="button"
-                        className="underline"
                         disabled={count >= 32}
                         onClick={() => setCount(count + 1)}
                     >
                         Add week
-                    </button>
+                    </Button>
                     {count > 1 && (
-                        <button type="button" className="underline" onClick={() => setCount(count - 1)}>
+                        <Button variant="outline" type="button" onClick={() => setCount(count - 1)}>
                             Remove last week
-                        </button>
+                        </Button>
                     )}
                 </div>
             </EntryForm>

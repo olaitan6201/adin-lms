@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function Home() {
@@ -10,9 +11,11 @@ export default function Home() {
                 <p className="portal-kicker">Academic workspace</p>
                 <h1 className="portal-title">Learning portal</h1>
                 <p>Open your course materials, attend scheduled classes and return to your assessments.</p>
-                <Link className="portal-action" href={signedIn ? '/dashboard' : '/login'}>
-                    {signedIn ? 'Open dashboard' : 'Sign in to the portal'} →
-                </Link>
+                <Button asChild className="mt-5">
+                    <Link href={signedIn ? '/dashboard' : '/login'}>
+                        {signedIn ? 'Open dashboard' : 'Sign in to the portal'} →
+                    </Link>
+                </Button>
             </div>
             <aside className="portal-panel desk-shelf">
                 <h2 className="desk-section">Course registration</h2>

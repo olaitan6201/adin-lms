@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { TeachingFigures, type Activity } from '../components/workload/TeachingFigures';
 
@@ -62,8 +64,7 @@ export default function LecturerActivity({ staff, from, until, rows }: Props) {
                             <>
                                 <label>
                                     From
-                                    <input
-                                        className="block w-full border p-2"
+                                    <Input
                                         type="date"
                                         name="from"
                                         defaultValue={from}
@@ -72,17 +73,16 @@ export default function LecturerActivity({ staff, from, until, rows }: Props) {
                                 </label>
                                 <label>
                                     Through
-                                    <input
-                                        className="block w-full border p-2"
+                                    <Input
                                         type="date"
                                         name="until"
                                         defaultValue={until}
                                         required
                                     />
                                 </label>
-                                <button className="portal-action" disabled={processing}>
+                                <Button disabled={processing}>
                                     Apply dates
-                                </button>
+                                </Button>
                                 {Object.entries(errors).map(([key, error]) => (
                                     <p key={key} role="alert">
                                         {error}

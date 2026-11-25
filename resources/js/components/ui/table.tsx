@@ -3,14 +3,21 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-function Table({ className, regionLabel, ...props }: React.ComponentProps<"table"> & { regionLabel?: string }) {
+type TableProps = React.ComponentProps<"table"> & {
+  regionLabel?: string
+  regionDescriptionId?: string
+  containerClassName?: string
+}
+
+function Table({ className, regionLabel, regionDescriptionId, containerClassName, ...props }: TableProps) {
   return (
     <div
       tabIndex={regionLabel ? 0 : undefined}
       role={regionLabel ? "region" : undefined}
       aria-label={regionLabel}
+      aria-describedby={regionDescriptionId}
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className={cn("relative w-full overflow-x-auto", containerClassName)}
     >
       <table
         data-slot="table"

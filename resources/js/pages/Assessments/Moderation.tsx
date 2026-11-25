@@ -1,3 +1,4 @@
+import { NativeSelect } from '@/components/ui/native-select';
 import { Head, Link } from '@inertiajs/react';
 import { Field, Post } from '../../assessment/Fields';
 import type { Grade } from '../../assessment/ResultRevisions';
@@ -113,13 +114,13 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                         {pending ? (
                             <label>
                                 Decision
-                                <select name="decision" aria-label="Decision" required defaultValue="">
+                                <NativeSelect name="decision" aria-label="Decision" required defaultValue="">
                                     <option value="" disabled>
                                         Choose a decision
                                     </option>
                                     <option value="correct">Request correction</option>
                                     <option value="approve">Approve</option>
-                                </select>
+                                </NativeSelect>
                             </label>
                         ) : (
                             <>

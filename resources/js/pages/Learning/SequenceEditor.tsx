@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
 import type { Activity } from '../Course';
 
@@ -22,34 +23,31 @@ export function SequenceEditor({ activities, action }: SequenceEditorProps) {
                 {form.data.activities.map((id, i) => (
                     <li key={id}>
                         {i + 1}. {titles.get(id)}{' '}
-                        <button
+                        <Button variant="outline"
                             type="button"
-                            className="underline disabled:opacity-50"
                             aria-label={`Move ${titles.get(id)} earlier`}
                             onClick={() => move(i, -1)}
                             disabled={i === 0}
                         >
                             Earlier
-                        </button>{' '}
-                        <button
+                        </Button>{' '}
+                        <Button variant="outline"
                             type="button"
-                            className="underline disabled:opacity-50"
                             aria-label={`Move ${titles.get(id)} later`}
                             onClick={() => move(i, 1)}
                             disabled={i + 1 === activities.length}
                         >
                             Later
-                        </button>
+                        </Button>
                     </li>
                 ))}
             </ol>
-            <button
-                className="portal-action"
+            <Button
                 disabled={form.processing}
                 onClick={() => form.put(action, { preserveScroll: true })}
             >
                 Save sequence
-            </button>
+            </Button>
             {Object.values(form.errors).map((error) => (
                 <p role="alert" key={error}>
                     {error}

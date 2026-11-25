@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/input';
 import '../../assessment/assessment.css';
 import { Head } from '@inertiajs/react';
 import { Post, Field, Check } from '../../assessment/Fields';
@@ -57,7 +58,7 @@ export default function MarkPaper({
                                 {q.marking_guide && <p>Marking guide: {q.marking_guide}</p>}
                                 <label>
                                     Question {i + 1} points (out of {q.possible})
-                                    <input
+                                    <Input
                                         type="number"
                                         name={`awards[${q.id}]`}
                                         min="0"

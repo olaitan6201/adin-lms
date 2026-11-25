@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { QuestionForm } from '../../assessment/QuestionForm';
 import type { BankQuestion } from '../../assessment/contracts';
@@ -38,33 +41,33 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
             <form action={base} method="get" className="grid gap-3 rounded border p-4 sm:grid-cols-3">
                 <label>
                     Search prompts
-                    <input name="q" defaultValue={filters.q} className="block w-full rounded border p-2" />
+                    <Input name="q" defaultValue={filters.q} />
                 </label>
                 <label>
                     Type
-                    <select name="kind" defaultValue={filters.kind ?? ''} className="block w-full rounded border p-2">
+                    <NativeSelect name="kind" defaultValue={filters.kind ?? ''}>
                         <option value="">All types</option>
                         {kinds.map((kind) => (
                             <option key={kind} value={kind}>
                                 {kind}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
                 <label>
                     Topic
-                    <select name="topic" defaultValue={filters.topic ?? ''} className="block w-full rounded border p-2">
+                    <NativeSelect name="topic" defaultValue={filters.topic ?? ''}>
                         <option value="">All topics</option>
                         {topics.map((topic) => (
                             <option key={topic} value={topic}>
                                 {topic}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
-                <button className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white">
+                <Button className="justify-self-start">
                     Filter questions
-                </button>
+                </Button>
             </form>
             <section aria-labelledby="browse-title">
                 <h2 id="browse-title" className="text-xl font-semibold">

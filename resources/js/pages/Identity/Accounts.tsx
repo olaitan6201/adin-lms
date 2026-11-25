@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../../components/academics/RecordForm';
 import { DeskHeading } from '../../components/academics/DeskHeading';
@@ -37,9 +39,9 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
             </details>
             <Form action="/accounts" method="get">
                 <label>
-                    Find by name or email <input name="q" defaultValue={q} className="border p-2" />
+                    Find by name or email <Input name="q" defaultValue={q} />
                 </label>
-                <button className="p-2 underline">Search</button>
+                <Button>Search</Button>
             </Form>
             {!accounts.length && <p>No matching accounts.</p>}
             <ul className="divide-y">
@@ -64,9 +66,9 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                                                 name="status"
                                                 value={a.status === 'active' ? 'suspended' : 'active'}
                                             />
-                                            <button disabled={processing} className="underline">
+                                            <Button disabled={processing}>
                                                 {a.status === 'active' ? 'Suspend' : 'Reactivate'} {a.full_name}
-                                            </button>
+                                            </Button>
                                             {errors.status && <p role="alert">{errors.status}</p>}
                                         </>
                                     )}

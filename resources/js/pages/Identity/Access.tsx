@@ -1,3 +1,6 @@
+import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Input } from '@/components/ui/input';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { DeskHeading } from '../../components/academics/DeskHeading';
@@ -44,9 +47,9 @@ export default function Access({ account, editable, grants, roles }: Props) {
                         {editable && (
                             <Form action={`${path}/${g.id}`} method="delete">
                                 {({ processing }) => (
-                                    <button disabled={processing} className="underline">
+                                    <Button variant="destructive" disabled={processing}>
                                         Revoke {label(g.role)} for {g.scope}
-                                    </button>
+                                    </Button>
                                 )}
                             </Form>
                         )}
@@ -59,19 +62,19 @@ export default function Access({ account, editable, grants, roles }: Props) {
                         <>
                             <label>
                                 Assign role{' '}
-                                <select name="role" required value={role} onChange={(e) => selectRole(e.target.value)}>
+                                <NativeSelect name="role" required value={role} onChange={(e) => selectRole(e.target.value)}>
                                     <option value="">Choose a role</option>
                                     {roles.map((r) => (
                                         <option key={r.code} value={r.code}>
                                             {label(r.code)}
                                         </option>
                                     ))}
-                                </select>
+                                </NativeSelect>
                             </label>
                             {scope && scope !== 'institution' && (
                                 <label>
                                     {scope === 'offering' ? 'Upstream offering ID' : `${scope} code`}{' '}
-                                    <input key={scope} className="border p-2" name="reference" required />
+                                    <Input key={scope} name="reference" required />
                                 </label>
                             )}
                             {scope === 'institution' && <p>This grant applies institution-wide.</p>}
@@ -80,12 +83,11 @@ export default function Access({ account, editable, grants, roles }: Props) {
                                     {error}
                                 </p>
                             ))}
-                            <button
+                            <Button className="justify-self-start"
                                 disabled={processing}
-                                className="justify-self-start rounded bg-teal-900 px-4 py-2 text-white"
                             >
                                 Grant role
-                            </button>
+                            </Button>
                         </>
                     )}
                 </Form>

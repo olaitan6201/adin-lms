@@ -1,3 +1,5 @@
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
 import { Link } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
@@ -42,17 +44,16 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                                 <p>Reply to a hidden post</p>
                             ))}
                         <p className="whitespace-pre-wrap break-words">{post.body}</p>
-                        <button
-                            className="mr-4 py-2 underline"
+                        <Button variant="outline" className="mr-4"
                             onClick={() => {
                                 setReply(post.id);
                                 composer.current?.querySelector('textarea')?.focus();
                             }}
                         >
                             Reply to post {i + 1}
-                        </button>
+                        </Button>
                         {canModerate && (
-                            <Link as="button" className="underline" method="patch" href={`${action}/${post.id}/hide`}>
+                            <Link as="button" className={buttonVariants({ variant: 'outline' })} method="patch" href={`${action}/${post.id}/hide`}>
                                 Hide post {i + 1}
                             </Link>
                         )}
@@ -63,9 +64,8 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                 <EntryForm action={action} title="Post to discussion">
                     <label>
                         Reply to{' '}
-                        <select
+                        <NativeSelect
                             name="parent_id"
-                            className="border p-2"
                             value={reply}
                             onChange={(event) => setReply(event.target.value)}
                         >
@@ -75,7 +75,7 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                                     Post {i + 1}
                                 </option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     </label>
                 </EntryForm>
             </div>

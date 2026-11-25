@@ -1,3 +1,4 @@
+import { NativeSelect } from '@/components/ui/native-select';
 import { useId, useLayoutEffect, useRef, type ComponentProps } from 'react';
 import { PortalField } from './PortalForm';
 
@@ -13,11 +14,11 @@ export function OperationsSelect({ label, error, children, ...select }: Componen
     return (
         <div>
             <label htmlFor={id}>{label}</label>
-            <select {...select} id={id} className="block w-full rounded border p-2" aria-invalid={error ? true : undefined}
+            <NativeSelect {...select} id={id} aria-invalid={error ? true : undefined}
                 aria-describedby={error ? `${id}-error` : undefined}>
                 {children}
-            </select>
-            {error && <p id={`${id}-error`}>{error}</p>}
+            </NativeSelect>
+            {error && <p className="mt-1 text-sm text-destructive" id={`${id}-error`}>{error}</p>}
         </div>
     );
 }

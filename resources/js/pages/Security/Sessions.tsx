@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../../components/academics/DeskHeading';
 
@@ -34,13 +35,12 @@ export default function Sessions({
                         </p>
                         <Form method="delete" action={`/security/sessions/${s.id}`}>
                             {({ processing }) => (
-                                <button
+                                <Button variant="destructive"
                                     disabled={processing}
                                     aria-label={`Revoke session ${s.id.slice(-8)} for ${s.full_name}`}
-                                    className="underline"
                                 >
                                     Revoke session
-                                </button>
+                                </Button>
                             )}
                         </Form>
                     </li>

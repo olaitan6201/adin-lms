@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Form, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
@@ -26,7 +28,6 @@ export type CasePage = {
     };
 };
 const label = (value: string) => value.replaceAll('_', ' ');
-const button = 'portal-action justify-self-start';
 
 export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
     const [kind, setKind] = useState('subject_access');
@@ -53,14 +54,14 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                             decision. The custodian checks holds again before acting in the source system and returns an
                             execution receipt for independent verification. Advancing a case does not delete data.</p>}
                         <label htmlFor="opening-reference">External case reference</label>
-                        <input id="opening-reference" className="block w-full border p-2" name="reference" required maxLength={64}
+                        <Input id="opening-reference" name="reference" required maxLength={64}
                             aria-invalid={errors.reference ? true : undefined} aria-describedby="reference-format" />
                         <small id="reference-format">{errors.reference && `${errors.reference} `}Use letters, numbers, underscores or hyphens only.</small>
                         <OperationsInput label="Affected account UUID (required except for breaches)" name="subject_id"
                             error={errors.subject_id && 'Enter the affected account’s existing UUID from the restricted case system.'} />
-                        <button className={button} disabled={processing}>
+                        <Button disabled={processing}>
                             Open case
-                        </button>
+                        </Button>
                         {recentlySuccessful && <p role="status">Case opened.</p>}
                     </fieldset>
                 )}
@@ -100,9 +101,9 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                                     <OperationsInput label={`Decision or delivery receipt for ${row.reference}`}
                                         name="reference" maxLength={64} required error={errors.reference} />
                                     {errors.stage && <p role="alert">Reload this case to check its current stage.</p>}
-                                    <button className="justify-self-start rounded border px-3 py-2" disabled={processing}>
+                                    <Button variant="outline" className="justify-self-start" disabled={processing}>
                                         Record {label(row.next!)}
-                                    </button>
+                                    </Button>
                                 </fieldset>
                             )}
                         </Form>

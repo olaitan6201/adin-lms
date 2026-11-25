@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import { Link, router } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 
@@ -51,10 +53,9 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                     return (
                         <label key={name} className="grid min-w-0 gap-1 font-medium">
                             {label}
-                            <select
+                            <NativeSelect
                                 name={name}
                                 defaultValue={selected ?? ''}
-                                className="min-h-11 w-full min-w-0 rounded border border-slate-500 bg-white p-2"
                             >
                                 <option value="">{empty}</option>
                                 {missing && <option value={selected}>No matching records</option>}
@@ -63,12 +64,12 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                                         {choice.label}
                                     </option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </label>
                     );
                 })}
                 <div className="flex flex-wrap items-center gap-4 sm:col-span-3">
-                    <button className="portal-action">Apply filters</button>
+                    <Button>Apply filters</Button>
                     <Link href={family ? `${path}?family=${family}` : path} className="py-2 underline">
                         Clear filters
                     </Link>

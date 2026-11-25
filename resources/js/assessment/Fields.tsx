@@ -1,3 +1,4 @@
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
@@ -60,7 +61,7 @@ interface CheckProps {
 export function Check({ name, label }: CheckProps) {
     return (
         <label>
-            <input name={name} type="checkbox" value="1" />
+            <NativeCheckbox name={name} value="1" />
             {label}
         </label>
     );

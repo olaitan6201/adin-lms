@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../components/academics/DeskHeading';
 
@@ -29,9 +32,9 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
             <Form action="/students" method="get">
                 <label>
                     Find by name, matric number or upstream ID{' '}
-                    <input name="q" defaultValue={q} className="border p-2" />
+                    <Input name="q" defaultValue={q} />
                 </label>
-                <button className="p-2 underline">Search</button>
+                <Button>Search</Button>
             </Form>
             <ul className="divide-y">
                 {students.map((s) => (
@@ -54,14 +57,14 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                         {({ errors, processing }) => (
                             <>
                                 <label>
-                                    Upstream student ID <input className="border p-2" name="student" required />
+                                    Upstream student ID <Input name="student" required />
                                 </label>
                                 <label>
                                     Existing LMS account email{' '}
-                                    <input className="border p-2" type="email" name="account" required />
+                                    <Input type="email" name="account" required />
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="verified" value="1" required /> I checked both
+                                    <NativeCheckbox name="verified" value="1" required /> I checked both
                                     identities against the registrar's record.
                                 </label>
                                 {Object.entries(errors).map(([k, v]) => (
@@ -69,9 +72,9 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                                         {v}
                                     </p>
                                 ))}
-                                <button disabled={processing} className="justify-self-start underline">
+                                <Button className="justify-self-start" disabled={processing}>
                                     Link verified account
-                                </button>
+                                </Button>
                             </>
                         )}
                     </Form>
@@ -97,19 +100,18 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                                     <>
                                         <label>
                                             Registrar export{' '}
-                                            <input
+                                            <Input
                                                 type="file"
                                                 name="feed"
                                                 accept={kind === 'profiles' ? '.csv,.xlsx' : '.csv'}
                                                 required
                                             />
                                         </label>
-                                        <button
+                                        <Button
                                             disabled={processing}
-                                            className="rounded bg-teal-900 px-4 py-2 text-white"
                                         >
                                             Reconcile {kind}
-                                        </button>
+                                        </Button>
                                         {errors.feed && <p role="alert">{errors.feed}</p>}
                                     </>
                                 )}

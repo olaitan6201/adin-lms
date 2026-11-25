@@ -1,3 +1,5 @@
+import { Input } from '@/components/ui/input';
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { EntryForm } from './Elements';
 
 type MembershipChange = {
@@ -96,8 +98,7 @@ export function GroupManager({
         >
             <label>
                 Group name
-                <input
-                    className="block w-full border p-2"
+                <Input
                     name="name"
                     required
                     maxLength={191}
@@ -108,8 +109,7 @@ export function GroupManager({
                 <legend>Registered learners</legend>
                 {registrations.map((person) => (
                     <label key={person.id} className="flex items-center gap-2 py-1">
-                        <input
-                            type="checkbox"
+                        <NativeCheckbox
                             name="members[]"
                             value={person.id}
                             defaultChecked={team?.members.some((member) => member.enrolment_id === person.id)}

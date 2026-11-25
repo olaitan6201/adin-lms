@@ -1,3 +1,6 @@
+import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { useRef, useState } from 'react';
 import { Manuscript } from './Manuscript';
 import type { Choice, Lesson } from './contracts';
@@ -36,20 +39,19 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                     'Reading list',
                     'Summary',
                 ].map((name) => (
-                    <button
+                    <Button variant="outline"
                         type="button"
-                        className="rounded border px-2 py-1"
                         key={name}
                         onClick={() => insert(`## ${name}`)}
                     >
                         {name}
-                    </button>
+                    </Button>
                 ))}
             </div>
             {quizzes.length > 0 && (
                 <label>
                     Insert quiz link
-                    <select
+                    <NativeSelect
                         defaultValue=""
                         onChange={(e) => {
                             const quiz = quizzes.find((q) => q.id === e.target.value);
@@ -64,13 +66,13 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                                 {q.title}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
             )}
             {!!lesson?.materials.length && (
                 <label>
                     Insert learning resource
-                    <select
+                    <NativeSelect
                         defaultValue=""
                         onChange={(e) => {
                             if (e.target.value) insert(`{{resource:${e.target.value}}}`);
@@ -84,12 +86,12 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                                 {m.title}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
             )}
             <label>
                 Lesson text (outcomes, examples, exercises and references)
-                <textarea
+                <Textarea
                     ref={input}
                     rows={10}
                     maxLength={250000}
@@ -98,9 +100,9 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                     onChange={(e) => setText(e.target.value)}
                 />
             </label>
-            <button type="button" className="underline" aria-expanded={preview} onClick={() => setPreview(!preview)}>
+            <Button variant="outline" type="button" aria-expanded={preview} onClick={() => setPreview(!preview)}>
                 Preview manuscript
-            </button>
+            </Button>
             {preview && <Manuscript text={text} />}
         </fieldset>
     );

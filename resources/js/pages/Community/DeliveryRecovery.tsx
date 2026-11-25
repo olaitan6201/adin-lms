@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { CommunityPage } from '../../components/community/Elements';
 
@@ -34,7 +35,7 @@ export default function DeliveryRecovery({ failed }: { failed: Page }) {
                             as="button"
                             method="post"
                             href={`/community/delivery-failures/${row.id}`}
-                            className="underline"
+                            className={buttonVariants({ variant: 'outline' })}
                         >
                             Retry delivery {row.id.slice(-8)}
                         </Link>

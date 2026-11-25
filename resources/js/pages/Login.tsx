@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useRef, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
@@ -24,9 +25,11 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
             <section aria-label="Account details" className="portal-panel desk-shelf entry-form">
                 {institutionSignIn && (
                     <p className="mb-5">
-                        <a href={institutionSignIn} className="portal-action">
-                            Continue with institutional sign-in
-                        </a>
+                        <Button asChild>
+                            <a href={institutionSignIn}>
+                                Continue with institutional sign-in
+                            </a>
+                        </Button>
                     </p>
                 )}
                 {passwordReset && <p role="status">Your password has been set. Sign in with your new password.</p>}

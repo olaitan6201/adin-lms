@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
 import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
@@ -25,7 +26,7 @@ export type Infrastructure = {
 
 export default function InfrastructurePanel({ data }: { data: Infrastructure }) {
     const { settings } = data;
-    const button = 'justify-self-start rounded border px-3 py-2';
+
     return (
         <section className="space-y-5" aria-label="Infrastructure">
             <InfrastructureReadings data={data} />
@@ -60,9 +61,9 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                             Changing slots takes effect on the next check-in. Provision the matching key on the host and
                             at the provider first.
                         </p>
-                        <button className={button} disabled={processing}>
+                        <Button variant="outline" disabled={processing}>
                             Save infrastructure settings
-                        </button>
+                        </Button>
                         {recentlySuccessful && <p role="status">Infrastructure settings saved.</p>}
                     </fieldset>
                 )}
@@ -90,9 +91,9 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                                 <option value="restored">Isolated restore checked</option>
                                 <option value="failed">Backup or restore failed</option>
                         </OperationsSelect>
-                        <button className={button} disabled={processing}>
+                        <Button variant="outline" disabled={processing}>
                             Record backup evidence
-                        </button>
+                        </Button>
                         {recentlySuccessful && <p role="status">Backup receipt recorded.</p>}
                     </fieldset>
                 )}

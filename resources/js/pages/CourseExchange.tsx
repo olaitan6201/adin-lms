@@ -1,3 +1,6 @@
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import { useCourseTransfer, type Format } from '../components/useCourseTransfer';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
@@ -24,8 +27,6 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
         valid,
         match?.external_offering_id ?? offering,
     );
-    const control = 'block w-full rounded border border-slate-500 bg-white p-2 text-slate-950';
-    const button = 'portal-action disabled:opacity-60';
 
     return (
         <main className="portal-page space-y-6">
@@ -39,9 +40,8 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                 <label className="block font-semibold" htmlFor="exchange-offering">
                     Offering
                 </label>
-                <input
+                <Input
                     id="exchange-offering"
-                    className={control}
                     list="exchange-offerings"
                     value={offering}
                     disabled={busy}
@@ -71,24 +71,23 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                     <h2 className="desk-section">Download a package</h2>
                     <label className="block">
                         Format
-                        <select
-                            className={control}
+                        <NativeSelect
                             value={format}
                             disabled={busy}
                             onChange={(e) => setFormat(e.target.value as Format)}
                         >
                             <option value="native">Adin course backup</option>
                             <option value="scorm">SCORM 1.2 text assets</option>
-                        </select>
+                        </NativeSelect>
                     </label>
                     <p>
                         {format === 'native'
                             ? 'Current lessons and attachments, course forums, assignment briefs and reference files, exam definitions and course question banks. Assessment archives contain private answer keys; you need exchange permission and teaching authority for the selected offering.'
                             : 'Unscheduled text chapters only. A chapter with linked or attached material cannot be exported in this format.'}
                     </p>
-                    <button className={button} disabled={!valid || busy}>
+                    <Button disabled={!valid || busy}>
                         Download package
-                    </button>
+                    </Button>
                 </form>
                 <form onSubmit={(event) => transfer(event, true)} className="portal-panel desk-shelf space-y-4">
                     <h2 className="desk-section">Restore to a draft</h2>
@@ -99,17 +98,16 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                     <input type="hidden" name="_token" value={csrf} />
                     <label className="block">
                         Package (up to {(uploadLimit / 1048576).toFixed(1)} MiB)
-                        <input
-                            className={`${control} text-sm`}
+                        <Input
                             required
                             type="file"
                             accept=".zip,.imscc"
                             name="package"
                         />
                     </label>
-                    <button className={button} disabled={!valid || busy || (!!match && match.status !== 'draft')}>
+                    <Button disabled={!valid || busy || (!!match && match.status !== 'draft')}>
                         Restore package
-                    </button>
+                    </Button>
                 </form>
             </div>
             <div role="status">{busy ? 'Transferring package…' : message}</div>

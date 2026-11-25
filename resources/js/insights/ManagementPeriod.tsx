@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Counts, type Measures } from './DeskDetails';
@@ -17,13 +19,13 @@ export function ManagementPeriod({ period }: { period: Period }) {
             router.get('/dashboard', id ? { [key]: id } : {});
         }}>
             <label className="grid min-w-0 gap-1">Academic period
-                <select className="max-w-full rounded border border-slate-500 bg-white p-2" value={selection} onChange={event => setSelection(event.target.value)}>
+                <NativeSelect className="max-w-full" value={selection} onChange={event => setSelection(event.target.value)}>
                     <option value="">All periods</option>
                     <optgroup label="Academic sessions">{period.sessions.map(o => <option key={o.id} value={`session:${o.id}`}>{o.label}</option>)}</optgroup>
                     <optgroup label="Semesters">{period.terms.map(o => <option key={o.id} value={`term:${o.id}`}>{o.label}</option>)}</optgroup>
-                </select>
+                </NativeSelect>
             </label>
-            <button className="rounded bg-teal-800 px-4 py-2 font-semibold text-white" type="submit">Apply period</button>
+            <Button type="submit">Apply period</Button>
         </form>
         <Counts values={period.summary} />
     </section>;

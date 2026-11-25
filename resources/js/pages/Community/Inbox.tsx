@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
@@ -34,7 +35,7 @@ export default function Inbox({ notices, messages, announcements, canAnnounce, c
                             </p>
                             <Link
                                 as="button"
-                                className="underline"
+                                className={buttonVariants({ variant: 'outline' })}
                                 method="patch"
                                 data={{ read: !n.read_at }}
                                 href={`/community/notifications/${n.id}`}

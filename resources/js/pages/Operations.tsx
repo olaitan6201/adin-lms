@@ -19,16 +19,21 @@ export default function Operations({
     infrastructure,
 }: Status) {
     return (
-        <main className="mx-auto max-w-2xl space-y-6 px-6 py-12">
+        <main className="portal-page space-y-6">
             <Head title="Institution operations" />
-            <h1 className="text-3xl font-semibold">Institution operations</h1>
-            <dl>
-                <dt>Unexpired, unrevoked sessions</dt>
-                <dd>{activeSessions}</dd>
-                <dt>Failed notification deliveries</dt>
-                <dd>{failedDeliveries}</dd>
-                <dt>Failed password or MFA checks in the last 24 hours</dt>
-                <dd>{failedLogins}</dd>
+            <header className="desk-heading">
+                <p className="portal-kicker">System administration</p>
+                <h1 className="portal-title">Institution operations</h1>
+                <nav aria-label="Operations sections" className="flex flex-wrap gap-x-5 gap-y-2">
+                    <a className="desk-link" href="#monitor-settings">Monitoring settings</a>
+                    <a className="desk-link" href="#branding-heading">Institution identity</a>
+                    <a className="desk-link" href="#retention">Retention policy</a>
+                </nav>
+            </header>
+            <dl className="grid gap-4 border-y border-[var(--portal-line)] py-4 sm:grid-cols-3">
+                <div><dt>Unexpired, unrevoked sessions</dt><dd className="text-xl font-semibold">{activeSessions}</dd></div>
+                <div><dt>Failed notification deliveries</dt><dd className="text-xl font-semibold">{failedDeliveries}</dd></div>
+                <div><dt>Failed password or MFA checks in the last 24 hours</dt><dd className="text-xl font-semibold">{failedLogins}</dd></div>
             </dl>
             <InfrastructurePanel data={infrastructure} />
             <BrandingPanel />

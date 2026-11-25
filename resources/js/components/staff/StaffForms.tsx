@@ -1,3 +1,4 @@
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,7 +38,7 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                         </NativeSelect>
                     </label>
                     <label>
-                        <input type="checkbox" name="verified" value="1" required /> I verified this account against the
+                        <NativeCheckbox name="verified" value="1" required /> I verified this account against the
                         staff record.
                     </label>
                     <Button disabled={processing}>

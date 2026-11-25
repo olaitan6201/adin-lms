@@ -1,3 +1,4 @@
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { ExamWindow } from './ExamWindow';
 import { PortalField } from '../components/PortalForm';
 
@@ -26,7 +27,7 @@ export function ExamWindowControls({ errors }: { errors: Record<string, string> 
                 error={errors.max_attempts}
             />
             <label className="flex items-center gap-2">
-                <input name="shuffle" type="checkbox" value="1" />
+                <NativeCheckbox name="shuffle" value="1" />
                 Shuffle choices and matching options
             </label>
         </>

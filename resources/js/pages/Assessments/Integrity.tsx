@@ -1,3 +1,5 @@
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { Head, Link } from '@inertiajs/react';
 import { Post } from '../../assessment/Fields';
 import type { IntegrityPolicy } from '../../assessment/IntegrityNotice';
@@ -48,8 +50,7 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
             ) : (
                 <Post url={url} button="Save exam conditions">
                     <label>
-                        <input
-                            type="checkbox"
+                        <NativeCheckbox
                             name="observe_visibility"
                             value="1"
                             defaultChecked={policy.observe_visibility}
@@ -57,7 +58,7 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                         Record when the exam page becomes hidden
                     </label>
                     <label>
-                        <input type="checkbox" name="prevent_copy" value="1" defaultChecked={policy.prevent_copy} />
+                        <NativeCheckbox name="prevent_copy" value="1" defaultChecked={policy.prevent_copy} />
                         Prevent copying from the active exam page
                     </label>
                 </Post>
@@ -89,7 +90,7 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                             <Post url={`${url}/signals/${s.id}/review`} button="Record review">
                                 <label>
                                     Review note
-                                    <textarea name="note" required maxLength={1500} />
+                                    <Textarea name="note" required maxLength={1500} />
                                 </label>
                             </Post>
                         )}

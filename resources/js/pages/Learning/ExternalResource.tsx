@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 function playerUrl(href: string): string | null {
@@ -53,9 +54,9 @@ export function ExternalResource({ href, title }: ExternalResourceProps) {
                             allowFullScreen
                         />
                     ) : (
-                        <button type="button" onClick={() => setPlaying(true)} className="rounded border px-3 py-2">
+                        <Button variant="outline" type="button" onClick={() => setPlaying(true)}>
                             Load external video
-                        </button>
+                        </Button>
                     )}
                 </div>
             )}

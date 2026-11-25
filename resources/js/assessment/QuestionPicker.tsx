@@ -1,3 +1,8 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import { selectionTotal } from './selectionPoints';
 import { ExamWindowControls } from './ExamWindowControls';
 import { Form } from '@inertiajs/react';
@@ -23,7 +28,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
     return (
         <Form action={`/assessment-items/${item}/exam`} method="post" className="grid gap-4 rounded border p-5">
             {({ processing, errors, recentlySuccessful }) => (
-                <>
+                <FormFeedback errors={errors}>
                     <ExamWindowControls errors={errors} />
                     <fieldset className="grid gap-4 rounded border p-4">
                         <legend className="px-2 font-semibold">Select fixed question revisions</legend>
@@ -33,8 +38,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             return (
                                 <article key={question.id} className="grid gap-3 border-b pb-4">
                                     <label className="flex items-start gap-2">
-                                        <input
-                                            type="checkbox"
+                                        <NativeCheckbox
                                             name={`selections[${index}][version_id]`}
                                             value={question.id}
                                             checked={checked}
@@ -56,7 +60,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                     </label>
                                     <label className="grid min-w-0 gap-1">
                                         Possible points
-                                        <input
+                                        <Input
                                             type="number"
                                             min="0.00000001"
                                             max="1000000"
@@ -71,7 +75,6 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                                     [question.id]: event.target.value,
                                                 }))
                                             }
-                                            className="block w-full rounded border p-2 disabled:opacity-50"
                                         />
                                     </label>
                                 </article>
@@ -84,18 +87,17 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             <div key={i} className="grid gap-3 border-b pb-4 sm:grid-cols-2">
                                 <label className="grid min-w-0 gap-1">
                                     Topic for draw {i + 1}
-                                    <select className="min-h-11 w-full rounded border p-2" required name={`draws[${i}][bank_id]`}>
+                                    <NativeSelect required name={`draws[${i}][bank_id]`}>
                                         {topics.map((b) => (
                                             <option key={b.id} value={b.id}>
                                                 {b.topic}
                                             </option>
                                         ))}
-                                    </select>
+                                    </NativeSelect>
                                 </label>
                                 <label className="grid min-w-0 gap-1">
                                     Points for draw {i + 1}
-                                    <input
-                                        className="min-h-11 w-full rounded border p-2"
+                                    <Input
                                         max="1000000"
                                         name={`draws[${i}][points]`}
                                         type="number"
@@ -109,27 +111,22 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             </div>
                         ))}
                         <div className="flex flex-wrap gap-3">
-                            <button className="min-h-11 rounded border px-3" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
+                            <Button variant="outline" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
                                 Add random slot
-                            </button>
+                            </Button>
                             {!!draws.length && (
-                                <button className="min-h-11 px-3 underline" type="button" onClick={() => setDraws(draws.slice(0, -1))}>
+                                <Button variant="outline" type="button" onClick={() => setDraws(draws.slice(0, -1))}>
                                     Remove last random slot
-                                </button>
+                                </Button>
                             )}
                         </div>
                     </fieldset>
                     <p role="status">
                         {total === null ? 'Enter points greater than zero and at most 1000000, with up to 8 decimal places.' : `Selected total: ${total} / ${maximum} points`}
                     </p>
-                    {Object.entries(errors).map(([key, error]) => (
-                        <p role="alert" key={key}>
-                            {error}
-                        </p>
-                    ))}
                     <SubmitButton processing={processing || total === null}>Create examination from selection</SubmitButton>
                     {recentlySuccessful && <p role="status">Saved.</p>}
-                </>
+                </FormFeedback>
             )}
         </Form>
     );

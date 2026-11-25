@@ -1,3 +1,5 @@
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Button } from '@/components/ui/button';
 import { useId, useState, type FormEvent } from 'react';
 import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
 
@@ -75,13 +77,13 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
                 {mode === 'execute' && <>
                     <OperationsInput name="approval" label="Approval UUID" error={errors.approval} required pattern={uuid} />
                     <label className="flex items-baseline gap-2 break-all">
-                        <input type="checkbox" required checked={checkedReceipt} onChange={event => setCheckedReceipt(event.target.checked)} />
+                        <NativeCheckbox required checked={checkedReceipt} onChange={event => setCheckedReceipt(event.target.checked)} />
                         I checked the subject, approval and scope against {caseReference || 'the case'} in the restricted system.
                     </label>
                 </>}
-                <button disabled={busy} className={mode === 'execute' ? 'portal-action justify-self-start' : 'justify-self-start rounded border px-3 py-2'}>
+                <Button variant={mode === 'execute' ? 'destructive' : 'outline'} disabled={busy}>
                     {actions[mode]}
-                </button>
+                </Button>
                 {errors.form && <p role="alert">{errors.form}</p>}
                 {result && <><p role="status">{mode === 'execute' ? 'Approved action completed.' : result}</p>
                     {mode === 'execute' && <pre className="whitespace-pre-wrap break-all">{result}</pre>}</>}

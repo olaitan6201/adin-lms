@@ -1,3 +1,6 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { saveAnswer } from './saveAnswer';
 import { useEffect, useRef, useState } from 'react';
 import type { MatchingItem, QuestionKind } from './contracts';
@@ -89,7 +92,7 @@ export function Answer({
                     {q.matching.left.map((item) => (
                         <label key={item.id}>
                             {item.label}
-                            <select
+                            <NativeSelect
                                 disabled={!active}
                                 value={matching[item.id] ?? ''}
                                 onChange={(event) => match(item.id, event.target.value)}
@@ -106,7 +109,7 @@ export function Answer({
                                         {right.label}
                                     </option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </label>
                     ))}
                 </fieldset>
@@ -114,14 +117,14 @@ export function Answer({
                 <label>
                     {q.prompt}
                     {q.options.length ? (
-                        <select disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
+                        <NativeSelect disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
                             <option value="">Select an answer</option>
                             {q.options.map((option) => (
                                 <option key={option}>{option}</option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     ) : (
-                        <textarea
+                        <Textarea
                             disabled={!active}
                             value={String(value)}
                             onChange={(event) => edit(event.target.value)}
@@ -131,14 +134,14 @@ export function Answer({
             )}
             <span role="status">{message}</span>
             {failed && (
-                <button
+                <Button
                     onClick={() => {
                         setFailed(false);
                         setRetry((current) => current + 1);
                     }}
                 >
                     Retry save
-                </button>
+                </Button>
             )}
         </section>
     );

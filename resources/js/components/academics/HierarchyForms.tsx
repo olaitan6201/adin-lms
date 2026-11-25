@@ -1,3 +1,4 @@
+import { NativeSelect } from '@/components/ui/native-select';
 import RecordForm, { field } from './RecordForm';
 import type { Choice, Field } from './RecordForm';
 import { useState } from 'react';
@@ -56,8 +57,7 @@ export function HierarchyForms({
                     <summary>Maintain {label}</summary>
                     <label>
                         Record{' '}
-                        <select
-                            className="border p-2"
+                        <NativeSelect
                             value={selection[path] ?? ''}
                             onChange={(e) => select({ ...selection, [path]: e.target.value })}
                         >
@@ -69,7 +69,7 @@ export function HierarchyForms({
                                         `${sessions.find((s) => s.id === r.session_id)?.label} · semester ${r.position}`}
                                 </option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     </label>
                     <RecordForm
                         key={selection[path] ?? ''}

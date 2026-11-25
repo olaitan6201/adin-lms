@@ -12,20 +12,12 @@
     font-size: 1.15rem;
 }
 
-.entry-intro .portal-action,
 .portal-entry aside p {
     margin-top: 1.25rem;
 }
 
 .entry-form input {
-    background: #fff;
-    border-color: #687167;
     margin-top: 0.4rem;
-}
-
-.entry-form button {
-    background: var(--portal-ink);
-    min-height: 44px;
 }
 
 @media (min-width: 55rem) {

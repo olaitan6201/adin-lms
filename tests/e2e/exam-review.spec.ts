@@ -24,6 +24,8 @@ test('only an explicit online confirmation submits the saved paper', async ({ pa
         await expect(dialog).toContainText('offline');
         await expect(confirm).toBeDisabled();
         await expect(dialog.getByText('Return to paper')).toBeFocused();
+        expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+        await page.screenshot({ path: info.outputPath('offline-review.png') });
         await page.keyboard.press('Escape');
         await expect(review).toBeFocused();
         await expect(draft).toHaveValue('Current answer');

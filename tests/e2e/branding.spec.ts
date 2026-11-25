@@ -20,6 +20,9 @@ test('an operator can publish an institution identity that a learner sees', asyn
     await input.fill('<invalid>');
     await submit.press('Enter');
     await expect(input).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByRole('group', { name: 'Check your entries' })).toBeFocused();
+    await expect(input).toHaveAccessibleDescription(/Leave blank.*invalid/i);
+    await page.screenshot({ path: info.outputPath('branding-correction.png') });
     await input.fill(name);
     await page.getByLabel('Replacement logo').setInputFiles('public/portal-192.png');
     await submit.press('Enter');

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../../components/PortalForm';
 import { AccountTask } from '../../components/identity/AccountTask';
@@ -41,9 +42,11 @@ export default function Challenge() {
                     to your authenticator, contact ICT.
                 </p>
             </details>
-            <Link href="/logout" method="post" as="button" className="portal-action w-fit">
-                Sign out
-            </Link>
+            <Button asChild variant="outline">
+                <Link href="/logout" method="post" as="button">
+                    Sign out
+                </Link>
+            </Button>
         </AccountTask>
     );
 }

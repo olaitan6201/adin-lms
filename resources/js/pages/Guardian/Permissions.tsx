@@ -1,3 +1,7 @@
+import { FormFeedback } from '@/components/ui/form-feedback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeCheckbox } from '@/components/ui/native-checkbox';
 import { Form, Head, Link } from '@inertiajs/react';
 
 type Entry = {
@@ -40,9 +44,9 @@ export default function Permissions({ entries, previous, next }: Props) {
                                             </summary>
                                             <Form method="delete" action={`/guardian/permissions/${e.id}`}>
                                                 {({ processing }) => (
-                                                    <button disabled={processing} className="portal-action">
+                                                    <Button variant="destructive" disabled={processing}>
                                                         Confirm revocation
-                                                    </button>
+                                                    </Button>
                                                 )}
                                             </Form>
                                         </details>
@@ -70,38 +74,32 @@ export default function Permissions({ entries, previous, next }: Props) {
                     <h2 className="desk-section">Approve sharing</h2>
                     <Form action="/guardian/permissions" method="post" resetOnSuccess className="mt-4 grid gap-4">
                         {({ errors, processing, recentlySuccessful }) => (
-                            <>
+                            <FormFeedback errors={errors}>
                                 <label>
                                     Guardian account email
-                                    <input
+                                    <Input
                                         type="email"
                                         name="guardian_email"
                                         required
-                                        className="block w-full border p-2"
                                     />
                                 </label>
                                 <label>
                                     Upstream student reference
-                                    <input name="student_reference" required className="block w-full border p-2" />
+                                    <Input name="student_reference" required />
                                 </label>
                                 <p className="desk-note">
                                     The account must already hold the guardian role. Only lesson completion totals will
                                     be shared.
                                 </p>
                                 <label>
-                                    <input type="checkbox" name="confirmed" value="1" required /> I verified
+                                    <NativeCheckbox name="confirmed" value="1" required /> I verified
                                     authorization to share this student's progress with this guardian.
                                 </label>
-                                {Object.entries(errors).map(([field, text]) => (
-                                    <p key={field} role="alert">
-                                        {text}
-                                    </p>
-                                ))}
-                                <button className="portal-action" disabled={processing}>
+                                <Button disabled={processing}>
                                     Approve progress access
-                                </button>
+                                </Button>
                                 {recentlySuccessful && <p role="status">Permission saved.</p>}
-                            </>
+                            </FormFeedback>
                         )}
                     </Form>
                 </aside>

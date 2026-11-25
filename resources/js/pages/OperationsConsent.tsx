@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Form, Head } from '@inertiajs/react';
 
 type ConsentProps = {
@@ -20,9 +21,9 @@ export default function OperationsConsent({ granted, notice }: ConsentProps) {
                     <>
                         <input type="hidden" name="notice" value={notice} />
                         <input type="hidden" name="grant" value={granted ? '0' : '1'} />
-                        <button disabled={processing} className="bg-teal-900 p-2 text-white">
+                        <Button disabled={processing}>
                             {granted ? 'Withdraw consent' : 'Give consent'}
-                        </button>
+                        </Button>
                         {recentlySuccessful && <p role="status">Choice saved.</p>}
                         {Object.keys(errors).length > 0 && <p role="alert">{Object.values(errors)[0]}</p>}
                     </>

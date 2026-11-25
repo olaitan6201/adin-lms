@@ -1,3 +1,5 @@
+import { ReportTable } from '../../insights/ReportTable';
+import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { ReportFilters, type Filters, type Options } from '../../insights/ReportFilters';
 import { UsageMeasures } from '../../insights/UsageMeasures';
@@ -106,47 +108,22 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
                             <p id="scroll-hint" className="desk-note sm:hidden">Scroll the table sideways to see every column.</p>
                         )}
                         {table.rows.length > 0 && (
-                            <div
-                                role="region"
-                                aria-label="Report data"
-                                aria-describedby={family === 'institution-usage' ? undefined : 'scroll-hint'}
-                                tabIndex={0}
-                                className={family === 'institution-usage' ? 'hidden overflow-auto sm:block' : 'max-h-[36rem] overflow-auto'}
-                            >
-                                <table className="w-full min-w-[36rem] text-left">
-                                    <caption className="sr-only">{names[family]}</caption>
-                                    <thead className="sticky top-0 bg-slate-100">
-                                        <tr>
-                                            {columns.map((col) => (
-                                                <th key={col} scope="col" className={family === 'institution-usage' ? 'whitespace-nowrap p-2' : 'p-2'}>
-                                                    {col}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {table.rows.map((row, i) => (
-                                            <tr key={i} className="border-b">
-                                                {row.map((value, j) => (
-                                                    <td key={j} className="p-2">
-                                                        {value}
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <ReportTable title={names[family]} columns={columns} rows={table.rows}
+                                usage={family === 'institution-usage'} />
                         )}
                     </>
                 )}
                 {!limitMessage && <nav aria-label="Download report" className="flex flex-wrap gap-4">
-                    <a className="py-2 underline" href={path('/reports/export/pdf', family)}>
-                        Download PDF
-                    </a>
-                    <a className="py-2 underline" href={path('/reports/export/xlsx', family)}>
-                        Download Excel
-                    </a>
+                    <Button asChild variant="outline">
+                        <a href={path('/reports/export/pdf', family)}>
+                            Download PDF
+                        </a>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <a href={path('/reports/export/xlsx', family)}>
+                            Download Excel
+                        </a>
+                    </Button>
                 </nav>}
             </section>
         </main>

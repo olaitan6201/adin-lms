@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Input } from '@/components/ui/input';
 import { EntryForm } from './EntryForm';
 import type { Participant } from './contracts';
 
@@ -16,26 +18,26 @@ export function AttendanceForm({
             <EntryForm action={action} label="Save attendance">
                 <label>
                     Participant
-                    <select required name="user_id" defaultValue="">
+                    <NativeSelect required name="user_id" defaultValue="">
                         <option value="">Select participant</option>
                         {participants.map((p) => (
                             <option key={p.id} value={p.id}>
                                 {p.full_name}
                             </option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
                 <label>
                     Attendance
-                    <select name="status">
+                    <NativeSelect name="status">
                         {statuses.map((m) => (
                             <option key={m}>{m}</option>
                         ))}
-                    </select>
+                    </NativeSelect>
                 </label>
                 <label>
                     Reason for correction
-                    <input name="reason" />
+                    <Input name="reason" />
                 </label>
             </EntryForm>
         </details>

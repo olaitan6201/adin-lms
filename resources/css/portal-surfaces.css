@@ -39,15 +39,4 @@
 .course-search-controls input {
     flex: 1 1 12rem;
     min-width: 0;
-    border: 1px solid #475569;
-    border-radius: 0.25rem;
-    padding: 0.65rem;
-}
-
-.course-search-controls button {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    background: var(--portal-ink);
-    color: white;
-    border-radius: 0.25rem;
 }

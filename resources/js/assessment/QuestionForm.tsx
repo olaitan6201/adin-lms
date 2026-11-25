@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/native-select';
+import { Textarea } from '@/components/ui/textarea';
 import { Form, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
@@ -31,12 +33,11 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                     />
                     <label>
                         Question type
-                        <select
+                        <NativeSelect
                             name="kind"
                             required
                             value={kind}
                             onChange={(event) => setKind(event.target.value as QuestionKind)}
-                            className="block w-full rounded border p-2"
                         >
                             <option value="mcq">Multiple choice</option>
                             <option value="true_false">True or false</option>
@@ -46,64 +47,59 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                             <option value="essay">Essay</option>
                             <option value="programming">Programming</option>
                             <option value="practical">Practical</option>
-                        </select>
+                        </NativeSelect>
                     </label>
                     <label>
                         Prompt
-                        <textarea
+                        <Textarea
                             name="prompt"
                             required
                             rows={5}
                             maxLength={12000}
                             defaultValue={initial?.prompt}
-                            className="block w-full rounded border p-2"
                         />
                     </label>
                     {choices && (
                         <label>
                             Choices (one per line)
-                            <textarea
+                            <Textarea
                                 name="options"
                                 required={kind === 'mcq'}
                                 rows={4}
                                 defaultValue={initial?.options}
-                                className="block w-full rounded border p-2"
                             />
                         </label>
                     )}
                     {accepted && (
                         <label>
                             {choices ? 'Accepted answer (must match a choice)' : 'Accepted answers (one per line)'}
-                            <textarea
+                            <Textarea
                                 name="accepted"
                                 required
                                 rows={choices ? 2 : 4}
                                 defaultValue={initial?.accepted}
-                                className="block w-full rounded border p-2"
                             />
                         </label>
                     )}
                     {kind === 'matching' && (
                         <label>
                             Matching pairs (one left =&gt; right pair per line)
-                            <textarea
+                            <Textarea
                                 name="pairs"
                                 required
                                 rows={6}
                                 defaultValue={initial?.pairs}
-                                className="block w-full rounded border p-2"
                             />
                         </label>
                     )}
                     {subjective && (
                         <label>
                             Marking guide
-                            <textarea
+                            <Textarea
                                 name="guide"
                                 rows={4}
                                 maxLength={5000}
                                 defaultValue={initial?.guide}
-                                className="block w-full rounded border p-2"
                             />
                         </label>
                     )}

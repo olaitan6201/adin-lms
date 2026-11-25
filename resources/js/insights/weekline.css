@@ -1,10 +1,8 @@
 .weekline {
-    --wl-rule: #cbd0d8;
-    --portal-ink: #234bad;
-    --portal-muted: #525c6b;
-    color: #191e25;
+    --wl-rule: var(--portal-line);
+    color: #1a1a18;
 }
-.portal-workspace:has(.weekline) { background: #fff; }
+.portal-workspace:has(.weekline) { background: var(--portal-paper); }
 .weekline .wl-heading h1, .weekline .portal-title {
     margin: .15em 0;
     font: 730 clamp(2rem, 4.5vw, 3.75rem)/1.06 system-ui, sans-serif;
@@ -25,9 +23,9 @@
 }
 .wl-strip li { padding: .65rem .5rem; min-height: 5rem; border-inline-start: 1px solid var(--wl-rule); }
 .wl-strip li:last-child { border-inline-end: 1px solid var(--wl-rule); }
-.wl-strip li[aria-current] { background: #234bad; color: white; }
+.wl-strip li[aria-current] { background: var(--portal-ink); color: white; }
 .wl-strip li[aria-current] span { color: inherit; }
-.wl-strip .wl-booked { box-shadow: inset 0 -3px #345cc3; }
+.wl-strip .wl-booked { box-shadow: inset 0 -3px var(--portal-accent); }
 .wl-strip strong, .wl-strip small { display: block; }
 .wl-strip strong { font-size: 1.4rem; line-height: 1.15; }
 .wl-agenda { margin-top: 1rem; border-top: 2px solid currentColor; }

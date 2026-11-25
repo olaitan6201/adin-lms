@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ConnectionStatus } from './ConnectionStatus';
+import { SidebarNavigation } from './SidebarNavigation';
 
 type AcademicLink = {
     label: string;
@@ -12,27 +13,13 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         signedIn: boolean;
         academicLinks?: AcademicLink[];
     }>();
-    const path = url.split('?')[0];
+    const path = url.split(/[?#]/)[0];
     const previousPath = useRef(path);
     const content = useRef<HTMLDivElement>(null);
     const drawer = useRef<HTMLDialogElement>(null);
     const [expanded, setExpanded] = useState(false);
 
     const brand = document.body.dataset;
-    const links = props.signedIn
-        ? [
-              { label: 'Dashboard', href: brand.dashboard },
-              { label: 'My courses', href: brand.courses },
-              { label: 'Search courses', href: brand.search },
-              ...(props.academicLinks ?? []),
-              { label: 'Reports', href: brand.reports },
-              { label: 'Inbox', href: brand.inbox },
-              { label: 'Profile', href: brand.profile },
-          ]
-        : [
-              { label: 'Portal home', href: '/' },
-              { label: 'Sign in', href: '/login' },
-          ];
 
     useEffect(() => {
         if (previousPath.current !== path) {
@@ -55,20 +42,8 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         return () => desktop.removeEventListener('change', closeOnDesktop);
     }, []);
 
-    const navigation = (
-        <nav aria-label="Primary" className="portal-nav">
-            <p className="nav-caption">Navigation</p>
-            {links.map(({ label, href }) => href && (
-                <Link key={href} href={href} onClick={() => drawer.current?.close()}
-                    aria-current={path === href ? 'page' : undefined}>
-                    {label}
-                </Link>
-            ))}
-            {props.signedIn && <Link className="portal-exit" href="/logout" method="post" as="button">
-                Sign out
-            </Link>}
-        </nav>
-    );
+    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []}
+        path={path} close={() => drawer.current?.close()} />;
 
     return (
         <div className="portal-shell">
@@ -111,7 +86,9 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                         event.currentTarget.close();
                     }
                 }}>
-                <button type="button" className="portal-close" onClick={() => drawer.current?.close()}>Close menu</button>
+                <div className="drawer-heading"><strong>{brand.institution}</strong>
+                    <button type="button" className="portal-close" onClick={() => drawer.current?.close()}>Close menu</button>
+                </div>
                 {navigation}
             </dialog>
             <div className="portal-workspace">

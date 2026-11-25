@@ -3,6 +3,7 @@ import { RubricEditor, type RubricCriteria } from './RubricEditor';
 
 export type PolicyItem = {
     id?: string;
+    clientKey?: string;
     title: string;
     kind: ItemKind;
     maximum: string;
@@ -49,7 +50,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                 <input
                     required
                     type="number"
-                    min="0"
+                    min="0.00000001"
                     step="any"
                     name={`items[${index}][maximum]`}
                     value={item.maximum}
@@ -82,6 +83,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                 <RubricEditor
                     index={index}
                     criteria={item.criteria}
+                    maximum={item.maximum}
                     onChange={(criteria) => onChange({ criteria })}
                 />
             )}

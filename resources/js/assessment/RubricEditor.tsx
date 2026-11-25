@@ -5,10 +5,11 @@ export type RubricCriteria = RubricCriterion[];
 interface Props {
     index: number;
     criteria: RubricCriteria;
+    maximum: string;
     onChange: (criteria: RubricCriteria) => void;
 }
 
-export function RubricEditor({ index, criteria, onChange }: Props) {
+export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
     const updateCriterion = (criterionIndex: number, patch: Partial<RubricCriterion>) => {
         onChange(criteria.map((criterion, i) => (i === criterionIndex ? { ...criterion, ...patch } : criterion)));
     };
@@ -69,6 +70,7 @@ export function RubricEditor({ index, criteria, onChange }: Props) {
                                     required
                                     type="number"
                                     min="0"
+                                    max={maximum || undefined}
                                     step="any"
                                     name={`items[${index}][criteria][${criterionIndex}][levels][${levelIndex}][points]`}
                                     value={level.points}

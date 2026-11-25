@@ -8,7 +8,10 @@ export type PolicyDefinition = {
     items: PolicyItem[];
 };
 
+let nextItemKey = 0;
+
 const emptyItem = (): PolicyItem => ({
+    clientKey: `new-${++nextItemKey}`,
     title: '',
     kind: 'assignment',
     maximum: '',
@@ -111,7 +114,7 @@ export function SetupBook({ url, policy }: { url: string; policy?: PolicyDefinit
             </button>
             {data.items.map((item, index) => (
                 <PolicyItemFields
-                    key={item.id ?? `new-${index}`}
+                    key={item.id ?? item.clientKey ?? `new-${index}`}
                     index={index}
                     item={item}
                     removable={!item.id && data.items.length > 1}

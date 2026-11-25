@@ -15,6 +15,7 @@ use App\Models\SubmissionRecipient;
 use App\Models\SubmissionVersion;
 use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\PrivateScripts;
+use App\Services\Assessment\RecordSubmissionMark;
 use App\Services\Assessment\ScoreLedger;
 use App\Services\Assessment\SubmissionIntake;
 use App\Services\Assessment\SubmissionVisibility;
@@ -105,25 +106,11 @@ class AssignmentController
     public function mark(
         SubmissionMarkRequest $request,
         SubmissionVersion $version,
-        ScoreLedger $ledger,
-        PrivateScripts $files,
+        RecordSubmissionMark $action,
     ): RedirectResponse {
         $item = $version->submission->assignment->item;
         Gate::authorize('mark', $item);
-        $data = $request->validated();
-        DB::transaction(function () use ($request, $data, $files, $version, $ledger, $item) {
-            $marked = $request->file('script') ? $files->store($request->file('script'))->id : null;
-            foreach (SubmissionRecipient::where('version_id', $version->id)
-                ->orderBy('enrolment_id')
-                ->pluck('enrolment_id') as $id) {
-                $ledger->append($item, $id, (string) $data['points'], $data['reason'], $request->user()->id, [
-                    'submission_version_id' => $version->id,
-                    'marked_file_id' => $marked,
-                    'feedback' => $data['feedback'] ?? null,
-                    'released_at' => $request->boolean('release') ? now() : null,
-                ]);
-            }
-        });
+        $action->run($version, $request->user(), $request->validated(), $request->file('script'));
 
         return back();
     }

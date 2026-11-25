@@ -1,5 +1,6 @@
 import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
+import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
 
 export type Infrastructure = {
     backup: { state: string; run?: string; finished_at?: string; overdue?: boolean | null };
@@ -24,56 +25,41 @@ export type Infrastructure = {
 
 export default function InfrastructurePanel({ data }: { data: Infrastructure }) {
     const { settings } = data;
-    const field = 'block max-w-full rounded border p-2';
-    const button = 'rounded bg-teal-900 px-3 py-2 text-white';
+    const button = 'justify-self-start rounded border px-3 py-2';
     return (
         <section className="space-y-5" aria-label="Infrastructure">
             <InfrastructureReadings data={data} />
-            <Form action="/operations/infrastructure" method="post">
+            <Form id="monitor-settings" className="portal-panel desk-shelf"
+                action="/operations/infrastructure" method="post">
                 {({ errors, processing, recentlySuccessful }) => (
                     <fieldset className="grid gap-3">
                         <legend className="font-semibold">Monitoring and attendance integration</legend>
-                        <label>
-                            Storage warning (MiB)
-                            <input
-                                className={field}
-                                name="storage_mib"
-                                type="number"
-                                min="1"
-                                max="100000000"
-                                defaultValue={settings.storage_mib}
-                                required
-                            />
-                        </label>
-                        <label>
-                            Database warning (ms)
-                            <input
-                                className={field}
-                                name="probe_ms"
-                                type="number"
-                                min="1"
-                                max="60000"
-                                defaultValue={settings.probe_ms}
-                                required
-                            />
-                        </label>
-                        <label>
-                            Attendance bridge key slot
-                            <select className={field} name="bridge_slot" defaultValue={settings.bridge_slot}>
-                                <option value="primary">Primary host key</option>
-                                <option value="standby">Standby host key</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
+                        <CorrectionFocus errors={errors} />
+                        <OperationsInput label="Storage warning (MiB)" error={errors.storage_mib}
+                            name="storage_mib"
+                            type="number"
+                            min="1"
+                            max="100000000"
+                            defaultValue={settings.storage_mib}
+                            required
+                        />
+                        <OperationsInput label="Database warning (ms)" error={errors.probe_ms}
+                            name="probe_ms"
+                            type="number"
+                            min="1"
+                            max="60000"
+                            defaultValue={settings.probe_ms}
+                            required
+                        />
+                        <OperationsSelect label="Attendance bridge key slot" error={errors.bridge_slot} name="bridge_slot" defaultValue={settings.bridge_slot}>
+                            <option value="primary">Primary host key</option>
+                            <option value="standby">Standby host key</option>
+                            <option value="disabled">Disabled</option>
+                        </OperationsSelect>
                         <p>
                             Changing slots takes effect on the next check-in. Provision the matching key on the host and
                             at the provider first.
                         </p>
-                        {Object.values(errors).map((error) => (
-                            <p key={error} role="alert">
-                                {error}
-                            </p>
-                        ))}
                         <button className={button} disabled={processing}>
                             Save infrastructure settings
                         </button>
@@ -91,28 +77,19 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                     data.backup.overdue === null ? 'No freshness target configured' : data.backup.overdue ? 'Report overdue' : 'Within reporting interval'
                 }</p>}
             </div>
-            <p>Record the external job or rehearsal ticket after inspecting it. These receipts are operator reports.</p>
-            <Form action="/operations/backup-evidence" method="post">
+            <Form id="backup-receipt" className="portal-panel desk-shelf"
+                action="/operations/backup-evidence" method="post">
                 {({ errors, processing, recentlySuccessful }) => (
                     <fieldset className="grid gap-3">
                         <legend className="font-semibold">New backup receipt</legend>
-                        <label>
-                            Evidence reference
-                            <input className={field} name="reference" required pattern="[A-Za-z0-9_\-]{1,64}" />
-                        </label>
-                        <label>
-                            Observed outcome
-                            <select className={field} name="outcome">
+                        <CorrectionFocus errors={errors} />
+                        <p>Log the inspected ticket and outcome. Recording a receipt does not start a backup or restore.</p>
+                        <OperationsInput label="Evidence reference" error={errors.reference} name="reference" required pattern="[A-Za-z0-9_\-]{1,64}" />
+                        <OperationsSelect label="Observed outcome" error={errors.outcome} name="outcome">
                                 <option value="snapshot">Snapshot completed</option>
                                 <option value="restored">Isolated restore checked</option>
                                 <option value="failed">Backup or restore failed</option>
-                            </select>
-                        </label>
-                        {Object.values(errors).map((error) => (
-                            <p key={error} role="alert">
-                                {error}
-                            </p>
-                        ))}
+                        </OperationsSelect>
                         <button className={button} disabled={processing}>
                             Record backup evidence
                         </button>

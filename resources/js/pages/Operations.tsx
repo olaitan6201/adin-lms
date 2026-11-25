@@ -1,6 +1,7 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import InfrastructurePanel, { type Infrastructure } from '../components/InfrastructurePanel';
 import BrandingPanel from '../components/BrandingPanel';
+import RetentionPolicy from '../components/RetentionPolicy';
 
 type Status = {
     activeSessions: number;
@@ -31,35 +32,7 @@ export default function Operations({
             </dl>
             <InfrastructurePanel data={infrastructure} />
             <BrandingPanel />
-            <h2 className="text-xl font-semibold">Withdrawn feedback consent</h2>
-            <p>
-                {retentionDays === null
-                    ? 'Deletion is disabled until a retention period is configured.'
-                    : `Eligible for approved deletion after ${retentionDays} days.`}
-            </p>
-            <Form action="/operations/retention" method="post">
-                {({ errors, processing, recentlySuccessful }) => (
-                    <>
-                        <label>
-                            Retention period (days)
-                            <input
-                                className="block border p-2"
-                                type="number"
-                                name="days"
-                                defaultValue={retentionDays ?? ''}
-                                min={1}
-                                max={3650}
-                                required
-                            />
-                        </label>
-                        {errors.days && <p role="alert">{errors.days}</p>}
-                        <button className="my-2 bg-teal-900 p-2 text-white" disabled={processing}>
-                            Save retention period
-                        </button>
-                        {recentlySuccessful && <p role="status">Retention period saved.</p>}
-                    </>
-                )}
-            </Form>
+            <RetentionPolicy days={retentionDays} />
             <Link className="underline" href="/courses">
                 My courses
             </Link>

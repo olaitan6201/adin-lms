@@ -1,4 +1,6 @@
 import { Form, Link } from '@inertiajs/react';
+import { useState } from 'react';
+import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
 
 type CaseFile = {
     id: string;
@@ -24,10 +26,10 @@ export type CasePage = {
     };
 };
 const label = (value: string) => value.replaceAll('_', ' ');
-const field = 'block w-full rounded border p-2';
-const button = 'rounded bg-teal-900 px-3 py-2 text-white';
+const button = 'portal-action justify-self-start';
 
 export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
+    const [kind, setKind] = useState('subject_access');
     return (
         <section aria-label="Case register" className="space-y-4">
             <h2 className="text-xl font-semibold">Case register</h2>
@@ -35,35 +37,26 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                 The opening officer owns follow-up. Keep identities, correspondence, deadlines and documents in the
                 restricted case system. Enter only its opaque references here.
             </p>
-            <Form action="/operations/privacy/cases" method="post">
+            <Form id="open-case" className="portal-panel desk-shelf" action="/operations/privacy/cases" method="post">
                 {({ processing, errors, recentlySuccessful }) => (
                     <fieldset className="grid min-w-0 gap-2">
-                        <legend className="font-semibold">Open a case</legend>
-                        <label>
-                            Case type
-                            <select className={field} name="kind">
-                                <option value="subject_access">Subject access</option>
-                                <option value="breach">Breach response</option>
-                                <option value="retention_hold">Retention hold</option>
-                                <option value="records_disposition">Records disposition (custodian executed)</option>
-                            </select>
-                        </label>
-                        <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
+                        <legend className="desk-section">Open a case</legend>
+                        <CorrectionFocus errors={errors} />
+                        <OperationsSelect label="Case type" name="kind" error={errors.kind} value={kind}
+                            onChange={event => setKind(event.target.value)}>
+                            <option value="subject_access">Subject access</option>
+                            <option value="breach">Breach response</option>
+                            <option value="retention_hold">Retention hold</option>
+                            <option value="records_disposition">Records disposition (custodian executed)</option>
+                        </OperationsSelect>
+                        {kind === 'records_disposition' && <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
                             decision. The custodian checks holds again before acting in the source system and returns an
-                            execution receipt for independent verification. Advancing a case does not delete data.</p>
-                        <label>
-                            External case reference
-                            <input className={field} name="reference" required maxLength={64} />
-                        </label>
-                        <label>
-                            Affected account UUID (required except for breaches)
-                            <input className={field} name="subject_id" />
-                        </label>
-                        {Object.values(errors).map((error) => (
-                            <p key={error} role="alert">
-                                {error}
-                            </p>
-                        ))}
+                            execution receipt for independent verification. Advancing a case does not delete data.</p>}
+                        <OperationsInput label="External case reference" name="reference" required maxLength={64}
+                            error={errors.reference} aria-describedby="reference-format" />
+                        <small id="reference-format">Use letters, numbers, underscores or hyphens only.</small>
+                        <OperationsInput label="Affected account UUID (required except for breaches)" name="subject_id"
+                            error={errors.subject_id && 'Enter the affected account’s existing UUID from the restricted case system.'} />
                         <button className={button} disabled={processing}>
                             Open case
                         </button>
@@ -71,6 +64,7 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                     </fieldset>
                 )}
             </Form>
+            <h2 className="desk-section">Continue a case</h2>
             {cases.data.length === 0 && <p>No cases recorded.</p>}
             {cases.data.map((row) => (
                 <article key={row.id} className="space-y-2 break-words border-t py-3">
@@ -95,21 +89,17 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         </ol>
                     </details>
                     {row.next && (
-                        <Form method="post" action={`/operations/privacy/cases/${row.id}`}>
+                        <Form id={`continue-${row.id}`}
+                            method="post" action={`/operations/privacy/cases/${row.id}`}>
                             {({ processing, errors }) => (
                                 <fieldset className="grid min-w-0 gap-2">
                                     <legend>Record next step: {label(row.next!)}</legend>
+                                    <CorrectionFocus errors={errors} />
                                     <input type="hidden" name="stage" value={row.stage} />
-                                    <label>
-                                        Decision or delivery receipt for {row.reference}
-                                        <input className={field} name="reference" maxLength={64} required />
-                                    </label>
-                                    {Object.values(errors).map((error) => (
-                                        <p key={error} role="alert">
-                                            {error}
-                                        </p>
-                                    ))}
-                                    <button className={button} disabled={processing}>
+                                    <OperationsInput label={`Decision or delivery receipt for ${row.reference}`}
+                                        name="reference" maxLength={64} required error={errors.reference} />
+                                    {errors.stage && <p role="alert">Reload this case to check its current stage.</p>}
+                                    <button className="justify-self-start rounded border px-3 py-2" disabled={processing}>
                                         Record {label(row.next!)}
                                     </button>
                                 </fieldset>

@@ -52,9 +52,10 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         {kind === 'records_disposition' && <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
                             decision. The custodian checks holds again before acting in the source system and returns an
                             execution receipt for independent verification. Advancing a case does not delete data.</p>}
-                        <OperationsInput label="External case reference" name="reference" required maxLength={64}
-                            error={errors.reference} aria-describedby="reference-format" />
-                        <small id="reference-format">Use letters, numbers, underscores or hyphens only.</small>
+                        <label htmlFor="opening-reference">External case reference</label>
+                        <input id="opening-reference" className="block w-full border p-2" name="reference" required maxLength={64}
+                            aria-invalid={errors.reference ? true : undefined} aria-describedby="reference-format" />
+                        <small id="reference-format">{errors.reference && `${errors.reference} `}Use letters, numbers, underscores or hyphens only.</small>
                         <OperationsInput label="Affected account UUID (required except for breaches)" name="subject_id"
                             error={errors.subject_id && 'Enter the affected account’s existing UUID from the restricted case system.'} />
                         <button className={button} disabled={processing}>

@@ -5,7 +5,12 @@ export default function MarkPaper({
     questions,
 }: {
     attempt: string;
-    questions: { prompt: string; answer: string; possible: string; automatic: string | null }[];
+    questions: {
+        prompt: string;
+        answer: string;
+        possible: string;
+        automatic: string | null;
+    }[];
 }) {
     return (
         <main className="assessment-page">

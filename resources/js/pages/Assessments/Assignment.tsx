@@ -9,31 +9,55 @@ type Row = {
     receipt: string;
     late: boolean;
     files: string[];
-    scores: { id: string; points: string; feedback: string | null; marked_file_id: string | null }[];
+    scores: {
+        id: string;
+        points: string;
+        feedback: string | null;
+        marked_file_id: string | null;
+    }[];
 };
 type Props = {
     pending: string[];
-    assignment: { id: string; instructions: string; group_work: boolean; due_at: string; closes_at: string };
+    assignment: {
+        id: string;
+        instructions: string;
+        group_work: boolean;
+        due_at: string;
+        closes_at: string;
+    };
     title: string;
     marker: boolean;
     rows: Row[];
-    groups: { id: string; name: string }[];
+    groups: {
+        id: string;
+        name: string;
+    }[];
     references: string[];
 };
-export default function Assignment({ assignment: a, title, marker, rows, groups, references, pending }: Props) {
+export default function Assignment({
+    assignment: a,
+    title,
+    marker,
+    rows,
+    groups,
+    references,
+    pending,
+}: Props) {
     const url = `/assignments/${a.id}`;
     const download = (id: string, text: string) => (
         <a key={id} href={`${url}/files/${id}`}>
             {text}
         </a>
     );
+
     return (
         <main className="assessment-page">
             <Head title={title} />
             <h1>{title}</h1>
             <p>{a.instructions}</p>
             <p>
-                Due {new Date(a.due_at).toLocaleString()} · Closes {new Date(a.closes_at).toLocaleString()}
+                Due {new Date(a.due_at).toLocaleString()} · Closes{' '}
+                {new Date(a.closes_at).toLocaleString()}
             </p>
             {references.map((id) => download(id, 'Download reference'))}
             {!marker && (
@@ -85,7 +109,8 @@ export default function Assignment({ assignment: a, title, marker, rows, groups,
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (
                         <p key={s.id}>
-                            Mark: {s.points} · {s.feedback} {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
+                            Mark: {s.points} · {s.feedback}{' '}
+                            {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
                         </p>
                     ))}
                     {marker && (

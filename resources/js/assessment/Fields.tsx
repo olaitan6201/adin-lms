@@ -1,18 +1,28 @@
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-export function Post({ url, button, children }: { url: string; button: string; children?: ReactNode }) {
+
+interface PostProps {
+    url: string;
+    button: string;
+    children?: ReactNode;
+}
+
+export function Post({ url, button, children }: PostProps) {
     return (
         <Form action={url} method="post">
             {({ processing, errors, recentlySuccessful }) => (
                 <>
                     {children}
                     <button disabled={processing}>{button}</button>
-                    <p aria-live="polite">{recentlySuccessful ? 'Saved.' : Object.values(errors).join(' ')}</p>
+                    <p aria-live="polite">
+                        {recentlySuccessful ? 'Saved.' : Object.values(errors).join(' ')}
+                    </p>
                 </>
             )}
         </Form>
     );
 }
+
 export function Field({
     label,
     name,
@@ -39,7 +49,13 @@ export function Field({
         </label>
     );
 }
-export function Check({ name, label }: { name: string; label: string }) {
+
+interface CheckProps {
+    name: string;
+    label: string;
+}
+
+export function Check({ name, label }: CheckProps) {
     return (
         <label>
             <input name={name} type="checkbox" value="1" />
@@ -47,6 +63,7 @@ export function Check({ name, label }: { name: string; label: string }) {
         </label>
     );
 }
+
 export function WindowFields() {
     return (
         <>
@@ -55,7 +72,11 @@ export function WindowFields() {
         </>
     );
 }
-export type Member = { id: string; name: string };
+
+export type Member = {
+    id: string;
+    name: string;
+};
 export function Roster({ members }: { members: Member[] }) {
     return (
         <label>

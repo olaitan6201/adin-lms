@@ -2,6 +2,7 @@
 
 namespace App\Services\Identity;
 
+use App\Enums\PermissionCode;
 use App\Jobs\SendAccountResetLink;
 use App\Models\AuditLog;
 use App\Models\User;
@@ -54,7 +55,7 @@ class AccountAdministration
     private function authorize(string $actorId): void
     {
         $actor = User::lockForUpdate()->find($actorId);
-        if ($actor?->status !== 'active' || ! $this->authority->institutionAllows($actor, 'accounts.manage')) {
+        if ($actor?->status !== 'active' || ! $this->authority->institutionAllows($actor, PermissionCode::AccountsManage)) {
             throw new DomainException('An active institutional account administrator is required.');
         }
     }

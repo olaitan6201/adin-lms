@@ -2,6 +2,9 @@
 
 namespace App\Services\Authority;
 
+use App\Enums\PermissionCode;
+use App\Enums\RoleCode;
+use App\Enums\ScopeType;
 use App\Models\Offering;
 use App\Models\RoleGrant;
 use App\Models\TeachingAllocation;
@@ -13,24 +16,27 @@ class ScopedAuthority
     public function requiresMfa(User $user): bool
     {
         return RoleGrant::where('user_id', $user->id)
-            ->whereHas('role', fn (Builder $roles) => $roles->whereNotIn('code', ['student', 'guardian']))
+            ->whereHas('role', fn (Builder $roles) => $roles->whereNotIn('code', [RoleCode::Student, RoleCode::Guardian]))
             ->exists();
     }
 
-    public function institutionAllows(User $user, string $permission): bool
+    public function institutionAllows(User $user, PermissionCode|string $permission): bool
     {
-        $roles = array_keys(array_filter(RoleCatalogue::MATRIX,
-            fn (string $role) => RoleCatalogue::scopeType($role) === 'institution', ARRAY_FILTER_USE_KEY));
+        $permission = $permission instanceof PermissionCode ? $permission : PermissionCode::tryFrom($permission);
+        if ($permission === null) {
+            return false;
+        }
+        $roles = array_values(array_filter(RoleCode::cases(), fn (RoleCode $role) => $role->scope() === ScopeType::Institution));
 
-        return $this->hasGrant($user, $permission, 'institution', $roles);
+        return $this->hasGrant($user, $permission, ScopeType::Institution->key(), $roles);
     }
 
     public function rosterAllows(User $user, Offering $offering): bool
     {
-        if ($this->institutionAllows($user, 'roster.read')) {
+        if ($this->institutionAllows($user, PermissionCode::RosterRead)) {
             return true;
         }
-        if ($this->hasGrant($user, 'roster.read', 'offering:'.$offering->id, ['lecturer'])
+        if ($this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Offering->key($offering->id), [RoleCode::Lecturer])
             && TeachingAllocation::where('offering_id', $offering->id)
                 ->whereHas('lecturer', fn (Builder $query) => $query->where('user_id', $user->id))->exists()) {
             return true;
@@ -38,13 +44,13 @@ class ScopedAuthority
         $department = $offering->curriculumCourse?->course?->department;
 
         return $department !== null && (
-            $this->hasGrant($user, 'roster.read', 'department:'.$department->id, ['head_of_department'])
-            || $this->hasGrant($user, 'roster.read', 'faculty:'.$department->faculty_id, ['dean'])
+            $this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Department->key($department->id), [RoleCode::HeadOfDepartment])
+            || $this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Faculty->key($department->faculty_id), [RoleCode::Dean])
         );
     }
 
-    /** @param list<string> $roles */
-    private function hasGrant(User $user, string $permission, string $scope, array $roles): bool
+    /** @param list<RoleCode> $roles */
+    private function hasGrant(User $user, PermissionCode $permission, string $scope, array $roles): bool
     {
         return RoleGrant::where('role_grants.user_id', $user->id)
             ->join('roles', 'roles.id', '=', 'role_grants.role_id')

@@ -2,28 +2,38 @@
 
 namespace App\Services\Authority;
 
+use App\Enums\PermissionCode;
+use App\Enums\RoleCode;
+
 final class RoleCatalogue
 {
-    public const MATRIX = [
-        'super_admin' => ['roster.read', 'accounts.manage', 'login_events.read', 'staff.manage', 'academics.manage', 'curriculum.edit', 'offerings.manage', 'curriculum.approve'],
-        'institutional_admin' => ['roster.read', 'accounts.manage', 'staff.manage', 'academics.manage', 'curriculum.edit', 'offerings.manage'],
-        'ict_admin' => ['login_events.read'],
-        'dean' => ['roster.read'],
-        'head_of_department' => ['roster.read'],
-        'lecturer' => ['roster.read'],
-        'student' => ['courses.read_own'],
-        'examination_officer' => ['examinations.manage'],
-        'quality_assurance_officer' => ['compliance.read'],
-        'guardian' => ['progress.read_approved'],
+    private const ADMIN_PERMISSIONS = [
+        PermissionCode::RosterRead, PermissionCode::AccountsManage, PermissionCode::StaffManage,
+        PermissionCode::AcademicsManage, PermissionCode::CurriculumEdit, PermissionCode::OfferingsManage,
+        PermissionCode::PortabilityManage,
     ];
 
-    public static function scopeType(string $role): ?string
+    /** @return list<PermissionCode> */
+    public static function permissions(RoleCode $role): array
     {
         return match ($role) {
-            'dean' => 'faculty',
-            'head_of_department' => 'department',
-            'lecturer' => 'offering',
-            default => isset(self::MATRIX[$role]) ? 'institution' : null,
+            RoleCode::SuperAdmin => [...self::ADMIN_PERMISSIONS, PermissionCode::LoginEventsRead,
+                PermissionCode::CurriculumApprove, PermissionCode::OperationsManage, PermissionCode::PrivacyManage],
+            RoleCode::InstitutionalAdmin => self::ADMIN_PERMISSIONS,
+            RoleCode::IctAdmin => [PermissionCode::LoginEventsRead, PermissionCode::OperationsManage],
+            RoleCode::Dean, RoleCode::HeadOfDepartment, RoleCode::Lecturer => [PermissionCode::RosterRead],
+            RoleCode::Student => [PermissionCode::CoursesReadOwn],
+            RoleCode::ExaminationOfficer => [PermissionCode::ExaminationsManage],
+            RoleCode::QualityAssuranceOfficer => [PermissionCode::ComplianceRead],
+            RoleCode::Guardian => [PermissionCode::ProgressReadApproved],
         };
+    }
+
+    /** Compatibility for callers comparing persisted scope names. */
+    public static function scopeType(RoleCode|string $role): ?string
+    {
+        $code = $role instanceof RoleCode ? $role : RoleCode::tryFrom($role);
+
+        return $code?->scope()->value;
     }
 }

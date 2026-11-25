@@ -2,6 +2,8 @@
 
 namespace App\Services\Authority;
 
+use App\Enums\RoleCode;
+use App\Enums\ScopeType;
 use App\Models\AccessScope;
 use App\Models\AuditLog;
 use App\Models\Department;
@@ -16,12 +18,16 @@ use InvalidArgumentException;
 
 class ChangeRoleGrant
 {
-    public function apply(string $userId, string $code, string $scopeKey, bool $revoke, ?string $actorId = null): void
+    public function apply(string $userId, RoleCode|string $code, string $scopeKey, bool $revoke, ?string $actorId = null): void
     {
+        $code = $code instanceof RoleCode ? $code : RoleCode::tryFrom($code);
+        if ($code === null) {
+            throw new InvalidArgumentException('Unknown role.');
+        }
         DB::transaction(function () use ($userId, $code, $scopeKey, $revoke, $actorId): void {
             $user = Str::isUuid($userId) ? User::lockForUpdate()->find($userId) : null;
             $role = Role::where('code', $code)->first();
-            if (! $user || ! $role || ! isset(RoleCatalogue::MATRIX[$code])) {
+            if (! $user || ! $role) {
                 throw new InvalidArgumentException('Unknown account or role. Seed the authority catalogue first.');
             }
 
@@ -41,30 +47,30 @@ class ChangeRoleGrant
                     'subject_key' => 'user:'.$user->id, 'occurred_at' => now(),
                     'action' => $revoke ? 'role.revoked' : 'role.granted',
                     'actor_id' => $actorId,
-                    'details' => ['role' => $code, 'scope' => $scopeKey, 'source' => $actorId ? 'web' : 'console'],
+                    'details' => ['role' => $code->value, 'scope' => $scopeKey, 'source' => $actorId ? 'web' : 'console'],
                 ]);
             }
         });
     }
 
     /** @return array<string, string> */
-    private function scopeAttributes(string $code, string $key): array
+    private function scopeAttributes(RoleCode $code, string $key): array
     {
-        $type = RoleCatalogue::scopeType($code);
-        if ($type === 'institution' && $key === 'institution') {
+        $type = $code->scope();
+        if ($type === ScopeType::Institution && $key === $type->key()) {
             return [];
         }
         [$prefix, $id] = array_pad(explode(':', $key, 2), 2, '');
-        $model = match ($prefix) {
-            'faculty' => Faculty::class,
-            'department' => Department::class,
-            'offering' => Offering::class,
-            default => null,
+        $model = match ($type) {
+            ScopeType::Faculty => Faculty::class,
+            ScopeType::Department => Department::class,
+            ScopeType::Offering => Offering::class,
+            ScopeType::Institution => null,
         };
-        if (! $model || $prefix !== $type || ! Str::isUuid($id) || ! $model::whereKey($id)->exists()) {
-            throw new InvalidArgumentException("Expected an existing {$type} scope for {$code}.");
+        if (! $model || $prefix !== $type->value || ! Str::isUuid($id) || ! $model::whereKey($id)->exists()) {
+            throw new InvalidArgumentException("Expected an existing {$type->value} scope for {$code->value}.");
         }
 
-        return [$type.'_id' => $id];
+        return [$type->value.'_id' => $id];
     }
 }

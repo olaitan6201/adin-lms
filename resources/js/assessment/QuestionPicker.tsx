@@ -1,3 +1,4 @@
+import { selectionTotal } from './selectionPoints';
 import { ExamWindowControls } from './ExamWindowControls';
 import { Form } from '@inertiajs/react';
 import { useState } from 'react';
@@ -17,10 +18,7 @@ type Props = {
 export function QuestionPicker({ item, maximum, questions, topics }: Props) {
     const [points, setPoints] = useState<Record<string, string>>({});
     const [draws, setDraws] = useState<string[]>([]);
-    const selected = questions.filter((question) => points[question.id] !== undefined);
-    const total =
-        selected.reduce((sum, question) => sum + Number(points[question.id] || 0), 0) +
-        draws.reduce((sum, score) => sum + Number(score || 0), 0);
+    const total = selectionTotal([...Object.values(points), ...draws]);
 
     return (
         <Form action={`/assessment-items/${item}/exam`} method="post" className="grid gap-4 rounded border p-5">
@@ -56,13 +54,13 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                             <span className="mt-1 block whitespace-pre-wrap">{question.prompt}</span>
                                         </span>
                                     </label>
-                                    <label>
+                                    <label className="grid min-w-0 gap-1">
                                         Possible points
                                         <input
                                             type="number"
                                             min="0.00000001"
                                             max="1000000"
-                                            step="any"
+                                            step="0.00000001"
                                             required={checked}
                                             disabled={!checked}
                                             name={checked ? `selections[${index}][points]` : undefined}
@@ -80,13 +78,13 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             );
                         })}
                     </fieldset>
-                    <fieldset>
-                        <legend>Random topic slots</legend>
+                    <fieldset className="grid min-w-0 gap-4 rounded border p-4">
+                        <legend className="px-2 font-semibold">Random topic slots</legend>
                         {draws.map((value, i) => (
-                            <div key={i}>
-                                <label>
+                            <div key={i} className="grid gap-3 border-b pb-4 sm:grid-cols-2">
+                                <label className="grid min-w-0 gap-1">
                                     Topic for draw {i + 1}
-                                    <select required name={`draws[${i}][bank_id]`}>
+                                    <select className="min-h-11 w-full rounded border p-2" required name={`draws[${i}][bank_id]`}>
                                         {topics.map((b) => (
                                             <option key={b.id} value={b.id}>
                                                 {b.topic}
@@ -94,13 +92,15 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                         ))}
                                     </select>
                                 </label>
-                                <label>
+                                <label className="grid min-w-0 gap-1">
                                     Points for draw {i + 1}
                                     <input
+                                        className="min-h-11 w-full rounded border p-2"
+                                        max="1000000"
                                         name={`draws[${i}][points]`}
                                         type="number"
                                         min="0.00000001"
-                                        step="any"
+                                        step="0.00000001"
                                         required
                                         value={value}
                                         onChange={(e) => setDraws(draws.map((s, n) => (n === i ? e.target.value : s)))}
@@ -108,24 +108,26 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                 </label>
                             </div>
                         ))}
-                        <button type="button" disabled={!topics.length} onClick={() => setDraws([...draws, '1'])}>
-                            Add random slot
-                        </button>
-                        {!!draws.length && (
-                            <button type="button" onClick={() => setDraws(draws.slice(0, -1))}>
-                                Remove last random slot
+                        <div className="flex flex-wrap gap-3">
+                            <button className="min-h-11 rounded border px-3" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
+                                Add random slot
                             </button>
-                        )}
+                            {!!draws.length && (
+                                <button className="min-h-11 px-3 underline" type="button" onClick={() => setDraws(draws.slice(0, -1))}>
+                                    Remove last random slot
+                                </button>
+                            )}
+                        </div>
                     </fieldset>
                     <p role="status">
-                        Selected total: {total} / {maximum} points
+                        {total === null ? 'Enter points greater than zero and at most 1000000, with up to 8 decimal places.' : `Selected total: ${total} / ${maximum} points`}
                     </p>
                     {Object.entries(errors).map(([key, error]) => (
                         <p role="alert" key={key}>
                             {error}
                         </p>
                     ))}
-                    <SubmitButton processing={processing}>Create examination from selection</SubmitButton>
+                    <SubmitButton processing={processing || total === null}>Create examination from selection</SubmitButton>
                     {recentlySuccessful && <p role="status">Saved.</p>}
                 </>
             )}

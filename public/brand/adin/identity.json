@@ -1,0 +1,14 @@
+{
+    "schema_version": 1,
+    "status": "local portal fallback, not official university artwork",
+    "name": "Adin LMS",
+    "variants": {
+        "full": "portal-full.svg",
+        "min": "portal-min.svg",
+        "full_white": "portal-full-white.svg",
+        "min_white": "portal-min-white.svg"
+    },
+    "raster": "Each SVG has a transparent 2x PNG with the same basename.",
+    "usage": "Use full or min on light surfaces; use white variants on dark surfaces. Use empty alt text when adjacent text already names the portal.",
+    "replacement": "Supply approved artwork and its provenance, preserve variant roles and transparent backgrounds, regenerate PNG and installation icons, then update status and name."
+}

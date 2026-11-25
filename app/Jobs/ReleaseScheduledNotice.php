@@ -11,13 +11,11 @@ final class ReleaseScheduledNotice implements ShouldQueue
 {
     use Queueable;
 
-    /** @param list<string> $recipients */
     public function __construct(
         public readonly string $course,
         public readonly TimedNotice $kind,
         public readonly string $source,
         public readonly int $at,
-        public readonly array $recipients,
     ) {}
 
     public function handle(TimedReleaseCapture $capture): void

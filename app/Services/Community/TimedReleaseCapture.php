@@ -48,11 +48,9 @@ final class TimedReleaseCapture
             return;
         }
 
-        $this->audience->learners($course->id)->select('id')->chunkById(200, function ($users) use ($course, $kind, $id, $at): void {
-            Queue::connection('community_events')->later($at, new ReleaseScheduledNotice(
-                $course->id, $kind, $id, $at->timestamp, $users->modelKeys(),
-            ));
-        });
+        Queue::connection('community_events')->later($at, new ReleaseScheduledNotice(
+            $course->id, $kind, $id, $at->timestamp,
+        ));
     }
 
     public function release(ReleaseScheduledNotice $event): void
@@ -95,6 +93,6 @@ final class TimedReleaseCapture
             }
         }
 
-        $this->outbox->record($this->audience->learners($course->id)->whereKey($event->recipients), $key, $body);
+        $this->outbox->record($this->audience->learners($course->id, registeredBy: $at), $key, $body);
     }
 }

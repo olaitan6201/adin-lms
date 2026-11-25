@@ -6,11 +6,13 @@ use App\Models\Announcement;
 use App\Models\AssessmentItem;
 use App\Models\AssessmentScore;
 use App\Models\Assignment;
+use App\Models\Enrolment;
 use App\Models\Examination;
 use App\Models\Gradebook;
 use App\Models\GradingPolicy;
 use App\Models\MaterialVersion;
 use App\Models\Notification;
+use App\Models\NotificationDelivery;
 use App\Models\Offering;
 use App\Models\Submission;
 use App\Models\SubmissionVersion;
@@ -32,12 +34,18 @@ class AcademicNoticeTest extends CommunityTestCase
         $key = 'assignment:'.$future->id;
         $this->assertDatabaseMissing('notifications', ['event_key' => $key]);
         $this->assertDatabaseHas('jobs', ['queue' => 'academic-releases']);
+        $this->artisan('community:notify')->assertSuccessful();
+        $this->travel(1)->hour();
+        $joined = Enrolment::factory()->create(['offering_id' => $course->id, 'enrolled_at' => null]);
         $this->person('tunde')->student->enrolments()->where('offering_id', $course->id)->update(['status' => 'withdrawn']);
         $this->travel(33)->hours();
+        Enrolment::factory()->create(['offering_id' => $course->id]);
         $this->artisan('community:notify')->assertSuccessful();
         $this->artisan('community:notify')->assertSuccessful();
         foreach ([$key, 'deadline:'.$future->id.':'.$future->due_at->timestamp] as $event) {
-            $this->assertSame([$this->person('ada')->id], Notification::where('event_key', $event)->pluck('recipient_id')->all());
+            $notices = Notification::where('event_key', $event);
+            $this->assertEqualsCanonicalizing([$this->person('ada')->id, $joined->student->user_id], $notices->pluck('recipient_id')->all());
+            $this->assertSame(2, NotificationDelivery::whereIn('notification_id', $notices->select('id'))->count());
         }
     }
 

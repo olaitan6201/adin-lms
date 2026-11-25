@@ -10,14 +10,19 @@ use App\Models\GroupMember;
 use App\Models\RoleGrant;
 use App\Models\Student;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 
 final class CommunityAudience
 {
     /** @return Builder<User> */
-    public function learners(string $offering, ?string $group = null): Builder
+    public function learners(string $offering, ?string $group = null, ?CarbonImmutable $registeredBy = null): Builder
     {
         $registrations = Enrolment::where('offering_id', $offering)->where('status', EnrolmentStatus::Registered);
+        if ($registeredBy !== null) {
+            // Imports without an upstream enrolment date can only prove their locally observed state.
+            $registrations->whereRaw('coalesce(enrolled_at, updated_at, created_at) <= ?', [$registeredBy]);
+        }
         if ($group !== null) {
             $groupMembers = GroupMember::where('group_id', $group)
                 ->whereHas('group', fn (Builder $groups) => $groups->where('offering_id', $offering));

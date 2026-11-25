@@ -10,13 +10,13 @@ final class LearnerActivity
 {
     public function append(InsightTable $table, Builder $roster, Collection $courses, ReportAudience $audience): void
     {
-        $members = (clone $roster)->orderBy('e.id')->get(['e.id', 'e.offering_id', 'e.student_id', 'p.matric_number',
+        $members = (clone $roster)->tap(ReportLimit::apply(...))->orderBy('e.id')->get(['e.id', 'e.offering_id', 'e.student_id', 'p.matric_number',
             'p.external_student_id', 'e.completed_at', 'u.full_name'])->keyBy('id');
-        $progress = (clone $roster)->join('lesson_progress as lp', 'lp.enrolment_id', '=', 'e.id')
+        $progress = (clone $roster)->tap(ReportLimit::apply(...))->join('lesson_progress as lp', 'lp.enrolment_id', '=', 'e.id')
             ->join('modules as m', 'm.id', '=', 'lp.module_id')->whereColumn('m.offering_id', 'e.offering_id')
             ->when($audience === ReportAudience::Student, ReportRelease::lesson(...))
             ->orderBy('lp.last_seen', 'desc')->get(['e.id', 'm.title', 'lp.completed_at', 'lp.last_seen']);
-        $attendance = (clone $roster)->join('attendance as a', 'a.user_id', '=', 'p.user_id')
+        $attendance = (clone $roster)->tap(ReportLimit::apply(...))->join('attendance as a', 'a.user_id', '=', 'p.user_id')
             ->join('classes as cl', 'cl.id', '=', 'a.class_id')->whereColumn('cl.offering_id', 'e.offering_id')
             ->orderBy('cl.starts_at')->get(['e.id', 'cl.title', 'a.status']);
         $table->totals += [

@@ -12,7 +12,7 @@ final readonly class AssessmentRecords
 
     public function receipts(): Collection
     {
-        return (clone $this->roster)
+        return (clone $this->roster)->tap(ReportLimit::apply(...))
             ->join('submission_recipients as r', 'r.enrolment_id', '=', 'e.id')
             ->join('submission_versions as v', 'v.id', '=', 'r.version_id')
             ->join('submissions as sub', 'sub.id', '=', 'v.submission_id')
@@ -35,7 +35,7 @@ final readonly class AssessmentRecords
             ->join('gradebooks as b', 'b.id', '=', 'i.gradebook_id')
             ->whereColumn('b.offering_id', 'e.offering_id');
 
-        return ReportRelease::score($scores)
+        return ReportRelease::score($scores)->tap(ReportLimit::apply(...))
             ->orderByDesc('sc.revision')
             ->orderBy('sc.id')
             ->get(['e.id', 'u.full_name', 'e.offering_id', 'i.title', 'i.id as item', 'sc.points', 'i.maximum_score'])
@@ -46,7 +46,7 @@ final readonly class AssessmentRecords
     {
         $grades = (clone $this->roster)->join('grades as g', 'g.enrolment_id', '=', 'e.id');
 
-        return ReportRelease::grade($grades)
+        return ReportRelease::grade($grades)->tap(ReportLimit::apply(...))
             ->orderByDesc('g.revision')
             ->orderBy('g.id')
             ->get(['e.id', 'e.offering_id', 'u.full_name', 'g.grade', 'g.total_percent'])
@@ -74,7 +74,7 @@ final readonly class AssessmentRecords
 
     public function pendingMarks(Collection $receipts): int
     {
-        $marked = (clone $this->roster)
+        $marked = (clone $this->roster)->tap(ReportLimit::apply(...))
             ->join('assessment_scores as sc', 'sc.enrolment_id', '=', 'e.id')
             ->whereIn('sc.submission_version_id', $receipts->pluck('id'))
             ->get(['e.id', 'sc.submission_version_id'])
@@ -96,6 +96,7 @@ final readonly class AssessmentRecords
     private function items(): Builder
     {
         return DB::table('assessment_items as i')
+            ->tap(ReportLimit::apply(...))
             ->join('gradebooks as b', 'b.id', '=', 'i.gradebook_id')
             ->whereIn('b.offering_id', $this->offeringIds);
     }

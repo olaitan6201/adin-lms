@@ -18,11 +18,12 @@ export type Options = Record<Field, Choice[]>;
 
 type Props = {
     path: string;
+    family?: string;
     filters: Filters;
     options: Options;
 };
 
-export function ReportFilters({ path, filters, options }: Props) {
+export function ReportFilters({ path, filters, options, family }: Props) {
     function apply(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -35,7 +36,7 @@ export function ReportFilters({ path, filters, options }: Props) {
             }
         }
 
-        router.get(path, selected);
+        router.get(path, { ...selected, ...(family ? { family } : {}) });
     }
 
     return (
@@ -59,7 +60,7 @@ export function ReportFilters({ path, filters, options }: Props) {
                 );
             })}
             <button className="rounded bg-teal-800 px-4 py-2 text-white">Apply filters</button>
-            <Link href={path} className="py-2 underline">Clear filters</Link>
+            <Link href={family ? `${path}?family=${family}` : path} className="py-2 underline">Clear filters</Link>
         </form>
     );
 }

@@ -51,6 +51,7 @@ trait BuildsLecturerWorkload
                 'scope' => 'offering:'.$offering->id,
             ])->assertSuccessful();
         }
+
         $this->withSession(['security.mfa_user' => $user->id]);
         TeachingAllocation::factory()->create(['offering_id' => $first->id]);
 

@@ -91,6 +91,15 @@ class OperationsPortabilityTest extends TestCase
         return file_get_contents(base_path('tests/Fixtures/operations/'.$name));
     }
 
+    public function test_cartridge_text_resource_maps_to_chapter_in_reading_order(): void
+    {
+        $target = Offering::factory()->create();
+        $this->operator(RoleCode::InstitutionalAdmin);
+        $package = $this->archive(['imsmanifest.xml' => $this->fixture('cartridge11.xml'), 'web_resources/Reading.txt' => 'Read the field notes.']);
+        $this->postJson("/operations/courses/{$target->id}/import", ['package' => $package])->assertCreated();
+        $this->assertDatabaseHas('modules', ['offering_id' => $target->id, 'position' => 1, 'title' => 'Soil observations', 'body' => 'Read the field notes.']);
+    }
+
     private function archive(array $entries): UploadedFile
     {
         $file = tmpfile();

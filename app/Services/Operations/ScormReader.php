@@ -11,6 +11,8 @@ final class ScormReader
 
     public const ADL = 'http://www.adlnet.org/xsd/adlcp_rootv1p2';
 
+    public const CARTRIDGE = 'http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1';
+
     /** @return list<array{title:string,file:string,links:array}> */
     public function chapters(string $xml): array
     {
@@ -24,22 +26,30 @@ final class ScormReader
         }
 
         $root = $doc->documentElement;
-        if ($root->localName !== 'manifest' || $root->namespaceURI !== self::IMS || $doc->doctype) {
-            TextAssetArchive::reject('Expected an IMS SCORM 1.2 manifest.');
+        $cartridge = $root->namespaceURI === self::CARTRIDGE;
+        if ($root->localName !== 'manifest' || (! $cartridge && $root->namespaceURI !== self::IMS) || $doc->doctype) {
+            TextAssetArchive::reject('Expected SCORM 1.2 or a Common Cartridge 1.1 text-resource manifest.');
         }
         [$meta, $organizations, $resources] = $this->sequence($root, 'metadata', 'organizations', 'resources');
         [$schema, $version] = $this->sequence($meta, 'schema', 'schemaversion');
-        if ($this->text($schema) !== 'ADL SCORM' || $this->text($version) !== '1.2') {
-            TextAssetArchive::reject('Only SCORM 1.2 static assets are supported.');
+        if ($this->text($schema) !== ($cartridge ? 'IMS Common Cartridge' : 'ADL SCORM') || $this->text($version) !== ($cartridge ? '1.1.0' : '1.2')) {
+            TextAssetArchive::reject('Unsupported package schema or version.');
         }
         [$org] = $this->sequence($organizations, 'organization');
-        if ($organizations->getAttribute('default') !== $org->getAttribute('identifier')
-            || ! in_array($org->getAttribute('structure'), ['', 'hierarchical'], true)) {
+        if (($organizations->getAttribute('default') !== $org->getAttribute('identifier') && ! ($cartridge && ! $organizations->hasAttribute('default')))
+            || ! in_array($org->getAttribute('structure'), $cartridge ? ['rooted-hierarchy'] : ['', 'hierarchical'], true)) {
             TextAssetArchive::reject('Expected a single default organization.');
         }
 
         $files = $this->resourceFiles($resources);
         $items = $this->children($org);
+        if ($cartridge) {
+            [$folder] = $this->sequence($org, 'item');
+            if ($folder->hasAttribute('identifierref')) {
+                TextAssetArchive::reject('Expected one cartridge root folder.');
+            }
+            $items = $this->children($folder);
+        }
         if (isset($items[0]) && $items[0]->localName === 'title') {
             $this->text(array_shift($items));
         }
@@ -68,12 +78,15 @@ final class ScormReader
     {
         $files = [];
         foreach ($this->children($resources) as $resource) {
+            if ($resource->getAttributeNS(self::ADL, 'scormtype') === 'sco') {
+                TextAssetArchive::reject('Executable SCORM is blocked. This installation has no isolated runtime player.');
+            }
             [$file] = $this->sequence($resource, 'file');
             $id = $resource->getAttribute('identifier');
             $href = $resource->getAttribute('href');
             $isAsset = $resource->localName === 'resource'
                 && $resource->getAttribute('type') === 'webcontent'
-                && $resource->getAttributeNS(self::ADL, 'scormtype') === 'asset';
+                && ($resource->namespaceURI === self::CARTRIDGE || $resource->getAttributeNS(self::ADL, 'scormtype') === 'asset');
             $isLocalFile = $href === $file->getAttribute('href') && ! $this->children($file);
 
             if (! $isAsset || ! $isLocalFile || $id === '' || isset($files[$id])) {
@@ -108,7 +121,7 @@ final class ScormReader
             default => [],
         };
         foreach ($element->attributes as $attribute) {
-            if ($element->localName === 'resource' && $attribute->namespaceURI === self::ADL && $attribute->localName === 'scormtype') {
+            if ($element->namespaceURI === self::IMS && $element->localName === 'resource' && $attribute->namespaceURI === self::ADL && $attribute->localName === 'scormtype') {
                 continue;
             }
 
@@ -124,7 +137,7 @@ final class ScormReader
         $children = [];
         foreach ($element->childNodes as $node) {
             if ($node instanceof DOMElement) {
-                if ($node->namespaceURI !== self::IMS || $node->hasAttributeNS('http://www.w3.org/XML/1998/namespace', 'base')) {
+                if ($node->namespaceURI !== $element->namespaceURI || $node->hasAttributeNS('http://www.w3.org/XML/1998/namespace', 'base')) {
                     TextAssetArchive::reject('Unsupported namespace or base location.');
                 }
 

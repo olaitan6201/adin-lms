@@ -73,7 +73,7 @@ final class CoursePackage
             'chapters' => 'required|array|list|min:1|max:50',
             'chapters.*' => 'required|array:title,file,links',
             'chapters.*.title' => 'required|string|max:191',
-            'chapters.*.file' => ['required', 'string', 'regex:/^[a-z0-9_-]{1,64}\.txt$/D'],
+            'chapters.*.file' => ['required', 'string', 'regex:~^(?:[a-zA-Z0-9_-]{1,64}/){0,3}[a-zA-Z0-9_-]{1,64}\.txt$~D'],
             'chapters.*.links' => 'present|array|list|max:10',
             'chapters.*.links.*' => 'array:title,url',
             'chapters.*.links.*.title' => 'required|string|max:191',

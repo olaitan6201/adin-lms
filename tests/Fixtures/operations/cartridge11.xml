@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="EarthScience" xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1 imscp_v1p1.xsd">
+ <metadata><schema>IMS Common Cartridge</schema><schemaversion>1.1.0</schemaversion></metadata>
+ <organizations>
+  <organization identifier="Lessons" structure="rooted-hierarchy">
+   <item identifier="Root">
+    <item identifier="Read" identifierref="Reading"><title>Soil observations</title></item>
+   </item>
+  </organization>
+ </organizations>
+ <resources>
+  <resource identifier="Reading" type="webcontent" href="web_resources/Reading.txt">
+   <file href="web_resources/Reading.txt"/>
+  </resource>
+ </resources>
+</manifest>

@@ -29,14 +29,13 @@ export function ResultRevisions({ grades, teacher, officer, who }: Props) {
                         {who(g.enrolment_id) ?? 'Your result'} · Revision {g.revision}
                     </h3>
                     <p>
-                        {g.total_percent}% · {g.grade} ·{' '}
-                        {g.published_at ? 'Published' : g.moderation_status}
+                        {g.total_percent}% · {g.grade} · {g.published_at ? 'Published' : g.moderation_status}
                     </p>
                     {(teacher || officer) && <p>{g.moderation_note}</p>}
-                    {officer && <Link href={`/grades/${g.id}/evidence`}>Inspect marks and moderation history</Link>}
-                    {g.published_at && (
-                        <a href={`/grades/${g.id}/sheet`}>Download published result sheet</a>
+                    {officer && (
+                        <Link href={`/grades/${g.id}/evidence`}>Inspect marks and moderation history</Link>
                     )}
+                    {g.published_at && <a href={`/grades/${g.id}/sheet`}>Download published result sheet</a>}
                 </article>
             ))}
         </section>

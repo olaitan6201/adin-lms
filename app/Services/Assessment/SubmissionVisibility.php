@@ -2,6 +2,7 @@
 
 namespace App\Services\Assessment;
 
+use App\Models\AssessmentCriterionFeedback;
 use App\Models\AssessmentScore;
 use App\Models\Assignment;
 use App\Models\AssignmentReference;
@@ -10,6 +11,7 @@ use App\Models\SubmissionFile;
 use App\Models\SubmissionRecipient;
 use App\Models\SubmissionVersion;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class SubmissionVisibility
 {
@@ -34,6 +36,16 @@ class SubmissionVisibility
         }
 
         return $scores;
+    }
+
+    public function criterionFeedback(Collection $scores): void
+    {
+        $feedback = AssessmentCriterionFeedback::whereIn('score_id', $scores->pluck('id'))
+            ->orderBy('position')->get(['score_id', 'criterion_title', 'level_label', 'points', 'feedback'])
+            ->groupBy('score_id');
+        foreach ($scores as $score) {
+            $score->setRelation('criteria', $feedback->get($score->id, collect()));
+        }
     }
 
     public function canDownload(Assignment $assignment, File $file, bool $marker, ?string $learner): bool

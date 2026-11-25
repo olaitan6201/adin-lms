@@ -2,7 +2,7 @@
     max-width: 58rem;
     margin: auto;
     padding: clamp(1rem, 4vw, 3rem);
-    color: #172f38;
+    color: inherit;
     overflow-wrap: anywhere;
 }
 
@@ -66,7 +66,7 @@
     width: fit-content;
     min-height: 44px;
     padding: 0.45rem 0.9rem;
-    background: #134e4a;
+    background: var(--portal-ink, #134e4a);
     color: white;
     border-radius: 0.3rem;
     cursor: pointer;
@@ -86,4 +86,42 @@
 
 .assessment-page pre {
     white-space: pre-wrap;
+}
+
+.assessment-heading {
+    border-bottom: 2px solid var(--portal-accent, #134e4a);
+    padding-block: 1rem;
+}
+
+.assessment-heading nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.assessment-page article > a + a {
+    margin-inline-start: 1rem;
+}
+
+.assessment-item {
+    scroll-margin-block-start: 2rem;
+}
+
+.assessment-page :focus-visible {
+    outline: 3px solid var(--portal-ink, #134e4a);
+    outline-offset: 3px;
+}
+
+.assessment-prose {
+    white-space: pre-wrap;
+    max-width: 72ch;
+}
+
+.assessment-evidence li {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 0.5rem;
+    align-items: baseline;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--portal-line, #b4c6c2);
 }

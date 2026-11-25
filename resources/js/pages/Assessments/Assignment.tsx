@@ -1,5 +1,7 @@
 import '../../assessment/assessment.css';
-import { Form, Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { SubmissionEntry } from '../../assessment/SubmissionEntry';
+import { SubmissionMarkForm, type Rubric } from '../../assessment/SubmissionMarkForm';
 
 type Row = {
     recipients: string[];
@@ -14,6 +16,7 @@ type Row = {
         points: string;
         feedback: string | null;
         marked_file_id: string | null;
+        criteria: { criterion_title: string; level_label: string; points: string; feedback: string | null }[];
     }[];
 };
 type Props = {
@@ -27,9 +30,10 @@ type Props = {
         accepted_formats: string[];
         max_bytes: number;
         editable: boolean;
-        late_policy: {allow: boolean};
+        late_policy: { allow: boolean };
     };
     title: string;
+    rubric: Rubric | null;
     marker: boolean;
     rows: Row[];
     groups: {
@@ -41,6 +45,7 @@ type Props = {
 export default function Assignment({
     assignment: a,
     title,
+    rubric,
     marker,
     rows,
     groups,
@@ -55,51 +60,60 @@ export default function Assignment({
     );
 
     return (
-        <main className="assessment-page">
+        <main className="portal-page assessment-page">
             <Head title={title} />
-            <h1>{title}</h1>
+            <header className="assessment-heading">
+                <p className="portal-kicker">
+                    {marker
+                        ? 'Marking workspace'
+                        : a.group_work
+                          ? 'Group assignment'
+                          : 'Individual assignment'}
+                </p>
+                <h1 className="portal-title">{title}</h1>
+                <nav aria-label="Assignment sections">
+                    <a href="#submissions">Submission history</a>
+                </nav>
+            </header>
             <section aria-label="Assignment brief">
-            <h2>Assignment brief</h2>
-            <p className="assessment-prose">{a.instructions}</p>
-            <a href={`${url}/instructions`}>Download instructions (.txt)</a>
-            <p>
-                Due {new Date(a.due_at).toLocaleString()} · Closes{' '}
-                {new Date(a.closes_at).toLocaleString()}
-            </p>
-            {references.map((id) => download(id, 'Download reference'))}
-            <p>Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()} bytes</p>
-            <p>{a.editable ? 'Revisions accepted.' : 'One submission only.'} {a.late_policy.allow ? 'Late work accepted until close.' : 'No late submissions.'}</p>
+                <h2>Assignment brief</h2>
+                <p className="assessment-prose">{a.instructions}</p>
+                <a href={`${url}/instructions`}>Download instructions (.txt)</a>
+                <p>
+                    Due {new Date(a.due_at).toLocaleString()} · Closes{' '}
+                    {new Date(a.closes_at).toLocaleString()}
+                </p>
+                {references.map((id) => download(id, 'Download reference'))}
+                {rubric && (rubric.guide || rubric.criteria?.length) ? (
+                    <details>
+                        <summary>Marking criteria</summary>
+                        <p>{rubric.guide}</p>
+                        {rubric.criteria?.map((c) => (
+                            <div key={c.id}>
+                                <h3>{c.title}</h3>
+                                <p>{c.description}</p>
+                                <ul>
+                                    {c.levels.map((l) => (
+                                        <li key={l.id}>
+                                            {l.label}: {l.points} points. {l.description}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </details>
+                ) : null}
+                <p>
+                    Accepted files: {a.accepted_formats.join(', ')} · Maximum {a.max_bytes.toLocaleString()}{' '}
+                    bytes
+                </p>
+                <p>
+                    {a.editable ? 'Revisions accepted.' : 'One submission only.'}{' '}
+                    {a.late_policy.allow ? 'Late work accepted until close.' : 'No late submissions.'}
+                </p>
             </section>
             {!marker && (
-                <Form action={url} method="post">
-                    {({ processing, errors }) => (
-                        <>
-                            {a.accepted_formats.includes('txt') && <label>
-                                Answer
-                                <textarea name="body" />
-                            </label>}
-                            <label>
-                                Attach submission
-                                <input type="file" name="script" accept={a.accepted_formats.map(f => `.${f}`).join(',')} />
-                            </label>
-                            {a.group_work && (
-                                <label>
-                                    Study group
-                                    <select name="group_id" required>
-                                        {groups.map((g) => (
-                                            <option value={g.id} key={g.id}>
-                                                {g.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </label>
-                            )}
-                            {a.group_work && !groups.length && <p>Ask your lecturer to assign you to a study group before submitting.</p>}
-                            <button disabled={processing || (a.group_work && !groups.length)}>Submit revision</button>
-                            <p role="alert">{Object.values(errors).join(' ')}</p>
-                        </>
-                    )}
-                </Form>
+                <SubmissionEntry url={url} formats={a.accepted_formats} groupWork={a.group_work} groups={groups} />
             )}
             {marker && (
                 <section>
@@ -107,7 +121,7 @@ export default function Assignment({
                     <p>{pending.length ? pending.join(', ') : 'All learners have submitted.'}</p>
                 </section>
             )}
-            <h2>Submission history</h2>
+            <h2 id="submissions">Submission history</h2>
             {!rows.length && <p>No submissions yet.</p>}
             {rows.map((r) => (
                 <article key={r.id} id={`submission-${r.id}`}>
@@ -119,41 +133,20 @@ export default function Assignment({
                     <p>{r.body}</p>
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (
-                        <p key={s.id}>
+                        <div key={s.id}>
                             Mark: {s.points} · {s.feedback}{' '}
                             {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
-                        </p>
+                            <ul>
+                                {s.criteria.map((c, i) => (
+                                    <li key={i}>
+                                        <strong>{c.criterion_title}</strong>: {c.level_label} · {c.points}{' '}
+                                        points. {c.feedback}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     ))}
-                    {marker && (
-                        <Form action={`/submission-versions/${r.id}/marks`} method="post">
-                            {({ processing, errors }) => (
-                                <>
-                                    <label>
-                                        Points
-                                        <input required name="points" type="number" min="0" step="any" />
-                                    </label>
-                                    <label>
-                                        Feedback
-                                        <textarea name="feedback" />
-                                    </label>
-                                    <label>
-                                        Reason
-                                        <input name="reason" required />
-                                    </label>
-                                    <label>
-                                        Marked copy
-                                        <input type="file" name="script" accept=".pdf,.txt" />
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" name="release" value="1" />
-                                        Return to recipients
-                                    </label>
-                                    <button disabled={processing}>Record mark</button>
-                                    <p role="alert">{Object.values(errors).join(' ')}</p>
-                                </>
-                            )}
-                        </Form>
-                    )}
+                    {marker && <SubmissionMarkForm version={r.id} rubric={rubric} />}
                 </article>
             ))}
         </main>

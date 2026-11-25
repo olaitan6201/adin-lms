@@ -57,6 +57,7 @@ class AssignmentController
                     'revision',
                     'released_at',
                 ]);
+            $this->visibility->criterionFeedback($scores);
 
             return $version->only('id', 'revision', 'receipt', 'body') + [
                 'late' => $version->submitted_at->gt($assignment->due_at),
@@ -73,6 +74,7 @@ class AssignmentController
             'assignment' => $assignment->only('id', 'instructions', 'group_work', 'due_at', 'closes_at',
                 'accepted_formats', 'max_bytes', 'editable', 'late_policy'),
             'title' => $item->title,
+            'rubric' => $item->rubric,
             'marker' => $marker,
             'pending' => $pending,
             'rows' => $rows,

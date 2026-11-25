@@ -5,7 +5,7 @@ import { Post, Field, Check } from '../../assessment/Fields';
 type Question = {
     id: string;
     prompt: string;
-    answer: string | Record<string, string>;
+    answer: string;
     marking_guide: string | null;
     possible: string;
     objective: boolean;
@@ -47,11 +47,7 @@ export default function MarkPaper({
                             Question {i + 1} · {q.prompt}
                         </h2>
                         <pre>
-                            {typeof q.answer === 'string'
-                                ? q.answer || 'No response submitted.'
-                                : Object.entries(q.answer)
-                                      .map(([left, right]) => `${left} → ${right}`)
-                                      .join('\n')}
+                            {q.answer || 'No response submitted.'}
                         </pre>
                         {q.objective ? (
                             <p>

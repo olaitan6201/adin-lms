@@ -78,7 +78,7 @@ class ExamAuthorController
             ->map(fn (AttemptQuestion $question) => [
                 'id' => $question->id,
                 'prompt' => $question->version->prompt,
-                'answer' => $question->latestResponse?->answer['value'] ?? '',
+                'answer' => $this->readableAnswer($question),
                 'marking_guide' => $question->version->marking_key['guide'] ?? null,
                 'objective' => $question->version->kind->isObjective(),
                 'possible' => $question->possible_points,
@@ -99,5 +99,22 @@ class ExamAuthorController
         $action->run($attempt, $request->user(), $request->validated());
 
         return back();
+    }
+
+    private function readableAnswer(AttemptQuestion $question): string
+    {
+        $answer = $question->latestResponse?->answer['value'] ?? '';
+        if (is_string($answer)) {
+            return $answer;
+        }
+        $matching = $question->version->marking_key['matching'] ?? [];
+        $left = array_column($matching['left'] ?? [], 'label', 'id');
+        $right = array_column($matching['right'] ?? [], 'label', 'id');
+        $pairs = [];
+        foreach ($answer as $prompt => $choice) {
+            $pairs[] = ($left[$prompt] ?? 'Unknown prompt').' → '.($right[$choice] ?? 'Unknown choice');
+        }
+
+        return implode("\n", $pairs);
     }
 }

@@ -3,6 +3,7 @@
 use App\Enums\RoleCode;
 use App\Models\CurriculumCourse;
 use App\Models\Enrolment;
+use App\Models\GuardianAccess;
 use App\Models\Lecturer;
 use App\Models\Offering;
 use App\Models\Student;
@@ -42,6 +43,17 @@ foreach (['desktop', 'phone'] as $project) {
     $factor = app(TotpEnrollment::class)->issue($author);
     file_put_contents("$run/$exchange.json", json_encode(['source' => $source->id, 'target' => $target->id, 'factor' => $factor], JSON_THROW_ON_ERROR), LOCK_EX);
 
+    $guardian = User::factory()->create(['email' => "guardian-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($guardian->id, RoleCode::Guardian, 'institution', false);
+    $operator = User::factory()->create(['email' => "privacy-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($operator->id, RoleCode::SuperAdmin, 'institution', false);
+    file_put_contents($run."/privacy-{$project}.factor", app(TotpEnrollment::class)->issue($operator), LOCK_EX);
+    foreach (Student::orderBy('id')->limit(2)->get() as $linked) {
+        GuardianAccess::forceCreate([
+            'student_id' => $linked->id, 'guardian_id' => $guardian->id,
+            'allowed_fields' => ['completed_lessons'], 'approved_by' => $operator->id,
+        ]);
+    }
     $authors[] = 'exam-reviewer-'.$project;
     $candidate = User::factory()->create(['email' => "exam-learner-{$project}@demo.example.test"]);
     $student = Student::factory()->create(['user_id' => $candidate->id, 'matric_number' => "EXAM/{$project}"]);

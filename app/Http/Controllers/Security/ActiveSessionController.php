@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Http\Controllers\Controller;
 use App\Enums\AuthenticationOutcome;
-use App\Models\AuthSession;
+use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\AuthSession;
 use App\Services\Authority\ScopedAuthority;
 use App\Services\Security\AuthEvents;
 use Illuminate\Http\RedirectResponse;

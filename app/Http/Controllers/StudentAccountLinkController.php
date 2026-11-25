@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\Authority\ScopedAuthority;
 use App\Services\Identity\AccountLookup;
 use App\Services\Roster\LinkStudentAccount;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class StudentAccountLinkController extends Controller

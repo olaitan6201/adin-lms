@@ -11,6 +11,6 @@ Route::middleware('auth')->prefix('accounts')->name('accounts.')->group(function
     Route::prefix('{account}/access')->controller(AccountGrantsController::class)->group(function (): void {
         Route::get('/', 'show')->whereUuid('account')->name('access');
         Route::post('/', 'store')->whereUuid('account')->name('access.grant');
-        Route::delete('{grant}', 'destroy')->whereUuid(['account','grant'])->name('access.revoke');
+        Route::delete('{grant}', 'destroy')->whereUuid(['account', 'grant'])->name('access.revoke');
     });
 });

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Identity;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\Authority\ScopedAuthority;
 use App\Services\Identity\AccountAdministration;
 use DomainException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;

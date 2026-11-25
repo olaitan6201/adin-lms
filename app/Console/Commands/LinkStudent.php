@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Roster\LinkStudentAccount;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use App\Services\Roster\LinkStudentAccount;
 
 #[Signature('roster:link {student : Upstream student ID} {user : Verified local user ID}')]
 #[Description('Bind a verified institutional student to their existing LMS account')]

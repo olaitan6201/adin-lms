@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Security\ChallengeController;
 use App\Http\Controllers\Security\ActiveSessionController;
+use App\Http\Controllers\Security\ChallengeController;
 use App\Http\Controllers\Security\LoginHistoryController;
 use Illuminate\Support\Facades\Route;
 

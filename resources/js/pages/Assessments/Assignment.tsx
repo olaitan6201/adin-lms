@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { CriterionFeedback, type CriterionScore } from '../../assessment/CriterionFeedback';
 import { Head } from '@inertiajs/react';
 import { AssignmentLimits } from '../../assessment/AssignmentLimits';
@@ -75,8 +76,7 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                 <AssignmentLimits assignment={a} />
                 {references.map((id) => download(id, 'Download reference'))}
                 {rubric && (rubric.guide || rubric.criteria?.length) ? (
-                    <details>
-                        <summary className="cursor-pointer py-2 font-medium">Marking criteria</summary>
+                    <CourseDisclosure label="Marking criteria">
                         <p>{rubric.guide}</p>
                         {rubric.criteria?.map((c) => (
                             <div key={c.id}>
@@ -91,7 +91,7 @@ export default function Assignment({ assignment: a, title, rubric, marker, rows,
                                 </ul>
                             </div>
                         ))}
-                    </details>
+                    </CourseDisclosure>
                 ) : null}
                 <p>
                     {a.editable ? 'Revisions accepted.' : 'One submission only.'}{' '}

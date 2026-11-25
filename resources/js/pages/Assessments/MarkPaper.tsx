@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedInput } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head } from '@inertiajs/react';
@@ -79,10 +80,7 @@ export default function MarkPaper({
                 <section className="min-w-0 space-y-3">
                     <h2 className="text-xl font-semibold tracking-tight">Mark history</h2>
                     {history.map((h) => (
-                        <details key={h.revision}>
-                            <summary className="cursor-pointer py-2 font-medium">
-                                Score revision {h.revision} · {h.reason}
-                            </summary>
+                        <CourseDisclosure key={h.revision} label={`Score revision ${h.revision} · ${h.reason}`}>
                             <ol>
                                 {h.awards.map((a) => (
                                     <li key={a.position}>
@@ -90,7 +88,7 @@ export default function MarkPaper({
                                     </li>
                                 ))}
                             </ol>
-                        </details>
+                        </CourseDisclosure>
                     ))}
                 </section>
             )}

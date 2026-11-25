@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
 import { Head, Link } from '@inertiajs/react';
 import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';
@@ -51,8 +52,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                     <p>No assessments configured.</p>
                 ))}
             {officer && policy && (
-                <details>
-                    <summary className="cursor-pointer py-2 font-medium">Amend grading policy · version {policy.version}</summary>
+                <CourseDisclosure label={`Amend grading policy · version ${policy.version}`}>
                     <SetupBook
                         key={policy.id}
                         url={`/courses/${offering}/assessments`}
@@ -69,7 +69,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                             })),
                         }}
                     />
-                </details>
+                </CourseDisclosure>
             )}
             {items.map((i) => (
                 <AssessmentItemPanel
@@ -83,12 +83,11 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                 />
             ))}
             {book && teacher && (
-                <details>
-                    <summary className="cursor-pointer py-2 font-medium">Compute results</summary>
+                <CourseDisclosure label="Compute results">
                     {roster.map((m) => (
                         <Post key={m.id} url={`/gradebooks/${book}/compute/${m.id}`} button={`Compute ${m.name}`} />
                     ))}
-                </details>
+                </CourseDisclosure>
             )}
             <ResultRevisions grades={grades} teacher={teacher} officer={officer} who={who} />
         </main>

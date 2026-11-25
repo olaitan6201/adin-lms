@@ -22,8 +22,11 @@ test('a learner follows the prerequisite link and unlocks the next reading', asy
     const content = `${href}/learning`;
     await page.goto(content);
     for (const title of [prior, next]) {
-        const create = page.locator('details').filter({ has: page.getByText('Author a lesson', { exact: true }) });
-        await create.locator('summary').first().press('Enter');
+        const trigger = page.getByRole('button', { name: 'Author a lesson', exact: true });
+        const create = page.locator('[data-slot="collapsible"]').filter({ has: trigger });
+        await trigger.press('Enter');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        await expect(trigger).toBeFocused();
         await create.getByLabel('Title', { exact: true }).fill(title);
         await create.getByLabel('Publication').selectOption('1');
         if (title === next) {

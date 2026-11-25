@@ -50,25 +50,26 @@ test('lecturer study-group history is reachable at the shared anchor', async ({ 
     await expect(page.locator('#study-groups')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Study groups', exact: true })).toBeVisible();
 
-    await page.getByText('New study group', { exact: true }).click();
-    const create = page.locator('details').filter({ has: page.getByText('New study group', { exact: true }) });
+    const createTrigger = page.getByRole('button', { name: 'New study group', exact: true });
+    await createTrigger.click();
+    const create = page.locator('[data-slot="collapsible"]').filter({ has: createTrigger });
     await create.getByLabel('Group name').fill(name);
     await create.getByLabel('Ada Demo', { exact: true }).check();
     await page.getByRole('button', { name: 'Create study group', exact: true }).click();
-    await expect(page.getByText(`${name} · Edit membership`, { exact: true })).toBeVisible();
+    const editTrigger = page.getByRole('button', { name: `${name} · Edit membership`, exact: true });
+    await expect(editTrigger).toBeVisible();
 
-    await page.getByText(`${name} · Edit membership`, { exact: true }).focus();
+    await editTrigger.focus();
     await page.keyboard.press('Enter');
-    const editor = page
-        .locator('details')
-        .filter({ has: page.getByText(`${name} · Edit membership`, { exact: true }) });
-    await editor.getByText('Membership history', { exact: true }).click();
+    await expect(editTrigger).toBeFocused();
+    const editor = page.locator('[data-slot="collapsible"]').filter({ has: editTrigger });
+    await editor.getByRole('button', { name: 'Membership history', exact: true }).click();
     await expect(page.getByText(`Created as “${name}”.`, { exact: true })).toBeVisible();
 
     await editor.getByLabel('Group name').fill(renamed);
     await editor.getByLabel('Ada Demo', { exact: true }).uncheck();
     await editor.getByRole('button', { name: 'Save membership', exact: true }).click();
-    await expect(page.getByText(`${renamed} · Edit membership`, { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: `${renamed} · Edit membership`, exact: true })).toBeVisible();
     await expect(page.getByText(`Renamed from “${name}” to “${renamed}”.`, { exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Removed', exact: true })).toBeVisible();
 

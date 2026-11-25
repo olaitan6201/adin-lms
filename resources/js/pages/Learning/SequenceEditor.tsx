@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
 import type { Activity } from '../Course';
@@ -17,8 +18,7 @@ export function SequenceEditor({ activities, action }: SequenceEditorProps) {
     }
 
     return (
-        <details className="my-4">
-            <summary>Edit activity sequence</summary>
+        <CourseDisclosure className="my-4" label="Edit activity sequence">
             <ol className="my-3 space-y-2">
                 {form.data.activities.map((id, i) => (
                     <li key={id}>
@@ -54,6 +54,6 @@ export function SequenceEditor({ activities, action }: SequenceEditorProps) {
                 </p>
             ))}
             {form.recentlySuccessful && <p role="status">Sequence saved.</p>}
-        </details>
+        </CourseDisclosure>
     );
 }

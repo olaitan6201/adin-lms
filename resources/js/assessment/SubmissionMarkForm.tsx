@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Check, Field, Post } from './Fields';
@@ -24,8 +25,7 @@ type SubmissionMarkFormProps = {
 
 export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps) {
     return (
-        <details>
-            <summary className="cursor-pointer py-2 font-medium">Mark this revision</summary>
+        <CourseDisclosure label="Mark this revision">
             <Post url={`/submission-versions/${version}/marks`} button="Record mark">
                 {rubric?.criteria?.length ? (
                     rubric.criteria.map((criterion, i) => (
@@ -67,6 +67,6 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                 </Label>
                 <Check name="release" label="Return this mark and feedback to the recipients" />
             </Post>
-        </details>
+        </CourseDisclosure>
     );
 }

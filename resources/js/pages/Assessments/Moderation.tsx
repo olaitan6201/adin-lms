@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedSelect } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head, Link } from '@inertiajs/react';
@@ -77,8 +78,7 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                             <small>
                                 Weight {input.weight}% · Score revision {input.score_revision}
                             </small>
-                            <details className="sm:col-span-full">
-                                <summary className="cursor-pointer py-2 font-medium">Marking record</summary>
+                            <CourseDisclosure className="sm:col-span-full" label="Marking record">
                                 <p>
                                     {input.marker ?? 'Automatic score'} · {input.reason}
                                 </p>
@@ -88,12 +88,11 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                                         {c.feedback && ` · ${c.feedback}`}
                                     </p>
                                 ))}
-                            </details>
+                            </CourseDisclosure>
                         </li>
                     ))}
                 </ul>
-                <details>
-                    <summary className="cursor-pointer py-2 font-medium">Grading policy · version {policy.version}</summary>
+                <CourseDisclosure label={`Grading policy · version ${policy.version}`}>
                     <p>Rounding: {policy.rounding_rule.replaceAll('_', ' ')}</p>
                     <ul>
                         {boundaries.map((b) => (
@@ -102,7 +101,7 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                             </li>
                         ))}
                     </ul>
-                </details>
+                </CourseDisclosure>
             </section>
             {superseded && !grade.published_at && (
                 <p>A newer result has replaced this revision. Return to assessments to review it.</p>

@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -130,19 +131,16 @@ export function GroupManager({
             </h2>
             {!groups.length && <p>No study groups yet.</p>}
             {groups.map((team) => (
-                <details key={team.id}>
-                    <summary className="cursor-pointer py-2">{team.name} · Edit membership</summary>
+                <CourseDisclosure key={team.id} label={`${team.name} · Edit membership`}>
                     {editor(team)}
-                    <details className="mt-3 border-t pt-3">
-                        <summary className="cursor-pointer py-2">Membership history</summary>
+                    <CourseDisclosure className="mt-3 border-t pt-3" label="Membership history">
                         <MembershipHistory entries={team.history} />
-                    </details>
-                </details>
+                    </CourseDisclosure>
+                </CourseDisclosure>
             ))}
-            <details>
-                <summary className="cursor-pointer py-2">New study group</summary>
+            <CourseDisclosure label="New study group">
                 {editor()}
-            </details>
+            </CourseDisclosure>
         </section>
     );
 }

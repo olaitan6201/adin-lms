@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -16,8 +17,7 @@ export function ClassScheduleForm({
     materials: Choice[];
 }) {
     return (
-        <details>
-            <summary>{session ? 'Edit session' : 'Schedule a class'}</summary>
+        <CourseDisclosure label={session ? 'Edit session' : 'Schedule a class'}>
             <EntryForm action={action} label="Save session" originalTimes={session}>
                 <Label className="grid gap-2">
                     Class title
@@ -60,6 +60,6 @@ export function ClassScheduleForm({
                     </NativeSelect>
                 </Label>
             </EntryForm>
-        </details>
+        </CourseDisclosure>
     );
 }

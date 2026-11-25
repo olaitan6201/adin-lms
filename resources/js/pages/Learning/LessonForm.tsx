@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -26,8 +27,7 @@ export function LessonForm({
 }) {
     const [order, setOrder] = useState(position);
     return (
-        <details open={startOverview || undefined}>
-            <summary>{lesson ? 'Edit lesson or publish' : 'Author a lesson'}</summary>
+        <CourseDisclosure defaultOpen={startOverview} label={lesson ? 'Edit lesson or publish' : 'Author a lesson'}>
             <EntryForm
                 originalTimes={lesson}
                 action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`}
@@ -79,6 +79,6 @@ export function LessonForm({
                 </Label>
                 <AvailabilityFields item={lesson} />
             </EntryForm>
-        </details>
+        </CourseDisclosure>
     );
 }

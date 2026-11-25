@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { Material } from './contracts';
 import { ExternalResource } from './ExternalResource';
@@ -49,10 +50,9 @@ export function ResourceReader({ material, action }: ResourceReaderProps) {
                                 )}
                                 {v.external_url && <ExternalResource href={v.external_url} title={material.title} />}
                                 {v.transcript && (
-                                    <details>
-                                        <summary>Read transcript</summary>
+                                    <CourseDisclosure label="Read transcript">
                                         <p className="whitespace-pre-wrap">{v.transcript}</p>
-                                    </details>
+                                    </CourseDisclosure>
                                 )}
                                 {v.caption && (
                                     <a href={v.caption} className="block underline">

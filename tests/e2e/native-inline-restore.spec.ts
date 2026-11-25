@@ -28,8 +28,9 @@ test('a restored image appears once between the authored paragraphs for a target
     await page.getByRole('button', { name: /verify code/i }).click();
     await expect(page).toHaveURL(/dashboard$/);
     await page.goto(`/courses/${source}/learning`);
-    const create = page.locator('details').filter({ has: page.getByText('Author a lesson', { exact: true }) });
-    await create.locator('summary').first().click();
+    const trigger = page.getByRole('button', { name: 'Author a lesson', exact: true });
+    const create = page.locator('[data-slot="collapsible"]').filter({ has: trigger });
+    await trigger.click();
     await create.getByLabel('Title', { exact: true }).fill('Field plate');
     await create.getByLabel('Publication').selectOption('1');
     await create.getByRole('button', { name: 'Save lesson' }).click();

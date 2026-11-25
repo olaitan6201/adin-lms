@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ExamWindow } from './ExamWindow';
@@ -75,15 +76,14 @@ export function AssessmentItemPanel({ item: i, teacher, learner, officer, roster
                             </p>
                         ))}
                         {i.exam && officer && (
-                            <details>
-                                <summary className="cursor-pointer py-2 font-medium">Individual accommodation</summary>
+                            <CourseDisclosure label="Individual accommodation">
                                 <Post url={`/examinations/${i.exam}/accommodations`} button="Approve override">
                                     <Roster members={roster} />
                                     <ExamWindow />
                                     <Field type="number" name="duration_seconds" label="Duration in seconds" />
                                     <Field type="number" name="max_attempts" label="Attempt cap" />
                                 </Post>
-                            </details>
+                            </CourseDisclosure>
                         )}
                     </>
                 )}

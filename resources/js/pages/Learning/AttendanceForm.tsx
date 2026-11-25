@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
@@ -14,8 +15,7 @@ export function AttendanceForm({
     participants: Participant[];
 }) {
     return (
-        <details>
-            <summary>Record attendance</summary>
+        <CourseDisclosure label="Record attendance">
             <EntryForm action={action} label="Save attendance">
                 <Label className="grid gap-2">
                     Participant
@@ -41,6 +41,6 @@ export function AttendanceForm({
                     <Input name="reason" />
                 </Label>
             </EntryForm>
-        </details>
+        </CourseDisclosure>
     );
 }

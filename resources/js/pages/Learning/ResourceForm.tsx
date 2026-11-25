@@ -1,3 +1,4 @@
+import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -13,8 +14,7 @@ interface ResourceFormProps {
 
 export function ResourceForm({ action, item }: ResourceFormProps) {
     return (
-        <details>
-            <summary>{item ? 'Replace resource' : 'Add a resource'}</summary>
+        <CourseDisclosure label={item ? 'Replace resource' : 'Add a resource'}>
             <EntryForm originalTimes={item} action={action} label="Save revision">
                 <Label className="grid gap-2">
                     Resource title
@@ -49,6 +49,6 @@ export function ResourceForm({ action, item }: ResourceFormProps) {
                 </Label>
                 <AvailabilityFields item={item} />
             </EntryForm>
-        </details>
+        </CourseDisclosure>
     );
 }

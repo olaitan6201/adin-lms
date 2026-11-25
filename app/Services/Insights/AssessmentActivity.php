@@ -49,8 +49,15 @@ final class AssessmentActivity
             $table->add($courses[$grade->offering_id]->label, 'Published result', $grade->full_name ?? 'Learner', $value);
         }
 
-        foreach ($exams->filter(fn ($exam) => CarbonImmutable::parse($exam->closes_at)->isFuture()) as $exam) {
-            $table->add($courses[$exam->offering_id]->label, 'Exam window', $exam->title, $exam->opens_at.' – '.$exam->closes_at);
+        foreach ($exams as $exam) {
+            $closes = CarbonImmutable::parse($exam->closes_at, 'UTC')->utc();
+            if (! $closes->isFuture()) {
+                continue;
+            }
+
+            $opens = CarbonImmutable::parse($exam->opens_at, 'UTC')->utc();
+            $window = $opens->format('Y-m-d H:i:s T').' – '.$closes->format('Y-m-d H:i:s T');
+            $table->add($courses[$exam->offering_id]->label, 'Exam window', $exam->title, $window);
         }
 
         $submitted = $receipts->pluck('assignment')->flip();

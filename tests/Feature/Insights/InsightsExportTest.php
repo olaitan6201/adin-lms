@@ -6,6 +6,8 @@ use App\Models\AssessmentItem;
 use App\Models\Grade;
 use App\Models\Module;
 use App\Models\Offering;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\Process\Process;
@@ -13,6 +15,25 @@ use Symfony\Component\Process\Process;
 final class InsightsExportTest extends InsightCase
 {
     use AssessmentFixture;
+
+    public function test_exam_window_matches_new_york_preview_in_utc_on_report_and_downloads(): void
+    {
+        $this->travelTo(CarbonImmutable::parse('2027-01-15 23:50:00 UTC'));
+        $course = $this->assessmentFixture($this->loginAs('ada'));
+        $previewStart = CarbonImmutable::parse('2027-01-15 18:45', 'America/New_York');
+        $previewEnd = CarbonImmutable::parse('2027-01-15 19:15', 'America/New_York');
+        DB::table('examinations')->update(['opens_at' => $previewStart->utc(), 'closes_at' => $previewEnd->utc()]);
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("SET LOCAL TIME ZONE 'America/New_York'");
+        }
+
+        $expected = '2027-01-15 23:45:00 UTC – 2027-01-16 00:15:00 UTC';
+        $row = [$course->external_offering_id, 'Exam window', 'Exam One', $expected];
+        $query = '?offering='.$course->id;
+        $this->assertContains($row, $this->data('/reports'.$query)['table']['rows']);
+        $this->assertContains($row, $this->sheet($query));
+        $this->assertStringContainsString($expected, preg_replace('/\s+/u', ' ', $this->pdfText($query)));
+    }
 
     public function test_student_downloads_follow_lesson_completion_and_actual_grade_publication(): void
     {

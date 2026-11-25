@@ -11,6 +11,7 @@ enum OperationsEvent: string
     case PrivacyExecuted = 'privacy.executed';
     case IncidentReferred = 'privacy.incident_referred';
     case InfrastructureChanged = 'operations.infrastructure_changed';
+    case BrandingChanged = 'operations.branding_changed';
     case BackupEvidence = 'operations.backup_evidence';
     case CaseAdvanced = 'privacy.case_advanced';
     case CourseImported = 'course.imported';

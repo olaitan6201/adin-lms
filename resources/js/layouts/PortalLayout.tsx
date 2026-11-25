@@ -11,6 +11,7 @@ type AcademicLink = {
 export function PortalLayout({ children }: { children: ReactNode }) {
     const { url, props } = usePage<{
         signedIn: boolean;
+        branding: { institution: string; logoWhite: string };
         academicLinks?: AcademicLink[];
     }>();
     const path = url.split(/[?#]/)[0];
@@ -19,7 +20,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     const drawer = useRef<HTMLDialogElement>(null);
     const [expanded, setExpanded] = useState(false);
 
-    const brand = document.body.dataset;
+    const brand = props.branding;
 
     useEffect(() => {
         if (previousPath.current !== path) {
@@ -57,7 +58,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                         className="portal-brand"
                         aria-label={`${brand.institution} home`}
                     >
-                        <img src={brand.logoWhite ?? brand.logo} width="44" height="44" alt="" />
+                        <img src={brand.logoWhite} width="44" height="44" alt="" />
                         <span>
                             {brand.institution}
                             <small>Learning management system</small>

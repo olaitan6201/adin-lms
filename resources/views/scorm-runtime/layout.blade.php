@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title') · {{ config('branding.institution') }}</title>
+    <title>@yield('title') · {{ $branding['institution'] }}</title>
     <link rel="stylesheet" href="/scorm-shell.css" @isset($styleNonce) nonce="{{ $styleNonce }}" @endisset>
     <link rel="stylesheet" href="/scorm-desk.css" @isset($styleNonce) nonce="{{ $styleNonce }}" @endisset>
     @stack('scripts')
@@ -12,7 +12,7 @@
     <a class="skip" href="#content">Skip to content</a>
     <header class="masthead">
         <div class="rail brand">
-            <span>{{ config('branding.institution') }}</span>
+            <span>{{ $branding['institution'] }}</span>
             <small>Learning management system</small>
         </div>
     </header>

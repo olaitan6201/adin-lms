@@ -59,7 +59,12 @@ app(ChangeRoleGrant::class)->apply($examOfficer->id, RoleCode::ExaminationOffice
 $quality = User::factory()->create(['email' => 'report-qa@demo.example.test']);
 app(ChangeRoleGrant::class)->apply($quality->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
 
-foreach (['lecturer', 'officer', 'exam-office', 'report-qa', ...$authors] as $role) {
+foreach (['brand-desktop', 'brand-phone'] as $login) {
+    $operator = User::factory()->create(['email' => $login.'@demo.example.test']);
+    app(ChangeRoleGrant::class)->apply($operator->id, RoleCode::IctAdmin, 'institution', false);
+}
+
+foreach (['lecturer', 'officer', 'exam-office', 'report-qa', 'brand-desktop', 'brand-phone', ...$authors] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
     $secret = app(TotpEnrollment::class)->issue($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);

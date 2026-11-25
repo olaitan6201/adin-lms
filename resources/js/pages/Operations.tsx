@@ -1,5 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import InfrastructurePanel, { type Infrastructure } from '../components/InfrastructurePanel';
+import BrandingPanel from '../components/BrandingPanel';
 
 type Status = {
     activeSessions: number;
@@ -29,6 +30,7 @@ export default function Operations({
                 <dd>{failedLogins}</dd>
             </dl>
             <InfrastructurePanel data={infrastructure} />
+            <BrandingPanel />
             <h2 className="text-xl font-semibold">Withdrawn feedback consent</h2>
             <p>
                 {retentionDays === null

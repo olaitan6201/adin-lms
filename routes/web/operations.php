@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PermissionCode;
+use App\Http\Controllers\Operations\BrandingController;
 use App\Http\Controllers\Operations\OperationsController;
 use App\Http\Controllers\Operations\PortabilityController;
 use App\Http\Controllers\Operations\PrivacyCaseFileController;
@@ -8,12 +9,15 @@ use App\Http\Controllers\Operations\PrivacyController;
 use App\Http\Middleware\OperationsPermission;
 use Illuminate\Support\Facades\Route;
 
+Route::get('branding/logo/{id}', [BrandingController::class, 'image'])->whereUuid('id')->name('branding.logo');
+
 Route::middleware(['auth', 'throttle:60,1,operations'])->prefix('operations')->name('operations.')->group(function (): void {
     Route::get('consent', [PrivacyController::class, 'show'])->name('consent.show');
     Route::post('consent', [PrivacyController::class, 'consent'])->name('consent');
     Route::middleware(OperationsPermission::requiring(PermissionCode::OperationsManage))->group(function (): void {
         Route::get('/', [OperationsController::class, 'index'])->name('index');
         Route::post('retention', [OperationsController::class, 'retention'])->name('retention');
+        Route::post('branding', [BrandingController::class, 'update'])->name('branding');
         Route::post('infrastructure', [OperationsController::class, 'configure'])->name('infrastructure');
         Route::post('backup-evidence', [OperationsController::class, 'backup'])->name('backup');
     });

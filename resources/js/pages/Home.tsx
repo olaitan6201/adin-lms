@@ -1,12 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function Home() {
-    const { signedIn } = usePage<{ signedIn: boolean }>().props;
+    const { signedIn, branding } = usePage<{ signedIn: boolean; branding: { institution: string; logoFull: string } }>().props;
     return (
         <main className="portal-page portal-entry">
             <Head title="Learning portal" />
             <div className="entry-intro">
-                <img className="mb-6 h-12 w-auto" src={document.body.dataset.logoFull} alt="Adin LMS" />
+                <img className="mb-6 h-12 w-auto" src={branding.logoFull} alt={branding.institution} />
                 <p className="portal-kicker">Academic workspace</p>
                 <h1 className="portal-title">Learning portal</h1>
                 <p>Open your course materials, attend scheduled classes and return to your assessments.</p>

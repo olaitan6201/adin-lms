@@ -15,11 +15,13 @@ type Props = {
     })[];
     announcements: Entry[];
     canAnnounce: boolean;
+    canRecover: boolean;
 };
 
-export default function Inbox({ notices, messages, announcements, canAnnounce }: Props) {
+export default function Inbox({ notices, messages, announcements, canAnnounce, canRecover }: Props) {
     return (
         <CommunityPage title="Community inbox">
+            {canRecover && <Link className="underline" href="/community/delivery-failures">Review failed email deliveries</Link>}
             <section>
                 <h2 className="text-xl font-semibold">
                     Notifications ({notices.filter((n) => !n.read_at).length} unread)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Community\BoardController;
+use App\Http\Controllers\Community\DeliveryRecoveryController;
 use App\Http\Controllers\Community\DiscussionController;
 use App\Http\Controllers\Community\InboxController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,9 @@ Route::middleware('auth')
     ->name('community.')
     ->group(function (): void {
         Route::get('/', [InboxController::class, 'index'])->name('inbox');
+        Route::get('/delivery-failures', [DeliveryRecoveryController::class, 'index'])->name('delivery.failures');
+        Route::post('/delivery-failures/{delivery}', [DeliveryRecoveryController::class, 'retry'])
+            ->whereUuid('delivery')->name('delivery.retry');
         Route::post('/announcements', [InboxController::class, 'announce'])->name('institution.announce');
         Route::patch('/notifications/{notice}', [InboxController::class, 'readState'])
             ->whereUuid('notice')

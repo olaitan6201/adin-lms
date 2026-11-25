@@ -36,6 +36,7 @@ class InboxController
             )->resolve($request),
             'announcements' => $board->announcements(null),
             'canAnnounce' => $authority->institutionAllows($user, PermissionCode::AccountsManage),
+            'canRecover' => $authority->institutionAllows($user, PermissionCode::OperationsManage),
         ]);
     }
 

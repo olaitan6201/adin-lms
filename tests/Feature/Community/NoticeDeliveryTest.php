@@ -5,6 +5,7 @@ namespace Tests\Feature\Community;
 use App\Jobs\DeliverCommunityEmail;
 use App\Mail\CommunityNoticeMail;
 use App\Models\Announcement;
+use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\NotificationDelivery;
 use Illuminate\Support\Facades\Mail;
@@ -98,6 +99,7 @@ class NoticeDeliveryTest extends CommunityTestCase
         Queue::fake();
         $this->artisan('community:notify')->assertSuccessful();
         $delivery = NotificationDelivery::firstOrFail();
+        $mailer = Mail::getFacadeRoot();
         Mail::shouldReceive('to')->times(5)->andThrow(new TransportException('unavailable'));
         $job = new DeliverCommunityEmail($delivery->id);
         foreach ([1, 2, 4, 8, 16] as $minutes) {
@@ -113,5 +115,19 @@ class NoticeDeliveryTest extends CommunityTestCase
             'next_attempt_at' => null,
         ]);
         $this->assertDatabaseHas('notifications', ['id' => $delivery->notification_id, 'read_at' => null]);
+        $retry = route('community.delivery.retry', $delivery);
+        $this->actingAs($this->person('ada'))->post($retry)->assertForbidden();
+        $admin = $this->person('officer');
+        $this->artisan('authority:grant', ['user' => $admin->id, 'role' => 'ict_admin', 'scope' => 'institution'])->assertSuccessful();
+        $this->actingAs($admin)->withSession(['security.mfa_user' => $admin->id])
+            ->get(route('community.delivery.failures'))->assertOk()->assertSee($delivery->id);
+        $this->post($retry)->assertRedirect();
+        $this->post($retry)->assertRedirect();
+        $this->assertSame(1, AuditLog::where('action', 'community.delivery.retried')->count());
+        Mail::swap($mailer);
+        Mail::fake();
+        $job->handle();
+        Mail::assertSentCount(1);
+        $this->assertSame('delivered', $delivery->fresh()->status->value);
     }
 }

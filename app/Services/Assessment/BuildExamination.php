@@ -34,11 +34,13 @@ class BuildExamination
                     if (in_array($row['version_id'], $selected, true)) {
                         throw ValidationException::withMessages(['selections' => 'Select each question revision only once.']);
                     }
+
                     $selected[] = $row['version_id'];
                     $this->slots->selectVersion($exam, $course, $i, $row);
                 } else {
                     $this->slots->add($exam, $course, $i, $row);
                 }
+
                 $points = $points->plus((string) $row['points']);
             }
 
@@ -49,6 +51,7 @@ class BuildExamination
                     $points = $points->plus((string) $row['points']);
                 }
             }
+
             if (! $points->isEqualTo((string) $item->maximum_score)) {
                 throw ValidationException::withMessages(['questions' => 'Slot points must equal the item maximum.']);
             }

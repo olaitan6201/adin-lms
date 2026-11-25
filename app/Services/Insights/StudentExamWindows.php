@@ -37,6 +37,7 @@ final class StudentExamWindows
             if ($now->gte($closes) || (int) $exam->last_attempt >= ($rules['max_attempts'] ?? $exam->max_attempts)) {
                 continue;
             }
+
             $scheduled = $now->lt($opens);
             $rows->push([
                 'title' => $exam->title, 'context' => $exam->external_offering_id,

@@ -80,9 +80,11 @@ class QuestionDefinition
         if ($accepted === [] && trim((string) ($data['key'] ?? '')) !== '') {
             $accepted = [trim($data['key'])];
         }
+
         if ($kind->isObjective() && $accepted === []) {
             throw ValidationException::withMessages(['accepted' => 'Supply at least one accepted answer.']);
         }
+
         if ($kind->hasChoices() && (count($options) < 2 || count($accepted) !== 1 || ! in_array($accepted[0], $options, true))) {
             throw ValidationException::withMessages(['accepted' => 'Supply one accepted answer from the choices.']);
         }
@@ -99,20 +101,24 @@ class QuestionDefinition
             if (! preg_match('/^(.+?)\s*(?:=>|=)\s*(.+)$/u', $line, $matches)) {
                 throw ValidationException::withMessages(['pairs' => 'Use one left => right pair per line.']);
             }
+
             $leftLabel = trim($matches[1]);
             $rightLabel = trim($matches[2]);
             if (in_array($leftLabel, array_column($left, 'label'), true) || in_array($rightLabel, array_column($right, 'label'), true)) {
                 throw ValidationException::withMessages(['pairs' => 'Matching labels must be unique within each side.']);
             }
+
             $leftId = $this->opaqueId();
             $rightId = $this->opaqueId();
             $left[] = ['id' => $leftId, 'label' => $leftLabel];
             $right[] = ['id' => $rightId, 'label' => $rightLabel];
             $pairs[$leftId] = $rightId;
         }
+
         if (count($pairs) < 2 || count($pairs) > 20) {
             throw ValidationException::withMessages(['pairs' => 'Supply between 2 and 20 matching pairs.']);
         }
+
         shuffle($right);
 
         return compact('left', 'right', 'pairs');

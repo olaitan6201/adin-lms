@@ -18,10 +18,12 @@ class MatchingCredit
                 ? (string) $question->possible_points
                 : '0';
         }
+
         $matching = $question->version->marking_key['matching'] ?? null;
         if (! $matching || ! is_array($answer)) {
             return '0';
         }
+
         $correct = 0;
         $used = [];
         foreach ($answer as $left => $right) {
@@ -29,8 +31,10 @@ class MatchingCredit
                 && ($matching['pairs'][$left] ?? null) === $right) {
                 $correct++;
             }
+
             $used[] = $right;
         }
+
         $pairs = count($matching['pairs']);
         if ($correct === 0 || $pairs === 0) {
             return '0';

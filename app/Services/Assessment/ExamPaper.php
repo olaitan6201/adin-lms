@@ -81,6 +81,7 @@ class ExamPaper
 
             return $options;
         }
+
         $matching = $version->marking_key['matching'];
         $left = array_column($matching['left'], 'id');
         $right = array_column($matching['right'], 'id');

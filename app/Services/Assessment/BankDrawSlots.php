@@ -23,6 +23,7 @@ final class BankDrawSlots
             if ($remaining < 1) {
                 throw ValidationException::withMessages(['draws' => "Not enough unused questions in {$bank->topic}."]);
             }
+
             $counts[$bank->id] = $remaining - 1;
             ExamSlot::forceCreate([
                 'exam_id' => $exam->id, 'position' => $offset + $i + 1,

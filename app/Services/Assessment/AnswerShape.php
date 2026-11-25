@@ -13,9 +13,11 @@ class AnswerShape
         if ($question->version->kind === QuestionKind::Matching) {
             return $this->matching($question, $answer);
         }
+
         if ($answer !== null && ! is_string($answer)) {
             throw ValidationException::withMessages(['answer' => 'The answer must be text.']);
         }
+
         if ($question->version->kind->hasChoices() && $answer !== null) {
             $choices = $question->option_order ?: $question->version->options;
             abort_unless(in_array($answer, $choices, true), 422, 'Select a valid choice.');
@@ -29,6 +31,7 @@ class AnswerShape
         if ($answer === null || $answer === []) {
             return null;
         }
+
         $matching = $question->version->marking_key['matching'] ?? null;
         abort_unless($matching !== null, 422, 'Matching key is unavailable.');
         abort_unless(is_array($answer) && count($answer) <= count($matching['left']), 422, 'Invalid matching answer.');

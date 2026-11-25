@@ -16,6 +16,8 @@ type Row = {
         points: string;
         feedback: string | null;
         marked_file_id: string | null;
+        revision: number;
+        released_at: string | null;
         criteria: { criterion_title: string; level_label: string; points: string; feedback: string | null }[];
     }[];
 };
@@ -134,7 +136,8 @@ export default function Assignment({
                     {r.files.map((id) => download(id, 'Download submission'))}
                     {r.scores.map((s) => (
                         <div key={s.id}>
-                            Mark: {s.points} · {s.feedback}{' '}
+                            Mark: {s.points} · Score revision {s.revision} · {s.released_at ? 'Returned' : 'Private draft'}
+                            {s.feedback && <p>{s.feedback}</p>}
                             {s.marked_file_id && download(s.marked_file_id, 'Marked copy')}
                             <ul>
                                 {s.criteria.map((c, i) => (

@@ -79,6 +79,7 @@ class GradeDeliveryTest extends AssessmentCase
         $this->get("/grades/$grade->id/evidence")->assertNotFound();
         $this->as($this->officer)->get("/grades/$grade->id/evidence")->assertInertia(fn (Page $p) => $p
             ->has('inputs', 2)->where('inputs.0.points', fn (string $v) => BigDecimal::of($v)->isEqualTo('7.125'))
+            ->where('inputs.0.marker', $this->marker->full_name)->where('inputs.0.reason', 'Checked evidence')
             ->where('policy.rounding_rule', 'half_up')->has('boundaries', 2)
             ->where('history.0.actor', $this->marker->full_name));
         $this->as($this->officer)->post($review, $decision('publish'))->assertConflict();

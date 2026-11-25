@@ -3,7 +3,11 @@ import { Field, Post } from '../../assessment/Fields';
 import type { Grade } from '../../assessment/ResultRevisions';
 import '../../assessment/assessment.css';
 
-type Input = { item: string; points: string; maximum: string; weight: string; score_revision: number };
+type Input = {
+    item: string; points: string; maximum: string; weight: string; score_revision: number;
+    marker: string | null; reason: string;
+    criteria: {criterion_title: string; level_label: string; points: string; feedback: string | null}[];
+};
 type Event = { action: string; at: string; actor: string | null; reason: string | null };
 const eventLabels: Record<string, string> = {
     'grade.calculated': 'Result calculated',
@@ -16,13 +20,14 @@ type Props = {
     desk: string;
     learner: string;
     grade: Grade;
+    superseded: boolean;
     policy: { version: number; rounding_rule: string };
     inputs: Input[];
     boundaries: { grade: string; minimum_percent: string }[];
     history: Event[];
 };
 
-export default function Moderation({ desk, learner, grade, policy, inputs, boundaries, history }: Props) {
+export default function Moderation({ desk, learner, grade, superseded, policy, inputs, boundaries, history }: Props) {
     const pending = grade.moderation_status === 'pending';
     const approved = grade.moderation_status === 'approved';
     return (
@@ -50,6 +55,12 @@ export default function Moderation({ desk, learner, grade, policy, inputs, bound
                             <small>
                                 Weight {input.weight}% · Score revision {input.score_revision}
                             </small>
+                            <details className="assessment-provenance"><summary>Marking record</summary>
+                                <p>{input.marker ?? 'Automatic score'} · {input.reason}</p>
+                                {input.criteria.map(c => <p key={c.criterion_title}>
+                                    {c.criterion_title}: {c.level_label}, {c.points} points{c.feedback && ` · ${c.feedback}`}
+                                </p>)}
+                            </details>
                         </li>
                     ))}
                 </ul>
@@ -65,7 +76,8 @@ export default function Moderation({ desk, learner, grade, policy, inputs, bound
                     </ul>
                 </details>
             </section>
-            {!grade.published_at && (pending || approved) && (
+            {superseded && !grade.published_at && <p>A newer result has replaced this revision. Return to assessments to review it.</p>}
+            {!superseded && !grade.published_at && (pending || approved) && (
                 <section>
                     <h2>{pending ? 'Moderation decision' : 'Release result'}</h2>
                     <Post

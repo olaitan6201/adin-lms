@@ -125,3 +125,10 @@
     padding-block: 0.75rem;
     border-bottom: 1px solid var(--portal-line, #b4c6c2);
 }
+
+.assessment-page .assessment-provenance {
+    grid-column: 1 / -1;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}

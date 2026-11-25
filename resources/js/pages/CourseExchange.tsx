@@ -133,11 +133,13 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                 </p>
                 <p>
                     Common Cartridge 1.1 import maps a single root folder of local plain-text web resources to ordered
-                    chapters. Moodle .mbz backups, quizzes and nested sections are unsupported.
+                    chapters. Cartridge quizzes and nested sections are unsupported. Moodle .mbz backups cannot be
+                    restored here; export supported text resources from the source course instead.
                 </p>
                 <p>
-                    SCORM 1.2 static text assets become chapters. Executable SCOs are blocked: there is no isolated
-                    player or SCORM completion, score or progress tracking.
+                    SCORM 1.2 text assets become ordinary chapters. This importer does not run package code or transfer
+                    learner progress. For a supported Reading v1 package, use the separate course reading player when
+                    enabled. Its completion score does not enter the gradebook.
                 </p>
             </section>
         </main>

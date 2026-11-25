@@ -1,6 +1,18 @@
 # Adin LMS
 
-Custom Laravel + Inertia application with React, TypeScript and Vite. This foundation serves a public learning-portal entry page. Applications, admissions and official registration are managed by the existing institutional platform.
+Adin is the institution’s standalone learning management system, built with Laravel, Inertia, React and TypeScript. Lecturers teach and assess in Adin; students study, submit work and view released results here.
+
+## Standalone adoption path
+
+| Responsibility | System of record |
+|---|---|
+| Applications, admissions and official registration | Existing institutional platform. Adin consumes roster revisions keyed by upstream student and offering IDs. A withdrawal removes access without erasing academic history. |
+| Teaching, assignments, question banks, timed exams, marking, moderation, released grades and reporting | Adin. These workflows must work without a Moodle installation or an external gradebook. |
+| Moving reusable course material | File exchange. The operations desk supports a subset of SCORM 1.2 text resources, IMS Common Cartridge 1.1 text imports and native Adin backups. It does not restore Moodle `.mbz` archives. |
+
+For a first course, import the roster, allocate the lecturer, prepare an offering and publish its lessons. Run a learner through an assignment and a timed exam, then have staff mark, moderate and release a result. Check that the student can reopen the submission receipt and see only released grades. Repeat with a withdrawn registration to check access and history. Preserve the Weekline student workspace as the entry point.
+
+Prioritise improvements that complete a real teaching workflow in Adin. For example, a student should be able to download a readable copy of a published result; a department migrating materials should be able to tell which content the importer will preserve. Expand exchange formats against representative course files rather than adding a second LMS runtime.
 
 ## Local setup
 

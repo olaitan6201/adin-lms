@@ -1,5 +1,3 @@
-@import './scorm-shell.css';
-
 .desk {
     padding-block: clamp(1.25rem, 4vw, 3rem) 3rem;
 }

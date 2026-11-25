@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title') · {{ config('branding.institution') }}</title>
+    <link rel="stylesheet" href="/scorm-shell.css" @isset($styleNonce) nonce="{{ $styleNonce }}" @endisset>
     <link rel="stylesheet" href="/scorm-desk.css" @isset($styleNonce) nonce="{{ $styleNonce }}" @endisset>
     @stack('scripts')
 </head>

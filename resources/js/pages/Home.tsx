@@ -16,7 +16,10 @@ export default function Home() {
             </div>
             <aside className="portal-panel desk-shelf">
                 <h2 className="desk-section">Course registration</h2>
-                <p>Registration is managed through the institution’s registration platform. Your registered courses appear here after the roster is updated.</p>
+                <p>
+                    Registration is managed through the institution’s registration platform. Your registered courses
+                    appear here after the roster is updated.
+                </p>
             </aside>
         </main>
     );

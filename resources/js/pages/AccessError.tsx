@@ -25,7 +25,9 @@ export default function AccessError({ status, returnTo }: AccessErrorProps) {
             <p className="portal-kicker">Learning portal · {status}</p>
             <h1 className="portal-title">{message.title}</h1>
             <p className="my-6 max-w-prose">{message.detail}</p>
-            <Link href={returnTo} className="portal-action">Return to the portal</Link>
+            <Link href={returnTo} className="portal-action">
+                Return to the portal
+            </Link>
         </main>
     );
 }

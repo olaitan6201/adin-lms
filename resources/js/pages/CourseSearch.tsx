@@ -36,14 +36,18 @@ export default function CourseSearch(props: SearchProps) {
         <main className="mx-auto max-w-3xl px-6 py-10">
             <Head title="Search my courses" />
             <header className="space-y-2">
-                <Link href="/courses" className="underline">My courses</Link>
+                <Link href="/courses" className="underline">
+                    My courses
+                </Link>
                 <h1 className="text-3xl font-semibold">Search my courses</h1>
                 <p>Find a published course in your current registrations.</p>
             </header>
             <Form action="/search" method="get" role="search" className="my-6">
                 {({ processing, errors }) => (
                     <>
-                        <label htmlFor="course-query" className="block font-semibold">Course search</label>
+                        <label htmlFor="course-query" className="block font-semibold">
+                            Course search
+                        </label>
                         <div className="course-search-controls">
                             <input
                                 id="course-query"
@@ -57,13 +61,17 @@ export default function CourseSearch(props: SearchProps) {
                             />
                             <button disabled={processing}>{processing ? 'Searching…' : 'Search'}</button>
                         </div>
-                        {errors.q && <p id="search-error" role="alert">{errors.q}</p>}
+                        {errors.q && (
+                            <p id="search-error" role="alert">
+                                {errors.q}
+                            </p>
+                        )}
                     </>
                 )}
             </Form>
             <p role="status">{resultSummary(props)}</p>
             <ul className="mt-4 divide-y divide-slate-300">
-                {props.matches.map(course => (
+                {props.matches.map((course) => (
                     <li key={course.id} className="space-y-1 py-4">
                         <Link href={`/courses/${course.id}`} className="font-semibold underline">
                             {course.code} · {course.title}

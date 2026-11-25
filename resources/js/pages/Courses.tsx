@@ -32,7 +32,9 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
             <header className="syllabus-title">
                 <p className="portal-kicker">Course catalogue</p>
                 <h1 className="portal-title">My courses</h1>
-                <p>{courses.length} {courses.length === 1 ? 'offering' : 'offerings'} linked to your account</p>
+                <p>
+                    {courses.length} {courses.length === 1 ? 'offering' : 'offerings'} linked to your account
+                </p>
             </header>
             <nav aria-label="Course shortcuts" className="mb-4 flex flex-wrap gap-4">
                 {shortcuts.map(
@@ -44,17 +46,23 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
                         ),
                 )}
             </nav>
-            {courses.length === 0 && (
-                <p>No active course registrations are linked to your account.</p>
-            )}
+            {courses.length === 0 && <p>No active course registrations are linked to your account.</p>}
             <ul className="catalogue-list">
                 {courses.map((course) => (
                     <li key={course.id}>
-                        <small>{course.code || 'Course offering'} · {course.status}</small>
-                        <Link href={`/courses/${course.id}`}>
-                            {course.title || course.external_offering_id}
-                        </Link>
-                        <p>{[course.external_offering_id, course.section && `Section ${course.section}`, course.delivery_mode].filter(Boolean).join(' · ')}</p>
+                        <small>
+                            {course.code || 'Course offering'} · {course.status}
+                        </small>
+                        <Link href={`/courses/${course.id}`}>{course.title || course.external_offering_id}</Link>
+                        <p>
+                            {[
+                                course.external_offering_id,
+                                course.section && `Section ${course.section}`,
+                                course.delivery_mode,
+                            ]
+                                .filter(Boolean)
+                                .join(' · ')}
+                        </p>
                     </li>
                 ))}
             </ul>

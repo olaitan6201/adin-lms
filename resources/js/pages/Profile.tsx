@@ -42,8 +42,16 @@ export default function Profile({ profile, sharedProgressUrl, guardianPermission
                     </>
                 )}
             </Form>
-            {sharedProgressUrl && <Link className="desk-link" href={sharedProgressUrl}>Shared progress</Link>}
-            {guardianPermissionsUrl && <Link className="desk-link" href={guardianPermissionsUrl}>Manage guardian permissions</Link>}
+            {sharedProgressUrl && (
+                <Link className="desk-link" href={sharedProgressUrl}>
+                    Shared progress
+                </Link>
+            )}
+            {guardianPermissionsUrl && (
+                <Link className="desk-link" href={guardianPermissionsUrl}>
+                    Manage guardian permissions
+                </Link>
+            )}
             <Link className="desk-link" href="/courses">
                 My courses
             </Link>

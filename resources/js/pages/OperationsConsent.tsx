@@ -11,8 +11,8 @@ export default function OperationsConsent({ granted, notice }: ConsentProps) {
             <Head title="Feedback consent" />
             <h1 className="text-3xl font-semibold">Optional course feedback</h1>
             <p>
-                Notice {notice}: You may allow the institution to invite you to give course feedback. This is
-                optional and does not affect your registration, access or grades. You can withdraw here.
+                Notice {notice}: You may allow the institution to invite you to give course feedback. This is optional
+                and does not affect your registration, access or grades. You can withdraw here.
             </p>
             <p>Current choice: {granted ? 'Consent granted' : 'No active consent'}</p>
             <Form method="post" action="/operations/consent">

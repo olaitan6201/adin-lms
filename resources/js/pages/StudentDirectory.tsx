@@ -23,8 +23,8 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
         <main className="portal-page space-y-5">
             <Head title="Student records" />
             <DeskHeading area="Registrar" title="Student records">
-                Find a student to inspect their academic history, including withdrawn registrations and
-                released results.
+                Find a student to inspect their academic history, including withdrawn registrations and released
+                results.
             </DeskHeading>
             <Form action="/students" method="get">
                 <label>
@@ -45,8 +45,7 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                 ))}
             </ul>
             {!students.length && <p>No matching student records.</p>}
-            {previous && <Link href={previous}>Previous page</Link>}{' '}
-            {next && <Link href={next}>Next page</Link>}
+            {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
             {receipt && <p role="status">{receipt}</p>}
             {link && (
                 <details>
@@ -55,16 +54,15 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                         {({ errors, processing }) => (
                             <>
                                 <label>
-                                    Upstream student ID{' '}
-                                    <input className="border p-2" name="student" required />
+                                    Upstream student ID <input className="border p-2" name="student" required />
                                 </label>
                                 <label>
                                     Existing LMS account email{' '}
                                     <input className="border p-2" type="email" name="account" required />
                                 </label>
                                 <label>
-                                    <input type="checkbox" name="verified" value="1" required /> I checked
-                                    both identities against the registrar's record.
+                                    <input type="checkbox" name="verified" value="1" required /> I checked both
+                                    identities against the registrar's record.
                                 </label>
                                 {Object.entries(errors).map(([k, v]) => (
                                     <p role="alert" key={k}>
@@ -83,8 +81,8 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                 <section className="portal-panel desk-shelf">
                     <h2 className="desk-section">Reconcile registrar feeds</h2>
                     <p>
-                        Use an authorised upstream export. Corrections to official registration belong with
-                        the registrar.
+                        Use an authorised upstream export. Corrections to official registration belong with the
+                        registrar.
                     </p>
                     {(['registrations', 'profiles'] as const).map((kind) => (
                         <details key={kind} className="border-b py-3">

@@ -36,9 +36,7 @@ export default function PrivacyDesk({ csrf, operations, cases }: PrivacyDeskProp
                     {String(value)}
                 </p>
             ))}
-            <p>
-                Verify identity, authority and holds in the institution's case system. Use only its reference here.
-            </p>
+            <p>Verify identity, authority and holds in the institution's case system. Use only its reference here.</p>
             <PrivacyCaseRegister cases={cases} />
             <label>
                 Subject account UUID

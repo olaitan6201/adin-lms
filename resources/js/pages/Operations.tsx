@@ -9,7 +9,13 @@ type Status = {
     infrastructure: Infrastructure;
 };
 
-export default function Operations({ activeSessions, failedDeliveries, failedLogins, retentionDays, infrastructure }: Status) {
+export default function Operations({
+    activeSessions,
+    failedDeliveries,
+    failedLogins,
+    retentionDays,
+    infrastructure,
+}: Status) {
     return (
         <main className="mx-auto max-w-2xl space-y-6 px-6 py-12">
             <Head title="Institution operations" />

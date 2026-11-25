@@ -1,7 +1,8 @@
-/.agents
+/.agents/
+/.agent-work/
 /docs/
 /scripts/
-/.agent-work/
+/design-system/
 *.log
 .DS_Store
 .env

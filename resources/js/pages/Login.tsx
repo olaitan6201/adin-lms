@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import { useRef, type ComponentRef } from 'react';
+import { useRef, useState, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
 
 interface LoginProps {
@@ -14,6 +14,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
     const form = useRef<ComponentRef<typeof Form<Credentials>>>(null);
     const identifier = useRef<HTMLInputElement>(null);
     const password = useRef<HTMLInputElement>(null);
+    const [submittedIdentifier, setSubmittedIdentifier] = useState('');
     return (
         <main className="mx-auto grid w-full max-w-xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
             <Head title="Sign in" />
@@ -38,6 +39,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                     action="/login"
                     method="post"
                     className="grid gap-4"
+                    onBefore={() => setSubmittedIdentifier(identifier.current?.value ?? '')}
                     onError={(errors) => {
                         const firstInvalid = errors.email ? identifier : password;
                         // Publish the description before moving focus, then clear the previous field.
@@ -49,8 +51,11 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                 >
                     {({ errors, processing }) => (
                         <>
+                            {/* A fresh invalid input prevents stale autofill caret events from repeating the correction. */}
                             <PortalField
+                                key={errors.email ? 'rejected-identifier' : 'identifier'}
                                 ref={identifier}
+                                defaultValue={submittedIdentifier}
                                 label="Email, matric number or staff ID"
                                 name="email"
                                 autoComplete="username"

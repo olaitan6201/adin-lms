@@ -42,7 +42,7 @@ export function ResourceReader({ material, action }: ResourceReaderProps) {
                             </a>
                         )}
                         {v.download && (
-                            <a className="underline" href={v.download}>
+                            <a className="underline" href={v.download} download>
                                 Download {material.title} (revision {v.revision})
                             </a>
                         )}

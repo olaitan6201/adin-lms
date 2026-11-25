@@ -1,3 +1,5 @@
+import { StudyDetails, TeachingDetails, type Teaching, type Study } from '../../insights/DeskDetails';
+import { ManagementPeriod, ActivitySummary, type Period, type Activity } from '../../insights/ManagementPeriod';
 import { workspaceCopy } from '../../insights/workspaceCopy';
 import { Head, Link } from '@inertiajs/react';
 import { LearnerTime } from '../../components/LearnerTime';
@@ -12,6 +14,10 @@ type Props = {
     queue: AgendaItem[];
     courses: DeskCourse[];
     releases: Release[];
+    period: Period | null;
+    activity: Activity | null;
+    teaching: Teaching | null;
+    study: Study | null;
     population: Record<string, number> | null;
     tools: {
         label: string;
@@ -21,9 +27,9 @@ type Props = {
 
 
 
-export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools, population }: Props) {
+export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools, population, period, activity, teaching, study }: Props) {
     if (workspace === 'study') {
-        return <StudyWeek name={name} courses={courses} queue={queue} releases={releases} />;
+        return <StudyWeek name={name} courses={courses} queue={queue} releases={releases}>{study && <StudyDetails study={study} />}</StudyWeek>;
     }
     const desk = workspaceCopy[workspace];
     return (
@@ -35,6 +41,7 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                 <p>{desk.lead}</p>
                 <div className="desk-owner">{name}</div>
             </header>
+            {period && <ManagementPeriod key={`${period.session}:${period.term}`} period={period} />}
             <div className="desk-grid">
                 <div>
                     <section aria-labelledby="queue">
@@ -79,6 +86,8 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                             </div>
                         )}
                     </section>
+                    {teaching && <TeachingDetails teaching={teaching} />}
+                    {activity && <ActivitySummary activity={activity} />}
                     {population && <section className="mt-8 border-t pt-5" aria-labelledby="population-title">
                         <h2 className="desk-section" id="population-title">Institution census</h2>
                         <p className="desk-note">Current records, including people and units without course activity.</p>

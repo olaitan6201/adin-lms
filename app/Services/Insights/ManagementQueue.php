@@ -11,6 +11,7 @@ use App\Enums\PermissionCode;
 use App\Models\NotificationDelivery;
 use App\Models\User;
 use App\Services\Authority\ScopedAuthority;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -18,10 +19,10 @@ final class ManagementQueue
 {
     public function __construct(private ScopedAuthority $authority) {}
 
-    public function forUser(User $user, bool $operations, bool $examOffice): Collection
+    public function forUser(User $user, bool $operations, bool $examOffice, ?Builder $offerings): Collection
     {
         $rows = collect();
-        if ($operations && ($failed = NotificationDelivery::where('status', DeliveryStatus::Failed)->where('channel', NotificationChannel::Email)->count())) {
+        if (! $offerings && $operations && ($failed = NotificationDelivery::where('status', DeliveryStatus::Failed)->where('channel', NotificationChannel::Email)->count())) {
             $rows->push([
                 'kind' => 'Delivery exception', 'title' => 'Failed notification deliveries', 'context' => "$failed failed",
                 'action' => 'Review failed emails', 'href' => route('community.delivery.failures', [], false), 'at' => null,
@@ -31,6 +32,7 @@ final class ManagementQueue
         if ($examOffice) {
             $grades = DB::table('grades as g')->join('enrolments as e', 'e.id', '=', 'g.enrolment_id')
                 ->join('offerings as o', 'o.id', '=', 'e.offering_id')
+                ->when($offerings, fn ($q) => $q->whereIn('o.id', $offerings))
                 ->where('g.moderation_status', ModerationStatus::Pending)->whereNull('g.published_at')
                 ->whereNotExists(fn ($q) => $q->from('grades as later')->whereColumn('later.enrolment_id', 'g.enrolment_id')
                     ->whereColumn('later.revision', '>', 'g.revision'))
@@ -43,7 +45,7 @@ final class ManagementQueue
             }
         }
 
-        if ($this->authority->institutionAllows($user, PermissionCode::CurriculumApprove)) {
+        if (! $offerings && $this->authority->institutionAllows($user, PermissionCode::CurriculumApprove)) {
             $versions = DB::table('curricula as c')->join('programmes as p', 'p.id', '=', 'c.programme_id')
                 ->where('c.status', CurriculumStatus::Reviewed)->orderBy('p.name')->orderBy('c.version')->limit(12)
                 ->get(['c.id', 'p.name', 'c.version']);
@@ -57,6 +59,7 @@ final class ManagementQueue
 
         if ($this->authority->institutionAllows($user, PermissionCode::OfferingsManage)) {
             $offerings = DB::table('offerings as o')->leftJoin('curriculum_courses as c', 'c.id', '=', 'o.curriculum_course_id')
+                ->when($offerings, fn ($q) => $q->whereIn('o.id', $offerings))
                 ->where('o.status', OfferingStatus::Draft)->orderBy('o.external_offering_id')->limit(12)
                 ->get(['o.id', 'o.external_offering_id', 'c.title']);
             foreach ($offerings as $o) {

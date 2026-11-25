@@ -37,8 +37,8 @@ function WeekStrip({ queue, today }: { queue: AgendaItem[]; today: Date }) {
     );
 }
 
-export function StudyWeek({ name, courses, queue, releases }: {
-    name: string; courses: DeskCourse[]; queue: AgendaItem[]; releases: Release[];
+export function StudyWeek({ name, courses, queue, releases, children }: {
+    children: React.ReactNode; name: string; courses: DeskCourse[]; queue: AgendaItem[]; releases: Release[];
 }) {
     const today = new Date();
     const featured = courses.find((c) => c.code === queue[0]?.context) ?? courses[0];
@@ -79,6 +79,7 @@ export function StudyWeek({ name, courses, queue, releases }: {
                 <Link className="desk-link" href="/courses">Browse my courses →</Link>
             </section>
             <ReleasedWork releases={releases} />
+            {children}
         </main>
     );
 }

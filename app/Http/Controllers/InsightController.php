@@ -12,10 +12,11 @@ final class InsightController extends Controller
 {
     public function dashboard(InsightFilterRequest $request, DashboardWorkspace $workspace): Response|RedirectResponse
     {
-        if ($filters = $request->validated()) {
+        $filters = $request->validated();
+        if (isset($filters['offering']) || isset($filters['family'])) {
             return to_route('insights.reports', $filters);
         }
 
-        return Inertia::render('Insights/Dashboard', $workspace->build($request->user()));
+        return Inertia::render('Insights/Dashboard', $workspace->build($request->user(), $filters));
     }
 }

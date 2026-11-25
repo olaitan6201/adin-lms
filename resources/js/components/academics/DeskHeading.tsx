@@ -1,4 +1,10 @@
-export function DeskHeading({ area, title, children }: { area: string; title: string; children: string }) {
+type DeskHeadingProps = {
+    area: string;
+    title: string;
+    children: string;
+};
+
+export function DeskHeading({ area, title, children }: DeskHeadingProps) {
     return (
         <header className="desk-heading">
             <p className="portal-kicker">{area}</p>

@@ -54,8 +54,8 @@ export function OfferingPreparation({
             <details>
                 <summary>Copy teaching structure from another term</summary>
                 <p>
-                    The receiving offering must be empty. Scheduled activities shift by the difference
-                    between semester start dates.
+                    The receiving offering must be empty. Scheduled activities shift by the difference between semester
+                    start dates.
                 </p>
                 <RecordForm
                     title="Copy structure"

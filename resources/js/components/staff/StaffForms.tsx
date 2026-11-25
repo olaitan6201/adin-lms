@@ -13,12 +13,7 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                     <h2 className="text-xl font-semibold">Register a lecturer</h2>
                     <label>
                         Staff number{' '}
-                        <input
-                            className="block w-full border p-2"
-                            name="staff_number"
-                            maxLength={191}
-                            required
-                        />
+                        <input className="block w-full border p-2" name="staff_number" maxLength={191} required />
                     </label>
                     <label>
                         Verified account email{' '}
@@ -26,12 +21,7 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                     </label>
                     <label>
                         Department{' '}
-                        <select
-                            className="block w-full border p-2"
-                            name="department_id"
-                            required
-                            defaultValue=""
-                        >
+                        <select className="block w-full border p-2" name="department_id" required defaultValue="">
                             <option value="" disabled>
                                 Select department
                             </option>
@@ -43,8 +33,8 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                         </select>
                     </label>
                     <label>
-                        <input type="checkbox" name="verified" value="1" required /> I verified this
-                        account against the staff record.
+                        <input type="checkbox" name="verified" value="1" required /> I verified this account against the
+                        staff record.
                     </label>
                     {Object.entries(errors).map(([key, value]) => (
                         <p role="alert" key={key}>
@@ -71,8 +61,7 @@ export function ChangeAllocation() {
                         Staff number <input name="staff_number" className="border p-2" required />
                     </label>
                     <label>
-                        Upstream offering ID{' '}
-                        <input name="offering" className="border p-2" required />
+                        Upstream offering ID <input name="offering" className="border p-2" required />
                     </label>
                     <label>
                         Action{' '}

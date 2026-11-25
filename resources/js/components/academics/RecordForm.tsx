@@ -26,11 +26,7 @@ export default function RecordForm({
     method?: 'post' | 'delete' | 'patch';
 }) {
     return (
-        <Form
-            action={action}
-            method={method}
-            className="my-3 grid gap-3 border-l-2 border-teal-800 pl-4"
-        >
+        <Form action={action} method={method} className="my-3 grid gap-3 border-l-2 border-teal-800 pl-4">
             {({ processing, errors, recentlySuccessful }) => (
                 <>
                     {fields.map((f) => (

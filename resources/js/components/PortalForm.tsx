@@ -29,13 +29,12 @@ export function PortalField({ label, error, 'aria-describedby': hint, ...input }
     );
 }
 
-export function SubmitButton({
-    children,
-    processing,
-}: {
+type SubmitButtonProps = {
     children: string;
     processing: boolean;
-}) {
+};
+
+export function SubmitButton({ children, processing }: SubmitButtonProps) {
     return (
         <button type="submit" className="bg-teal-900 p-2 text-white" disabled={processing}>
             {children}

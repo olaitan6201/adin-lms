@@ -45,21 +45,15 @@ export function CourseMeta({ course }: { course: ClassDetails }) {
             </div>
             <div>
                 <dt className="text-slate-500">Section</dt>
-                <dd className="mt-1 font-medium text-slate-900">
-                    {course.section ?? 'Not assigned'}
-                </dd>
+                <dd className="mt-1 font-medium text-slate-900">{course.section ?? 'Not assigned'}</dd>
             </div>
             <div>
                 <dt className="text-slate-500">Credit units</dt>
-                <dd className="mt-1 font-medium text-slate-900">
-                    {course.credits ?? 'Not assigned'}
-                </dd>
+                <dd className="mt-1 font-medium text-slate-900">{course.credits ?? 'Not assigned'}</dd>
             </div>
             <div>
                 <dt className="text-slate-500">Status</dt>
-                <dd className="mt-1 font-medium capitalize text-slate-900">
-                    {course.status.replaceAll('_', ' ')}
-                </dd>
+                <dd className="mt-1 font-medium capitalize text-slate-900">{course.status.replaceAll('_', ' ')}</dd>
             </div>
         </dl>
     );
@@ -68,8 +62,8 @@ export function CourseMeta({ course }: { course: ClassDetails }) {
 export function PerformanceNote() {
     return (
         <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-600">
-            Performance uses active enrolments and the latest approved, published result revision
-            only. Unreleased results are excluded.
+            Performance uses active enrolments and the latest approved, published result revision only. Unreleased
+            results are excluded.
         </p>
     );
 }

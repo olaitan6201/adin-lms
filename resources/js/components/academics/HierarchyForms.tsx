@@ -2,7 +2,10 @@ import RecordForm, { field } from './RecordForm';
 import type { Choice, Field } from './RecordForm';
 import { useState } from 'react';
 
-type Row = { id: string; [key: string]: string | number | undefined };
+type Row = {
+    id: string;
+    [key: string]: string | number | undefined;
+};
 
 export function HierarchyForms({
     faculties,
@@ -75,9 +78,7 @@ export function HierarchyForms({
                         method={selection[path] ? 'patch' : 'post'}
                         fields={fields.map((f) => ({
                             ...f,
-                            initial: String(
-                                records[path]?.find((r) => r.id === selection[path])?.[f.name] ?? '',
-                            ),
+                            initial: String(records[path]?.find((r) => r.id === selection[path])?.[f.name] ?? ''),
                         }))}
                     />
                 </details>

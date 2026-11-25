@@ -1,10 +1,12 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
-export function CommunityPage({ title, children }: {
+type CommunityPageProps = {
     title: string;
     children: ReactNode;
-}) {
+};
+
+export function CommunityPage({ title, children }: CommunityPageProps) {
     return (
         <main className="mx-auto max-w-2xl space-y-6 px-5 py-10">
             <Head title={title} />
@@ -34,12 +36,7 @@ export function EntryForm({
     body?: boolean;
 }) {
     return (
-        <Form
-            action={action}
-            method="post"
-            resetOnSuccess
-            className="grid gap-3 rounded border p-4"
-        >
+        <Form action={action} method="post" resetOnSuccess className="grid gap-3 rounded border p-4">
             {({ processing, errors, recentlySuccessful }) => (
                 <>
                     <h2 className="text-xl font-semibold">{title}</h2>

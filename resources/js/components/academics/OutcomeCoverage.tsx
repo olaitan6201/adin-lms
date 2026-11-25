@@ -17,11 +17,7 @@ export function OutcomeCoverage({
                         {entries.find((e) => e.id === o.curriculum_course_id)?.code}: {o.statement} —{' '}
                         {mappings
                             .filter((m) => m.course_outcome_id === o.id)
-                            .map(
-                                (m) =>
-                                    programmeOutcomes.find((p) => p.id === m.programme_outcome_id)
-                                        ?.statement,
-                            )
+                            .map((m) => programmeOutcomes.find((p) => p.id === m.programme_outcome_id)?.statement)
                             .join('; ') || 'Unmapped'}
                     </li>
                 ))}

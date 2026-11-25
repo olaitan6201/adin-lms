@@ -9,12 +9,8 @@ export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
             <Head title="Teaching workload" />
             <div>
                 <header className="desk-heading">
-                    <p className="portal-kicker">
-                        Lecturer workspace
-                    </p>
-                    <h1 className="portal-title">
-                        Teaching workload
-                    </h1>
+                    <p className="portal-kicker">Lecturer workspace</p>
+                    <h1 className="portal-title">Teaching workload</h1>
                     <p className="mt-2 text-slate-600">
                         Review allocated classes, enrolments and released performance by term.
                     </p>
@@ -34,9 +30,7 @@ export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
                         <h2 id="classes-heading" className="text-xl font-semibold text-slate-950">
                             Allocated classes
                         </h2>
-                        <span className="text-sm text-slate-600">
-                            {workload.totals.classes} total
-                        </span>
+                        <span className="text-sm text-slate-600">{workload.totals.classes} total</span>
                     </div>
                     {workload.classes.length === 0 ? (
                         <p className="mt-4 rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
@@ -45,15 +39,10 @@ export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
                     ) : (
                         <ul className="mt-4 grid gap-4">
                             {workload.classes.map((course) => (
-                                <li
-                                    key={course.id}
-                                    className="portal-panel desk-shelf"
-                                >
+                                <li key={course.id} className="portal-panel desk-shelf">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <p className="text-sm font-semibold text-teal-800">
-                                                {course.code}
-                                            </p>
+                                            <p className="text-sm font-semibold text-teal-800">{course.code}</p>
                                             <h3 className="mt-1 text-lg font-semibold text-slate-950">
                                                 {course.title}
                                             </h3>

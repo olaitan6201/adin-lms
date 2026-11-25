@@ -35,8 +35,8 @@ export function CatalogueCourses({
                     <p>{e.description}</p>
                     <p>{e.outline}</p>
                     <p>
-                        Level {levels.find((level) => level.id === e.level_id)?.name} · {e.credits} credits ·
-                        semester {e.semester_position} · {e.compulsory ? 'Compulsory' : 'Elective'}
+                        Level {levels.find((level) => level.id === e.level_id)?.name} · {e.credits} credits · semester{' '}
+                        {e.semester_position} · {e.compulsory ? 'Compulsory' : 'Elective'}
                     </p>
                     <p>
                         Prerequisites:{' '}

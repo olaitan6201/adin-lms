@@ -35,7 +35,12 @@ export type WorkloadData = {
 };
 
 export type ClassReport = {
-    groups: { id: string; name: string; members: number; lessons: number }[];
+    groups: {
+        id: string;
+        name: string;
+        members: number;
+        lessons: number;
+    }[];
     activity: import('./TeachingFigures').Activity | null;
     class: ClassDetails;
     allocation: {

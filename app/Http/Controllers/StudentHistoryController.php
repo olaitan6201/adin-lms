@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Grade;
 use App\Models\Student;
+use App\Models\StudentPhoto;
 use App\Models\StudentSession;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -49,6 +50,7 @@ class StudentHistoryController extends Controller
         return Inertia::render('StudentHistory', [
             'student' => $student->only('matric_number', 'source_name', 'source_email') + [
                 'status' => $student->status?->value,
+                'photo' => StudentPhoto::where('student_id', $student->id)->exists() ? route('students.photo', $student) : null,
             ],
             'sessions' => $sessions,
             'records' => $enrolments->map(

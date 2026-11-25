@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Enums\StudentStatus;
 use App\Models\Student;
+use App\Models\User;
 use Database\Seeders\DemoCampusSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use ZipArchive;
 
@@ -31,8 +33,10 @@ class StudentProfileFeedTest extends TestCase
             file_put_contents($path, "$header\n".str_replace('graduated', 'registered', $row));
             $this->artisan('roster:profiles', ['file' => $path])->assertFailed();
             $this->assertDatabaseEmpty('student_sessions');
-            file_put_contents($path, "$header\n$row");
+            $photo = UploadedFile::fake()->image('student.jpg', 16, 16)->getContent();
+            file_put_contents($path, "$header\n$row\"data:image/jpeg;base64,".base64_encode($photo).'"');
             $this->artisan('roster:profiles', ['file' => $path])->assertSuccessful();
+            file_put_contents($path, "$header\n$row");
             $this->artisan('roster:profiles', ['file' => $path])->assertSuccessful();
             $this->assertDatabaseCount('student_sessions', 1);
             $ada = Student::where('external_student_id', 'DEMO-ADA')->sole();
@@ -40,6 +44,13 @@ class StudentProfileFeedTest extends TestCase
             $this->assertSame('alternate@example.test', $ada->source_email);
             $this->assertSame('ada@demo.example.test', $ada->user->email);
             $this->assertCount(2, $ada->enrolments);
+            $url = route('students.photo', $ada);
+            $this->actingAs(User::factory()->create())->get($url)->assertForbidden();
+            $response = $this->actingAs($ada->user)->get($url)->assertOk()->assertHeader('Content-Type', 'image/jpeg');
+            $this->assertSame([16, 16], array_slice(getimagesizefromstring($response->getContent()), 0, 2));
+            file_put_contents($path, "$header\n{$row}https://example.test/photo.jpg");
+            $this->artisan('roster:profiles', ['file' => $path])->assertFailed();
+            $this->assertSame($response->getContent(), $this->get($url)->getContent());
         } finally {
             unlink($path);
         }

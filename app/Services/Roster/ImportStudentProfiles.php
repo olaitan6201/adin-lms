@@ -7,6 +7,7 @@ use App\Models\AcademicLevel;
 use App\Models\AcademicSession;
 use App\Models\Programme;
 use App\Models\Student;
+use App\Models\StudentPhoto;
 use App\Models\StudentSession;
 use DomainException;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -50,7 +51,11 @@ class ImportStudentProfiles
                     throw new DomainException("Record {$record}: unexpected number of columns.");
                 }
                 $data = $this->validatedFields($row, $record);
-                $this->saveProfile($data, $this->academicReferences($data, $record), $record);
+                $student = $this->saveProfile($data, $this->academicReferences($data, $record), $record);
+                if (($row[8] ?? '') !== '') {
+                    $jpeg = app(ProfilePhotograph::class)->normalise($row[8], $record);
+                    StudentPhoto::unguarded(fn () => StudentPhoto::updateOrCreate(['student_id' => $student->id], ['jpeg_base64' => $jpeg]));
+                }
             }
             if ($header === null) {
                 throw new DomainException('Missing profile sheet header.');
@@ -91,7 +96,7 @@ class ImportStudentProfiles
         return $references;
     }
 
-    private function saveProfile(array $data, array $references, int $record): void
+    private function saveProfile(array $data, array $references, int $record): Student
     {
         $student =
             Student::where('external_student_id', $data['student_id'])->lockForUpdate()->first() ??
@@ -114,5 +119,7 @@ class ImportStudentProfiles
                 ->where('session_id', $references['session_id'])
                 ->first() ?? new StudentSession;
         $session->forceFill(['student_id' => $student->id] + $references)->save();
+
+        return $student;
     }
 }

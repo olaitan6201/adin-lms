@@ -1,5 +1,6 @@
 {
   "source": "cfadc1976277fd30a9860cee64a1a76fd139d79344743b27508f33971a3d4ef6",
+  "previous": "ba9087e5423ec41f32564f258dccb33caf8e1f3051ddefc5f33c28e01e4cb26e",
   "order": [
     "migrations",
     "faculties",
@@ -58,6 +59,8 @@
     "attempt_questions",
     "examination_responses",
     "assessment_scores",
+    "grading_policy_items",
+    "assessment_criterion_feedback",
     "grades",
     "grade_inputs",
     "announcements",
@@ -71,6 +74,11 @@
     "privacy_consents",
     "access_scopes",
     "role_grants",
+    "privacy_case_files",
+    "teaching_plans",
+    "student_photos",
+    "scorm_packages",
+    "scorm_progress",
     "password_reset_tokens",
     "sessions",
     "cache",
@@ -79,8 +87,8 @@
     "job_batches",
     "failed_jobs"
   ],
-  "target": "ba9087e5423ec41f32564f258dccb33caf8e1f3051ddefc5f33c28e01e4cb26e",
-  "migration": "f309bd78a6c2c5f02fd5a9cded5deb63e4631a378d15a615f247b4ac8533cb20",
+  "target": "4775efab714fe6e9a19bac69be4a2de9f115e252502e991954a4b85bac38eace",
+  "migration": "0b0a3195e9820a45758e61af2be59ea01860564f567f420482f724ab82ba5d9f",
   "usage_indexes": {
     "login_events": {"usage_auth_window_idx": ["outcome", "occurred_at", "user_id"]},
     "submission_versions": {"usage_submission_window_idx": ["submitted_at"]},

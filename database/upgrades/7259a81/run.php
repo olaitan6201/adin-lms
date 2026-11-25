@@ -38,7 +38,9 @@ try {
     foreach (['source', 'target'] as $side) {
         $schema = $store->$side;
         $inventory = $store->inventory($schema);
-        if (hash('sha256', json_encode($inventory, JSON_THROW_ON_ERROR)) !== $contract[$side]) {
+        $pins = $side === 'source' ? [$contract['source'], $contract['previous']] : [$contract['target']];
+        $fingerprint = hash('sha256', json_encode($inventory, JSON_THROW_ON_ERROR));
+        if (! in_array($fingerprint, $pins, true)) {
             throw new RuntimeException("Unexpected {$side} table/column inventory.");
         }
 
@@ -64,6 +66,7 @@ try {
 
         if ($side === 'source') {
             $original = $inventory;
+            $manifest['source_inventory'] = $fingerprint;
         }
     }
 
@@ -96,7 +99,11 @@ try {
     }
 
     $store->db->beginTransaction();
-    foreach ($contract['order'] as $table) {
+    $order = array_intersect($contract['order'], array_keys($original));
+    if (array_diff(array_keys($original), $order) !== []) {
+        throw new RuntimeException('Missing table in transfer order.');
+    }
+    foreach ($order as $table) {
         $stage = "copy {$table}";
         $transfer->copy($table, $original[$table]);
     }

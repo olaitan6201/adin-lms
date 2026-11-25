@@ -267,7 +267,9 @@ return new class extends Migration
         });
 
         Schema::create('modules', function (Blueprint $table): void {
-            $table->uuid('id')->primary();
+            $table->uuid('id');
+            $table->primary('id');
+            $table->foreignUuid('prerequisite_id')->nullable()->constrained('modules');
             $table->foreignUuid('offering_id')->constrained('offerings');
             $table->integer('position');
             $table->string('title');
@@ -499,6 +501,7 @@ return new class extends Migration
 
         Schema::create('examination_attempts', function (Blueprint $table): void {
             $table->uuid('id')->primary();
+            $table->jsonb('visibility_receipts')->nullable();
             $table->foreignUuid('exam_id')->constrained('examinations');
             $table->foreignUuid('enrolment_id')->constrained('enrolments');
             $table->integer('ordinal');

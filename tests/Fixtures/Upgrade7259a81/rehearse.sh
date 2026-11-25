@@ -10,7 +10,13 @@ repo=$PWD
 scripts=tests/Fixtures/Upgrade7259a81
 baseline=2026_11_25_000001_create_uuid_lms_schema.php
 old=7259a816a9f17adc19c208ed92e415b12aafd62b
-candidate=$(git rev-parse HEAD)
+source_profile=${2:-legacy}
+case $source_profile in
+    previous) old=98fbfe38ba79e2d2c97347aa15a822069b37470c ;;
+    legacy) ;;
+    *) exit 2 ;;
+esac
+candidate=$(git rev-parse "${3:-HEAD}")
 mkdir -p .agent-work/redesign/continuity
 export QA_ROOT
 QA_ROOT=$(mktemp -d "$PWD/.agent-work/redesign/continuity/r.XXXXXX")
@@ -38,16 +44,18 @@ sql() {
     esac
 }
 echo "Source $old; candidate $candidate; target $(sha256sum "$QA_ROOT/target/database/migrations/$baseline" | cut -d' ' -f1); $DB_CONNECTION"
-php artisan migrate --seed --no-interaction >/dev/null
+php artisan migrate --no-interaction >/dev/null
+for seeder in AuthoritySeeder DemoCampusSeeder DemoStaffAuthoritySeeder; do php artisan db:seed --class="$seeder" --no-interaction >/dev/null; done
 sql < "$repo/$scripts/test-history.sql"
 sql < "$repo/$scripts/approved-control.sql"
+if [[ $source_profile == previous ]]; then sql < "$repo/$scripts/previous-history.sql"; fi
 history() {
     if ! QA_HISTORY_SIDE="$1" vendor/bin/phpunit --do-not-cache-result "$repo/$scripts/OwnerHistoryTest.php" > "$QA_ROOT/owner-$1" 2>&1; then
         echo "Owner history assertion failed on $1." >&2
         return 1
     fi
 }
-history legacy
+history "$source_profile"
 case $DB_CONNECTION in
     sqlite)
         sql <<<".backup '$UPGRADE_BACKUP'"
@@ -140,6 +148,8 @@ SQL
 refuse 'is not empty' "apply:$plan"
 check_cutover
 history candidate
+[[ $(sql <<<'SELECT count(*) FROM modules WHERE prerequisite_id IS NOT NULL') == 0 ]]
+[[ $(sql <<<'SELECT count(*) FROM examination_attempts WHERE visibility_receipts IS NOT NULL') == 0 ]]
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id WHERE a.external_offering_id=b.external_offering_id') == 0 ]]
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id') == 1 ]]
 sql <<<"INSERT INTO jobs (queue,payload,attempts,available_at,created_at) VALUES ('probe','{}',0,1,1);"

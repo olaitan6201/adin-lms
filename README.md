@@ -49,14 +49,17 @@ keep it intact: migrate a new database, transfer and reconcile the pilot
 records (map legacy numeric IDs to new UUIDs and translate all dependent links; preserve password hashes and roster revisions),
 then switch connections. Rolling back this baseline drops the whole schema.
 
-### Transfer an existing `7259a81` UUID database
+### Transfer an existing `7259a81` or `98fbfe3` UUID database
 
 Use `database/upgrades/7259a81/run.php` offline. Ordinary `artisan migrate`
-skips the already-recorded filename. This transfer expects the original
-UUID schema, a restored source and a new, **unseeded** destination on the
+skips the already-recorded filename. The transfer accepts the pinned inventory
+of the original UUID schema or the previous `98fbfe3` baseline. Use a restored source and a new, **unseeded** destination on the
 same engine. It never reads `.env`. First rehearse locally:
 `bash tests/Fixtures/Upgrade7259a81/rehearse.sh sqlite` (also `pgsql` and `mysql`;
 install PHP PDO drivers and local PostgreSQL or MySQL server/client binaries).
+Pass `previous` after the engine to rehearse `98fbfe3`. Its existing SCORM,
+feedback, privacy and other domain records are copied and reconciled. Both
+paths leave the new module prerequisite and visibility receipt fields null.
 
 1. Stop application writes, workers, scheduled jobs and integrations. Keep the
    old app/database intact. Back up the database, matching private files and

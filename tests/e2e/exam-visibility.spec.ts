@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { realpathSync } from 'node:fs';
 import { resolve, sep } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
@@ -23,7 +24,7 @@ function paper(login: string) {
         SELECT ?,?,e.id,1,datetime('now'),datetime('now','+10 minutes'),'active' FROM enrolments e
         JOIN offerings o ON e.offering_id=o.id JOIN students s ON s.id=e.student_id JOIN users u ON u.id=s.user_id
         WHERE e.status='registered' AND o.external_offering_id='DEMO-CSC101-2026-1' AND u.email=?`).run(attempt, exam, `${login}@demo.example.test`);
-    return { db, attempt };
+    return { db, attempt, exam };
 }
 
 async function hide(page: Page) {
@@ -33,20 +34,25 @@ async function hide(page: Page) {
     });
 }
 
-async function openPaper(page: Page, login: string, attempt: string) {
+async function loginWithPassword(page: Page, login: string) {
     await page.goto('/login');
     await page.locator('input[name=email]').fill(`${login}@demo.example.test`);
     await page.locator('input[name=password]').fill('password');
     await page.locator('input[name=password]').press('Enter');
+}
+
+async function openPaper(page: Page, login: string, attempt: string) {
+    await loginWithPassword(page, login);
     await expect(page).toHaveURL(/\/dashboard$/);
     await page.goto(`/attempts/${attempt}`);
     await expect(page.getByLabel('Exam conditions')).toContainText('records when the page becomes hidden');
 }
 
-test('replays a committed signal after a lost response and reload', async ({ page }) => {
-    const { db, attempt } = paper('ada');
+test('replays a committed signal after a lost response and reload', async ({ page }, info) => {
+    const learner = `exam-learner-${info.project.name}`;
+    const { db, attempt } = paper(learner);
     try {
-        await openPaper(page, 'ada', attempt);
+        await openPaper(page, learner, attempt);
         const ids: string[] = [];
         await page.route(`**/attempts/${attempt}/visibility-signal`, async route => {
             const body = route.request().postDataJSON();
@@ -72,10 +78,11 @@ test('replays a committed signal after a lost response and reload', async ({ pag
     }
 });
 
-test('bounds transient retries and reports an unconfirmed delivery', async ({ page }) => {
-    const { db, attempt } = paper('ada');
+test('bounds transient retries and reports an unconfirmed delivery', async ({ page }, info) => {
+    const learner = `exam-learner-${info.project.name}`;
+    const { db, attempt } = paper(learner);
     try {
-        await openPaper(page, 'ada', attempt);
+        await openPaper(page, learner, attempt);
         const ids: string[] = [];
         await page.route(`**/attempts/${attempt}/visibility-signal`, async route => {
             ids.push(route.request().postDataJSON().observation_id);
@@ -91,23 +98,42 @@ test('bounds transient retries and reports an unconfirmed delivery', async ({ pa
     }
 });
 
-test('keeps an offline observation in its own tab and attempt until it can be delivered', async ({ page, context }) => {
-    const first = paper('ada');
-    const second = paper('ada');
+test('keeps an offline observation scoped to its attempt and shows receipt time after recovery', async ({ page, context, browser }, info) => {
+    const learner = `exam-learner-${info.project.name}`;
+    const reviewer = `exam-reviewer-${info.project.name}`;
+    const staff = await browser.newPage({ baseURL: info.project.use.baseURL, viewport: info.project.use.viewport });
+    const first = paper(learner);
+    const second = paper(learner);
     const key = `exam-visibility:${first.attempt}`;
     try {
-        await openPaper(page, 'ada', first.attempt);
+        await loginWithPassword(staff, reviewer);
+        const otp = execFileSync('php', ['-r',
+            'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
+            resolve(process.env.PORTAL_E2E_RUN!, `${reviewer}.factor`)], { encoding: 'utf8' });
+        await staff.getByLabel('Authenticator code').fill(otp);
+        await staff.getByRole('button', { name: /verify code/i }).click();
+        await expect(staff).toHaveURL(/\/dashboard$/);
+        await openPaper(page, learner, first.attempt);
         await context.setOffline(true);
         await hide(page);
         const stored = await page.evaluate(key => sessionStorage.getItem(key), key);
         const pending = JSON.parse(stored!);
         expect(Object.keys(pending).sort()).toEqual(['id', 'sends']);
         expect(pending.sends).toBe(0);
+        await staff.goto(`/examinations/${first.exam}/integrity`);
+        await expect(staff.getByText('No observations recorded.')).toBeVisible();
         const ack = page.waitForResponse(resp => resp.url().endsWith(`${first.attempt}/visibility-signal`) && resp.status() === 204);
         await context.setOffline(false);
         await ack;
         await expect.poll(() => page.evaluate(key => sessionStorage.getItem(key), key)).toBeNull();
         expect(JSON.parse(first.db.prepare('SELECT visibility_receipts FROM examination_attempts WHERE id=?').get(first.attempt)?.visibility_receipts as string)).toEqual([pending.id]);
+        await staff.reload();
+        const observation = staff.getByRole('article').filter({ has: staff.getByRole('heading', { name: `EXAM/${info.project.name} · Attempt 1` }) });
+        await expect(observation.getByText(/^Report received ·/)).toBeVisible();
+        await expect(staff.getByText(/If the learner was offline, the page may have become hidden earlier/)).toBeVisible();
+        const audit = first.db.prepare("SELECT occurred_at FROM audit_logs WHERE attempt_id=? AND action='exam.page_hidden'").get(first.attempt);
+        const displayed = await observation.locator('time').getAttribute('datetime');
+        expect(Date.parse(displayed!)).toBe(Date.parse(`${audit?.occurred_at}Z`));
         // A receipt for a different paper in the same tab is never drained by this paper.
         await page.goto(`/attempts/${second.attempt}`);
         await page.evaluate(([key, value]) => sessionStorage.setItem(key, value), [key, stored!]);
@@ -118,6 +144,7 @@ test('keeps an offline observation in its own tab and attempt until it can be de
         const other = second.db.prepare('SELECT visibility_receipts FROM examination_attempts WHERE id=?').get(second.attempt);
         expect(JSON.parse((other?.visibility_receipts as string | null) ?? '[]')).not.toContain(pending.id);
     } finally {
+        await staff.close();
         first.db.close();
         second.db.close();
     }

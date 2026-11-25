@@ -65,6 +65,10 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
             <section>
                 <h2>Visibility observations</h2>
                 <p>
+                    Each time shows when the server received the report. If the learner was offline, the page may
+                    have become hidden earlier.
+                </p>
+                <p>
                     A hidden page may mean the learner locked their screen or used an accessibility tool. Review context
                     before drawing conclusions. Marks are never changed here.
                 </p>
@@ -75,7 +79,7 @@ export default function Integrity({ exam, title, policy, locked, signals }: Prop
                             {s.learner} · Attempt {s.ordinal}
                         </h3>
                         <p>
-                            Page hidden · <time dateTime={s.at}>{new Date(s.at).toLocaleString()}</time>
+                            Report received · <time dateTime={s.at}>{new Date(s.at).toLocaleString()}</time>
                         </p>
                         {s.note ? (
                             <p>

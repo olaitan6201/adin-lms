@@ -1,8 +1,10 @@
 <?php
 
 use App\Enums\RoleCode;
+use App\Models\Enrolment;
 use App\Models\Lecturer;
 use App\Models\Offering;
+use App\Models\Student;
 use App\Models\TeachingAllocation;
 use App\Models\User;
 use App\Services\Authority\ChangeRoleGrant;
@@ -25,6 +27,12 @@ if (! $run || ! $sandbox || ! str_starts_with($run, $sandbox.'/run-')
 umask(0077);
 $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
 $authors = ['group-desktop', 'group-phone', 'lesson-desktop', 'lesson-phone'];
+foreach (['desktop', 'phone'] as $project) {
+    $authors[] = 'exam-reviewer-'.$project;
+    $candidate = User::factory()->create(['email' => "exam-learner-{$project}@demo.example.test"]);
+    $student = Student::factory()->create(['user_id' => $candidate->id, 'matric_number' => "EXAM/{$project}"]);
+    Enrolment::factory()->create(['student_id' => $student->id, 'offering_id' => $offering->id]);
+}
 foreach ($authors as $login) {
     $user = User::factory()->create(['email' => $login.'@demo.example.test']);
     $lecturer = Lecturer::factory()->create(['user_id' => $user->id]);

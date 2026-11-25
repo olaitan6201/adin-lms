@@ -18,7 +18,10 @@ final class PortalAccessError
 
         // Machine consumers and provider callbacks keep their own response contract.
         $isVisit = $request->headers->has('X-Inertia');
-        if (! $isVisit && (! $request->isMethod('GET') || ! $request->acceptsHtml() || $request->expectsJson())) {
+        $isPage = $request->isMethod('GET')
+            && in_array('text/html', $request->getAcceptableContentTypes(), true)
+            && ! $request->expectsJson();
+        if (! $isVisit && ! $isPage) {
             return $original;
         }
 

@@ -18,7 +18,7 @@ final class PortalAccessErrorTest extends TestCase
         $this->withoutVite()->actingAs(User::factory()->create());
         $url = route('courses.show', $course);
 
-        $this->get($url)
+        $this->get($url, ['Accept' => 'text/html'])
             ->assertNotFound()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('AccessError')

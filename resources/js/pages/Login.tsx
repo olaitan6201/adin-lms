@@ -1,7 +1,12 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
 
-export default function Login({ passwordReset }: { passwordReset: boolean }) {
+interface LoginProps {
+    passwordReset: boolean;
+    institutionSignIn: string | null;
+}
+
+export default function Login({ passwordReset, institutionSignIn }: LoginProps) {
     return (
         <main className="portal-page portal-entry">
             <Head title="Sign in" />
@@ -11,6 +16,11 @@ export default function Login({ passwordReset }: { passwordReset: boolean }) {
                 <p>Use your institutional account to open your academic workspace.</p>
             </header>
             <section aria-label="Account details" className="portal-panel desk-shelf entry-form">
+            {institutionSignIn && (
+                <p className="mb-5">
+                    <a href={institutionSignIn} className="portal-action">Continue with institutional sign-in</a>
+                </p>
+            )}
             {passwordReset && (
                 <p role="status">
                     Your password has been set. Sign in with your new password.

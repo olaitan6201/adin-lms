@@ -16,7 +16,12 @@ class SessionController extends Controller
 {
     public function create(Request $request): Response
     {
-        return Inertia::render('Login', ['passwordReset' => $request->session()->get('password_reset', false)]);
+        return Inertia::render('Login', [
+            'passwordReset' => $request->session()->get('password_reset', false),
+            'institutionSignIn' => filled(config('integrations.oidc')) && filled(config('integrations.oidc_secret'))
+                ? route('integrations.oidc.login', absolute: false)
+                : null,
+        ]);
     }
 
     public function store(LoginRequest $request, AccountLookup $lookup): RedirectResponse

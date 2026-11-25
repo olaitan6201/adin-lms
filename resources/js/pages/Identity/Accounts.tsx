@@ -1,3 +1,4 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
@@ -25,18 +26,24 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
             <DeskHeading area="Identity and access" title="Account administration">
                 Find an institutional account to review access or change its LMS status.
             </DeskHeading>
-            <details>
-                <summary className="cursor-pointer py-2 font-medium">Provision an LMS account</summary>
-                <p>The account holder sets their password using the link sent by email.</p>
-                <RecordForm
-                    action="/accounts"
-                    title="Provision account"
-                    fields={[
-                        field('full_name', 'Full name'),
-                        { ...field('email', 'Institutional email'), type: 'email' },
-                    ]}
-                />
-            </details>
+            <Collapsible>
+                <CollapsibleTrigger asChild>
+                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                        Provision an LMS account
+                    </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                    <p>The account holder sets their password using the link sent by email.</p>
+                    <RecordForm
+                        action="/accounts"
+                        title="Provision account"
+                        fields={[
+                            field('full_name', 'Full name'),
+                            { ...field('email', 'Institutional email'), type: 'email' },
+                        ]}
+                    />
+                </CollapsibleContent>
+            </Collapsible>
             <Form action="/accounts" method="get" className="grid max-w-xl gap-3">
                 <label className="grid gap-2 text-sm font-medium">
                     Find by name or email <Input name="q" defaultValue={q} />
@@ -56,24 +63,30 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                             </p>
                         )}
                         {a.id !== self && (
-                            <details>
-                                <summary className="cursor-pointer py-2 font-medium">Change access status</summary>
-                                <Form action={`/accounts/${a.id}`} method="patch">
-                                    {({ errors, processing }) => (
-                                        <>
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value={a.status === 'active' ? 'suspended' : 'active'}
-                                            />
-                                            <Button className="h-auto min-h-9 max-w-full whitespace-normal break-words" disabled={processing}>
-                                                {a.status === 'active' ? 'Suspend' : 'Reactivate'} {a.full_name}
-                                            </Button>
-                                            {errors.status && <p role="alert">{errors.status}</p>}
-                                        </>
-                                    )}
-                                </Form>
-                            </details>
+                            <Collapsible>
+                                <CollapsibleTrigger asChild>
+                                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                        Change access status
+                                    </Button>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                    <Form action={`/accounts/${a.id}`} method="patch">
+                                        {({ errors, processing }) => (
+                                            <>
+                                                <input
+                                                    type="hidden"
+                                                    name="status"
+                                                    value={a.status === 'active' ? 'suspended' : 'active'}
+                                                />
+                                                <Button className="h-auto min-h-9 max-w-full whitespace-normal break-words" disabled={processing}>
+                                                    {a.status === 'active' ? 'Suspend' : 'Reactivate'} {a.full_name}
+                                                </Button>
+                                                {errors.status && <p role="alert">{errors.status}</p>}
+                                            </>
+                                        )}
+                                    </Form>
+                                </CollapsibleContent>
+                            </Collapsible>
                         )}
                     </li>
                 ))}

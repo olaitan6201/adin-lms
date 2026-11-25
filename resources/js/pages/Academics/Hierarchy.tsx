@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import { HierarchyForms } from '../../components/academics/HierarchyForms';
 import { Head, Link } from '@inertiajs/react';
 import RecordForm, { type Choice } from '../../components/academics/RecordForm';
@@ -49,25 +51,31 @@ export default function Hierarchy({ manage, faculties, departments, programmes, 
                     {departments
                         .filter((d) => d.faculty_id === f.id)
                         .map((d) => (
-                            <details className="ml-4" key={d.id}>
-                                <summary className="cursor-pointer py-2 font-medium">{d.name}</summary>
-                                <ul>
-                                    {programmes
-                                        .filter((p) => p.department_id === d.id)
-                                        .map((p) => (
-                                            <li key={p.id}>
-                                                {p.code} · {p.name}
-                                            </li>
-                                        ))}
-                                </ul>
-                                {manage && (
-                                    <RecordForm
-                                        title="Delete department"
-                                        action={`/academics/departments/${d.id}`}
-                                        method="delete"
-                                    />
-                                )}
-                            </details>
+                            <Collapsible className="ml-4" key={d.id}>
+                                <CollapsibleTrigger asChild>
+                                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                        {d.name}
+                                    </Button>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                    <ul>
+                                        {programmes
+                                            .filter((p) => p.department_id === d.id)
+                                            .map((p) => (
+                                                <li key={p.id}>
+                                                    {p.code} · {p.name}
+                                                </li>
+                                            ))}
+                                    </ul>
+                                    {manage && (
+                                        <RecordForm
+                                            title="Delete department"
+                                            action={`/academics/departments/${d.id}`}
+                                            method="delete"
+                                        />
+                                    )}
+                                </CollapsibleContent>
+                            </Collapsible>
                         ))}
                 </section>
             ))}

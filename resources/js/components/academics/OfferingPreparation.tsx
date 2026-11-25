@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import RecordForm, { field } from './RecordForm';
 import type { Offering, DeliveryProps } from './deliveryTypes';
 
@@ -51,26 +53,32 @@ export function OfferingPreparation({
                     },
                 ]}
             />
-            <details>
-                <summary className="cursor-pointer py-2 font-medium">Copy teaching structure from another term</summary>
-                <p>
-                    The receiving offering must be empty. Scheduled activities shift by the difference between semester
-                    start dates.
-                </p>
-                <RecordForm
-                    title="Copy structure"
-                    action={`${path}/copy`}
-                    fields={[
-                        field(
-                            'source_id',
-                            'Source offering',
-                            offerings
-                                .filter((s) => s.id !== o.id)
-                                .map((s) => ({ id: s.id, name: s.external_offering_id })),
-                        ),
-                    ]}
-                />
-            </details>
+            <Collapsible>
+                <CollapsibleTrigger asChild>
+                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                        Copy teaching structure from another term
+                    </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                    <p>
+                        The receiving offering must be empty. Scheduled activities shift by the difference between semester
+                        start dates.
+                    </p>
+                    <RecordForm
+                        title="Copy structure"
+                        action={`${path}/copy`}
+                        fields={[
+                            field(
+                                'source_id',
+                                'Source offering',
+                                offerings
+                                    .filter((s) => s.id !== o.id)
+                                    .map((s) => ({ id: s.id, name: s.external_offering_id })),
+                            ),
+                        ]}
+                    />
+                </CollapsibleContent>
+            </Collapsible>
         </>
     );
 }

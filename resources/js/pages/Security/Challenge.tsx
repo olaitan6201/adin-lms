@@ -1,3 +1,4 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../../components/PortalForm';
@@ -33,15 +34,19 @@ export default function Challenge() {
                     </>
                 )}
             </Form>
-            <details className="border-t border-border pt-2">
-                <summary className="min-h-11 cursor-pointer py-2 font-semibold">
-                    Need help with your authenticator?
-                </summary>
-                <p className="text-sm text-muted-foreground">
-                    For first-time setup, ask ICT for a setup key and add it to your app. If you no longer have access
-                    to your authenticator, contact ICT.
-                </p>
-            </details>
+            <Collapsible className="border-t border-border pt-2">
+                <CollapsibleTrigger asChild>
+                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                        Need help with your authenticator?
+                    </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                    <p className="text-sm text-muted-foreground">
+                        For first-time setup, ask ICT for a setup key and add it to your app. If you no longer have access
+                        to your authenticator, contact ICT.
+                    </p>
+                </CollapsibleContent>
+            </Collapsible>
             <Button asChild variant="outline">
                 <Link href="/logout" method="post" as="button">
                     Sign out

@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import type { DeliveryProps } from '../../components/academics/deliveryTypes';
 import { OfferingPreparation } from '../../components/academics/OfferingPreparation';
 import { Head, Link } from '@inertiajs/react';
@@ -45,41 +47,51 @@ export default function Delivery({
                 const path = `/academics/delivery/${o.id}`;
                 const prepare = ['draft', 'unpublished'].includes(o.status);
                 return (
-                    <details
+                    <Collapsible
                         key={o.id}
                         id={`offering-${o.id}`}
-                        open={new URLSearchParams(location.search).get('offering') === o.id}
+                        defaultOpen={new URLSearchParams(location.search).get('offering') === o.id}
                         className="rounded border p-3"
                     >
-                        <summary className="cursor-pointer py-2 font-medium">
-                            {o.external_offering_id} · {o.status}
-                        </summary>
-                        <p>
-                            {entries.find((e) => e.id === o.curriculum_course_id)?.title ?? 'No approved course linked'}{' '}
-                            · {o.section ?? 'No section'} · {o.delivery_mode ?? 'No delivery mode'}
-                        </p>
-                        {o.copied_from && (
-                            <p>Copied from {offerings.find((s) => s.id === o.copied_from)?.external_offering_id}</p>
-                        )}
-                        <Link className="text-primary underline underline-offset-4" href={`/courses/${o.id}/learning/teaching-plan`}>
-                            Teaching plan history
-                        </Link>
-                        {prepare && (
-                            <>
-                                <OfferingPreparation {...{ o, path, entries, terms, modes, offerings }} />
-                                <RecordForm title="Publish offering" action={`${path}/publish`} />
-                            </>
-                        )}
-                        {o.status === 'published' && (
-                            <RecordForm title="Unpublish offering" action={`${path}/unpublish`} />
-                        )}
-                        {o.status !== 'archived' && (
-                            <details>
-                                <summary className="cursor-pointer py-2 font-medium">Archive permanently</summary>
-                                <RecordForm title="Archive offering" action={`${path}/archive`} />
-                            </details>
-                        )}
-                    </details>
+                        <CollapsibleTrigger asChild>
+                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                {o.external_offering_id} · {o.status}
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                            <p>
+                                {entries.find((e) => e.id === o.curriculum_course_id)?.title ?? 'No approved course linked'}{' '}
+                                · {o.section ?? 'No section'} · {o.delivery_mode ?? 'No delivery mode'}
+                            </p>
+                            {o.copied_from && (
+                                <p>Copied from {offerings.find((s) => s.id === o.copied_from)?.external_offering_id}</p>
+                            )}
+                            <Link className="text-primary underline underline-offset-4" href={`/courses/${o.id}/learning/teaching-plan`}>
+                                Teaching plan history
+                            </Link>
+                            {prepare && (
+                                <>
+                                    <OfferingPreparation {...{ o, path, entries, terms, modes, offerings }} />
+                                    <RecordForm title="Publish offering" action={`${path}/publish`} />
+                                </>
+                            )}
+                            {o.status === 'published' && (
+                                <RecordForm title="Unpublish offering" action={`${path}/unpublish`} />
+                            )}
+                            {o.status !== 'archived' && (
+                                <Collapsible>
+                                    <CollapsibleTrigger asChild>
+                                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                            Archive permanently
+                                        </Button>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                        <RecordForm title="Archive offering" action={`${path}/archive`} />
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            )}
+                        </CollapsibleContent>
+                    </Collapsible>
                 );
             })}
         </main>

@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
 import RecordForm, { field } from './RecordForm';
 import type { Choice, Field } from './RecordForm';
@@ -53,35 +55,41 @@ export function HierarchyForms({
         <section>
             <h2 className="text-xl font-semibold">Configure organisation</h2>
             {forms.map(([label, path, fields]) => (
-                <details className="border-b py-2" key={path}>
-                    <summary className="cursor-pointer py-2 font-medium">Maintain {label}</summary>
-                    <label className="grid gap-2 text-sm font-medium">
-                        Record{' '}
-                        <NativeSelect
-                            value={selection[path] ?? ''}
-                            onChange={(e) => select({ ...selection, [path]: e.target.value })}
-                        >
-                            <option value="">New {label}</option>
-                            {records[path]?.map((r) => (
-                                <option key={r.id} value={r.id}>
-                                    {r.name ??
-                                        r.label ??
-                                        `${sessions.find((s) => s.id === r.session_id)?.label} · semester ${r.position}`}
-                                </option>
-                            ))}
-                        </NativeSelect>
-                    </label>
-                    <RecordForm
-                        key={selection[path] ?? ''}
-                        title={selection[path] ? `Correct ${label}` : `Create ${label}`}
-                        action={`/academics/organisation/${path}${selection[path] ? `/${selection[path]}` : ''}`}
-                        method={selection[path] ? 'patch' : 'post'}
-                        fields={fields.map((f) => ({
-                            ...f,
-                            initial: String(records[path]?.find((r) => r.id === selection[path])?.[f.name] ?? ''),
-                        }))}
-                    />
-                </details>
+                <Collapsible className="border-b py-2" key={path}>
+                    <CollapsibleTrigger asChild>
+                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                            Maintain {label}
+                        </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                        <label className="grid gap-2 text-sm font-medium">
+                            Record{' '}
+                            <NativeSelect
+                                value={selection[path] ?? ''}
+                                onChange={(e) => select({ ...selection, [path]: e.target.value })}
+                            >
+                                <option value="">New {label}</option>
+                                {records[path]?.map((r) => (
+                                    <option key={r.id} value={r.id}>
+                                        {r.name ??
+                                            r.label ??
+                                            `${sessions.find((s) => s.id === r.session_id)?.label} · semester ${r.position}`}
+                                    </option>
+                                ))}
+                            </NativeSelect>
+                        </label>
+                        <RecordForm
+                            key={selection[path] ?? ''}
+                            title={selection[path] ? `Correct ${label}` : `Create ${label}`}
+                            action={`/academics/organisation/${path}${selection[path] ? `/${selection[path]}` : ''}`}
+                            method={selection[path] ? 'patch' : 'post'}
+                            fields={fields.map((f) => ({
+                                ...f,
+                                initial: String(records[path]?.find((r) => r.id === selection[path])?.[f.name] ?? ''),
+                            }))}
+                        />
+                    </CollapsibleContent>
+                </Collapsible>
             ))}
         </section>
     );

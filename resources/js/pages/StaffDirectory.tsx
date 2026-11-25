@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../components/academics/RecordForm';
 
@@ -43,29 +45,39 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
                                             View teaching activity
                                         </Link>
                                     </p>
-                                    <details>
-                                        <summary className="cursor-pointer py-2 font-medium">Transfer department</summary>
-                                        <RecordForm
-                                            method="patch"
-                                            title="Save department"
-                                            action={`/staff/${s.id}/department`}
-                                            fields={[field('department_id', 'New department', departments)]}
-                                        />
-                                    </details>
-                                    <details>
-                                        <summary className="cursor-pointer">
-                                            Teaching allocations ({s.offerings.length})
-                                        </summary>
-                                        {s.offerings.length ? (
-                                            <ul className="list-inside list-disc">
-                                                {s.offerings.map((id) => (
-                                                    <li key={id}>{id}</li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p>No teaching allocations.</p>
-                                        )}
-                                    </details>
+                                    <Collapsible>
+                                        <CollapsibleTrigger asChild>
+                                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                                Transfer department
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                            <RecordForm
+                                                method="patch"
+                                                title="Save department"
+                                                action={`/staff/${s.id}/department`}
+                                                fields={[field('department_id', 'New department', departments)]}
+                                            />
+                                        </CollapsibleContent>
+                                    </Collapsible>
+                                    <Collapsible>
+                                        <CollapsibleTrigger asChild>
+                                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                                Teaching allocations ({s.offerings.length})
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                            {s.offerings.length ? (
+                                                <ul className="list-inside list-disc">
+                                                    {s.offerings.map((id) => (
+                                                        <li key={id}>{id}</li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p>No teaching allocations.</p>
+                                            )}
+                                        </CollapsibleContent>
+                                    </Collapsible>
                                 </li>
                             ))}
                         </ul>
@@ -77,14 +89,26 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
                 </section>
                 <aside className="min-w-0 space-y-4 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
                     <h2 className="text-xl font-semibold tracking-tight">Staff actions</h2>
-                    <details>
-                        <summary className="cursor-pointer py-3 font-semibold">Register a lecturer</summary>
-                        <RegisterLecturer departments={departments} />
-                    </details>
-                    <details>
-                        <summary className="cursor-pointer py-3 font-semibold">Change a teaching allocation</summary>
-                        <ChangeAllocation />
-                    </details>
+                    <Collapsible>
+                        <CollapsibleTrigger asChild>
+                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                Register a lecturer
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                            <RegisterLecturer departments={departments} />
+                        </CollapsibleContent>
+                    </Collapsible>
+                    <Collapsible>
+                        <CollapsibleTrigger asChild>
+                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                Change a teaching allocation
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                            <ChangeAllocation />
+                        </CollapsibleContent>
+                    </Collapsible>
                 </aside>
             </div>
         </main>

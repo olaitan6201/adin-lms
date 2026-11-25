@@ -1,3 +1,4 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { VerifiedRecord } from '../components/identity/VerifiedRecord';
@@ -53,21 +54,27 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
             {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
             {receipt && <p role="status">{receipt}</p>}
             {link && (
-                <details>
-                    <summary className="cursor-pointer py-2 font-medium">Link a verified LMS account</summary>
-                    <Form action="/students/link" method="post" className="grid gap-3">
-                        {({ errors, processing }) => (
-                            <FormFeedback errors={errors}>
-                                <PortalField label="Upstream student ID" name="student" required error={errors.student} announceError={false} />
-                                <PortalField label="Existing LMS account email" name="account" type="email" required error={errors.account} announceError={false} />
-                                <VerifiedRecord error={errors.verified}>I checked both identities against the registrar's record.</VerifiedRecord>
-                                <Button className="justify-self-start" disabled={processing}>
-                                    Link verified account
-                                </Button>
-                            </FormFeedback>
-                        )}
-                    </Form>
-                </details>
+                <Collapsible>
+                    <CollapsibleTrigger asChild>
+                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                            Link a verified LMS account
+                        </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                        <Form action="/students/link" method="post" className="grid gap-3">
+                            {({ errors, processing }) => (
+                                <FormFeedback errors={errors}>
+                                    <PortalField label="Upstream student ID" name="student" required error={errors.student} announceError={false} />
+                                    <PortalField label="Existing LMS account email" name="account" type="email" required error={errors.account} announceError={false} />
+                                    <VerifiedRecord error={errors.verified}>I checked both identities against the registrar's record.</VerifiedRecord>
+                                    <Button className="justify-self-start" disabled={processing}>
+                                        Link verified account
+                                    </Button>
+                                </FormFeedback>
+                            )}
+                        </Form>
+                    </CollapsibleContent>
+                </Collapsible>
             )}
             {manage && (
                 <section className="min-w-0 space-y-3 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
@@ -77,27 +84,33 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                         registrar.
                     </p>
                     {(['registrations', 'profiles'] as const).map((kind) => (
-                        <details key={kind} className="border-b py-3">
-                            <summary className="cursor-pointer py-2 font-medium">Import {kind}</summary>
-                            <p>
-                                {kind === 'profiles'
-                                    ? 'CSV or single-sheet XLSX: student_id, matric_number, name, email, programme, level, session, status. The optional photo column accepts a JPEG data URL up to 256 KiB and 1024 × 1024 pixels. Blank leaves the existing photo unchanged.'
-                                    : 'CSV: student_id, offering_id, status, revision. Replayed rows are ignored.'}
-                            </p>
-                            <Form action={`/students/feeds/${kind}`} method="post">
-                                {({ processing, errors }) => (
-                                    <>
-                                        <PortalField label="Registrar export" type="file" name="feed"
-                                            accept={kind === 'profiles' ? '.csv,.xlsx' : '.csv'} required error={errors.feed} />
-                                        <Button
-                                            disabled={processing}
-                                        >
-                                            Reconcile {kind}
-                                        </Button>
-                                    </>
-                                )}
-                            </Form>
-                        </details>
+                        <Collapsible key={kind} className="border-b py-3">
+                            <CollapsibleTrigger asChild>
+                                <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                                    Import {kind}
+                                </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                                <p>
+                                    {kind === 'profiles'
+                                        ? 'CSV or single-sheet XLSX: student_id, matric_number, name, email, programme, level, session, status. The optional photo column accepts a JPEG data URL up to 256 KiB and 1024 × 1024 pixels. Blank leaves the existing photo unchanged.'
+                                        : 'CSV: student_id, offering_id, status, revision. Replayed rows are ignored.'}
+                                </p>
+                                <Form action={`/students/feeds/${kind}`} method="post">
+                                    {({ processing, errors }) => (
+                                        <>
+                                            <PortalField label="Registrar export" type="file" name="feed"
+                                                accept={kind === 'profiles' ? '.csv,.xlsx' : '.csv'} required error={errors.feed} />
+                                            <Button
+                                                disabled={processing}
+                                            >
+                                                Reconcile {kind}
+                                            </Button>
+                                        </>
+                                    )}
+                                </Form>
+                            </CollapsibleContent>
+                        </Collapsible>
                     ))}
                 </section>
             )}

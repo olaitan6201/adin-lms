@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../../components/academics/RecordForm';
 import type { CatalogueProps } from '../../components/academics/catalogueTypes';
@@ -51,17 +53,23 @@ export default function Catalogue({
                 )}
             </nav>
             {edit && (
-                <details>
-                    <summary className="cursor-pointer py-2 font-medium">Start a curriculum</summary>
-                    <RecordForm
-                        title="Create draft"
-                        action={base}
-                        fields={[
-                            field('programme_id', 'Programme', programmes),
-                            field('framework_revision', 'CCMAS framework revision'),
-                        ]}
-                    />
-                </details>
+                <Collapsible>
+                    <CollapsibleTrigger asChild>
+                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                            Start a curriculum
+                        </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                        <RecordForm
+                            title="Create draft"
+                            action={base}
+                            fields={[
+                                field('programme_id', 'Programme', programmes),
+                                field('framework_revision', 'CCMAS framework revision'),
+                            ]}
+                        />
+                    </CollapsibleContent>
+                </Collapsible>
             )}
             {version?.id && (
                 <>

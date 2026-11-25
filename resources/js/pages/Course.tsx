@@ -18,12 +18,13 @@ export interface Activity {
 interface Props {
     course: CourseSummary & { description: string | null; credits: string | null };
     teaching: boolean;
+    learningToolsUrl: string;
     activities: Activity[];
     lecturers: string[];
     outcomes: string[];
 }
 
-export default function Course({ course, teaching, activities, lecturers, outcomes }: Props) {
+export default function Course({ course, teaching, activities, lecturers, outcomes, learningToolsUrl }: Props) {
     const visible = teaching || course.status === 'published';
     const title = course.title || course.external_offering_id;
     const lessons = activities.filter((a) => a.type === 'Lesson');
@@ -80,6 +81,7 @@ export default function Course({ course, teaching, activities, lecturers, outcom
                             <Link href={`${base}/learning`}>{teaching ? 'Author or preview lessons' : 'Lessons and materials'}</Link>
                             <Link href={`${base}/learning/classes`}>Classroom and attendance</Link>
                             <Link href={`${base}/assessments`}>Assessments</Link>
+                            <Link href={learningToolsUrl}>Library and learning tools</Link>
                         </>}
                         <Link href={`/community/courses/${course.id}`}>Course board</Link>
                     </nav>

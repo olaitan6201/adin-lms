@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\EnrolmentStatus;
+use App\Enums\PermissionCode;
+use App\Enums\RoleCode;
 use App\Models\Offering;
 use App\Services\Authority\ScopedAuthority;
 use App\Services\Learning\CourseOutline;
@@ -21,7 +23,7 @@ class CourseController extends Controller
             'historyUrl' => $request->user()->student
                 ? route('students.history', $request->user()->student)
                 : null,
-            'staffUrl' => $authority->institutionAllows($request->user(), 'staff.manage')
+            'staffUrl' => $authority->institutionAllows($request->user(), PermissionCode::StaffManage)
                 ? route('staff.index')
                 : null,
             'courses' => $this->accessibleCourses($request)->orderBy('offerings.external_offering_id')->get(),
@@ -38,6 +40,7 @@ class CourseController extends Controller
         return Inertia::render('Course', [
             'course' => $course,
             'teaching' => $teaching,
+            'learningToolsUrl' => route('integrations.index', $offering, false),
             ...$outline->build($offering, $request->user(), $teaching),
         ]);
     }
@@ -82,8 +85,8 @@ class CourseController extends Controller
             ->join('permissions', 'permissions.id', '=', 'role_permissions.permission_id')
             ->where('lecturers.user_id', $request->user()->id)
             ->where('role_grants.user_id', $request->user()->id)
-            ->where('roles.code', 'lecturer')
-            ->where('permissions.code', 'roster.read')
+            ->where('roles.code', RoleCode::Lecturer->value)
+            ->where('permissions.code', PermissionCode::RosterRead->value)
             ->select('teaching_allocations.offering_id');
     }
 }

@@ -75,10 +75,14 @@ final class ImportRosterFile
         }
 
         $values = ['status' => $status->value, 'source_revision' => $revision];
+        $id = $current->id ?? (string) Str::uuid7();
         if ($current) {
             $query->update($values + ['updated_at' => $now]);
         } else {
-            DB::table('enrolments')->insert(['id' => (string) Str::uuid7()] + $key + $values + $timestamps);
+            DB::table('enrolments')->insert(['id' => $id] + $key + $values + $timestamps);
+        }
+        if ($status === EnrolmentStatus::Registered) {
+            RegistrationInterval::observe($id, $current, $revision, $now);
         }
 
         return true;

@@ -58,6 +58,9 @@ test('separates slot controls, adds exact points and persists the UTC interval f
             expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
         }
         await remove.press('Enter');
+        await expect(add).toBeFocused();
+        expect(await add.evaluate(el => el.matches(':focus-visible') &&
+            (getComputedStyle(el).outlineStyle === 'solid' || getComputedStyle(el).boxShadow !== 'none'))).toBe(true);
         await expect(page.getByText(/Selected total: 0\.1 \//)).toBeVisible();
         await add.press('Enter');
         await page.getByLabel('Topic for draw 1').selectOption({ label: topic });

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { selectionTotal } from './selectionPoints';
 import { ExamWindowControls } from './ExamWindowControls';
 import { Form } from '@inertiajs/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { SubmitButton } from '../components/PortalForm';
 import type { BankQuestion } from './contracts';
 
@@ -23,6 +23,11 @@ type Props = {
 export function QuestionPicker({ item, maximum, questions, topics }: Props) {
     const [points, setPoints] = useState<Record<string, string>>({});
     const [draws, setDraws] = useState<string[]>([]);
+    const addSlot = useRef<HTMLButtonElement>(null);
+    function removeSlot() {
+        if (draws.length === 1) addSlot.current?.focus();
+        setDraws(draws.slice(0, -1));
+    }
     const total = selectionTotal([...Object.values(points), ...draws]);
 
     return (
@@ -111,17 +116,17 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                             </div>
                         ))}
                         <div className="flex flex-wrap gap-3">
-                            <Button variant="outline" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
+                            <Button ref={addSlot} variant="outline" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
                                 Add random slot
                             </Button>
                             {!!draws.length && (
-                                <Button variant="outline" type="button" onClick={() => setDraws(draws.slice(0, -1))}>
+                                <Button variant="outline" type="button" onClick={removeSlot}>
                                     Remove last random slot
                                 </Button>
                             )}
                         </div>
                     </fieldset>
-                    <p role="status">
+                    <p role="status" aria-atomic="true">
                         {total === null ? 'Enter points greater than zero and at most 1000000, with up to 8 decimal places.' : `Selected total: ${total} / ${maximum} points`}
                     </p>
                     <SubmitButton processing={processing || total === null}>Create examination from selection</SubmitButton>

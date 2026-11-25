@@ -2,9 +2,27 @@
 
 Custom Laravel 13 application with Inertia 3, React 19 and strict TypeScript. PostgreSQL and MySQL 8.0.16+ are supported server databases; SQLite is supported locally. Laravel owns navigation, authorization and validation. Moodle is a content exchange target only.
 
-## Start here
+## Mandatory orchestration point — every task, every agent
 
-Read `.agents/docs/{features.md,schema.dbml,integrations.mmd,recommended-stack.md}` and `.agents/product-requirements.md`. The `.agents` directory is local and intentionally ignored. For engineering work, apply `SKILL.md` and `references/governance/adaptive-workflow.md` under `/home/cybrotron/Documents/workspace/prompt-engineering/design-principles/design-principles/`; load the relevant Laravel, React, data, accessibility or testing references per change.
+Start at `.agents/design-principles/design-principles/SKILL.md` and its authoritative
+`references/governance/adaptive-workflow.md`. This local pack governs discovery,
+design, implementation, review, verification and handover. Framework guidance,
+sprint handoffs and tooling below support that workflow; none replaces it.
+The same entry point applies to delegated work and resumed sessions.
+`.agents/` is intentionally local: if the pack is missing, stop and request
+it rather than substituting another copy or claiming compliance.
+
+1. **Before edits:** select the applicable workflow mode, read the role/surface
+   references, and map the user’s acceptance criteria to observable outcomes.
+   Use `.agents/product-requirements.md` and `.agents/docs/` for LMS requirements.
+2. **During work:** record boundaries, owners, decisions, evidence and blockers
+   in `.agent-work/`. Apply the pack’s architecture, UI and domain guidance
+   throughout the work, not as a formatting pass at the end.
+3. **Before handover:** verify real workflows and failure cases at the required
+   boundaries. For qualification, apply `references/qa/qualification-protocol.md`
+   and `references/qualification/enterprise-qualification.md`, preserve independent
+   review and give only their evidence-backed verdict. Passing tests, compiling
+   or finishing a sprint is not acceptance of a complete product.
 
 ## Commands
 

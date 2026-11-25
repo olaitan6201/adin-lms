@@ -4,6 +4,8 @@ type Profile = Record<'matric_number' | 'source_name' | 'source_email' | 'status
 type Session = {
     session: string;
     programme: string;
+    department: string;
+    faculty: string;
     level: string;
 };
 
@@ -44,7 +46,7 @@ export default function StudentHistory({
                 <ul>
                     {sessions.map((s) => (
                         <li key={s.session}>
-                            {s.session}: {s.programme}, level {s.level}
+                            {s.session}: {s.programme}, level {s.level} · {s.department}, {s.faculty}
                         </li>
                     ))}
                 </ul>

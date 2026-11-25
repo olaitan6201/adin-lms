@@ -29,12 +29,12 @@ class ImportStudentProfiles
 
     public function __construct(private readonly ProfileSheet $sheet) {}
 
-    public function import(string $path): int
+    public function import(string $path, ?string $format = null): int
     {
-        return DB::transaction(function () use ($path): int {
+        return DB::transaction(function () use ($path, $format): int {
             $header = null;
             $count = 0;
-            foreach ($this->sheet->rows($path) as $row) {
+            foreach ($this->sheet->rows($path, $format) as $row) {
                 if ($header === null) {
                     $header = $row;
                     if ($row !== self::HEADER && $row !== [...self::HEADER, 'photo']) {

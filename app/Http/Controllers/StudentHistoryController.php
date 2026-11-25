@@ -34,6 +34,8 @@ class StudentHistoryController extends Controller
             ->keyBy('enrolment_id');
         $sessions = StudentSession::where('student_id', $student->id)
             ->join('programmes', 'programmes.id', '=', 'student_sessions.programme_id')
+            ->join('departments', 'departments.id', '=', 'programmes.department_id')
+            ->join('faculties', 'faculties.id', '=', 'departments.faculty_id')
             ->join('academic_sessions', 'academic_sessions.id', '=', 'student_sessions.session_id')
             ->join('academic_levels', 'academic_levels.id', '=', 'student_sessions.level_id')
             ->orderByDesc('academic_sessions.starts_on')
@@ -41,6 +43,8 @@ class StudentHistoryController extends Controller
             ->get([
                 'academic_sessions.label as session',
                 'programmes.name as programme',
+                'departments.name as department',
+                'faculties.name as faculty',
                 'academic_levels.label as level',
             ]);
 

@@ -14,7 +14,7 @@ class StudentPolicy
 
     public function viewHistory(User $user, Student $student): bool
     {
-        return $student->user_id === $user->id;
+        return $student->user_id === $user->id || $this->authority->institutionAllows($user, PermissionCode::RosterRead);
     }
 
     public function viewCompletedLessons(User $user, Student $student): bool

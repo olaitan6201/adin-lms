@@ -10,12 +10,12 @@ use ZipArchive;
 
 class ProfileSheet
 {
-    public function rows(string $path): Generator
+    public function rows(string $path, ?string $format = null): Generator
     {
         if (! is_file($path) || ! is_readable($path) || filesize($path) > 8_000_000) {
             throw new DomainException('Expected a readable local profile sheet under 8 MB.');
         }
-        if (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'xlsx') {
+        if (($format ?? strtolower(pathinfo($path, PATHINFO_EXTENSION))) === 'xlsx') {
             yield from $this->excel($path);
 
             return;

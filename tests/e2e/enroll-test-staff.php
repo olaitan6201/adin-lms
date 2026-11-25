@@ -24,14 +24,15 @@ if (! $run || ! $sandbox || ! str_starts_with($run, $sandbox.'/run-')
 
 umask(0077);
 $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
-foreach (['group-desktop', 'group-phone'] as $login) {
+$authors = ['group-desktop', 'group-phone', 'lesson-desktop', 'lesson-phone'];
+foreach ($authors as $login) {
     $user = User::factory()->create(['email' => $login.'@demo.example.test']);
     $lecturer = Lecturer::factory()->create(['user_id' => $user->id]);
     TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $offering->id]);
     app(ChangeRoleGrant::class)->apply($user->id, RoleCode::Lecturer, 'offering:'.$offering->id, false);
 }
 
-foreach (['lecturer', 'officer', 'group-desktop', 'group-phone'] as $role) {
+foreach (['lecturer', 'officer', ...$authors] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
     $secret = app(TotpEnrollment::class)->issue($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);

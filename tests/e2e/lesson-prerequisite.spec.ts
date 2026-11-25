@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
 test('a learner follows the prerequisite link and unlocks the next reading', async ({ page, browser }, info) => {
-    const author = `group-${info.project.name}`;
+    const author = `lesson-${info.project.name}`;
     const learner = info.project.name === 'desktop' ? 'ada' : 'tunde';
     const prior = `Orientation · ${info.project.name}`;
     const next = `Field notes · ${info.project.name}`;

@@ -40,6 +40,7 @@ final class TeachingPlans
                 array_column($content['weeks'], 'body') === array_column($latest->snapshot['weeks'], 'body')) {
                 return;
             }
+
             abort_unless($this->available($shell), 409, 'Teaching plans require an empty draft shell.');
             abort_if($revision !== ($latest?->revision ?? 0) + 1 ||
                 ($latest && $latest->status !== TeachingPlanStatus::Rejected), 409, 'Reload the current proposal.');
@@ -63,6 +64,7 @@ final class TeachingPlans
             if ($plan->status === $decision && $plan->reviewer_id === $reviewer->id && $plan->reason === $reason) {
                 return;
             }
+
             abort_unless($plan->status === TeachingPlanStatus::Submitted, 409, 'This proposal has already been decided.');
             if ($decision === TeachingPlanStatus::Approved) {
                 abort_unless($this->available($shell) && $this->policy->allocated($plan->author_id, $shell)
@@ -70,6 +72,7 @@ final class TeachingPlans
                     'Shell details, allocation or lessons changed. Reject this snapshot and request a new plan.');
                 $this->draftLessons($shell, $plan->snapshot);
             }
+
             $plan->forceFill([
                 'status' => $decision,
                 'reviewer_id' => $reviewer->id,

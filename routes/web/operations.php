@@ -13,6 +13,8 @@ Route::middleware(['auth', 'throttle:60,1,operations'])->prefix('operations')->n
     Route::middleware(OperationsPermission::requiring(PermissionCode::OperationsManage))->group(function (): void {
         Route::get('/', [OperationsController::class, 'index'])->name('index');
         Route::post('retention', [OperationsController::class, 'retention'])->name('retention');
+        Route::post('infrastructure', [OperationsController::class, 'configure'])->name('infrastructure');
+        Route::post('backup-evidence', [OperationsController::class, 'backup'])->name('backup');
     });
     Route::prefix('privacy')->controller(PrivacyController::class)->middleware(OperationsPermission::requiring(PermissionCode::PrivacyManage))->group(function (): void {
         Route::get('/', 'desk')->name('privacy');

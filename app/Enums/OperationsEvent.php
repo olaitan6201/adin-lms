@@ -10,6 +10,9 @@ enum OperationsEvent: string
     case PrivacyApproved = 'privacy.approved';
     case PrivacyExecuted = 'privacy.executed';
     case IncidentReferred = 'privacy.incident_referred';
+    case InfrastructureChanged = 'operations.infrastructure_changed';
+    case BackupEvidence = 'operations.backup_evidence';
+    case CaseAdvanced = 'privacy.case_advanced';
     case CourseImported = 'course.imported';
     case CourseExported = 'course.exported';
 }

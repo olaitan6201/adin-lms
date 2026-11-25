@@ -1,13 +1,15 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import InfrastructurePanel, { type Infrastructure } from '../components/InfrastructurePanel';
 
 type Status = {
     activeSessions: number;
     failedDeliveries: number;
     failedLogins: number;
     retentionDays: number | null;
+    infrastructure: Infrastructure;
 };
 
-export default function Operations({ activeSessions, failedDeliveries, failedLogins, retentionDays }: Status) {
+export default function Operations({ activeSessions, failedDeliveries, failedLogins, retentionDays, infrastructure }: Status) {
     return (
         <main className="mx-auto max-w-2xl space-y-6 px-6 py-12">
             <Head title="Institution operations" />
@@ -20,6 +22,7 @@ export default function Operations({ activeSessions, failedDeliveries, failedLog
                 <dt>Failed password or MFA checks in the last 24 hours</dt>
                 <dd>{failedLogins}</dd>
             </dl>
+            <InfrastructurePanel data={infrastructure} />
             <h2 className="text-xl font-semibold">Withdrawn feedback consent</h2>
             <p>
                 {retentionDays === null

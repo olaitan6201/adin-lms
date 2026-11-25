@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Learning;
 
+use App\Enums\BridgeSlot;
+use App\Services\Operations\InfrastructureDesk;
 use Illuminate\Foundation\Http\FormRequest;
 
 /** Accept normalized check-ins only from the institution's trusted provider adapter. */
@@ -9,7 +11,7 @@ final class ProviderAttendanceRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $key = config('learning.attendance_bridge_key');
+        $key = BridgeSlot::tryFrom(app(InfrastructureDesk::class)->settings()['bridge_slot'])?->key();
         $stamp = $this->header('X-Learning-Timestamp', '');
         if (
             ! is_string($key) ||

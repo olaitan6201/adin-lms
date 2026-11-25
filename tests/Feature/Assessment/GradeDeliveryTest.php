@@ -37,7 +37,7 @@ class GradeDeliveryTest extends AssessmentCase
         $compute = '/gradebooks/'.$items[0]->gradebook_id.'/compute/'.$this->member->id;
         $this->post($compute)->assertRedirect();
         $grade = Grade::firstOrFail();
-        $this->assertEquals('75', $grade->total_percent);
+        $this->assertTrue(BigDecimal::of($grade->total_percent)->isEqualTo('75'));
         $this->assertSame('A', $grade->grade);
         $sheet = "/grades/$grade->id/sheet";
         $review = "/grades/$grade->id/review";
@@ -64,7 +64,7 @@ class GradeDeliveryTest extends AssessmentCase
         $score(0, '5.125');
         $this->post($compute)->assertRedirect();
         $revised = Grade::where('revision', 2)->firstOrFail();
-        $this->assertEquals('65', $revised->total_percent);
+        $this->assertTrue(BigDecimal::of($revised->total_percent)->isEqualTo('65'));
         $this->as($this->officer)->post("/grades/$revised->id/review", $decision('correct'))->assertRedirect();
         $this->post("/grades/$revised->id/review", $decision('approve'))->assertConflict();
         $this->as($this->member->student->user)->get($sheet)->assertContent($first);

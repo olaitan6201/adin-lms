@@ -43,7 +43,7 @@ class AcademicHierarchyController
     ): RedirectResponse {
         abort_unless($authority->institutionAllows($request->user(), 'academics.manage'), 403);
         try {
-            $department->delete();
+            DB::transaction(fn () => $department->delete());
         } catch (QueryException $error) {
             if (! str_starts_with((string) $error->getCode(), '23')) {
                 throw $error;

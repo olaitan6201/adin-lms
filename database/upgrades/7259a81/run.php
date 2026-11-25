@@ -3,14 +3,16 @@
 require __DIR__.'/Store.php';
 require __DIR__.'/Transfer.php';
 require __DIR__.'/UsageIndexes.php';
+require __DIR__.'/RegistrarReview.php';
 
 const BASELINE = '2026_11_25_000001_create_uuid_lms_schema';
 
 $stage = 'preflight';
 try {
-    if ($argc !== 2 || ($argv[1] !== 'plan' && ! preg_match('/^apply:[a-f0-9]{64}$/D', $argv[1]))) {
-        throw new RuntimeException('Expected plan or apply:<plan-sha256>.');
+    if ($argc !== 2 || (! in_array($argv[1], ['plan', 'report'], true) && ! preg_match('/^(apply|cutover):[a-f0-9]{64}$/D', $argv[1]))) {
+        throw new RuntimeException('Expected plan, report, apply:<plan-sha256> or cutover:<plan-sha256>.');
     }
+    $cutover = str_starts_with($argv[1], 'cutover:');
 
     $dsn = (string) getenv('UPGRADE_DSN');
     $backup = (string) getenv('UPGRADE_BACKUP');
@@ -48,6 +50,10 @@ try {
         foreach ($inventory as $table => $columns) {
             if ($side === 'source') {
                 $manifest['tables'][$table] = $store->digest($schema, $table, $columns);
+            } elseif ($cutover && isset($original[$table])) {
+                if ($store->digest($schema, $table, $original[$table]) !== $manifest['tables'][$table]) {
+                    throw new RuntimeException('Transferred data no longer matches source.');
+                }
             } elseif ($table !== 'migrations') {
                 $name = $store->table($schema, $table);
                 if ($store->db->query("SELECT 1 FROM {$name} LIMIT 1")->fetchColumn() !== false) {
@@ -61,14 +67,27 @@ try {
         }
     }
 
+    $cases = RegistrarReview::exceptions($store);
+    $manifest['history_exceptions'] = count($cases);
+    $manifest['history_inventory'] = hash('sha256', json_encode($cases, JSON_THROW_ON_ERROR));
     $token = hash('sha256', json_encode($manifest, JSON_THROW_ON_ERROR));
+    if ($argv[1] === 'report') {
+        RegistrarReview::report($token, $cases);
+        echo "Private registrar report created.\n";
+        exit(0);
+    }
     if ($argv[1] === 'plan') {
         echo json_encode(['plan' => $token] + $manifest, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR).PHP_EOL;
         exit(0);
     }
 
-    if (! hash_equals('apply:'.$token, $argv[1])) {
+    if (! hash_equals(($cutover ? 'cutover:' : 'apply:').$token, $argv[1])) {
         throw new RuntimeException('Plan changed; review a fresh plan.');
+    }
+    $review = RegistrarReview::authorize($token, $cases);
+    if ($cutover) {
+        echo json_encode(['cutover_check' => $token, 'review_digest' => $review], JSON_THROW_ON_ERROR).PHP_EOL;
+        exit(0);
     }
 
     if ($store->engine === 'mysql') {
@@ -95,7 +114,7 @@ try {
 
     $stage = 'commit';
     $store->db->commit();
-    echo json_encode(['committed' => $token] + $manifest, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR).PHP_EOL;
+    echo json_encode(['committed' => $token, 'review_digest' => $review] + $manifest, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR).PHP_EOL;
 } catch (Throwable $error) {
     if (isset($store) && $store->db->inTransaction()) {
         $store->db->rollBack();

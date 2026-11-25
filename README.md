@@ -75,8 +75,10 @@ install PHP PDO drivers and local PostgreSQL or MySQL server/client binaries).
    ```sh
    umask 077
    php database/upgrades/7259a81/run.php plan > "$PRIVATE_DIR/plan.json"
-   # Inspect backup hash, target migration hash, every table count and digest.
+   # Review the backup, target hash, counts, digests and history_exceptions.
+   # Complete registrar reconciliation below before apply if the count is nonzero.
    php database/upgrades/7259a81/run.php "apply:$PLAN_HASH" > "$PRIVATE_DIR/receipt.json"
+   php database/upgrades/7259a81/run.php "cutover:$PLAN_HASH" > "$PRIVATE_DIR/cutover.json"
    ```
 
    Set `PRIVATE_DIR` to a private directory outside the checkout and `PLAN_HASH`
@@ -96,6 +98,45 @@ install PHP PDO drivers and local PostgreSQL or MySQL server/client binaries).
    writes rollback means pointing the old code at its untouched database;
    after new writes, freeze and reconcile them before reverting or they will
    be lost. The transfer neither switches connections nor deploys code.
+
+**Registrar reconciliation (before apply and again immediately before switching).**
+The old history page showed the highest published revision with an approval
+timestamp. The new page also requires an approver and `approved` moderation.
+The planner counts affected enrolments, including withdrawals, when the old
+visible result would disappear or fall back to an earlier approved revision.
+It checks publication times at execution; a newly visible exception invalidates
+the old plan. The transfer never sets moderation or changes a grade.
+
+If `history_exceptions` is nonzero:
+
+1. Set `UPGRADE_REVIEW_DIR` to an empty, access-controlled `0700` directory
+   outside the checkout and web root. Run `php database/upgrades/7259a81/run.php
+   report`. It creates `review.json` exclusively (`0600`). Only this private
+   report contains the affected grade UUIDs and any fallback grade UUIDs.
+   Treat both as student records: send by the registrar’s restricted channel,
+   never in tickets with public access, console logs or source control.
+2. The registrar/exams office looks up each UUID in its authorized records
+   and documents its decision in the institutional case system. If it accepts
+   the stricter visibility for that case, set `decision` to
+   `accept_candidate_visibility` and `case_ref` to an opaque case reference
+   (1–64 letters, digits, hyphens or underscores). Preserve the plan, row
+   order and UUIDs. Leave disputed or unevidenced cases unresolved: **stop
+   cutover**. If academic action is required, use the authorized academic
+   process, then take a new backup and plan. Never edit the restored grades.
+3. The designated registrar signs the exact reviewed file in their own
+   trusted environment, e.g. `openssl dgst -sha256 -sign registrar-private.pem
+   -out review.sig review.json`. Return both files privately. Set
+   `UPGRADE_REGISTRAR_PUBLIC_KEY` to the institution’s independently verified,
+   operator-protected registrar public key, **not a key supplied with the
+   report**. The private key must never be on the transfer host. Archive
+   the signed review, receipt and cutover check under institutional retention.
+4. Both `apply` and the read-only `cutover` command recompute the cases and
+   verify complete signed coverage. Zero exceptions require no signature.
+   A receipt alone does not clear cutover: keep the candidate offline,
+   run `cutover` against the reconciled candidate and immutable source just
+   before switching, and require success plus normal release authorization.
+   If the data, plan or visibility changes, keep the old installation serving
+   and repeat the transfer workflow against a fresh isolated candidate.
 
 ## Demo data
 

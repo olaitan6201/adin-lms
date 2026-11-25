@@ -40,6 +40,14 @@ sql() {
 echo "Source $old; candidate $candidate; target $(sha256sum "$QA_ROOT/target/database/migrations/$baseline" | cut -d' ' -f1); $DB_CONNECTION"
 php artisan migrate --seed --no-interaction >/dev/null
 sql < "$repo/$scripts/test-history.sql"
+sql < "$repo/$scripts/approved-control.sql"
+history() {
+    if ! QA_HISTORY_SIDE="$1" vendor/bin/phpunit --do-not-cache-result "$repo/$scripts/OwnerHistoryTest.php" > "$QA_ROOT/owner-$1" 2>&1; then
+        echo "Owner history assertion failed on $1." >&2
+        return 1
+    fi
+}
+history legacy
 case $DB_CONNECTION in
     sqlite)
         sql <<<".backup '$UPGRADE_BACKUP'"
@@ -71,7 +79,9 @@ refuse() {
     local expected=$1
     shift
     if "${cli[@]}" "$@" > "$QA_ROOT/refusal" 2>&1; then return 1; fi
-    grep -F "$expected" "$QA_ROOT/refusal"
+    grep -Fq "$expected" "$QA_ROOT/refusal"
+    if grep -Eiq '019aaa00-|ARCHIVE-42|83\.12345678|PRIVATE-CASE-1|@demo\.example' "$QA_ROOT/refusal"; then return 1; fi
+    echo "Refused: $expected"
 }
 # Probe the isolated candidate only. Never normalize a real migration ledger.
 legacy_sql() {
@@ -100,6 +110,8 @@ sql <<<'CREATE INDEX usage_auth_window_idx ON login_events(outcome,occurred_at,u
 cp "$UPGRADE_BACKUP" "$QA_ROOT/changed"
 echo probe >> "$QA_ROOT/changed"
 UPGRADE_BACKUP="$QA_ROOT/changed" refuse 'Plan changed' "apply:$plan"
+source "$repo/$scripts/registrar.sh"
+registrar_review
 # Late failure after earlier tables have been populated; verify transaction rollback.
 sql <<<'CREATE UNIQUE INDEX rehearsal_reject ON enrolments(status);'
 refuse 'copy enrolments: Database error' "apply:$plan"
@@ -111,6 +123,7 @@ import json,sys,pathlib
 p=pathlib.Path(sys.argv[1])
 plan=json.loads((p/'plan').read_text())
 receipt=json.loads((p/'receipt').read_text())
+assert len(receipt.pop('review_digest')) == 64
 assert plan.pop('plan') == receipt.pop('committed') and plan == receipt
 print(f"Reconciled {len(plan['tables'])} tables, {sum(t['count'] for t in plan['tables'].values())} rows.")
 PY
@@ -121,10 +134,12 @@ JOIN submission_recipients r ON r.version_id=v.id AND r.enrolment_id=g.enrolment
 JOIN enrolments e ON e.id=r.enrolment_id JOIN students t ON t.id=e.student_id
 WHERE v.receipt='ARCHIVE-42' AND e.status='withdrawn' AND e.source_revision=2
 AND t.external_student_id='DEMO-TUNDE' AND g.revision=1 AND g.published_at IS NOT NULL
-AND g.total_percent=83.12345678 AND s.points=g.total_percent;
+AND g.total_percent=83.12345678 AND s.points=g.total_percent AND g.moderation_status='pending';
 SQL
 ) == 1 ]]
 refuse 'is not empty' "apply:$plan"
+check_cutover
+history candidate
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id WHERE a.external_offering_id=b.external_offering_id') == 0 ]]
 [[ $(sql <<<'SELECT count(*) FROM offerings a JOIN offerings b ON a.copied_from=b.id') == 1 ]]
 sql <<<"INSERT INTO jobs (queue,payload,attempts,available_at,created_at) VALUES ('probe','{}',0,1,1);"

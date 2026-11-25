@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -43,9 +44,9 @@ export function SetupBook({ url, policy }: SetupBookProps) {
                     value={data.rounding}
                     onChange={(event) => setData({ ...data, rounding: event.target.value })}
                 >
-                    <option value="half_up">Half up</option>
-                    <option value="half_even">Half even</option>
-                    <option value="floor">Round down</option>
+                    <NativeSelectOption value="half_up">Half up</NativeSelectOption>
+                    <NativeSelectOption value="half_even">Half even</NativeSelectOption>
+                    <NativeSelectOption value="floor">Round down</NativeSelectOption>
                 </ValidatedSelect>
             </Label>
             {policy && (

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -46,7 +47,7 @@ export function PolicyItemFields({ index, item, removable, onChange, onRemove }:
                     onChange={(event) => onChange({ kind: event.target.value as ItemKind })}
                 >
                     {itemKinds.map((kind) => (
-                        <option key={kind}>{kind}</option>
+                        <NativeSelectOption key={kind}>{kind}</NativeSelectOption>
                     ))}
                 </ValidatedSelect>
             </Label>

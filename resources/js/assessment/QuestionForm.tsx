@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,14 +41,14 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                             value={kind}
                             onChange={(event) => setKind(event.target.value as QuestionKind)}
                         >
-                            <option value="mcq">Multiple choice</option>
-                            <option value="true_false">True or false</option>
-                            <option value="gap_fill">Fill the gap</option>
-                            <option value="matching">Matching</option>
-                            <option value="short_answer">Short answer</option>
-                            <option value="essay">Essay</option>
-                            <option value="programming">Programming</option>
-                            <option value="practical">Practical</option>
+                            <NativeSelectOption value="mcq">Multiple choice</NativeSelectOption>
+                            <NativeSelectOption value="true_false">True or false</NativeSelectOption>
+                            <NativeSelectOption value="gap_fill">Fill the gap</NativeSelectOption>
+                            <NativeSelectOption value="matching">Matching</NativeSelectOption>
+                            <NativeSelectOption value="short_answer">Short answer</NativeSelectOption>
+                            <NativeSelectOption value="essay">Essay</NativeSelectOption>
+                            <NativeSelectOption value="programming">Programming</NativeSelectOption>
+                            <NativeSelectOption value="practical">Practical</NativeSelectOption>
                         </NativeSelect>
                     </Label>
                     <Label className="grid min-w-0 gap-2 leading-normal">

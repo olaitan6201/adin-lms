@@ -1,7 +1,8 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Form } from '@inertiajs/react';
 
 interface Props {
@@ -36,9 +37,9 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
                                 Study group
                                 <ValidatedSelect name="group_id" required>
                                     {groups.map((group) => (
-                                        <option value={group.id} key={group.id}>
+                                        <NativeSelectOption value={group.id} key={group.id}>
                                             {group.name}
-                                        </option>
+                                        </NativeSelectOption>
                                     ))}
                                 </ValidatedSelect>
                             </Label>

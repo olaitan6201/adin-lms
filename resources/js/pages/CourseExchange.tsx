@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
@@ -56,9 +57,9 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                 />
                 <datalist id="exchange-offerings">
                     {offerings.map((item) => (
-                        <option key={item.id} value={item.id}>
+                        <NativeSelectOption key={item.id} value={item.id}>
                             {item.external_offering_id ?? item.id} · {item.status}
-                        </option>
+                        </NativeSelectOption>
                     ))}
                 </datalist>
             </div>
@@ -79,8 +80,8 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                             disabled={busy}
                             onChange={(e) => setFormat(e.target.value as Format)}
                         >
-                            <option value="native">Adin course backup</option>
-                            <option value="scorm">SCORM 1.2 text assets</option>
+                            <NativeSelectOption value="native">Adin course backup</NativeSelectOption>
+                            <NativeSelectOption value="scorm">SCORM 1.2 text assets</NativeSelectOption>
                         </NativeSelect>
                     </Label>
                     <p>

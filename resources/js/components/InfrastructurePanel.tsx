@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InfrastructureReadings } from './InfrastructureReadings';
@@ -54,9 +55,9 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                             required
                         />
                         <OperationsSelect label="Attendance bridge key slot" error={errors.bridge_slot} name="bridge_slot" defaultValue={settings.bridge_slot}>
-                            <option value="primary">Primary host key</option>
-                            <option value="standby">Standby host key</option>
-                            <option value="disabled">Disabled</option>
+                            <NativeSelectOption value="primary">Primary host key</NativeSelectOption>
+                            <NativeSelectOption value="standby">Standby host key</NativeSelectOption>
+                            <NativeSelectOption value="disabled">Disabled</NativeSelectOption>
                         </OperationsSelect>
                         <p>
                             Changing slots takes effect on the next check-in. Provision the matching key on the host and
@@ -88,9 +89,9 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                         <p>Log the inspected ticket and outcome. Recording a receipt does not start a backup or restore.</p>
                         <OperationsInput label="Evidence reference" error={errors.reference} name="reference" required pattern="[A-Za-z0-9_\-]{1,64}" />
                         <OperationsSelect label="Observed outcome" error={errors.outcome} name="outcome">
-                                <option value="snapshot">Snapshot completed</option>
-                                <option value="restored">Isolated restore checked</option>
-                                <option value="failed">Backup or restore failed</option>
+                                <NativeSelectOption value="snapshot">Snapshot completed</NativeSelectOption>
+                                <NativeSelectOption value="restored">Isolated restore checked</NativeSelectOption>
+                                <NativeSelectOption value="failed">Backup or restore failed</NativeSelectOption>
                         </OperationsSelect>
                         <Button variant="outline" disabled={processing}>
                             Record backup evidence

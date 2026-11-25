@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
@@ -47,22 +48,22 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                 <Label className="grid min-w-0 gap-2 leading-normal">
                     Type
                     <NativeSelect name="kind" defaultValue={filters.kind ?? ''}>
-                        <option value="">All types</option>
+                        <NativeSelectOption value="">All types</NativeSelectOption>
                         {kinds.map((kind) => (
-                            <option key={kind} value={kind}>
+                            <NativeSelectOption key={kind} value={kind}>
                                 {kind}
-                            </option>
+                            </NativeSelectOption>
                         ))}
                     </NativeSelect>
                 </Label>
                 <Label className="grid min-w-0 gap-2 leading-normal">
                     Topic
                     <NativeSelect name="topic" defaultValue={filters.topic ?? ''}>
-                        <option value="">All topics</option>
+                        <NativeSelectOption value="">All topics</NativeSelectOption>
                         {topics.map((topic) => (
-                            <option key={topic} value={topic}>
+                            <NativeSelectOption key={topic} value={topic}>
                                 {topic}
-                            </option>
+                            </NativeSelectOption>
                         ))}
                     </NativeSelect>
                 </Label>

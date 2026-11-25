@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
@@ -70,11 +71,11 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                             value={reply}
                             onChange={(event) => setReply(event.target.value)}
                         >
-                            <option value="">New topic</option>
+                            <NativeSelectOption value="">New topic</NativeSelectOption>
                             {posts.map((p, i) => (
-                                <option key={p.id} value={p.id}>
+                                <NativeSelectOption key={p.id} value={p.id}>
                                     Post {i + 1}
-                                </option>
+                                </NativeSelectOption>
                             ))}
                         </NativeSelect>
                     </Label>

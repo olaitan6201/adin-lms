@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from './alert';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { createContext, useContext, useEffect, useId, useRef, type ReactNode } from 'react';
 
 type Errors = Record<string, string>;

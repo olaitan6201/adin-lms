@@ -1,6 +1,7 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { selectionTotal } from './selectionPoints';
@@ -94,9 +95,9 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                     Topic for draw {i + 1}
                                     <ValidatedSelect required name={`draws[${i}][bank_id]`}>
                                         {topics.map((b) => (
-                                            <option key={b.id} value={b.id}>
+                                            <NativeSelectOption key={b.id} value={b.id}>
                                                 {b.topic}
-                                            </option>
+                                            </NativeSelectOption>
                                         ))}
                                     </ValidatedSelect>
                                 </Label>

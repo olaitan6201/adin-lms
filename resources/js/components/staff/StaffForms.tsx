@@ -1,5 +1,5 @@
 import { VerifiedRecord } from '../identity/VerifiedRecord';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { PortalField } from '../PortalForm';
 import { RecordField } from '../academics/RecordField';

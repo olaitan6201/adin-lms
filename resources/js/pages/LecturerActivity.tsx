@@ -1,5 +1,5 @@
 import { PortalField } from '../components/PortalForm';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { TeachingFigures, type Activity } from '../components/workload/TeachingFigures';

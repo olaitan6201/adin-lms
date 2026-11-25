@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { VerifiedRecord } from '../components/identity/VerifiedRecord';
 import { PortalField } from '../components/PortalForm';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../components/academics/DeskHeading';
 

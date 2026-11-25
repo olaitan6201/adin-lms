@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
@@ -100,9 +101,9 @@ export function Answer({
                                     value={matching[item.id] ?? ''}
                                     onChange={(event) => match(item.id, event.target.value)}
                                 >
-                                    <option value="">Select a match</option>
+                                    <NativeSelectOption value="">Select a match</NativeSelectOption>
                                     {q.matching?.right.map((right) => (
-                                        <option
+                                        <NativeSelectOption
                                             key={right.id}
                                             value={right.id}
                                             disabled={Object.entries(matching).some(
@@ -110,7 +111,7 @@ export function Answer({
                                             )}
                                         >
                                             {right.label}
-                                        </option>
+                                        </NativeSelectOption>
                                     ))}
                                 </NativeSelect>
                             </Label>
@@ -121,9 +122,9 @@ export function Answer({
                         {q.prompt}
                         {q.options.length ? (
                             <NativeSelect disabled={!active} value={String(value)} onChange={(event) => edit(event.target.value)}>
-                                <option value="">Select an answer</option>
+                                <NativeSelectOption value="">Select an answer</NativeSelectOption>
                                 {q.options.map((option) => (
-                                    <option key={option}>{option}</option>
+                                    <NativeSelectOption key={option}>{option}</NativeSelectOption>
                                 ))}
                             </NativeSelect>
                         ) : (

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
@@ -48,10 +49,10 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         <CorrectionFocus errors={errors} />
                         <OperationsSelect label="Case type" name="kind" error={errors.kind} value={kind}
                             onChange={event => setKind(event.target.value)}>
-                            <option value="subject_access">Subject access</option>
-                            <option value="breach">Breach response</option>
-                            <option value="retention_hold">Retention hold</option>
-                            <option value="records_disposition">Records disposition (custodian executed)</option>
+                            <NativeSelectOption value="subject_access">Subject access</NativeSelectOption>
+                            <NativeSelectOption value="breach">Breach response</NativeSelectOption>
+                            <NativeSelectOption value="retention_hold">Retention hold</NativeSelectOption>
+                            <NativeSelectOption value="records_disposition">Records disposition (custodian executed)</NativeSelectOption>
                         </OperationsSelect>
                         {kind === 'records_disposition' && <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
                             decision. The custodian checks holds again before acting in the source system and returns an

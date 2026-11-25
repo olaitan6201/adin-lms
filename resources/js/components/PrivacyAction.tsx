@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -73,7 +74,7 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
                     error={errors.reference} maxLength={64} required pattern={'[A-Za-z0-9_\\-]{1,64}'}
                     onChange={event => setCaseReference(event.target.value)} />
                 {mode === 'approve' && <OperationsSelect name="operation" label="Approved scope" error={errors.operation}>
-                    {operations.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                    {operations.map(item => <NativeSelectOption key={item.value} value={item.value}>{item.label}</NativeSelectOption>)}
                 </OperationsSelect>}
                 {mode === 'execute' && <>
                     <OperationsInput name="approval" label="Approval UUID" error={errors.approval} required pattern={uuid} />

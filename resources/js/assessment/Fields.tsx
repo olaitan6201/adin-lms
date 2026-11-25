@@ -1,8 +1,9 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
@@ -86,9 +87,9 @@ export function Roster({ members }: { members: Member[] }) {
             Learner
             <ValidatedSelect name="enrolment" required>
                 {members.map((m) => (
-                    <option key={m.id} value={m.id}>
+                    <NativeSelectOption key={m.id} value={m.id}>
                         {m.name}
-                    </option>
+                    </NativeSelectOption>
                 ))}
             </ValidatedSelect>
         </Label>

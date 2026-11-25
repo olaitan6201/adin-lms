@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ export function SetupExam({ id }: { id: string }) {
                             Question type
                             <ValidatedSelect name={`${n}[kind]`}>
                                 {questionKinds.map((k) => (
-                                    <option key={k}>{k}</option>
+                                    <NativeSelectOption key={k}>{k}</NativeSelectOption>
                                 ))}
                             </ValidatedSelect>
                         </Label>

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
@@ -68,13 +69,13 @@ export function HierarchyForms({
                                 value={selection[path] ?? ''}
                                 onChange={(e) => select({ ...selection, [path]: e.target.value })}
                             >
-                                <option value="">New {label}</option>
+                                <NativeSelectOption value="">New {label}</NativeSelectOption>
                                 {records[path]?.map((r) => (
-                                    <option key={r.id} value={r.id}>
+                                    <NativeSelectOption key={r.id} value={r.id}>
                                         {r.name ??
                                             r.label ??
                                             `${sessions.find((s) => s.id === r.session_id)?.label} · semester ${r.position}`}
-                                    </option>
+                                    </NativeSelectOption>
                                 ))}
                             </NativeSelect>
                         </label>

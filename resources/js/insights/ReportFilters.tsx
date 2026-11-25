@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Disclosure } from './Disclosure';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
@@ -58,12 +59,12 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                                 name={name}
                                 defaultValue={selected ?? ''}
                             >
-                                <option value="">{empty}</option>
-                                {missing && <option value={selected}>No matching records</option>}
+                                <NativeSelectOption value="">{empty}</NativeSelectOption>
+                                {missing && <NativeSelectOption value={selected}>No matching records</NativeSelectOption>}
                                 {choices.map((choice) => (
-                                    <option value={choice.id} key={choice.id}>
+                                    <NativeSelectOption value={choice.id} key={choice.id}>
                                         {choice.label}
-                                    </option>
+                                    </NativeSelectOption>
                                 ))}
                             </NativeSelect>
                         </label>

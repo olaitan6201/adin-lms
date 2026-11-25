@@ -1,7 +1,8 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { FormFeedback } from '@/components/ui/form-feedback';
+import { FormFeedback } from '@/components/FormFeedback';
 import { PortalField } from '../../components/PortalForm';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
@@ -68,11 +69,11 @@ export default function Access({ account, editable, grants, roles }: Props) {
                                     aria-invalid={errors.role ? true : undefined}
                                     aria-describedby={errors.role ? 'assign-role-error' : undefined}
                                     onChange={(e) => selectRole(e.target.value)}>
-                                    <option value="">Choose a role</option>
+                                    <NativeSelectOption value="">Choose a role</NativeSelectOption>
                                     {roles.map((r) => (
-                                        <option key={r.code} value={r.code}>
+                                        <NativeSelectOption key={r.code} value={r.code}>
                                             {label(r.code)}
-                                        </option>
+                                        </NativeSelectOption>
                                     ))}
                                 </NativeSelect>
                                 <FieldError id="assign-role-error" role={undefined}>{errors.role}</FieldError>

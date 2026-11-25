@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedSelect } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
@@ -114,11 +115,11 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                             <Label className="grid min-w-0 gap-2 leading-normal">
                                 Decision
                                 <ValidatedSelect name="decision" aria-label="Decision" required defaultValue="">
-                                    <option value="" disabled>
+                                    <NativeSelectOption value="" disabled>
                                         Choose a decision
-                                    </option>
-                                    <option value="correct">Request correction</option>
-                                    <option value="approve">Approve</option>
+                                    </NativeSelectOption>
+                                    <NativeSelectOption value="correct">Request correction</NativeSelectOption>
+                                    <NativeSelectOption value="approve">Approve</NativeSelectOption>
                                 </ValidatedSelect>
                             </Label>
                         ) : (

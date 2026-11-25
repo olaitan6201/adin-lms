@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
@@ -48,13 +49,13 @@ export default function Board({ offering, canManage, forums, groups, registratio
                     <Label className="grid gap-2">
                         Recipient{' '}
                         <NativeSelect className="max-w-full" name="recipient_id" required defaultValue="">
-                            <option value="" disabled>
+                            <NativeSelectOption value="" disabled>
                                 Select a participant
-                            </option>
+                            </NativeSelectOption>
                             {members.map((member) => (
-                                <option value={member.id} key={member.id}>
+                                <NativeSelectOption value={member.id} key={member.id}>
                                     {member.full_name}
-                                </option>
+                                </NativeSelectOption>
                             ))}
                         </NativeSelect>
                     </Label>
@@ -71,11 +72,11 @@ export default function Board({ offering, canManage, forums, groups, registratio
                         <Label className="grid gap-2">
                             Audience{' '}
                             <NativeSelect className="max-w-full" name="group_id">
-                                <option value="">Whole course</option>
+                                <NativeSelectOption value="">Whole course</NativeSelectOption>
                                 {groups.map((group) => (
-                                    <option key={group.id} value={group.id}>
+                                    <NativeSelectOption key={group.id} value={group.id}>
                                         {group.name}
-                                    </option>
+                                    </NativeSelectOption>
                                 ))}
                             </NativeSelect>
                         </Label>

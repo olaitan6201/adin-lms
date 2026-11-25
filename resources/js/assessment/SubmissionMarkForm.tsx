@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
@@ -36,14 +37,14 @@ export function SubmissionMarkForm({ version, rubric }: SubmissionMarkFormProps)
                             <Label className="grid min-w-0 gap-2 leading-normal">
                                 Performance level
                                 <ValidatedSelect required name={`selections[${i}][level]`} defaultValue="">
-                                    <option value="" disabled>
+                                    <NativeSelectOption value="" disabled>
                                         Select a level
-                                    </option>
+                                    </NativeSelectOption>
                                     {criterion.levels.map((l) => (
-                                        <option key={l.id} value={l.id}>
+                                        <NativeSelectOption key={l.id} value={l.id}>
                                             {l.label} · {l.points} points
                                             {l.description ? ` — ${l.description}` : ''}
-                                        </option>
+                                        </NativeSelectOption>
                                     ))}
                                 </ValidatedSelect>
                             </Label>

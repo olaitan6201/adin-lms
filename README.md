@@ -10,7 +10,11 @@ Adin is the institution’s standalone learning management system, built with La
 | Teaching, assignments, question banks, timed exams, marking, moderation, released grades and reporting | Adin. These workflows must work without a Moodle installation or an external gradebook. |
 | Moving reusable course material | File exchange. The operations desk supports a subset of SCORM 1.2 text resources, IMS Common Cartridge 1.1 text imports and native Adin backups. It does not restore Moodle `.mbz` archives. |
 
-For a first course, import the roster, allocate the lecturer, prepare an offering and publish its lessons. Run a learner through an assignment and a timed exam, then have staff mark, moderate and release a result. Check that the student can reopen the submission receipt and see only released grades. Repeat with a withdrawn registration to check access and history. Preserve the Weekline student workspace as the entry point.
+For a first course, import the roster, allocate the lecturer, prepare an offering and publish its lessons. Run a learner through an assignment and a timed exam, then have staff mark, moderate and release a result. Check that the student can reopen the submission receipt and see only released grades. Repeat with a withdrawn registration to check access and history.
+
+## Interface standard
+
+All portal roles use the stock shadcn/ui New York registry with Tailwind v4. Add controls with the project's pinned CLI (`npx --no-install shadcn add <component>`); compose them in feature modules, and reserve `resources/js/components/ui/` for the registry source. The main stylesheet contains the Tailwind entry point and theme tokens. Offline, isolated SCORM and print renderers use semantic markup and compiled utilities; check those assets with `node resources/static-renderers/build.mjs --check`.
 
 Prioritise improvements that complete a real teaching workflow in Adin. For example, a student should be able to download a readable copy of a published result; a department migrating materials should be able to tell which content the importer will preserve. Expand exchange formats against representative course files rather than adding a second LMS runtime.
 

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import { router } from '@inertiajs/react';
@@ -20,9 +21,9 @@ export function ManagementPeriod({ period }: { period: Period }) {
         }}>
             <label className="grid w-full min-w-0 gap-1 sm:max-w-md [&>div]:w-full [&>div]:min-w-0">Academic period
                 <NativeSelect className="w-full max-w-full" value={selection} onChange={event => setSelection(event.target.value)}>
-                    <option value="">All periods</option>
-                    <optgroup label="Academic sessions">{period.sessions.map(o => <option key={o.id} value={`session:${o.id}`}>{o.label}</option>)}</optgroup>
-                    <optgroup label="Semesters">{period.terms.map(o => <option key={o.id} value={`term:${o.id}`}>{o.label}</option>)}</optgroup>
+                    <NativeSelectOption value="">All periods</NativeSelectOption>
+                    <optgroup label="Academic sessions">{period.sessions.map(o => <NativeSelectOption key={o.id} value={`session:${o.id}`}>{o.label}</NativeSelectOption>)}</optgroup>
+                    <optgroup label="Semesters">{period.terms.map(o => <NativeSelectOption key={o.id} value={`term:${o.id}`}>{o.label}</NativeSelectOption>)}</optgroup>
                 </NativeSelect>
             </label>
             <Button type="submit">Apply period</Button>

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Check, Field, Post } from './Fields';
@@ -37,7 +38,7 @@ export function SetupAssignment({ id }: { id: string }) {
                         'docx',
                         'xlsx',
                     ].map((format) => (
-                        <option key={format}>{format}</option>
+                        <NativeSelectOption key={format}>{format}</NativeSelectOption>
                     ))}
                 </ValidatedSelect>
             </Label>

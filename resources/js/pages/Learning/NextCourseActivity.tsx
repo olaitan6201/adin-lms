@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Link } from '@inertiajs/react';
 import type { Activity } from '../Course';
 
@@ -25,7 +26,9 @@ export function NextCourseActivity({ activities }: { activities: Activity[] }) {
                         <p>
                             {completed} of {lessons.length} listed lessons complete
                         </p>
-                        <progress aria-label="Listed lessons completed" max={lessons.length} value={completed} />
+                        <Progress aria-label="Listed lessons completed" value={100 * completed / lessons.length}
+                            aria-valuenow={completed} aria-valuemin={0} aria-valuemax={lessons.length}
+                            aria-valuetext={`${completed} of ${lessons.length} listed lessons complete`} />
                     </>
                 )}
                 {next && (

@@ -1,3 +1,4 @@
+import { NativeSelectOption } from '@/components/ui/native-select';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import type { WorkloadData } from './contracts';
@@ -19,11 +20,11 @@ export function TermSelector({ workload }: { workload: Pick<WorkloadData, 'terms
                         defaultValue={workload.selected_term ?? ''}
                         disabled={workload.terms.length === 0}
                     >
-                        {workload.terms.length === 0 && <option value="">No allocated terms</option>}
+                        {workload.terms.length === 0 && <NativeSelectOption value="">No allocated terms</NativeSelectOption>}
                         {workload.terms.map((term) => (
-                            <option key={term.id} value={term.id}>
+                            <NativeSelectOption key={term.id} value={term.id}>
                                 {term.label}
-                            </option>
+                            </NativeSelectOption>
                         ))}
                     </NativeSelect>
                 </div>

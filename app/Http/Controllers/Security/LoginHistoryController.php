@@ -16,11 +16,13 @@ class LoginHistoryController extends Controller
     public function __invoke(Request $request, ScopedAuthority $authority): Response
     {
         abort_unless($authority->institutionAllows($request->user(), PermissionCode::LoginEventsRead), 403);
-        $events = LoginEvent::orderByDesc('occurred_at')->orderByDesc('id')
+        $events = LoginEvent::with('user:id,full_name')->orderByDesc('occurred_at')->orderByDesc('id')
             ->simplePaginate(50, ['id', 'user_id', 'occurred_at', 'outcome']);
 
         return Inertia::render('Security/LoginHistory', [
             'events' => LoginEventResource::collection($events->items())->resolve($request),
+            'sessionsUrl' => $authority->institutionAllows($request->user(), PermissionCode::OperationsManage)
+                ? route('security.sessions', [], false) : null,
             'previous' => $events->previousPageUrl(),
             'next' => $events->nextPageUrl(),
         ]);

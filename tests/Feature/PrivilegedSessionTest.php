@@ -41,7 +41,7 @@ class PrivilegedSessionTest extends TestCase
         $this->assertNull($factor->fresh()->expires_at);
         $this->get('/security/login-events')->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Security/LoginHistory')->has('events.0', fn (AssertableInertia $row) => $row
-            ->hasAll('id', 'occurred_at', 'user_id', 'outcome')));
+            ->hasAll('id', 'occurred_at', 'user_id', 'outcome')->where('account_name', $user->full_name)));
         $this->post('/logout');
         $this->login($user);
         $this->post('/security/challenge', ['code' => $code])->assertSessionHasErrors('code');

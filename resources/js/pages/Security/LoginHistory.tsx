@@ -15,17 +15,19 @@ const outcomeLabels = {
 type SignInEvent = {
     id: string;
     user_id: string | null;
+    account_name: string | null;
     occurred_at: string;
     outcome: keyof typeof outcomeLabels;
 };
 
 type LoginHistoryProps = {
     events: SignInEvent[];
+    sessionsUrl: string | null;
     previous: string | null;
     next: string | null;
 };
 
-export default function LoginHistory({ events, previous, next }: LoginHistoryProps) {
+export default function LoginHistory({ events, sessionsUrl, previous, next }: LoginHistoryProps) {
     return (
         <main className="portal-page">
             <Head title="Sign-in history" />
@@ -35,6 +37,7 @@ export default function LoginHistory({ events, previous, next }: LoginHistoryPro
                 <p>
                     Review password checks, authenticator activity and session changes across accounts.
                 </p>
+                {sessionsUrl && <Link className="desk-link" href={sessionsUrl}>Manage active sessions</Link>}
             </header>
             <section aria-labelledby="activity-heading" className="portal-panel mt-6">
                 <h2 id="activity-heading" className="desk-section">
@@ -53,9 +56,7 @@ export default function LoginHistory({ events, previous, next }: LoginHistoryPro
                                     <div>
                                         <strong>{outcomeLabels[event.outcome] ?? event.outcome}</strong>
                                         <p className="desk-note break-all">
-                                            {event.user_id
-                                                ? `Account ID: ${event.user_id}`
-                                                : 'Account not identified'}
+                                            {event.account_name ?? 'Account not identified'}
                                         </p>
                                     </div>
                                     <time dateTime={event.occurred_at}>

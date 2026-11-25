@@ -31,7 +31,7 @@ export default function Content({ base, title, staff, lessons, lessonKinds }: Co
             )}
             {!lessons.length && <p>No lessons are available yet.</p>}
             {lessons.map((lesson) => (
-                <section className="space-y-3 border-t pt-5" key={lesson.id}>
+                <section id={`lesson-${lesson.id}`} className="space-y-3 border-t pt-5" key={lesson.id}>
                     <p>
                         {!lesson.published && 'Draft · '}
                         {lesson.kind}

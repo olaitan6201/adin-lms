@@ -1,8 +1,14 @@
 import { Head, Link } from '@inertiajs/react';
+import './Learning/course.css';
 
 export type CourseSummary = {
     id: string;
     external_offering_id: string;
+    title: string | null;
+    code: string | null;
+    status: string;
+    section: string | null;
+    delivery_mode: string | null;
 };
 
 type CoursesProps = {
@@ -21,9 +27,13 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
     ];
 
     return (
-        <main className="mx-auto max-w-2xl px-6 py-16">
+        <main className="syllabus">
             <Head title="My courses" />
-            <h1 className="mb-4 text-3xl font-semibold">My courses</h1>
+            <header className="syllabus-title">
+                <p className="syllabus-kicker">Course catalogue</p>
+                <h1>My courses</h1>
+                <p>{courses.length} {courses.length === 1 ? 'offering' : 'offerings'} linked to your account</p>
+            </header>
             <nav aria-label="Course shortcuts" className="mb-4 flex flex-wrap gap-4">
                 {shortcuts.map(
                     ({ href, label }) =>
@@ -37,12 +47,14 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
             {courses.length === 0 && (
                 <p>No active course registrations are linked to your account.</p>
             )}
-            <ul className="space-y-3">
+            <ul className="catalogue-list">
                 {courses.map((course) => (
                     <li key={course.id}>
-                        <Link className="underline" href={`/courses/${course.id}`}>
-                            {course.external_offering_id}
+                        <small>{course.code || 'Course offering'} · {course.status}</small>
+                        <Link href={`/courses/${course.id}`}>
+                            {course.title || course.external_offering_id}
                         </Link>
+                        <p>{[course.external_offering_id, course.section && `Section ${course.section}`, course.delivery_mode].filter(Boolean).join(' · ')}</p>
                     </li>
                 ))}
             </ul>

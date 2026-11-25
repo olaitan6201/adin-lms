@@ -45,7 +45,7 @@ export default function Classroom({
             )}
             {!sessions.length && <p>No classes scheduled.</p>}
             {sessions.map((s) => (
-                <section key={s.id} className="space-y-2 border-t pt-4">
+                <section key={s.id} id={`class-${s.id}`} className="space-y-2 border-t pt-4">
                     <h2 className="text-xl font-semibold">{s.title}</h2>
                     <p>
                         {new Date(s.starts_at).toLocaleString()} –{' '}

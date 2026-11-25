@@ -1,80 +1,85 @@
-import type { OfferingStatus } from '../components/academics/workflow';
 import { Head, Link } from '@inertiajs/react';
 import type { CourseSummary } from './Courses';
+import './Learning/course.css';
 
-type Props = {
-    course: CourseSummary & {
-        title: string | null;
-        status: OfferingStatus;
-        section: string | null;
-        delivery_mode: string | null;
-    };
+export interface Activity {
+    id: string;
+    type: string;
+    title: string;
+    detail: string;
+    href: string;
+    at?: string | null;
+    complete?: boolean;
+}
+
+interface Props {
+    course: CourseSummary & { description: string | null; credits: string | null };
     teaching: boolean;
-    modules: {
-        id: string;
-        title: string;
-        body: string | null;
-        kind: string;
-    }[];
-};
+    activities: Activity[];
+    lecturers: string[];
+    outcomes: string[];
+}
 
-export default function Course({ course, teaching, modules }: Props) {
+export default function Course({ course, teaching, activities, lecturers, outcomes }: Props) {
     const visible = teaching || course.status === 'published';
+    const title = course.title || course.external_offering_id;
+    const lessons = activities.filter((a) => a.type === 'Lesson');
+    const next = lessons.find((a) => !a.complete);
+    const completed = lessons.filter((a) => a.complete).length;
+    const base = `/courses/${course.id}`;
 
     return (
-        <main className="mx-auto max-w-2xl space-y-4 px-6 py-16">
-            <Head title={course.title || course.external_offering_id} />
-            <Link href="/courses" className="underline">
-                My courses
-            </Link>
-            <h1 className="text-3xl font-semibold">{course.title || course.external_offering_id}</h1>
-            <p>
-                {course.external_offering_id}
-                {course.section && ` · Section ${course.section}`}
-                {course.delivery_mode && ` · ${course.delivery_mode}`}
-            </p>
-            <p>
-                {teaching && 'Lecturer view · '}Status: {course.status}
-            </p>
-            <nav aria-label="Course tools" className="flex flex-wrap gap-4">
-                <Link href={`/community/courses/${course.id}`} className="underline">
-                    Course board
-                </Link>
-                {visible && (
-                    <>
-                        <Link href={`/courses/${course.id}/learning`} className="underline">
-                            Lessons and materials
-                        </Link>
-                        <Link href={`/courses/${course.id}/assessments`} className="underline">
-                            Assessments
-                        </Link>
-                    </>
-                )}
-            </nav>
-            {!visible && (
-                <p>
-                    {course.status === 'archived'
-                        ? 'This offering is archived.'
-                        : 'Course materials have not been published yet.'}
-                </p>
-            )}
-            {visible && (
-                <section>
-                    <h2 className="text-xl font-semibold">Course modules</h2>
-                    {modules.length ? (
-                        <ol>
-                            {modules.map((m) => (
-                                <li key={m.id} className="border-b py-3">
-                                    <h3 className="font-semibold">{m.title}</h3>
-                                    <p className="whitespace-pre-wrap">{m.body}</p>
-                                </li>
-                            ))}
-                        </ol>
-                    ) : (
-                        <p>No modules available.</p>
+        <main className="syllabus">
+            <Head title={title} />
+            <Link className="syllabus-back" href="/courses">← My courses</Link>
+            <header className="syllabus-title">
+                <p className="syllabus-kicker">{course.code || course.external_offering_id} · {teaching ? 'Teaching workspace' : 'Course overview'}</p>
+                <h1>{title}</h1>
+                {course.description && <p>{course.description}</p>}
+                <p className="syllabus-meta">{[course.section && `Section ${course.section}`, course.delivery_mode,
+                    course.credits && `${Number(course.credits)} credits`, course.status].filter(Boolean).join(' · ')}</p>
+            </header>
+            <div className="syllabus-grid">
+                <div>
+                    {visible && !teaching && lessons.length > 0 && (
+                        <section className="study-progress">
+                            <h2>{next ? 'Continue learning' : 'Reading complete'}</h2>
+                            <p>{completed} of {lessons.length} available lessons complete</p>
+                            <progress aria-label="Available lessons completed" max={lessons.length} value={completed} />
+                            {next && <Link href={next.href}>Continue: {next.title} →</Link>}
+                        </section>
                     )}
-                </section>
-            )}
+                    <h2>Course outline</h2>
+                    {!visible ? <p>{course.status === 'archived' ? 'This offering is archived.' : 'Course materials have not been published yet.'}</p>
+                        : !activities.length ? <p>No activities available yet.</p> : (
+                            <ol className="activity-sequence">
+                                {activities.map((a, i) => <li key={a.id}>
+                                    <span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                                    <div>
+                                        <small>{a.type} · {a.complete ? 'Completed' : a.detail}</small>
+                                        <Link href={a.href}>{a.title}</Link>
+                                        {a.at && <time dateTime={a.at}>{new Date(a.at).toLocaleString()}</time>}
+                                    </div>
+                                </li>)}
+                            </ol>
+                        )}
+                </div>
+                <aside>
+                    <h2>Course information</h2>
+                    <h3>Teaching team</h3>
+                    <p>{lecturers.join(', ') || 'No lecturer listed yet.'}</p>
+                    {outcomes.length > 0 && <><h3>Learning outcomes</h3><ul>{outcomes.map((s, i) => <li key={i}>{s}</li>)}</ul></>}
+                    <nav aria-label="Course tools">
+                        <h3>{teaching ? 'Authoring and delivery' : 'Course tools'}</h3>
+                        {visible && <>
+                            <Link href={`${base}/learning`}>{teaching ? 'Author or preview lessons' : 'Lessons and materials'}</Link>
+                            <Link href={`${base}/learning/classes`}>Classroom and attendance</Link>
+                            <Link href={`${base}/assessments`}>Assessments</Link>
+                        </>}
+                        <Link href={`/community/courses/${course.id}`}>Course board</Link>
+                    </nav>
+                </aside>
+            </div>
         </main>
     );
 }

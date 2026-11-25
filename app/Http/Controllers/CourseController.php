@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\EnrolmentStatus;
-use App\Enums\OfferingStatus;
-use App\Models\Module;
-use App\Policies\LearningPolicy;
+use App\Models\Offering;
 use App\Services\Authority\ScopedAuthority;
+use App\Services\Learning\CourseOutline;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,26 +28,17 @@ class CourseController extends Controller
         ]);
     }
 
-    public function show(Request $request, string $offering, LearningPolicy $release): Response
+    public function show(Request $request, Offering $offering, CourseOutline $outline): Response
     {
-        $course = $this->accessibleCourses($request)->where('offerings.id', $offering)->first();
+        $course = $this->accessibleCourses($request)->where('offerings.id', $offering->id)->first();
         abort_if($course === null, 404);
 
-        $teaching = $this->teaching($request)->where('teaching_allocations.offering_id', $offering)->exists();
-        $modules =
-            $teaching || $course->status === OfferingStatus::Published->value
-                ? Module::where('offering_id', $offering)
-                    ->orderBy('position')
-                    ->get()
-                    ->filter(fn (Module $module) => $teaching || $release->released($module))
-                    ->values()
-                    ->map->only(['id', 'kind', 'title', 'body'])
-                : [];
+        $teaching = $this->teaching($request)->where('teaching_allocations.offering_id', $offering->id)->exists();
 
         return Inertia::render('Course', [
             'course' => $course,
             'teaching' => $teaching,
-            'modules' => $modules,
+            ...$outline->build($offering, $request->user(), $teaching),
         ]);
     }
 
@@ -62,6 +52,7 @@ class CourseController extends Controller
 
         return DB::table('offerings')
             ->leftJoin('curriculum_courses', 'curriculum_courses.id', '=', 'offerings.curriculum_course_id')
+            ->leftJoin('courses', 'courses.id', '=', 'curriculum_courses.course_id')
             ->where(
                 fn ($q) => $q
                     ->whereIn('offerings.id', $registered)
@@ -74,6 +65,9 @@ class CourseController extends Controller
                 'offerings.delivery_mode',
                 'offerings.section',
                 'curriculum_courses.title',
+                'courses.code',
+                'curriculum_courses.description',
+                'curriculum_courses.credits',
             );
     }
 

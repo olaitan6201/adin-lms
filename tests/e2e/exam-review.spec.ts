@@ -23,7 +23,9 @@ test('only an explicit online confirmation submits the saved paper', async ({ pa
         await expect(dialog).toContainText('0 answered · 2 unanswered');
         await expect(dialog).toContainText('offline');
         await expect(confirm).toBeDisabled();
-        await expect(dialog.getByText('Return to paper')).toBeFocused();
+        const cancel = dialog.getByRole('button', { name: 'Return to paper' });
+        await expect(cancel).toBeFocused();
+        await expect(cancel).toHaveAccessibleDescription(/0 answered · 2 unanswered.*Submitting ends this attempt.*cannot change your answers/);
         expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
         await page.screenshot({ path: info.outputPath('offline-review.png') });
         await page.keyboard.press('Escape');

@@ -52,7 +52,7 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
             <Button type="button" ref={trigger} aria-haspopup="dialog" onClick={() => dialog.current?.showModal()}>
                 Review final submission
             </Button>
-            <NativeDialog className="w-[min(28rem,90vw)] border shadow-xl" ref={dialog} aria-labelledby="review-title" aria-describedby="review-summary review-consequence"
+            <NativeDialog className="w-[min(28rem,90vw)] border shadow-xl" ref={dialog} aria-labelledby="review-title"
                 onCancel={(event) => { if (lock.current) event.preventDefault(); }}
                 onClose={() => trigger.current?.focus()}>
                 <p className="portal-kicker">Examination paper</p>
@@ -61,7 +61,7 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
                 <p id="review-consequence" className="my-3">Submitting ends this attempt. You cannot change your answers afterward.</p>
                 <p role="status">{error || reason}</p>
                 <div className="mt-4 flex flex-wrap gap-3">
-                    <Button variant="outline" type="button" autoFocus disabled={sending} onClick={() => dialog.current?.close()}>Return to paper</Button>
+                    <Button variant="outline" type="button" autoFocus aria-describedby="review-summary review-consequence" disabled={sending} onClick={() => dialog.current?.close()}>Return to paper</Button>
                     <Button variant="destructive" type="button" disabled={Boolean(reason || error) || sending} onClick={submit}>
                         {sending ? 'Submitting…' : 'Submit final answers'}
                     </Button>

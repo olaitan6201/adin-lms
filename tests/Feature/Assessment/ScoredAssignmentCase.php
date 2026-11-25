@@ -34,6 +34,7 @@ abstract class ScoredAssignmentCase extends AssessmentCase
                 'enrolment_id' => $this->member->id,
             ]);
         }
+
         $this->as($this->member->student->user)->post("/assignments/$assignment->id", [
             'body' => 'My argument and supporting evidence.',
             'group_id' => $groupWork ? $group?->id : null,

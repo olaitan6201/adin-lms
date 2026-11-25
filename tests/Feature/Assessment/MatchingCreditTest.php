@@ -91,6 +91,7 @@ class MatchingCreditTest extends AssessmentCase
         foreach ($pairs as $left => $right) {
             $lines[] = $left.' => '.$right;
         }
+
         $this->as($this->marker)->post("/courses/{$this->offering->id}/question-banks", [
             'topic' => 'Matching',
             'kind' => 'matching',

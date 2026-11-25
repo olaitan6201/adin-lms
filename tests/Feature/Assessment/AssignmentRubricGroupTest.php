@@ -34,6 +34,7 @@ class AssignmentRubricGroupTest extends ScoredAssignmentCase
             $this->assertTrue(BigDecimal::of((string) $score->points)->isEqualTo('6'));
             $this->assertSame(2, AssessmentCriterionFeedback::where('score_id', $score->id)->count());
         }
+
         $this->assertDatabaseCount('assessment_criterion_feedback', 4);
     }
 }

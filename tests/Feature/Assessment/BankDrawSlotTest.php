@@ -17,6 +17,7 @@ final class BankDrawSlotTest extends AssessmentCase
         foreach (['Explain a queue', 'Explain a stack'] as $prompt) {
             $this->post($bankUrl, ['topic' => 'Algorithms', 'kind' => 'essay', 'prompt' => $prompt])->assertSessionHasNoErrors();
         }
+
         $bank = QuestionBank::sole();
         $fixed = QuestionVersion::where('prompt', 'Explain a queue')->sole();
         $data = [
@@ -33,6 +34,7 @@ final class BankDrawSlotTest extends AssessmentCase
             $exam = Examination::where('item_id', $item->id)->sole();
             $this->as($this->member->student->user)->post("/examinations/$exam->id/start")->assertRedirect();
         }
+
         $this->assertSame(2, AttemptQuestion::where('version_id', $fixed->id)->where('position', 1)->count());
         $this->assertSame(2, AttemptQuestion::where('version_id', '!=', $fixed->id)->where('position', 2)->count());
         $this->assertDatabaseCount('question_versions', 2);

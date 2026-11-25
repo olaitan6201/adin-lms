@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Insights;
 
+use App\Models\AssessmentItem;
+use App\Models\Grade;
+use App\Models\Module;
+use App\Models\Offering;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Component\Process\Process;
@@ -9,6 +13,55 @@ use Symfony\Component\Process\Process;
 final class InsightsExportTest extends InsightCase
 {
     use AssessmentFixture;
+
+    public function test_student_downloads_follow_lesson_completion_and_actual_grade_publication(): void
+    {
+        $course = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
+        $lesson = Module::whereOfferingId($course->id)->sole();
+        $this->loginAs('lecturer');
+        $this->post(route('learning.revisions.store', [$course, $lesson]), [
+            'title' => 'Report reading', 'body' => 'Read this before class.', 'download_allowed' => false,
+        ])->assertSessionHasNoErrors()->assertRedirect();
+        $this->post("/courses/$course->id/assessments", ['rounding' => 'half_up',
+            'items' => [['kind' => 'manual', 'title' => 'Portfolio', 'weight' => 100, 'maximum' => 10]],
+            'boundaries' => [['minimum' => 0, 'grade' => 'RESULT-MERIT']],
+        ])->assertSessionHasNoErrors()->assertRedirect();
+        $student = $this->loginAs('ada');
+        $this->post(route('learning.complete', [$course, $lesson]))->assertRedirect();
+        $member = $course->enrolments()->where('student_id', $student->student->id)->sole();
+        $this->loginAs('lecturer');
+        $item = AssessmentItem::where('title', 'Portfolio')->sole();
+        $this->post("/assessment-items/$item->id/score", ['enrolment' => $member->id, 'points' => '8.125',
+            'reason' => 'Portfolio review'])->assertSessionHasNoErrors()->assertRedirect();
+        $this->post("/gradebooks/$item->gradebook_id/compute/$member->id")->assertRedirect();
+        $grade = Grade::where('enrolment_id', $member->id)->sole();
+        $review = "/grades/$grade->id/review";
+        $officer = $this->loginAs('officer');
+        $this->artisan('authority:grant', ['user' => $officer->id, 'role' => 'examination_officer', 'scope' => 'institution'])->assertSuccessful();
+        $this->post($review, ['decision' => 'approve', 'reason' => 'Checked'])->assertRedirect();
+        $query = '?offering='.$course->id;
+        $download = function () use ($query): array {
+            return [json_encode($this->sheet($query), JSON_THROW_ON_ERROR), $this->pdfText($query)];
+        };
+        $this->loginAs('ada');
+        foreach ($download() as $text) {
+            $this->assertStringContainsString('Report reading', $text);
+            $this->assertStringNotContainsString('RESULT-MERIT', $text);
+        }
+        $this->assertSame(1, $this->data('/reports'.$query)['table']['totals']['Completed lessons']);
+        $this->loginAs('officer');
+        $this->post($review, ['decision' => 'publish', 'reason' => 'Release'])->assertRedirect();
+        $this->loginAs('ada');
+        foreach ($download() as $text) {
+            $this->assertStringContainsString('RESULT-MERIT', $text);
+            $this->assertStringContainsString('81.25', $text);
+            $this->assertStringNotContainsString('8.125', $text);
+        }
+        $this->loginAs('tunde');
+        foreach ($download() as $text) {
+            $this->assertStringNotContainsString('RESULT-MERIT', $text);
+        }
+    }
 
     public function test_student_report_and_exports_match_filtered_rows_and_exclude_unreleased_revisions(): void
     {

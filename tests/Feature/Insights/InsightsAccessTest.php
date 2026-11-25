@@ -3,6 +3,7 @@
 namespace Tests\Feature\Insights;
 
 use App\Models\AcademicSession;
+use App\Models\CurriculumCourse;
 use App\Models\Offering;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +50,7 @@ final class InsightsAccessTest extends InsightCase
     {
         $lecturer = $this->loginAs('lecturer');
         $course = Offering::where('status', 'published')->firstOrFail();
-        $outside = Offering::factory()->create();
+        $outside = Offering::factory()->create(['curriculum_course_id' => CurriculumCourse::factory()]);
         $this->assertSame(2, $this->data('/reports?offering='.Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->value('id'))['table']['totals']['Registrations']);
         $this->get("/reports/export/pdf?offering=$outside->id")->assertNotFound();
         DB::table('teaching_allocations')->where('lecturer_id', $lecturer->lecturer->id)->where('offering_id', $course->id)->delete();

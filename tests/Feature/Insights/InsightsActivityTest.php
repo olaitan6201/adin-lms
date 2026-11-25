@@ -3,11 +3,23 @@
 namespace Tests\Feature\Insights;
 
 use App\Models\Offering;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 final class InsightsActivityTest extends InsightCase
 {
     use AssessmentFixture;
+
+    public function test_exam_window_excludes_the_exact_close_instant(): void
+    {
+        $this->travelTo(Carbon::parse('2026-11-24 12:00:00', 'UTC'));
+        $course = $this->assessmentFixture($this->loginAs('ada'));
+        DB::table('examinations')->update(['opens_at' => now()->subHour(), 'closes_at' => now()]);
+
+        $report = $this->data('/reports?offering='.$course->id);
+        $this->assertSame(1, $report['table']['totals']['Exams']);
+        $this->assertNotContains('Exam window', array_column($report['table']['rows'], 1));
+    }
 
     public function test_dashboards_show_only_current_visible_activity_for_the_viewer(): void
     {

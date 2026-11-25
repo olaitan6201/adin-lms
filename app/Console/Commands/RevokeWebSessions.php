@@ -26,6 +26,7 @@ class RevokeWebSessions extends Command
 
             return self::FAILURE;
         }
+
         $count = DB::transaction(function () use ($user, $session): int {
             $count = AuthSession::where('user_id', $user->id)->whereNull('revoked_at')
                 ->when($session, fn ($query) => $query->whereKey($session))->update(['revoked_at' => now()]);

@@ -31,6 +31,7 @@ class AdministerAccount extends Command
 
             return self::FAILURE;
         }
+
         try {
             if ($action === 'provision') {
                 $user = $accounts->provision($actor, $target, $name);

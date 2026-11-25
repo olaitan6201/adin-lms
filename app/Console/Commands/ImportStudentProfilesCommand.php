@@ -21,6 +21,7 @@ class ImportStudentProfilesCommand extends Command
 
             return self::FAILURE;
         }
+
         $this->info("Processed {$count} profile records.");
 
         return self::SUCCESS;

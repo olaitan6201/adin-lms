@@ -23,6 +23,7 @@ class IssueAuthenticator extends Command
 
             return self::FAILURE;
         }
+
         try {
             $this->line($enrollment->issue($user));
         } catch (LogicException $exception) {

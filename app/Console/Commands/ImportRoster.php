@@ -24,6 +24,7 @@ class ImportRoster extends Command
 
             return self::FAILURE;
         }
+
         $this->info("Applied {$count} enrolment changes.");
 
         return self::SUCCESS;

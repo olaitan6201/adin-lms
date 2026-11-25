@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\EnrolmentStatus;
+use App\Enums\OfferingStatus;
 use App\Http\Requests\CourseSearchRequest;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class CourseSearchController extends Controller
             ->join('courses', 'courses.id', '=', 'curriculum_courses.course_id')
             ->where('students.user_id', $request->user()->id)
             ->where('enrolments.status', EnrolmentStatus::Registered->value)
-            ->where('offerings.status', 'published')
+            ->where('offerings.status', OfferingStatus::Published->value)
             ->where(function (Builder $query) use ($match): void {
                 $query->whereRaw("lower(courses.code) like ? escape '!'", [$match])
                     ->orWhereRaw("lower(curriculum_courses.title) like ? escape '!'", [$match])

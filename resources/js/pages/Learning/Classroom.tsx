@@ -4,6 +4,8 @@ import { AttendanceForm } from './AttendanceForm';
 import type { Choice, Workspace, Session, Participant } from './contracts';
 
 interface ClassroomProps extends Workspace {
+    overview: string;
+    board: string;
     sessions: Session[];
     percentage: number | null;
     materials: Choice[];
@@ -13,6 +15,8 @@ interface ClassroomProps extends Workspace {
 }
 export default function Classroom({
     base,
+    overview,
+    board,
     title,
     staff,
     sessions,
@@ -23,18 +27,19 @@ export default function Classroom({
     attendanceStatuses,
 }: ClassroomProps) {
     return (
-        <main className="mx-auto max-w-3xl space-y-5 px-5 py-10">
+        <main className="portal-page mx-auto max-w-3xl space-y-5 px-5 py-10">
             <Head title={`${title} · Classroom`} />
-            <Link className="underline" href={base}>
-                Lessons and resources
-            </Link>
+            <nav aria-label="Classroom navigation" className="flex flex-wrap gap-4 underline">
+                <Link href={overview}>Course overview</Link><Link href={base}>Lessons and resources</Link>
+                <Link href={board}>Course announcements and questions</Link>
+            </nav>
             <header>
-                <p>{title}</p>
-                <h1 className="text-3xl font-semibold">Classroom and attendance</h1>
+                <p className="portal-kicker">{title}</p>
+                <h1 className="portal-title">Classroom and attendance</h1>
             </header>
             <p>
                 My attendance: {percentage === null ? 'No counted classes yet' : `${percentage}%`}
-                . Counted classes are held sessions marked present or absent.
+                . Counted classes are held sessions marked present or absent. Excused, cancelled and unmarked sessions do not lower your percentage.
             </p>
             {staff && (
                 <ClassScheduleForm
@@ -55,7 +60,7 @@ export default function Classroom({
                     {s.meeting_url && (
                         <p>
                             <a className="underline" href={s.meeting_url} rel="noreferrer">
-                                Join meeting
+                                Join class meeting
                             </a>
                         </p>
                     )}

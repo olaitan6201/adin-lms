@@ -10,6 +10,29 @@ use Inertia\Testing\AssertableInertia as Page;
 
 class ClassRegisterTest extends LearningTestCase
 {
+    public function test_bridge_resolves_only_one_registered_institutional_identity(): void
+    {
+        $class = $this->schedule('Mapped identities');
+        $path = route('learning.provider', [$this->offering, $class], false);
+        $key = str_repeat('k', 32);
+        config(['learning.attendance_bridge_key' => $key]);
+        $stamp = (string) now()->timestamp;
+        $send = fn (array $data) => $this->postJson($path, $data, [
+            'X-Learning-Timestamp' => $stamp,
+            'X-Learning-Signature' => hash_hmac('sha256', implode("\n", [$stamp, 'POST', $path, json_encode($data)]), $key),
+        ]);
+        $student = ['external_student_id' => $this->learner->student->external_student_id];
+        $lecturer = ['staff_number' => $this->teacher->lecturer->staff_number];
+        $send($student)->assertNoContent();
+        $send($student)->assertNoContent();
+        $send($lecturer)->assertNoContent();
+        $send($student + $lecturer)->assertUnprocessable();
+        $send(['staff_number' => 'not-mapped'])->assertUnprocessable();
+        $this->withdraw();
+        $send($student)->assertUnprocessable();
+        $this->assertDatabaseCount('attendance', 2);
+    }
+
     public function test_replayed_provider_checkins_preserve_manual_corrections_and_export_is_staff_only(): void
     {
         $class = $this->schedule('Tutorial');

@@ -47,7 +47,7 @@ final class RegisterController
             $offering,
             $session,
             null,
-            $request->validated('user_id'),
+            $request->participant(),
             AttendanceStatus::Present,
             AttendanceMethod::Provider,
             null,

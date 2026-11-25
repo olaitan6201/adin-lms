@@ -40,7 +40,9 @@ final class ClassroomWorkspace
 
         return [
             'base' => route('learning.index', $offering),
-            'title' => $offering->external_offering_id,
+            'title' => $offering->curriculumCourse?->title ?? $offering->external_offering_id,
+            'overview' => route('courses.show', $offering),
+            'board' => route('community.board', $offering),
             'staff' => $staff,
             'classStatuses' => array_column(ClassStatus::cases(), 'value'),
             'attendanceStatuses' => array_column(AttendanceStatus::cases(), 'value'),

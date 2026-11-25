@@ -41,7 +41,8 @@ class CurriculumCatalogueTest extends TestCase
         $this->post("$path/entry", $entry)->assertSessionHasNoErrors();
         $first = CurriculumCourse::sole();
         $offering = Offering::factory()->create(['curriculum_course_id' => $first->id]);
-        $this->post("$path/entry", ['code' => 'CS102'] + $entry)->assertSessionHasNoErrors();
+        $otherLevel = AcademicLevel::factory()->create();
+        $this->post("$path/entry", ['code' => 'CS102', 'compulsory' => 0, 'level_id' => $otherLevel->id] + $entry)->assertSessionHasNoErrors();
         $second = CurriculumCourse::whereKeyNot($first->id)->sole();
         $this->post("$path/prerequisite", [
             'entry_id' => $second->id,
@@ -104,6 +105,9 @@ class CurriculumCatalogueTest extends TestCase
         $this->post("$path/unmap", ['mapping_id' => $original->id])->assertSessionHasErrors('status');
         $this->post("$draftPath/unmap", ['mapping_id' => $original->id])->assertNotFound();
         $this->academicUser('quality_assurance_officer');
+        $this->get($path)->assertInertia(fn (AssertableInertia $p) => $p->where('edit', false)
+            ->where('approverName', $actor->full_name)->where('entries.0.level_id', $entry['level_id'])
+            ->where('entries.1.level_id', $otherLevel->id)->where('entries.1.compulsory', fn ($value) => ! (bool) $value));
         $this->post("$draftPath/unmap", ['mapping_id' => $copy->id])->assertForbidden();
         $this->academicUser();
         $this->post("$draftPath/unmap", ['mapping_id' => $copy->id])->assertSessionHasNoErrors();

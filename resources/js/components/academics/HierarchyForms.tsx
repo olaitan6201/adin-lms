@@ -51,16 +51,34 @@ export function HierarchyForms({
             {forms.map(([label, path, fields]) => (
                 <details className="border-b py-2" key={path}>
                     <summary>Maintain {label}</summary>
-                    <label>Record <select className="border p-2" value={selection[path] ?? ''} onChange={e => select({ ...selection, [path]: e.target.value })}>
-                        <option value="">New {label}</option>
-                        {records[path]?.map(r => <option key={r.id} value={r.id}>{r.name ?? r.label ?? `${sessions.find(s => s.id === r.session_id)?.label} · semester ${r.position}`}</option>)}
-                    </select></label>
+                    <label>
+                        Record{' '}
+                        <select
+                            className="border p-2"
+                            value={selection[path] ?? ''}
+                            onChange={(e) => select({ ...selection, [path]: e.target.value })}
+                        >
+                            <option value="">New {label}</option>
+                            {records[path]?.map((r) => (
+                                <option key={r.id} value={r.id}>
+                                    {r.name ??
+                                        r.label ??
+                                        `${sessions.find((s) => s.id === r.session_id)?.label} · semester ${r.position}`}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
                     <RecordForm
                         key={selection[path] ?? ''}
                         title={selection[path] ? `Correct ${label}` : `Create ${label}`}
                         action={`/academics/organisation/${path}${selection[path] ? `/${selection[path]}` : ''}`}
                         method={selection[path] ? 'patch' : 'post'}
-                        fields={fields.map(f => ({ ...f, initial: String(records[path]?.find(r => r.id === selection[path])?.[f.name] ?? '') }))}
+                        fields={fields.map((f) => ({
+                            ...f,
+                            initial: String(
+                                records[path]?.find((r) => r.id === selection[path])?.[f.name] ?? '',
+                            ),
+                        }))}
                     />
                 </details>
             ))}

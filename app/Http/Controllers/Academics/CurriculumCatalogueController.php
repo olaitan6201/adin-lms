@@ -34,6 +34,7 @@ class CurriculumCatalogueController
         return Inertia::render(
             'Academics/Catalogue',
             compact('edit', 'approve', 'version', 'entries', 'courseOutcomes', 'programmeOutcomes') + [
+                'approverName' => $version?->approvedBy()->value('full_name'),
                 'mappings' => DB::table('outcome_mappings')
                     ->whereIn('course_outcome_id', $courseOutcomes->pluck('id'))
                     ->get(),

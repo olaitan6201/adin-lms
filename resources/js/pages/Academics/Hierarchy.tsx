@@ -1,6 +1,7 @@
 import { HierarchyForms } from '../../components/academics/HierarchyForms';
 import { Head, Link } from '@inertiajs/react';
 import RecordForm, { type Choice } from '../../components/academics/RecordForm';
+import { DeskHeading } from '../../components/academics/DeskHeading';
 
 type Unit = Choice & {
     code: string;
@@ -38,12 +39,14 @@ export default function Hierarchy({
     semesters,
 }: Props) {
     return (
-        <main className="mx-auto max-w-3xl space-y-5 px-5 py-12">
+        <main className="portal-page space-y-5">
             <Head title="Academic organisation" />
             <Link className="underline" href="/courses">
                 My courses
             </Link>
-            <h1 className="text-3xl font-semibold">Academic organisation</h1>
+            <DeskHeading area="Academic registry" title="Academic organisation">
+                Browse faculties, departments and programmes alongside the institutional calendar.
+            </DeskHeading>
             <h2 className="text-xl font-semibold">Faculties and programmes</h2>
             {!faculties.length && <p>No faculties in scope.</p>}
             {faculties.map((f) => (
@@ -95,7 +98,12 @@ export default function Hierarchy({
                     </ul>
                 </section>
             ))}
-            {manage && <HierarchyForms {...{ faculties, departments, sessions }} records={{ faculties, departments, programmes, levels, sessions, semesters }} />}
+            {manage && (
+                <HierarchyForms
+                    {...{ faculties, departments, sessions }}
+                    records={{ faculties, departments, programmes, levels, sessions, semesters }}
+                />
+            )}
         </main>
     );
 }

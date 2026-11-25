@@ -30,6 +30,7 @@ export type Outcome = {
 };
 
 export type CatalogueProps = {
+    approverName: string | null;
     edit: boolean;
     approve: boolean;
     versions: (Pick<Version, 'id' | 'version' | 'status'> & Choice)[];

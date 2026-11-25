@@ -4,10 +4,12 @@ import type { CatalogueProps } from '../../components/academics/catalogueTypes';
 import { CatalogueCourses } from '../../components/academics/CatalogueCourses';
 import { OutcomeCoverage } from '../../components/academics/OutcomeCoverage';
 import { OutcomeEditor } from '../../components/academics/OutcomeEditor';
+import { DeskHeading } from '../../components/academics/DeskHeading';
 
 export default function Catalogue({
     edit,
     approve,
+    approverName,
     versions,
     version,
     entries,
@@ -24,12 +26,15 @@ export default function Catalogue({
     const draft = edit && version?.status === 'draft';
 
     return (
-        <main className="mx-auto max-w-3xl space-y-5 px-5 py-12">
+        <main className="portal-page space-y-5">
             <Head title="Curriculum catalogue" />
             <Link href="/courses" className="underline">
                 My courses
             </Link>
-            <h1 className="text-3xl font-semibold">Curriculum catalogue</h1>
+            <DeskHeading area="Academic registry" title="Curriculum catalogue">
+                Select a programme version to inspect course requirements, academic levels and outcome
+                coverage.
+            </DeskHeading>
             <nav aria-label="Curriculum versions">
                 <h2 className="text-xl font-semibold">Programme versions</h2>
                 {versions.length ? (
@@ -66,14 +71,16 @@ export default function Catalogue({
                     </h2>
                     {version.approved_at && (
                         <p className="break-words">
-                            Approved {version.approved_at} by {version.approved_by}
+                            Approved {new Date(version.approved_at).toLocaleString()} by {approverName}
                         </p>
                     )}
                     <CatalogueCourses {...{ entries, levels, prerequisites, draft, path }} />
                     <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
                     {draft && (
                         <>
-                            <OutcomeEditor {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }} />
+                            <OutcomeEditor
+                                {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }}
+                            />
                             <RecordForm title="Mark reviewed" action={`${path}/review`} />
                         </>
                     )}

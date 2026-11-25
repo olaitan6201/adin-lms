@@ -27,11 +27,11 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
     ];
 
     return (
-        <main className="syllabus">
+        <main className="portal-page syllabus">
             <Head title="My courses" />
             <header className="syllabus-title">
-                <p className="syllabus-kicker">Course catalogue</p>
-                <h1>My courses</h1>
+                <p className="portal-kicker">Course catalogue</p>
+                <h1 className="portal-title">My courses</h1>
                 <p>{courses.length} {courses.length === 1 ? 'offering' : 'offerings'} linked to your account</p>
             </header>
             <nav aria-label="Course shortcuts" className="mb-4 flex flex-wrap gap-4">
@@ -58,9 +58,6 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
                     </li>
                 ))}
             </ul>
-            <Link as="button" method="post" href="/logout" className="mt-8 underline">
-                Sign out
-            </Link>
         </main>
     );
 }

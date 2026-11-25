@@ -39,6 +39,7 @@ final class CourseAssessments
                 'title' => $item->title,
                 'detail' => $state.' · '.(float) $item->weight_percent.'% of result',
                 'at' => $scheduled ? $opens : $assignment?->due_at,
+                'dateLabel' => $scheduled ? 'Opens' : 'Due',
                 'href' => $assignment && ($staff || ! $scheduled) ? route('assignments.show', $assignment)
                     : route('assessment.desk', $offering).'#item-'.$item->id,
             ];

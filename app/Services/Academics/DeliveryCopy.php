@@ -38,15 +38,17 @@ class DeliveryCopy
             CarbonImmutable::parse($target->semester->starts_on),
         );
         $modules = $this->copyRows('modules', 'offering_id', $sourceId, $target->id, days: $days);
+        $resources = [];
         foreach ($modules as $old => $new) {
             $materials = $this->copyRows('learning_materials', 'module_id', $old, $new, days: $days);
+            $resources += $materials;
             foreach ($materials as $original => $copied) {
                 $this->copyRows('material_versions', 'material_id', $original, $copied);
             }
         }
 
         $groups = $this->copyRows('study_groups', 'offering_id', $sourceId, $target->id);
-        $this->copyRows(
+        $classes = $this->copyRows(
             'classes',
             'offering_id',
             $sourceId,
@@ -58,13 +60,17 @@ class DeliveryCopy
                 'status' => 'scheduled',
             ],
         );
-        $this->copyRows('forums', 'offering_id', $sourceId, $target->id, ['group_id' => $groups]);
+        $forums = $this->copyRows('forums', 'offering_id', $sourceId, $target->id, ['group_id' => $groups]);
+        $activityMap = $modules + $classes + $forums;
+        $quizLinks = [];
         $books = $this->copyRows('gradebooks', 'offering_id', $sourceId, $target->id);
         foreach ($books as $old => $new) {
             $items = $this->copyRows('assessment_items', 'gradebook_id', $old, $new, [
                 'module_id' => $modules,
             ]);
             foreach ($items as $original => $copied) {
+                $activityMap[$original] = $copied;
+                $quizLinks["/courses/$sourceId/assessments#item-$original"] = "/courses/$target->id/assessments#item-$copied";
                 $assignments = $this->copyRows('assignments', 'item_id', $original, $copied, days: $days);
                 foreach ($assignments as $before => $after) {
                     $this->copyRows('assignment_references', 'assignment_id', $before, $after);
@@ -77,6 +83,17 @@ class DeliveryCopy
             }
         }
 
+        foreach ($resources as $old => $new) {
+            $quizLinks['{{resource:'.$old.'}}'] = '{{resource:'.$new.'}}';
+        }
+        foreach (DB::table('modules')->whereIn('id', $modules)->whereNotNull('body')->get(['id', 'body']) as $chapter) {
+            $body = strtr($chapter->body, $quizLinks);
+            if ($body !== $chapter->body) {
+                DB::table('modules')->where('id', $chapter->id)->update(['body' => $body]);
+            }
+        }
+        $target->activity_order = collect($source->activity_order ?? [])->filter(fn ($id) => isset($activityMap[$id]))
+            ->map(fn ($id) => $activityMap[$id])->values()->all();
         $target->copied_from = $sourceId;
     }
 

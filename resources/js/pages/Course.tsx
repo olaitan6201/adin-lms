@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import type { CourseSummary } from './Courses';
 import './Learning/course.css';
+import { SequenceEditor } from './Learning/SequenceEditor';
 
 export interface Activity {
     id: string;
@@ -9,6 +10,7 @@ export interface Activity {
     detail: string;
     href: string;
     at?: string | null;
+    dateLabel?: string;
     complete?: boolean;
 }
 
@@ -29,12 +31,12 @@ export default function Course({ course, teaching, activities, lecturers, outcom
     const base = `/courses/${course.id}`;
 
     return (
-        <main className="syllabus">
+        <main className="portal-page syllabus">
             <Head title={title} />
             <Link className="syllabus-back" href="/courses">← My courses</Link>
             <header className="syllabus-title">
-                <p className="syllabus-kicker">{course.code || course.external_offering_id} · {teaching ? 'Teaching workspace' : 'Course overview'}</p>
-                <h1>{title}</h1>
+                <p className="portal-kicker">{course.code || course.external_offering_id} · {teaching ? 'Teaching workspace' : 'Course overview'}</p>
+                <h1 className="portal-title">{title}</h1>
                 {course.description && <p>{course.description}</p>}
                 <p className="syllabus-meta">{[course.section && `Section ${course.section}`, course.delivery_mode,
                     course.credits && `${Number(course.credits)} credits`, course.status].filter(Boolean).join(' · ')}</p>
@@ -50,6 +52,8 @@ export default function Course({ course, teaching, activities, lecturers, outcom
                         </section>
                     )}
                     <h2>Course outline</h2>
+                    {teaching && <Link href={`${base}/learning?compose=overview`}>Draft a course introduction</Link>}
+                    {teaching && activities.length > 1 && <SequenceEditor key={activities.map((a) => a.id).join(',')} activities={activities} action={`${base}/learning/sequence`} />}
                     {!visible ? <p>{course.status === 'archived' ? 'This offering is archived.' : 'Course materials have not been published yet.'}</p>
                         : !activities.length ? <p>No activities available yet.</p> : (
                             <ol className="activity-sequence">
@@ -58,7 +62,7 @@ export default function Course({ course, teaching, activities, lecturers, outcom
                                     <div>
                                         <small>{a.type} · {a.complete ? 'Completed' : a.detail}</small>
                                         <Link href={a.href}>{a.title}</Link>
-                                        {a.at && <time dateTime={a.at}>{new Date(a.at).toLocaleString()}</time>}
+                                        {a.at && <time dateTime={a.at}>{a.dateLabel}: {new Date(a.at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</time>}
                                     </div>
                                 </li>)}
                             </ol>

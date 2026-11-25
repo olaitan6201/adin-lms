@@ -13,6 +13,7 @@ use App\Models\Offering;
 use App\Models\User;
 use App\Policies\LearningPolicy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 final class CourseOutline
 {
@@ -45,6 +46,7 @@ final class CourseOutline
                     'title' => $class->title,
                     'detail' => ucfirst($class->status->value),
                     'at' => $class->starts_at,
+                    'dateLabel' => 'Starts',
                     'href' => route('learning.classes', $offering).'#class-'.$class->id,
                 ]);
             }
@@ -66,9 +68,11 @@ final class CourseOutline
             $activities = $activities->concat($this->assessments->rows($offering, $staff, $enrolment));
         }
 
+        $positions = array_flip($offering->activity_order ?? []);
+
         return [
             'modules' => $modules->map->only(['id', 'title']),
-            'activities' => $activities->values(),
+            'activities' => $activities->sortBy(fn ($row) => $positions[$row['id']] ?? PHP_INT_MAX)->values(),
             'outcomes' => $visible ? CourseOutcome::where('curriculum_course_id', $offering->curriculum_course_id)
                 ->orderBy('id')->pluck('statement') : [],
             'lecturers' => DB::table('teaching_allocations')
@@ -76,5 +80,18 @@ final class CourseOutline
                 ->join('users', 'users.id', '=', 'lecturers.user_id')
                 ->where('offering_id', $offering->id)->orderBy('full_name')->pluck('full_name'),
         ];
+    }
+
+    public function reorder(Offering $offering, User $user, array $order): void
+    {
+        DB::transaction(function () use ($offering, $user, $order): void {
+            $locked = Offering::lockForUpdate()->findOrFail($offering->id);
+            $current = $this->build($locked, $user, true)['activities']->pluck('id')->all();
+            if (count($order) !== count($current) || array_diff($order, $current)) {
+                throw ValidationException::withMessages(['activities' => 'The outline changed. Reload it before saving the sequence.']);
+            }
+
+            $locked->forceFill(['activity_order' => $order])->save();
+        });
     }
 }

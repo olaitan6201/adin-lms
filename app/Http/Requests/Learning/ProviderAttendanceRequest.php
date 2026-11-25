@@ -49,6 +49,7 @@ final class ProviderAttendanceRequest extends FormRequest
         if ($id = $this->validated('user_id')) {
             return $id;
         }
+
         $id = $this->filled('external_student_id')
             ? Student::where('external_student_id', $this->validated('external_student_id'))->value('user_id')
             : Lecturer::where('staff_number', $this->validated('staff_number'))->value('user_id');

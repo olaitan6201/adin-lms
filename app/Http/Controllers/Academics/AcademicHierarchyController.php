@@ -49,14 +49,17 @@ class AcademicHierarchyController
                     || DB::table('curricula')->where('programme_id', $record)->where('status', 'approved')->exists())) {
                 throw ValidationException::withMessages(['department_id' => 'This programme has recorded history. Create a successor programme for the new department.']);
             }
+
             if ($table === 'departments' && $before['faculty_id'] !== $data['faculty_id']
                 && DB::table('programmes')->where('department_id', $record)->exists()) {
                 throw ValidationException::withMessages(['faculty_id' => 'This department has linked programmes. Preserve their faculty and create a successor department.']);
             }
+
             if ($table === 'semesters' && $before['session_id'] !== $data['session_id']
                 && DB::table('offerings')->where('semester_id', $record)->exists()) {
                 throw ValidationException::withMessages(['session_id' => 'This semester already has offerings. Keep their original academic session.']);
             }
+
             $query->update($data);
             AuditLog::forceCreate(['actor_id' => $request->user()->id, 'subject_key' => "$table:$record",
                 'action' => 'organisation.corrected', 'occurred_at' => now(),

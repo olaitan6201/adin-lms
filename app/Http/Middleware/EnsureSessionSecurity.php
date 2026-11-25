@@ -19,6 +19,7 @@ class EnsureSessionSecurity
         if (! $user) {
             return $next($request);
         }
+
         $guard = Auth::guard('web');
         if ($request->session()->has($guard->getName()) && ! $this->sessions->touch($request, $user)) {
             $guard->logoutCurrentDevice();
@@ -27,6 +28,7 @@ class EnsureSessionSecurity
 
             return to_route('login');
         }
+
         if (! $request->routeIs('security.challenge', 'security.verify', 'logout')
             && $request->session()->get('security.mfa_user') !== $user->id && $this->authority->requiresMfa($user)) {
             return to_route('security.challenge');

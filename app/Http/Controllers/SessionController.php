@@ -30,6 +30,7 @@ class SessionController extends Controller
         if (! Auth::attempt(['id' => $id, 'status' => 'active', 'password' => $request->validated('password')])) {
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
+
         $request->session()->regenerate();
         $request->session()->put(EnsureActiveAccount::VERSION, Auth::user()->auth_version);
 

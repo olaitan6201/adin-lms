@@ -53,11 +53,13 @@ final class LtiController
             'prompt' => 'none', 'client_id' => $tool['client'], 'redirect_uri' => $tool['redirect']] as $key => $value) {
             abort_unless($request->query($key) === $value, 403);
         }
+
         $state = $request->query('state');
         $nonce = $request->query('nonce');
         foreach ([$state, $nonce] as $opaque) {
             abort_unless(is_string($opaque) && preg_match('/^[\x21-\x7e]{1,512}$/D', $opaque), 403);
         }
+
         abort_unless(Cache::add('integrations:lti:nonce:'.hash('sha256', serialize([$issuer, $tool['client'], $nonce])), true, 600), 403);
         $pairwise = fn (string $kind, string $id) => hash_hmac('sha256', serialize([$issuer, $tool['client'], $kind, $id]), config('app.key'));
         $claims = [

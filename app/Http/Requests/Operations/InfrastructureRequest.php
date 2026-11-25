@@ -35,6 +35,7 @@ final class InfrastructureRequest extends FormRequest
         if (! $this->expectsJson()) {
             throw new ValidationException($validator, back()->withErrors($validator));
         }
+
         parent::failedValidation($validator);
     }
 }

@@ -85,6 +85,7 @@ class LecturerDirectoryController extends Controller
             if ($previous === $department) {
                 return;
             }
+
             $staff->forceFill(['department_id' => $department])->save();
             AuditLog::forceCreate(['actor_id' => $request->user()->id, 'action' => StaffAuditEvent::Transferred->value,
                 'subject_key' => "lecturer:$staff->id", 'occurred_at' => now(), 'details' => ['from' => $previous, 'to' => $department]]);

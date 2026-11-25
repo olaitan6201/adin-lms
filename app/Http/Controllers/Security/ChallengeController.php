@@ -22,6 +22,7 @@ class ChallengeController extends Controller
         if (! $enrollment->verify($request->user(), is_string($code) ? $code : '')) {
             return to_route('security.challenge')->withErrors(['code' => 'Enter a new six-digit code from your authenticator.']);
         }
+
         $request->session()->regenerate(true);
         $request->session()->put('security.mfa_user', $request->user()->id);
 

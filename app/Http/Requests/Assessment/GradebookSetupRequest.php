@@ -56,6 +56,7 @@ class GradebookSetupRequest extends FormRequest
             if ($validator->errors()->isNotEmpty()) {
                 return;
             }
+
             try {
                 AssessmentPolicy::normalize($validator->getData());
             } catch (ValidationException $exception) {
@@ -63,6 +64,7 @@ class GradebookSetupRequest extends FormRequest
                     $validator->errors()->add($key, $messages[0]);
                 }
             }
+
             $offering = $this->route('offering');
             $exists = $offering instanceof Offering && Gradebook::where('offering_id', $offering->id)->exists();
             if ($exists && blank($validator->getData()['reason'] ?? null)) {
@@ -76,6 +78,7 @@ class GradebookSetupRequest extends FormRequest
         if (! $this->expectsJson()) {
             throw new ValidationException($validator, back()->withErrors($validator));
         }
+
         parent::failedValidation($validator);
     }
 }

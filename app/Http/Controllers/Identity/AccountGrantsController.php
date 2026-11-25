@@ -60,6 +60,7 @@ class AccountGrantsController extends Controller
         if ($scope !== ScopeType::Institution && ! $id) {
             throw ValidationException::withMessages(['reference' => "Unknown {$scope->value} reference."]);
         }
+
         $this->change($request, $account, fn () => $this->changes->apply($account->id, $role, $scope->key($id), false, $request->user()->id));
 
         return back();

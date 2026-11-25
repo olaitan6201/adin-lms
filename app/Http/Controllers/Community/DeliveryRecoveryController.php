@@ -38,6 +38,7 @@ final class DeliveryRecoveryController
             if ($row->status !== DeliveryStatus::Failed) {
                 return;
             }
+
             AuditLog::forceCreate([
                 'actor_id' => $request->user()->id,
                 'subject_key' => $row->id,

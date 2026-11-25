@@ -13,6 +13,9 @@ Route::middleware('auth')->prefix('academics')->name('academics.')->group(functi
         Route::post('/organisation/{kind}', 'store')
             ->whereIn('kind', ['faculties', 'departments', 'programmes', 'levels', 'sessions', 'semesters'])
             ->name('organisation.store');
+        Route::patch('/organisation/{kind}/{record}', 'update')->whereUuid('record')
+            ->whereIn('kind', ['faculties', 'departments', 'programmes', 'levels', 'sessions', 'semesters'])
+            ->name('organisation.update');
     });
 
     Route::controller(CurriculumCatalogueController::class)->prefix('curriculum')->group(function (): void {

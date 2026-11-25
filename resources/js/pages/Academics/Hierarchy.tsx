@@ -95,7 +95,7 @@ export default function Hierarchy({
                     </ul>
                 </section>
             ))}
-            {manage && <HierarchyForms {...{ faculties, departments, sessions }} />}
+            {manage && <HierarchyForms {...{ faculties, departments, sessions }} records={{ faculties, departments, programmes, levels, sessions, semesters }} />}
         </main>
     );
 }

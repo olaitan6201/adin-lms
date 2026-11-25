@@ -38,6 +38,11 @@ class AcademicHierarchyTest extends TestCase
         $this->post("$base/programmes", $programme)->assertSessionHasNoErrors();
         $this->delete("/academics/departments/$department->id")->assertSessionHasErrors('department');
         $this->assertTrue(Programme::sole()->department->is($department));
+        $id = Programme::sole()->id;
+        $corrected = ['department_id' => Department::whereKeyNot($department->id)->sole()->id, 'name' => 'Computing Sciences'] + $programme;
+        $this->patch("$base/programmes/$id", $corrected)->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('programmes', ['id' => $id] + $corrected);
+        $this->assertDatabaseHas('audit_logs', ['subject_key' => "programmes:$id", 'action' => 'organisation.corrected']);
         $this->post("$base/levels", ['label' => '100'])->assertSessionHasNoErrors();
         $semester = ['position' => 1, 'starts_on' => '2026-01-01', 'ends_on' => '2026-02-01'];
         foreach (['2026', '2027'] as $label) {
@@ -64,6 +69,7 @@ class AcademicHierarchyTest extends TestCase
             );
             $this->get("/academics/departments/$other->id")->assertNotFound();
             $this->post('/academics/organisation/faculties', [])->assertForbidden();
+            $this->patch("/academics/organisation/departments/$own->id", ['name' => 'Changed'])->assertForbidden();
         }
     }
 }

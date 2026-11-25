@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Academics;
 
 use App\Http\Requests\AcademicHierarchyRequest;
 use App\Models\Department;
+use App\Models\AuditLog;
 use App\Services\Academics\HierarchyVisibility;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Database\QueryException;
@@ -32,6 +33,22 @@ class AcademicHierarchyController
             default => $kind,
         };
         DB::table($table)->insert(['id' => (string) Str::uuid7()] + $request->validated());
+
+        return to_route('academics.index');
+    }
+
+    public function update(AcademicHierarchyRequest $request, string $kind, string $record): RedirectResponse
+    {
+        $table = in_array($kind, ['levels','sessions'], true) ? 'academic_'.$kind : $kind;
+        DB::transaction(function () use ($request, $table, $record): void {
+            $query = DB::table($table)->where('id', $record);
+            $before = (array) (clone $query)->lockForUpdate()->firstOrFail();
+            $data = $request->validated();
+            $query->update($data);
+            AuditLog::forceCreate(['actor_id' => $request->user()->id, 'subject_key' => "$table:$record",
+                'action' => 'organisation.corrected', 'occurred_at' => now(),
+                'details' => ['before' => array_intersect_key($before, $data), 'after' => $data]]);
+        });
 
         return to_route('academics.index');
     }

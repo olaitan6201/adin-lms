@@ -23,7 +23,7 @@ export default function RecordForm({
     title: string;
     action: string;
     fields?: Field[];
-    method?: 'post' | 'delete';
+    method?: 'post' | 'delete' | 'patch';
 }) {
     return (
         <Form

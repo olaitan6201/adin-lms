@@ -17,7 +17,7 @@ export default function Delivery({ offerings, entries, terms, modes }: DeliveryP
                 const path = `/academics/delivery/${o.id}`;
                 const prepare = ['draft', 'unpublished'].includes(o.status);
                 return (
-                    <details key={o.id} className="rounded border p-3">
+                    <details key={o.id} id={`offering-${o.id}`} open={new URLSearchParams(location.search).get('offering') === o.id} className="rounded border p-3">
                         <summary>
                             {o.external_offering_id} · {o.status}
                         </summary>

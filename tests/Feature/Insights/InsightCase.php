@@ -3,7 +3,9 @@
 namespace Tests\Feature\Insights;
 
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\AuthoritySeeder;
+use Database\Seeders\DemoCampusSeeder;
+use Database\Seeders\DemoStaffAuthoritySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -17,7 +19,7 @@ abstract class InsightCase extends TestCase
     {
         parent::setUp();
         $this->withoutVite();
-        $this->seed(DatabaseSeeder::class);
+        $this->seed([AuthoritySeeder::class, DemoCampusSeeder::class, DemoStaffAuthoritySeeder::class]);
     }
 
     protected function loginAs(string $name): User

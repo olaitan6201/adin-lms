@@ -94,7 +94,7 @@ final class InsightsExportTest extends InsightCase
         $this->assertStringNotContainsString('UNRELEASED', $pdf);
         $this->assertStringNotContainsString('Tunde', $pdf);
         $this->loginAs('lecturer');
-        $this->assertSame(1, $this->data('/dashboard'.$q)['table']['totals']['Pending marking (recipients)']);
+        $this->assertSame(1, $this->data('/reports'.$q)['table']['totals']['Pending marking (recipients)']);
     }
 
     public function test_empty_selection_never_falls_back_to_all_records(): void

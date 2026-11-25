@@ -110,7 +110,7 @@ export default function Assignment({
             <h2>Submission history</h2>
             {!rows.length && <p>No submissions yet.</p>}
             {rows.map((r) => (
-                <article key={r.id}>
+                <article key={r.id} id={`submission-${r.id}`}>
                     <h3>
                         Revision {r.revision} · {r.late ? 'Late' : 'On time'}
                     </h3>

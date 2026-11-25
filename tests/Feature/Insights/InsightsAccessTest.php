@@ -19,15 +19,15 @@ final class InsightsAccessTest extends InsightCase
         $module = DB::table('modules')->where('offering_id', $member->offering_id)->value('id');
         $this->record('lesson_progress', ['module_id' => $module, 'enrolment_id' => $member->id, 'last_seen' => now(), 'completed_at' => now()]);
         DB::table('enrolments')->where('id', $member->id)->update(['completed_at' => now()]);
-        $metrics = $this->data("/dashboard?term=$term")['table']['totals'];
+        $metrics = $this->data("/reports?term=$term")['table']['totals'];
         foreach (['Courses' => 2, 'Published courses' => 2, 'Active lecturers' => 1, 'Participating departments' => 1,
             'Registered students' => 2, 'Registrations' => 3, 'Completed registrations' => 1, 'Engaged registrations' => 1,
             'Completed lessons' => 1, 'Active academic sessions' => 1, 'Offerings awaiting approval' => 0] as $name => $expected) {
             $this->assertSame($expected, $metrics[$name], $name);
         }
-        $this->assertSame(1, $this->data('/dashboard')['table']['totals']['Offerings awaiting approval']);
+        $this->assertSame(1, $this->data('/reports')['table']['totals']['Offerings awaiting approval']);
         $empty = AcademicSession::factory()->create();
-        $this->assertSame([], $this->data("/dashboard?session=$empty->id")['table']['rows']);
+        $this->assertSame([], $this->data("/reports?session=$empty->id")['table']['rows']);
     }
 
     public function test_live_withdrawal_removes_course_and_denies_direct_reports_and_exports(): void
@@ -36,14 +36,14 @@ final class InsightsAccessTest extends InsightCase
         $user = $this->loginAs('ada');
         $member = DB::table('enrolments')->where('student_id', $user->student->id)->first();
         $q = '?offering='.$member->offering_id;
-        $this->assertSame(1, $this->data('/dashboard'.$q)['table']['totals']['Registrations']);
+        $this->assertSame(1, $this->data('/reports'.$q)['table']['totals']['Registrations']);
         DB::table('enrolments')->where('id', $member->id)->update(['status' => 'withdrawn']);
-        $this->assertSame(1, $this->data('/dashboard')['table']['totals']['Courses']);
-        foreach (['/dashboard', '/reports', '/reports/export/pdf', '/reports/export/xlsx'] as $url) {
+        $this->assertSame(1, $this->data('/reports')['table']['totals']['Courses']);
+        foreach (['/reports', '/reports/export/pdf', '/reports/export/xlsx'] as $url) {
             $this->get($url.$q)->assertNotFound();
         }
         $this->actingAs(User::factory()->create());
-        $this->assertSame([], $this->data('/dashboard')['table']['rows']);
+        $this->assertSame([], $this->data('/reports')['table']['rows']);
     }
 
     public function test_allocations_and_faculty_scope_are_checked_for_page_and_download(): void
@@ -58,7 +58,7 @@ final class InsightsAccessTest extends InsightCase
         $dean = User::factory()->create();
         $this->artisan('authority:grant', ['user' => $dean->id, 'role' => 'dean', 'scope' => 'faculty:'.$course->curriculumCourse->course->department->faculty_id])->assertSuccessful();
         $this->actingAs($dean)->withSession(['security.mfa_user' => $dean->id]);
-        $this->assertSame('Academic unit', $this->data('/dashboard')['audience']);
+        $this->assertSame('Academic unit', $this->data('/reports')['audience']);
         $this->get("/reports/export/xlsx?offering=$outside->id")->assertNotFound();
     }
 }

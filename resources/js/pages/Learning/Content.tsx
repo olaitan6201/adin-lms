@@ -1,3 +1,5 @@
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { Head, Link } from '@inertiajs/react';
 import { LessonForm } from './LessonForm';
 import { ResourceForm } from './ResourceForm';
@@ -5,7 +7,6 @@ import { EntryForm } from './EntryForm';
 import { Manuscript } from './Manuscript';
 import { ResourceReader } from './ResourceReader';
 import type { Workspace, Lesson, Choice } from './contracts';
-import '../../insights/weekline.css';
 
 interface ContentProps extends Workspace {
     lessons: Lesson[];
@@ -30,7 +31,7 @@ export default function Content({
     startOverview,
 }: ContentProps) {
     return (
-        <main className={`portal-page mx-auto max-w-3xl space-y-6 px-5 py-10${staff || preview ? '' : ' weekline'}`}>
+        <main className="mx-auto w-full max-w-3xl space-y-6 p-4 sm:p-6">
             <Head title={`${title} · Lessons`} />
             <nav aria-label="Learning navigation" className="flex flex-wrap gap-5 underline">
                 <Link href={overview}>Course overview</Link>
@@ -42,8 +43,8 @@ export default function Content({
                 )}
             </nav>
             <header>
-                <p className="portal-kicker">{title}</p>
-                <h1 className="portal-title text-3xl font-semibold">Lessons and resources</h1>
+                <p className="text-sm text-muted-foreground">{title}</p>
+                <h1 className="text-3xl font-semibold">Lessons and resources</h1>
                 {preview && <p>Learner preview · Only currently released lessons and resources appear.</p>}
             </header>
             {staff && (
@@ -83,18 +84,33 @@ export default function Content({
                 }
 
                 return (
-                    <section id={`lesson-${lesson.id}`} className="space-y-3 border-t pt-5" key={lesson.id}>
-                        <p className="portal-kicker">
+                    <section id={`lesson-${lesson.id}`} className="space-y-3" key={lesson.id}>
+                        <Separator />
+                        <Badge variant="secondary">
                             {!lesson.published && 'Draft · '}
                             {lesson.kind}
-                        </p>
+                        </Badge>
                         <h2 className="text-xl font-semibold">
                             {lesson.position}. {lesson.title}
                         </h2>
                         {lesson.locked ? (
-                            <p>Locked · {prior ? <>Complete <a href={`#lesson-${prior.id}`}>{prior.title}</a> first.</>
-                                : 'The required earlier lesson is not currently available.'}</p>
-                        ) : <Manuscript text={lesson.body} resource={resource} />}
+                            <p>
+                                Locked ·{' '}
+                                {prior ? (
+                                    <>
+                                        Complete{' '}
+                                        <a className="underline" href={`#lesson-${prior.id}`}>
+                                            {prior.title}
+                                        </a>{' '}
+                                        first.
+                                    </>
+                                ) : (
+                                    'The required earlier lesson is not currently available.'
+                                )}
+                            </p>
+                        ) : (
+                            <Manuscript text={lesson.body} resource={resource} />
+                        )}
                         {lesson.materials.filter((m) => !rendered.has(m.id)).map((m) => resource(m.id))}
                         {staff ? (
                             <>
@@ -116,9 +132,13 @@ export default function Content({
                     </section>
                 );
             })}
-            {!staff && !preview && lessons.length > 0 && <nav aria-label="Continue from reading">
-                <Link className="desk-link" href={overview}>Return to course activities →</Link>
-            </nav>}
+            {!staff && !preview && lessons.length > 0 && (
+                <nav aria-label="Continue from reading">
+                    <Link className="underline" href={overview}>
+                        Return to course activities →
+                    </Link>
+                </nav>
+            )}
         </main>
     );
 }

@@ -44,7 +44,7 @@ export function ExternalResource({ href, title }: ExternalResourceProps) {
                 Open {title}
             </a>
             {player && (
-                <div className="grid aspect-video w-full place-items-center rounded border">
+                <div className="grid aspect-video w-full place-items-center">
                     {playing ? (
                         <iframe
                             className="h-full w-full"

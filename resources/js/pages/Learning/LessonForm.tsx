@@ -1,5 +1,6 @@
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { EntryForm } from './EntryForm';
 import { useState } from 'react';
 import { AvailabilityFields } from './AvailabilityFields';
@@ -27,41 +28,55 @@ export function LessonForm({
     return (
         <details open={startOverview || undefined}>
             <summary>{lesson ? 'Edit lesson or publish' : 'Author a lesson'}</summary>
-            <EntryForm action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`} label="Save lesson">
-                <label>
+            <EntryForm
+                originalTimes={lesson}
+                action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`}
+                label="Save lesson"
+            >
+                <Label className="grid gap-2">
                     Title
                     <Input name="title" required maxLength={191} defaultValue={lesson?.title} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Order
-                    <Input type="number" min="1" name="position" required defaultValue={position}
-                        onChange={(event) => setOrder(event.currentTarget.valueAsNumber)} />
-                </label>
-                <label>
+                    <Input
+                        type="number"
+                        min="1"
+                        name="position"
+                        required
+                        defaultValue={position}
+                        onChange={(event) => setOrder(event.currentTarget.valueAsNumber)}
+                    />
+                </Label>
+                <Label className="grid gap-2">
                     Require completion of
                     <NativeSelect name="prerequisite_id" defaultValue={lesson?.prerequisite_id ?? ''}>
-                        <option value="">No prior lesson</option>
-                        {lessons.filter((prior) => prior.id !== lesson?.id && prior.position < order).map((prior) => (
-                            <option key={prior.id} value={prior.id}>{prior.position}. {prior.title}</option>
-                        ))}
+                        <NativeSelectOption value="">No prior lesson</NativeSelectOption>
+                        {lessons
+                            .filter((prior) => prior.id !== lesson?.id && prior.position < order)
+                            .map((prior) => (
+                                <NativeSelectOption key={prior.id} value={prior.id}>
+                                    {prior.position}. {prior.title}
+                                </NativeSelectOption>
+                            ))}
                     </NativeSelect>
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Organisation
                     <NativeSelect name="kind" defaultValue={lesson?.kind ?? (startOverview ? 'overview' : undefined)}>
                         {lessonKinds.map((k) => (
-                            <option key={k}>{k}</option>
+                            <NativeSelectOption key={k}>{k}</NativeSelectOption>
                         ))}
                     </NativeSelect>
-                </label>
+                </Label>
                 <ManuscriptEditor lesson={lesson} quizzes={quizzes} />
-                <label>
+                <Label className="grid gap-2">
                     Publication
                     <NativeSelect name="published" defaultValue={lesson?.published ? '1' : '0'}>
-                        <option value="0">Draft</option>
-                        <option value="1">Publish</option>
+                        <NativeSelectOption value="0">Draft</NativeSelectOption>
+                        <NativeSelectOption value="1">Publish</NativeSelectOption>
                     </NativeSelect>
-                </label>
+                </Label>
                 <AvailabilityFields item={lesson} />
             </EntryForm>
         </details>

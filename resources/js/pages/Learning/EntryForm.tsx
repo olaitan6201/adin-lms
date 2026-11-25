@@ -15,15 +15,16 @@ export function EntryForm({ action, label, children, originalTimes }: EntryFormP
         <Form
             action={action}
             method="post"
-            className="my-4 grid max-w-xl gap-3 [&_input]:border [&_select]:border [&_textarea]:border [&_label]:grid"
+            className="my-4 grid max-w-xl gap-3"
             transform={(data) => {
                 const result = { ...data };
                 for (const field of ['starts_at', 'ends_at', 'opens_at', 'closes_at'] as const) {
                     if (typeof result[field] === 'string' && result[field]) {
                         const original = originalTimes?.[field];
-                        result[field] = original && result[field] === localInput(original)
-                            ? original
-                            : new Date(result[field]).toISOString();
+                        result[field] =
+                            original && result[field] === localInput(original)
+                                ? original
+                                : new Date(result[field]).toISOString();
                     }
                 }
 
@@ -33,9 +34,7 @@ export function EntryForm({ action, label, children, originalTimes }: EntryFormP
             {({ errors, processing, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     {children}
-                    <Button disabled={processing}>
-                        {processing ? 'Saving…' : label}
-                    </Button>
+                    <Button disabled={processing}>{processing ? 'Saving…' : label}</Button>
                     {recentlySuccessful && <span role="status">Saved.</span>}
                 </FormFeedback>
             )}

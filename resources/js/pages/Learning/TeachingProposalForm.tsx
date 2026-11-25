@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -17,11 +18,11 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
             <h2 className="text-xl font-semibold">{previous ? 'Revise your proposal' : 'Propose a teaching plan'}</h2>
             <EntryForm action={base} label="Submit for academic review">
                 <input type="hidden" name="previous_revision" value={previous?.revision ?? 0} />
-                <label>
+                <Label className="grid gap-2">
                     Proposed teaching title
                     <Input name="title" required maxLength={191} defaultValue={previous?.snapshot.title} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Course introduction and outcomes
                     <Textarea
                         name="introduction"
@@ -30,11 +31,11 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                         maxLength={20000}
                         defaultValue={previous?.snapshot.introduction}
                     />
-                </label>
+                </Label>
                 {Array.from({ length: count }, (_, i) => (
-                    <fieldset key={i} className="portal-panel grid gap-2 p-4">
+                    <fieldset key={i} className="grid gap-3">
                         <legend>Week {i + 1}</legend>
-                        <label>
+                        <Label className="grid gap-2">
                             Week {i + 1} title
                             <Input
                                 name={`weeks[${i}][title]`}
@@ -42,8 +43,8 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                                 maxLength={191}
                                 defaultValue={previous?.snapshot.weeks[i]?.title}
                             />
-                        </label>
-                        <label>
+                        </Label>
+                        <Label className="grid gap-2">
                             Week {i + 1} activities
                             <Textarea
                                 name={`weeks[${i}][body]`}
@@ -52,15 +53,11 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                                 maxLength={10000}
                                 defaultValue={previous?.snapshot.weeks[i]?.body}
                             />
-                        </label>
+                        </Label>
                     </fieldset>
                 ))}
                 <div className="flex gap-4">
-                    <Button variant="outline"
-                        type="button"
-                        disabled={count >= 32}
-                        onClick={() => setCount(count + 1)}
-                    >
+                    <Button variant="outline" type="button" disabled={count >= 32} onClick={() => setCount(count + 1)}>
                         Add week
                     </Button>
                     {count > 1 && (

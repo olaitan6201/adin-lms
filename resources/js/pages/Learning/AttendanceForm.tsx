@@ -1,4 +1,5 @@
-import { NativeSelect } from '@/components/ui/native-select';
+import { Label } from '@/components/ui/label';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
 import { EntryForm } from './EntryForm';
 import type { Participant } from './contracts';
@@ -16,29 +17,29 @@ export function AttendanceForm({
         <details>
             <summary>Record attendance</summary>
             <EntryForm action={action} label="Save attendance">
-                <label>
+                <Label className="grid gap-2">
                     Participant
                     <NativeSelect required name="user_id" defaultValue="">
-                        <option value="">Select participant</option>
+                        <NativeSelectOption value="">Select participant</NativeSelectOption>
                         {participants.map((p) => (
-                            <option key={p.id} value={p.id}>
+                            <NativeSelectOption key={p.id} value={p.id}>
                                 {p.full_name}
-                            </option>
+                            </NativeSelectOption>
                         ))}
                     </NativeSelect>
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Attendance
                     <NativeSelect name="status">
                         {statuses.map((m) => (
-                            <option key={m}>{m}</option>
+                            <NativeSelectOption key={m}>{m}</NativeSelectOption>
                         ))}
                     </NativeSelect>
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Reason for correction
                     <Input name="reason" />
-                </label>
+                </Label>
             </EntryForm>
         </details>
     );

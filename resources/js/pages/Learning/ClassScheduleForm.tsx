@@ -1,5 +1,6 @@
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { EntryForm, localInput } from './EntryForm';
 import type { Choice, Session } from './contracts';
 
@@ -18,11 +19,11 @@ export function ClassScheduleForm({
         <details>
             <summary>{session ? 'Edit session' : 'Schedule a class'}</summary>
             <EntryForm action={action} label="Save session" originalTimes={session}>
-                <label>
+                <Label className="grid gap-2">
                     Class title
                     <Input name="title" required defaultValue={session?.title} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Starts (local time)
                     <Input
                         type="datetime-local"
@@ -30,34 +31,34 @@ export function ClassScheduleForm({
                         required
                         defaultValue={localInput(session?.starts_at)}
                     />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Ends (local time)
                     <Input type="datetime-local" name="ends_at" required defaultValue={localInput(session?.ends_at)} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Meeting link (HTTPS)
                     <Input type="url" name="meeting_url" defaultValue={session?.meeting_url || ''} />
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Recording or alternative
                     <NativeSelect name="recording_material_id" defaultValue={session?.recording_material_id || ''}>
-                        <option value="">None</option>
+                        <NativeSelectOption value="">None</NativeSelectOption>
                         {materials.map((m) => (
-                            <option key={m.id} value={m.id}>
+                            <NativeSelectOption key={m.id} value={m.id}>
                                 {m.title}
-                            </option>
+                            </NativeSelectOption>
                         ))}
                     </NativeSelect>
-                </label>
-                <label>
+                </Label>
+                <Label className="grid gap-2">
                     Status
                     <NativeSelect name="status" defaultValue={session?.status}>
                         {statuses.map((s) => (
-                            <option key={s}>{s}</option>
+                            <NativeSelectOption key={s}>{s}</NativeSelectOption>
                         ))}
                     </NativeSelect>
-                </label>
+                </Label>
             </EntryForm>
         </details>
     );

@@ -1,3 +1,4 @@
+import { Separator } from '@/components/ui/separator';
 import { Head, Link } from '@inertiajs/react';
 import { ClassScheduleForm } from './ClassScheduleForm';
 import { AttendanceForm } from './AttendanceForm';
@@ -27,7 +28,7 @@ export default function Classroom({
     attendanceStatuses,
 }: ClassroomProps) {
     return (
-        <main className="portal-page mx-auto max-w-3xl space-y-5 px-5 py-10">
+        <main className="mx-auto w-full max-w-3xl space-y-5 px-5 py-10">
             <Head title={`${title} · Classroom`} />
             <nav aria-label="Classroom navigation" className="flex flex-wrap gap-4 underline">
                 <Link href={overview}>Course overview</Link>
@@ -35,8 +36,8 @@ export default function Classroom({
                 <Link href={board}>Course announcements and questions</Link>
             </nav>
             <header>
-                <p className="portal-kicker">{title}</p>
-                <h1 className="portal-title">Classroom and attendance</h1>
+                <p className="text-sm text-muted-foreground">{title}</p>
+                <h1 className="text-3xl font-semibold">Classroom and attendance</h1>
             </header>
             <p>
                 My attendance: {percentage === null ? 'No counted classes yet' : `${percentage}%`}. Counted classes are
@@ -46,7 +47,8 @@ export default function Classroom({
             {staff && <ClassScheduleForm statuses={classStatuses} action={`${base}/classes`} materials={materials} />}
             {!sessions.length && <p>No classes scheduled.</p>}
             {sessions.map((s) => (
-                <section key={s.id} id={`class-${s.id}`} className="space-y-2 border-t pt-4">
+                <section key={s.id} id={`class-${s.id}`} className="space-y-3">
+                    <Separator />
                     <h2 className="text-xl font-semibold">{s.title}</h2>
                     <p>
                         {new Date(s.starts_at).toLocaleString()} – {new Date(s.ends_at).toLocaleString()} · {s.status}

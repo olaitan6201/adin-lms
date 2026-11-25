@@ -1,3 +1,5 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, Head, Link } from '@inertiajs/react';
@@ -35,21 +37,23 @@ function resultSummary({ term, matches, truncated }: SearchProps): string {
 
 export default function CourseSearch(props: SearchProps) {
     return (
-        <main className="portal-page">
+        <main className="mx-auto w-full max-w-3xl space-y-5 p-4 sm:p-6">
             <Head title="Search my courses" />
-            <Link href="/courses" className="desk-link">← My courses</Link>
-            <header className="desk-heading">
-                <p className="portal-kicker">Course catalogue</p>
-                <h1 className="portal-title">Search my courses</h1>
+            <Link href="/courses" className="underline">
+                ← My courses
+            </Link>
+            <header className="space-y-2">
+                <p className="text-sm text-muted-foreground">Course catalogue</p>
+                <h1 className="text-3xl font-semibold">Search my courses</h1>
                 <p>Find a published course in your current registrations.</p>
             </header>
             <Form action="/search" method="get" role="search" className="my-6 max-w-2xl">
                 {({ processing, errors }) => (
                     <>
-                        <label htmlFor="course-query" className="block font-semibold">
+                        <Label htmlFor="course-query" className="block font-semibold">
                             Course search
-                        </label>
-                        <div className="course-search-controls">
+                        </Label>
+                        <div className="mt-2 flex gap-2">
                             <Input
                                 id="course-query"
                                 type="search"
@@ -71,13 +75,17 @@ export default function CourseSearch(props: SearchProps) {
                 )}
             </Form>
             <p role="status">{resultSummary(props)}</p>
-            <ul className="mt-4 divide-y divide-slate-300">
+            <ul className="mt-4 space-y-2">
                 {props.matches.map((course) => (
-                    <li key={course.id} className="space-y-1 py-4">
-                        <Link href={`/courses/${course.id}`} className="desk-link">
-                            {course.code} · {course.title}
-                        </Link>
-                        {course.external_offering_id && <p>{course.external_offering_id}</p>}
+                    <li key={course.id}>
+                        <Card>
+                            <CardContent className="space-y-1">
+                                <Link href={`/courses/${course.id}`} className="underline">
+                                    {course.code} · {course.title}
+                                </Link>
+                                {course.external_offering_id && <p>{course.external_offering_id}</p>}
+                            </CardContent>
+                        </Card>
                     </li>
                 ))}
             </ul>

@@ -1,5 +1,6 @@
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Head, Link } from '@inertiajs/react';
-import './Learning/course.css';
 
 export type CourseSummary = {
     id: string;
@@ -27,11 +28,11 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
     ];
 
     return (
-        <main className="portal-page syllabus">
+        <main className="mx-auto w-full max-w-6xl space-y-5 p-4 sm:p-6">
             <Head title="My courses" />
-            <header className="syllabus-title">
-                <p className="portal-kicker">Course catalogue</p>
-                <h1 className="portal-title">My courses</h1>
+            <header className="space-y-2">
+                <p className="text-sm text-muted-foreground">Course catalogue</p>
+                <h1 className="text-3xl font-semibold">My courses</h1>
                 <p>
                     {courses.length} {courses.length === 1 ? 'offering' : 'offerings'} linked to your account
                 </p>
@@ -47,22 +48,30 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
                 )}
             </nav>
             {courses.length === 0 && <p>No active course registrations are linked to your account.</p>}
-            <ul className="catalogue-list">
+            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {courses.map((course) => (
                     <li key={course.id}>
-                        <small>
-                            {course.code || 'Course offering'} · {course.status}
-                        </small>
-                        <Link href={`/courses/${course.id}`}>{course.title || course.external_offering_id}</Link>
-                        <p>
-                            {[
-                                course.external_offering_id,
-                                course.section && `Section ${course.section}`,
-                                course.delivery_mode,
-                            ]
-                                .filter(Boolean)
-                                .join(' · ')}
-                        </p>
+                        <Card className="h-full">
+                            <CardHeader>
+                                <Badge variant="secondary">
+                                    {course.code || 'Course offering'} · {course.status}
+                                </Badge>
+                                <CardTitle>
+                                    <Link className="underline" href={`/courses/${course.id}`}>
+                                        {course.title || course.external_offering_id}
+                                    </Link>
+                                </CardTitle>
+                                <CardDescription>
+                                    {[
+                                        course.external_offering_id,
+                                        course.section && `Section ${course.section}`,
+                                        course.delivery_mode,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' · ')}
+                                </CardDescription>
+                            </CardHeader>
+                        </Card>
                     </li>
                 ))}
             </ul>

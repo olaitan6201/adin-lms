@@ -4,7 +4,6 @@ use App\Models\AssessmentItem;
 use App\Models\Examination;
 use App\Models\ExamSlot;
 use App\Models\Gradebook;
-use App\Models\GradingPolicy;
 use App\Models\Offering;
 use App\Models\Question;
 use App\Models\QuestionBank;
@@ -28,11 +27,10 @@ if (! $socket || ! app()->environment('testing') || ! $isolated || DB::getDataba
 
 $ids = DB::transaction(function (): array {
     $course = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
-    $policy = GradingPolicy::forceCreate(['name' => 'QA', 'version' => 1, 'rounding_rule' => 'half_up']);
-    $book = Gradebook::forceCreate(['offering_id' => $course->id, 'policy_id' => $policy->id]);
+    $book = Gradebook::where('offering_id', $course->id)->sole();
     $item = AssessmentItem::forceCreate([
         'gradebook_id' => $book->id, 'kind' => 'exam', 'title' => 'QA paper',
-        'maximum_score' => 1, 'weight_percent' => 100,
+        'maximum_score' => 1, 'weight_percent' => 0,
     ]);
     $exam = Examination::forceCreate([
         'item_id' => $item->id, 'duration_seconds' => 300, 'max_attempts' => 1,

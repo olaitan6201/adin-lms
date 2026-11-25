@@ -14,7 +14,8 @@ mode=${2:-journey}
 revision=$(git rev-parse HEAD)
 test -f vendor/autoload.php
 export QA_ROOT
-QA_ROOT=$(mktemp -d /tmp/adin-qa.XXXXXXXX)
+mkdir -p "$PWD/.agent-work/qualification-runs"
+QA_ROOT=$(mktemp -d "$PWD/.agent-work/qualification-runs/q.XXXXXX")
 server=''
 cleanup() {
     if [[ -n "$server" ]]; then kill -- "-$server" 2>/dev/null || true; fi
@@ -28,7 +29,6 @@ trap cleanup EXIT
 mkdir "$QA_ROOT"/{app,socket}
 git archive "$revision" | tar -x -C "$QA_ROOT/app"
 mkdir -p "$QA_ROOT/app/scripts/qualification"
-cp scripts/qualification/{engines.sh,fixture.php,journey.py,reconcile.sql} "$QA_ROOT/app/scripts/qualification/"
 cp -a --reflink=auto vendor "$QA_ROOT/app/"
 cd "$QA_ROOT/app"
 source scripts/qualification/engines.sh

@@ -70,9 +70,7 @@
         };
         const frame = document.createElement('iframe');
         frame.title = 'Reading exercise';
-        frame.width = '95%';
-        frame.height = '420';
-        frame.src = 'reading.html';
+        frame.src = 'exercise.html';
         document.querySelector('#player').append(frame);
     });
     parent.postMessage('reading-ready', origin);

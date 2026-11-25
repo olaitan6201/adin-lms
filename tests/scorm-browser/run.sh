@@ -12,7 +12,8 @@ for port in "$PORTAL_TEST_PORT" "${SCORM_PLAYER_PORT:-19292}"; do
     if curl -s --max-time 1 "http://127.0.0.1:$port/" >/dev/null; then exit 1; fi
 done
 zip -qj "$run/reading.zip" resources/scorm-profile/imsmanifest.xml resources/scorm-static/reading.{js,html} tests/Fixtures/scorm/lesson.txt
-sed "s|LMS_ORIGIN|$APP_URL|g" docs/operations/scorm-static.nginx.conf.example > "$run/static.conf"
+sed -e "s|LMS_ORIGIN|$APP_URL|g" -e "s|STATIC_ORIGIN|$SCORM_STATIC_ORIGIN|g" \
+    resources/scorm-profile/static.nginx.conf.example > "$run/static.conf"
 cat > "$run/nginx.conf" <<EOF
 pid "$run/nginx.pid";
 error_log "$run/nginx.log";

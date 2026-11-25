@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reading exercise</title>
+    <link rel="stylesheet" href="reader.css">
+    <script src="reading.js" defer></script>
+</head>
+<body>
+    <main class="exercise">
+        <h1>Reading exercise</h1>
+        <p id="lesson"></p>
+        <label for="note">Reading note</label>
+        <textarea id="note" rows="4" maxlength="4096" aria-describedby="note-hint"></textarea>
+        <p id="note-hint">Pause to keep your place. Completing the reading makes your note final.</p>
+        <div class="actions">
+            <button type="button" id="pause" disabled>Save and pause</button>
+            <button type="button" id="finish" disabled>Complete reading</button>
+        </div>
+        <p id="status" role="status">Opening reading…</p>
+    </main>
+</body>
+</html>

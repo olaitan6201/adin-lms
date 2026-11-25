@@ -1,0 +1,28 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: white; color: #1a1a18; font: 1rem/1.55 system-ui, sans-serif; }
+#player iframe { display: block; width: 100%; height: 100vh; border: 0; }
+.exercise {
+    max-width: 52rem;
+    padding: clamp(1rem, 4vw, 2rem);
+    overflow-wrap: anywhere;
+}
+h1 { margin: 0; font: 500 clamp(1.5rem, 3vw, 2rem)/1.2 Georgia, serif; }
+#lesson { white-space: pre-wrap; margin: .8rem 0 1.6rem; }
+label { display: block; margin-bottom: .4rem; font-weight: 650; }
+textarea { width: 100%; padding: .7rem; border: 1px solid #687167; resize: vertical; font: inherit; }
+#note-hint { color: #505950; margin: .35rem 0 1rem; font-size: .9rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+button {
+    min-height: 44px;
+    border: 1px solid #005d22;
+    padding: .65rem 1rem;
+    background: #005d22;
+    color: white;
+    font: 650 1rem/1.4 system-ui, sans-serif;
+    cursor: pointer;
+}
+#finish { background: white; color: #005d22; }
+button:hover:not(:disabled) { text-decoration: underline; }
+button:disabled { opacity: .65; cursor: default; }
+#status { border-left: .25rem solid #d6b469; padding: .45rem .75rem; background: #fbfaf5; }
+:focus-visible { outline: 3px solid #075985; outline-offset: 2px; box-shadow: 0 0 0 2px white; }

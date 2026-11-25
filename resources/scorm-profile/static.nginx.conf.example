@@ -1,0 +1,15 @@
+# Include inside a dedicated static-only vhost, rooted at resources/scorm-static.
+# Replace STATIC_ORIGIN and LMS_ORIGIN with exact configured origins, no trailing slash.
+if ($http_cookie != "") { return 403; }
+if ($http_authorization != "") { return 403; }
+add_header Content-Security-Policy "default-src 'none'; style-src STATIC_ORIGIN/reader.css; script-src 'self'; frame-src 'self'; frame-ancestors 'self' LMS_ORIGIN; base-uri 'none'; form-action 'none'; object-src 'none'" always;
+add_header Referrer-Policy "no-referrer" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Cache-Control "no-store" always;
+access_log off;
+location ~ ^/(player\.html|exercise\.html|player\.js|reading\.js|reader\.css)$ {
+    limit_except GET { deny all; }
+    types { text/html html; application/javascript js; text/css css; }
+    try_files $uri =404;
+}
+location / { return 404; }

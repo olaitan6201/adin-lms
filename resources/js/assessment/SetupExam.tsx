@@ -1,5 +1,6 @@
+import { ExamWindow } from './ExamWindow';
 import { useState } from 'react';
-import { Check, Field, Post, WindowFields } from './Fields';
+import { Check, Field, Post } from './Fields';
 import { questionKinds } from './contracts';
 
 export function SetupExam({ id }: { id: string }) {
@@ -7,7 +8,7 @@ export function SetupExam({ id }: { id: string }) {
 
     return (
         <Post url={`/assessment-items/${id}/exam`} button="Create examination">
-            <WindowFields />
+            <ExamWindow />
             <Field name="duration_seconds" type="number" label="Duration (seconds)" value="3600" />
             <Field name="max_attempts" type="number" label="Attempt limit" value="1" />
             <Check name="shuffle" label="Shuffle choices" />

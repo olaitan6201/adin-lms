@@ -33,7 +33,7 @@ class ExamAuthorController
         abort_unless($item->kind === ItemKind::Exam, 422);
         $action->run($item, $request->validated());
 
-        return back();
+        return to_route('assessment.desk', $item->gradebook->offering_id);
     }
 
     public function accommodate(

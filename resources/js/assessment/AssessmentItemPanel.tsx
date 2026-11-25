@@ -1,9 +1,10 @@
+import { ExamWindow } from './ExamWindow';
 import { Link } from '@inertiajs/react';
 import type { PolicyDefinition } from './SetupBook';
 import { SetupAssignment } from './SetupAssignment';
 import { SetupExam } from './SetupExam';
 import { acceptsDirectScores, type ItemKind } from './contracts';
-import { Field, Post, Roster, WindowFields, type Member } from './Fields';
+import { Field, Post, Roster, type Member } from './Fields';
 
 export type Item = {
     id: string;
@@ -72,7 +73,7 @@ export function AssessmentItemPanel({ item: i, teacher, learner, officer, roster
                             <summary>Individual accommodation</summary>
                             <Post url={`/examinations/${i.exam}/accommodations`} button="Approve override">
                                 <Roster members={roster} />
-                                <WindowFields />
+                                <ExamWindow />
                                 <Field type="number" name="duration_seconds" label="Duration in seconds" />
                                 <Field type="number" name="max_attempts" label="Attempt cap" />
                             </Post>

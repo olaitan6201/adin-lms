@@ -27,7 +27,7 @@ class BuildExamination
             ]);
             $course = $item->courseId();
             $points = BigDecimal::zero();
-            $rows = $data['selections'] ?? $data['questions'];
+            $rows = $data['selections'] ?? $data['questions'] ?? [];
             $selected = [];
             foreach (array_values($rows) as $i => $row) {
                 if (isset($data['selections'])) {
@@ -42,6 +42,13 @@ class BuildExamination
                 $points = $points->plus((string) $row['points']);
             }
 
+            $draws = array_values($data['draws'] ?? []);
+            if ($draws !== []) {
+                app(BankDrawSlots::class)->append($exam, $course, $draws, count($rows));
+                foreach ($draws as $row) {
+                    $points = $points->plus((string) $row['points']);
+                }
+            }
             if (! $points->isEqualTo((string) $item->maximum_score)) {
                 throw ValidationException::withMessages(['questions' => 'Slot points must equal the item maximum.']);
             }

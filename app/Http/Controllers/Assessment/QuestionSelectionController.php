@@ -6,6 +6,7 @@ use App\Enums\Assessment\ItemKind;
 use App\Http\Controllers\Controller;
 use App\Models\AssessmentItem;
 use App\Models\Examination;
+use App\Models\QuestionBank;
 use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\QuestionBankBrowser;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ class QuestionSelectionController extends Controller
             'title' => $item->title,
             'maximum' => (string) $item->maximum_score,
             'questions' => $questions,
+            'topics' => QuestionBank::where('course_id', $item->courseId())->orderBy('topic')->get(['id', 'topic']),
             'bank' => '/courses/'.$item->gradebook->offering_id.'/question-banks',
         ]);
     }

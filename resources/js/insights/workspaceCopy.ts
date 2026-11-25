@@ -1,0 +1,32 @@
+export const workspaceCopy = {
+    study: {
+        title: 'My study desk',
+        lead: 'Plan your next class or assignment.',
+        queue: 'Due dates & classes',
+        hint: 'Next 12, in date order',
+        empty: 'No assignments, exams or scheduled classes to show.',
+        side: 'My course shelf',
+        action: 'Browse my courses',
+        url: '/courses',
+    },
+    teaching: {
+        title: 'Teaching desk',
+        lead: 'Return feedback on work from your allocated courses.',
+        queue: 'Marking queue',
+        hint: 'Oldest submissions first · up to 12',
+        empty: 'No submissions or exam scripts awaiting your mark.',
+        side: 'Teaching allocations',
+        action: 'View workload',
+        url: '/workload',
+    },
+    management: {
+        title: 'Academic operations',
+        lead: 'Review the decisions and exceptions assigned to your role.',
+        queue: 'Action queue',
+        hint: 'Exceptions, approvals and draft offerings · up to 12',
+        empty: 'No decisions or exceptions awaiting your role.',
+        side: 'Course reports',
+        action: 'Open reports',
+        url: '/reports',
+    },
+} as const;

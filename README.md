@@ -24,10 +24,11 @@ operator. This appends evidence; it does not change the lesson or send a notice.
 Let the scheduled worker retry, or use `php artisan queue:retry <failed-job-uuid>`
 if its retries were exhausted. Do not guess a missing rule or time.
 
-Use PHP 8.3+ with Composer and PDO SQLite, and Node.js 24 with npm. From a fresh checkout:
+Use PHP 8.4.1 or later in the PHP 8 series with Composer and PDO SQLite, and Node.js 24 with npm. PHP 8.4.1 is the minimum for the locked dependencies; use a current patch release for deployment. From a fresh checkout:
 
 ```sh
 composer install
+composer check-platform-reqs
 cp .env.example .env
 php artisan key:generate
 touch database/database.sqlite

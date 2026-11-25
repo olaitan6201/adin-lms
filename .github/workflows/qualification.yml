@@ -5,6 +5,52 @@ permissions:
   contents: read
 
 jobs:
+  minimum-php:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build exact PHP patch release
+        run: docker build -t adin-php-minimum - < .github/ci/php-minimum.Dockerfile
+      - name: Install release lock, bootstrap app and migrate empty SQLite database
+        run: |
+          docker run --rm -i --user "$(id -u):$(id -g)" -v "$PWD:/app" \
+            adin-php-minimum sh -eu <<'SH'
+          php -r 'echo PHP_VERSION, PHP_EOL; exit(PHP_VERSION_ID === 80401 ? 0 : 1);'
+          composer validate --strict
+          composer install --no-interaction --prefer-dist
+          composer check-platform-reqs
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+          touch database/database.sqlite
+          php artisan migrate --no-interaction
+          SH
+
+  typecheck:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  pint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: bcmath, dom, fileinfo, gd, intl, mbstring, xml, zip
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: vendor/bin/pint --test
+
   browser:
     runs-on: ubuntu-24.04
     timeout-minutes: 15

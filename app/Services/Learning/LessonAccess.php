@@ -3,7 +3,6 @@
 namespace App\Services\Learning;
 
 use App\Enums\EnrolmentStatus;
-use App\Models\Module;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +19,11 @@ final class LessonAccess
                     ->whereColumn('progress.module_id', 'lesson.prerequisite_id')));
     }
 
-    public static function completers(Module $lesson, ?CarbonImmutable $completedBy): Builder
+    public static function completers(string $offering, string $prerequisite, ?CarbonImmutable $completedBy): Builder
     {
         return self::completions()->select('student.user_id')
-            ->where('registration.offering_id', $lesson->offering_id)
-            ->where('progress.module_id', $lesson->prerequisite_id)
+            ->where('registration.offering_id', $offering)
+            ->where('progress.module_id', $prerequisite)
             ->when($completedBy, fn ($query) => $query->where('progress.completed_at', '<=', $completedBy));
     }
 

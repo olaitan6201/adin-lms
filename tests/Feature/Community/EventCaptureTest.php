@@ -69,6 +69,7 @@ final class EventCaptureTest extends CommunityTestCase
         $this->actingAs($eligible)->post($complete)->assertRedirect();
         $this->travel(2)->hours();
         $this->actingAs($late)->post($complete)->assertRedirect();
+        $lesson->forceFill(['prerequisite_id' => null])->save();
         $this->artisan('community:notify')->assertSuccessful();
 
         $notices = Notification::where('event_key', 'material:'.$version->id);

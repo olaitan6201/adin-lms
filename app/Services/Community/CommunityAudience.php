@@ -18,10 +18,15 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class CommunityAudience
 {
-    public function materialLearners(Module $lesson, ?CarbonImmutable $releaseAt = null): Builder
+    public function materialLearners(Module $lesson): Builder
     {
-        return $this->learners($lesson->offering_id, registeredBy: $releaseAt)
-            ->when($lesson->prerequisite_id, fn ($q) => $q->whereIn('id', LessonAccess::completers($lesson, $releaseAt)));
+        return $this->forMaterialRelease($lesson->offering_id, $lesson->prerequisite_id, null);
+    }
+
+    public function forMaterialRelease(string $offering, ?string $prerequisite, ?CarbonImmutable $releaseAt): Builder
+    {
+        return $this->learners($offering, registeredBy: $releaseAt)
+            ->when($prerequisite, fn ($q) => $q->whereIn('id', LessonAccess::completers($offering, $prerequisite, $releaseAt)));
     }
 
     /** @return Builder<User> */

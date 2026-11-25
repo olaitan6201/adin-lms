@@ -18,6 +18,7 @@ class CourseController extends Controller
     public function index(Request $request, ScopedAuthority $authority): Response
     {
         return Inertia::render('Courses', [
+            'workloadUrl' => $request->user()->lecturer ? route('workload.index') : null,
             'historyUrl' => $request->user()->student
                 ? route('students.history', $request->user()->student)
                 : null,

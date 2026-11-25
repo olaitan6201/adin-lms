@@ -2,6 +2,7 @@ import { CourseActivityList } from '../components/CourseActivityList';
 import { Head, Link } from '@inertiajs/react';
 import type { CourseSummary } from './Courses';
 import './Learning/course.css';
+import '../insights/weekline.css';
 import { SequenceEditor } from './Learning/SequenceEditor';
 
 export interface Activity {
@@ -46,7 +47,7 @@ export default function Course({
     const base = `/courses/${course.id}`;
 
     return (
-        <main className="portal-page syllabus">
+        <main className={`portal-page syllabus${teaching ? '' : ' weekline'}`}>
             <Head title={title} />
             <Link className="syllabus-back" href="/courses">
                 ← My courses
@@ -68,11 +69,18 @@ export default function Course({
                         .join(' · ')}
                 </p>
             </header>
-            <div className="syllabus-grid">
+            {!teaching && visible && activities.length > 0 && (
+                <nav aria-label="Course sequence">
+                    <h2>Course outline</h2>
+                    <CourseActivityList activities={activities} />
+                </nav>
+            )}
+            <div className="syllabus-grid wl-course-grid">
                 <div>
                     {visible && !teaching && (lessons.length > 0 || next) && (
-                        <section className="study-progress">
-                            <h2>{next ? 'Continue learning' : 'Reading complete'}</h2>
+                        <section className="wl-focus">
+                            <p className="wl-label">{next ? `Up next / ${next.type}` : 'Progress'}</p>
+                            <h2>{next?.title ?? 'Reading complete'}</h2>
                             {lessons.length > 0 && (
                                 <>
                                     <p>
@@ -85,10 +93,10 @@ export default function Course({
                                     />
                                 </>
                             )}
-                            {next && <Link href={next.href}>Continue: {next.title} →</Link>}
+                            {next && <Link className="wl-button" href={next.href}>Open {next.type.toLowerCase()} →</Link>}
                         </section>
                     )}
-                    <h2>Course outline</h2>
+                    {teaching && <h2>Course outline</h2>}
                     {teaching && course.status === 'draft' && (
                         <p>
                             <Link href={`${base}/learning/teaching-plan`}>Teaching plan and academic review</Link>
@@ -110,11 +118,11 @@ export default function Course({
                         </p>
                     ) : !activities.length ? (
                         <p>No activities available yet.</p>
-                    ) : (
+                    ) : teaching ? (
                         <CourseActivityList activities={activities} />
-                    )}
+                    ) : null}
                 </div>
-                <aside>
+                <aside className={teaching ? undefined : 'wl-panel'}>
                     <h2>Course information</h2>
                     <h3>Teaching team</h3>
                     <p>{lecturers.join(', ') || 'No lecturer listed yet.'}</p>

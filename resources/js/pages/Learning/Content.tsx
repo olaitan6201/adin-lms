@@ -5,6 +5,7 @@ import { EntryForm } from './EntryForm';
 import { Manuscript } from './Manuscript';
 import { ResourceReader } from './ResourceReader';
 import type { Workspace, Lesson, Choice } from './contracts';
+import '../../insights/weekline.css';
 
 interface ContentProps extends Workspace {
     lessons: Lesson[];
@@ -29,7 +30,7 @@ export default function Content({
     startOverview,
 }: ContentProps) {
     return (
-        <main className="portal-page mx-auto max-w-3xl space-y-6 px-5 py-10">
+        <main className={`portal-page mx-auto max-w-3xl space-y-6 px-5 py-10${staff || preview ? '' : ' weekline'}`}>
             <Head title={`${title} · Lessons`} />
             <nav aria-label="Learning navigation" className="flex flex-wrap gap-5 underline">
                 <Link href={overview}>Course overview</Link>
@@ -108,6 +109,9 @@ export default function Content({
                     </section>
                 );
             })}
+            {!staff && !preview && lessons.length > 0 && <nav aria-label="Continue from reading">
+                <Link className="desk-link" href={overview}>Return to course activities →</Link>
+            </nav>}
         </main>
     );
 }

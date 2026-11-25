@@ -1,28 +1,16 @@
 import { workspaceCopy } from '../../insights/workspaceCopy';
 import { Head, Link } from '@inertiajs/react';
 import { LearnerTime } from '../../components/LearnerTime';
-import { ReleasedWork, type Release } from '../../insights/ReleasedWork';
+import type { Release } from '../../insights/ReleasedWork';
+import { StudyWeek, type AgendaItem, type DeskCourse } from '../../insights/StudyWeek';
 
-type Task = {
-    title: string;
-    kind: string;
-    context: string;
-    at: string | null;
-    href: string;
-    action: string;
-};
-type Course = {
-    title: string;
-    code: string;
-    href: string;
-};
 type Workspace = keyof typeof workspaceCopy;
 type Props = {
     audience: string;
     workspace: Workspace;
     name: string;
-    queue: Task[];
-    courses: Course[];
+    queue: AgendaItem[];
+    courses: DeskCourse[];
     releases: Release[];
     population: Record<string, number> | null;
     tools: {
@@ -34,6 +22,9 @@ type Props = {
 
 
 export default function Dashboard({ audience, workspace, name, queue, courses, releases, tools, population }: Props) {
+    if (workspace === 'study') {
+        return <StudyWeek name={name} courses={courses} queue={queue} releases={releases} />;
+    }
     const desk = workspaceCopy[workspace];
     return (
         <main className="portal-page">
@@ -88,7 +79,6 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                             </div>
                         )}
                     </section>
-                    {workspace === 'study' && <ReleasedWork releases={releases} />}
                     {population && <section className="mt-8 border-t pt-5" aria-labelledby="population-title">
                         <h2 className="desk-section" id="population-title">Institution census</h2>
                         <p className="desk-note">Current records, including people and units without course activity.</p>

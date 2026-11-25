@@ -25,6 +25,9 @@ test('a registered learner can find a course and submit a persisted revision', a
     await password.press('Enter');
     await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.getByRole('heading', { name: 'My study desk' })).toBeVisible();
+    const week = page.getByRole('list', { name: 'This week, Monday through Sunday' });
+    await expect(week.getByRole('listitem')).toHaveCount(7);
+    await expect(week.locator('[aria-current="date"]')).toContainText('Today');
     await expect(page.getByText('Computing reflection', { exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: 'View assignment', exact: true })).toBeVisible();
 
@@ -37,6 +40,9 @@ test('a registered learner can find a course and submit a persisted revision', a
     await page.getByLabel('Course search', { exact: true }).press('Enter');
     await page.getByRole('link', { name: /introduction to computing/i }).press('Enter');
     await expect(page.getByRole('heading', { name: /introduction to computing/i }).first()).toBeVisible();
+    await page.getByRole('link', { name: 'Open lesson' }).press('Enter');
+    await expect(page.getByRole('heading', { name: 'First reading' })).toBeVisible();
+    await page.getByRole('link', { name: 'Return to course activities' }).press('Enter');
 
     const activity = page.locator('.activity-sequence li').filter({ hasText: 'Computing reflection' });
     await expect(activity.locator('time')).toHaveText(due);

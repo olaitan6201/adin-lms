@@ -37,9 +37,25 @@ final class CaseRegister
             $next = $case->kind->next($case->stage);
             abort_if($case->stage !== $expected || $next === null, 409, 'Case has changed; refresh before continuing.');
             abort_if($case->kind === PrivacyCaseKind::Hold && $actor->id === $case->owner_id, 403, 'Another privacy officer must release the hold.');
+            if ($case->kind === PrivacyCaseKind::Disposition) {
+                $this->checkDisposition($actor, $case, $next);
+            }
             $case->forceFill(['stage' => $next, 'evidence' => $reference])->save();
             $this->record($actor, $case);
         });
+    }
+
+    private function checkDisposition(User $actor, PrivacyCaseFile $case, PrivacyCaseStage $next): void
+    {
+        if (in_array($next, [PrivacyCaseStage::Authorised, PrivacyCaseStage::Disposed], true)) {
+            $held = PrivacyCaseFile::where('subject_id', $case->subject_id)->where('kind', PrivacyCaseKind::Hold)
+                ->where('stage', PrivacyCaseStage::Open)->lockForUpdate()->first();
+            abort_if($held !== null, 409, 'Active records hold; stop disposition.');
+        }
+        if (in_array($next, [PrivacyCaseStage::Authorised, PrivacyCaseStage::Checked], true)) {
+            $previous = $case->receipts()->get()->firstOrFail(fn ($receipt): bool => $receipt->details['stage'] === $case->stage->value);
+            abort_if($previous->actor_id === $actor->id, 403, 'Independent review required.');
+        }
     }
 
     private function record(User $actor, PrivacyCaseFile $case): void

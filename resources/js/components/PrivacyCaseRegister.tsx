@@ -45,8 +45,12 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                                 <option value="subject_access">Subject access</option>
                                 <option value="breach">Breach response</option>
                                 <option value="retention_hold">Retention hold</option>
+                                <option value="records_disposition">Records disposition (custodian executed)</option>
                             </select>
                         </label>
+                        <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
+                            decision. The custodian checks holds again before acting in the source system and returns an
+                            execution receipt for independent verification. Advancing a case does not delete data.</p>
                         <label>
                             External case reference
                             <input className={field} name="reference" required maxLength={64} />

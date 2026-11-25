@@ -3,9 +3,10 @@ import { useId, type ComponentProps } from 'react';
 type FieldProps = Omit<ComponentProps<'input'>, 'id'> & {
     label: string;
     error?: string;
+    announceError?: boolean;
 };
 
-export function PortalField({ label, error, 'aria-describedby': hint, ...input }: FieldProps) {
+export function PortalField({ label, error, announceError = true, 'aria-describedby': hint, ...input }: FieldProps) {
     const id = useId();
     const errorId = `${id}-error`;
     const description = [hint, error && errorId].filter(Boolean).join(' ') || undefined;
@@ -21,7 +22,7 @@ export function PortalField({ label, error, 'aria-describedby': hint, ...input }
                 aria-describedby={description}
             />
             {error && (
-                <p id={errorId} role="alert">
+                <p id={errorId} role={announceError ? 'alert' : undefined}>
                     {error}
                 </p>
             )}

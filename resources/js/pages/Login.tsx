@@ -47,6 +47,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 autoCapitalize="none"
                                 spellCheck={false}
                                 error={errors.email}
+                                announceError={false}
                                 required
                             />
                             <PortalField
@@ -56,6 +57,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 name="password"
                                 autoComplete="current-password"
                                 error={errors.password}
+                                announceError={false}
                                 required
                             />
                             <SubmitButton processing={processing}>Sign in</SubmitButton>

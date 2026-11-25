@@ -39,6 +39,9 @@ class AcademicNavigation
 
         return array_values(
             array_filter([
+                $institution->contains('examinations.manage')
+                    ? ['label' => 'Examinations office', 'href' => route('assessment.office', [], false)]
+                    : null,
                 $oversight || $institution->contains('academics.manage')
                     ? ['label' => 'Organisation', 'href' => route('academics.index', [], false)]
                     : null,

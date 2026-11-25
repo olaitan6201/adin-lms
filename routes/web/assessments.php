@@ -5,12 +5,14 @@ use App\Http\Controllers\Assessment\AssessmentSetupController;
 use App\Http\Controllers\Assessment\AssignmentController;
 use App\Http\Controllers\Assessment\AssignmentInstructionsController;
 use App\Http\Controllers\Assessment\ExamAuthorController;
+use App\Http\Controllers\Assessment\ExaminationsOfficeController;
 use App\Http\Controllers\Assessment\ExamSessionController;
 use App\Http\Controllers\Assessment\GradebookController;
 use App\Http\Controllers\Assessment\ModerationEvidenceController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function (): void {
+    Route::get('examinations-office', ExaminationsOfficeController::class)->name('assessment.office');
     Route::prefix('courses/{offering}/assessments')->group(function (): void {
         Route::get('/', AssessmentDeskController::class)->name('assessment.desk');
         Route::post('/', [AssessmentSetupController::class, 'book'])->name('assessment.activate');

@@ -10,6 +10,13 @@ use Inertia\Testing\AssertableInertia as Page;
 
 class GradeDeliveryTest extends AssessmentCase
 {
+    public function test_officer_can_reach_offerings_without_a_teaching_allocation(): void
+    {
+        $this->as($this->officer->refresh())->get('/examinations-office')->assertInertia(fn (Page $p) => $p
+            ->where('offerings.data.0.href', $this->desk)->where('academicLinks.0.href', '/examinations-office'));
+        $this->as($this->member->student->user)->get('/examinations-office')->assertForbidden();
+    }
+
     public function test_weight_validation_published_boundary_and_regrade_evidence(): void
     {
         $this->as($this->marker)->post($this->desk, [

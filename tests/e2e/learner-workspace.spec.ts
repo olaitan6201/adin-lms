@@ -8,7 +8,10 @@ test('a registered learner can find a course and submit a persisted revision', a
     await page.locator('input[name="email"]').fill(`${learner}@demo.example.test`);
     await page.locator('input[name="password"]').fill('password');
     await page.getByRole('button', { name: /sign in/i }).click();
-    await expect(page).not.toHaveURL(/\/login$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page.getByRole('heading', { name: 'My study desk' })).toBeVisible();
+    await expect(page.getByText('Computing reflection', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View assignment', exact: true })).toBeVisible();
 
     await page.goto('/search?q=CSC101');
     await page.getByRole('link', { name: /introduction to computing/i }).click();
@@ -23,4 +26,8 @@ test('a registered learner can find a course and submit a persisted revision', a
     await page.reload();
     await expect(page.getByText(reflection, { exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+
+    await page.goto('/dashboard');
+    await expect(page.getByRole('heading', { name: 'My study desk' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View assignment', exact: true })).toHaveCount(0);
 });

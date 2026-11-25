@@ -29,6 +29,7 @@ final class CommunityEventServiceProvider extends ServiceProvider
                     foreach (Examination::whereHas('item.gradebook', fn ($q) => $q->where('offering_id', $course->id))->lazyById() as $exam) {
                         $assessments->examinations($exam->id);
                     }
+
                     foreach (Assignment::whereHas('item.gradebook', fn ($q) => $q->where('offering_id', $course->id))->lazyById() as $work) {
                         $assessments->assignments($work->id);
                         $timed->assignment($work);

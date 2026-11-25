@@ -16,11 +16,17 @@ test('a guest can reach sign-in by keyboard at either navigation width', async (
         await menu.focus();
         await page.keyboard.press('Enter');
         await expect(navigation).toBeVisible();
+        await expect(page.getByRole('dialog', { name: 'Portal menu' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Close menu' })).toBeFocused();
         await navigation.getByRole('link', { name: 'Sign in', exact: true }).focus();
         await page.keyboard.press('Escape');
         await expect(navigation).toBeHidden();
         await expect(menu).toBeFocused();
         await page.keyboard.press('Enter');
+    } else {
+        const sidebar = await navigation.boundingBox();
+        const content = await page.locator('#portal-content').boundingBox();
+        expect(sidebar && content && sidebar.x + sidebar.width <= content.x + 1).toBe(true);
     }
 
     await navigation.getByRole('link', { name: 'Sign in', exact: true }).focus();

@@ -29,15 +29,7 @@ type Props = {
     })[];
 };
 
-export default function Hierarchy({
-    manage,
-    faculties,
-    departments,
-    programmes,
-    levels,
-    sessions,
-    semesters,
-}: Props) {
+export default function Hierarchy({ manage, faculties, departments, programmes, levels, sessions, semesters }: Props) {
     return (
         <main className="portal-page space-y-5">
             <Head title="Academic organisation" />

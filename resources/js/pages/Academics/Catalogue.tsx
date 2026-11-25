@@ -32,8 +32,7 @@ export default function Catalogue({
                 My courses
             </Link>
             <DeskHeading area="Academic registry" title="Curriculum catalogue">
-                Select a programme version to inspect course requirements, academic levels and outcome
-                coverage.
+                Select a programme version to inspect course requirements, academic levels and outcome coverage.
             </DeskHeading>
             <nav aria-label="Curriculum versions">
                 <h2 className="text-xl font-semibold">Programme versions</h2>
@@ -78,9 +77,7 @@ export default function Catalogue({
                     <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
                     {draft && (
                         <>
-                            <OutcomeEditor
-                                {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }}
-                            />
+                            <OutcomeEditor {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }} />
                             <RecordForm title="Mark reviewed" action={`${path}/review`} />
                         </>
                     )}

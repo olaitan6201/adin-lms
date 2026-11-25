@@ -3,12 +3,14 @@ import { ReportFilters, type Filters, type Options } from '../../insights/Report
 
 const names = {
     completion: 'Course completion',
+    engagement: 'Lesson engagement',
     attendance: 'Class attendance',
     examinations: 'Exam performance',
     activity: 'Academic activity',
 };
 const descriptions = {
     completion: 'Completed registrations divided by current registrations. The total is weighted by registrations. A dash means there is no denominator.',
+    engagement: 'The share of current registrations with at least one recorded lesson visit in the offering. Repeat visits to the same lesson count once per learner.',
     attendance: 'Each class shows marked attendance and current registrations without a mark. Unmarked learners are not counted as absent.',
     examinations: 'Mean points use the latest released score for each registration. A dash means no scores have been released.',
     activity: 'Course activity, enrolments, submissions and released results within your selection.',

@@ -59,6 +59,7 @@ final class ReportController
         return match ($request->enum('family', ReportFamily::class) ?? ReportFamily::Activity) {
             ReportFamily::Activity => $this->insights->build($user, $filters)->table,
             ReportFamily::Completion => $this->cohorts->completion($user, $audience, $filters),
+            ReportFamily::Engagement => $this->cohorts->engagement($user, $audience, $filters),
             ReportFamily::Attendance => $this->cohorts->attendance($user, $audience, $filters),
             ReportFamily::Examinations => $this->cohorts->examinations($user, $audience, $filters),
         };

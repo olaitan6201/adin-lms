@@ -52,6 +52,29 @@ final class CohortReports
         return $table;
     }
 
+    public function engagement(User $user, ReportAudience $audience, array $filters): InsightTable
+    {
+        $courses = $this->selection->query($user, $audience, $filters);
+        $visits = DB::table('lesson_progress as lp')->join('modules as m', 'm.id', '=', 'lp.module_id')
+            ->when($audience === ReportAudience::Student, ReportRelease::lesson(...))
+            ->whereNotNull('lp.last_seen')->select('lp.enrolment_id', 'm.offering_id')
+            ->selectRaw('count(*) as visits')->groupBy('lp.enrolment_id', 'm.offering_id');
+        $data = DB::query()->fromSub($courses, 'course')
+            ->leftJoinSub($this->registrations($user, $audience), 'member', 'member.offering_id', '=', 'course.id')
+            ->leftJoinSub($visits, 'v', fn ($q) => $q->on('v.enrolment_id', '=', 'member.id')->on('v.offering_id', '=', 'course.id'))
+            ->select('course.external_offering_id', 'course.title')->selectRaw('count(member.id) as registrations,
+                count(v.enrolment_id) as engaged, coalesce(sum(v.visits), 0) as lessons')
+            ->groupBy('course.id', 'course.external_offering_id', 'course.title')
+            ->orderBy('course.external_offering_id')->orderBy('course.id')->tap(ReportLimit::apply(...))->get();
+        $table = new InsightTable(['Course', 'Registrations', 'Engaged', 'Lesson records visited', 'Engagement rate']);
+        foreach ($data as $row) {
+            $table->rows[] = [$row->external_offering_id ?? $row->title, (int) $row->registrations, (int) $row->engaged,
+                (int) $row->lessons, $this->percentage($row->engaged, $row->registrations)];
+        }
+
+        return $table;
+    }
+
     public function examinations(User $user, ReportAudience $audience, array $filters): InsightTable
     {
         $courses = $this->selection->query($user, $audience, $filters);
@@ -84,8 +107,13 @@ final class CohortReports
 
     private function completionRow(string $scope, object $counts): array
     {
-        $rate = $counts->registrations ? number_format(100 * $counts->completed / $counts->registrations, 2).'%' : '—';
+        $rate = $this->percentage($counts->completed, $counts->registrations);
 
         return [$scope, (int) $counts->courses, (int) $counts->registrations, (int) $counts->completed, $rate];
+    }
+
+    private function percentage(int $count, int $denominator): string
+    {
+        return $denominator ? number_format(100 * $count / $denominator, 2).'%' : '—';
     }
 }

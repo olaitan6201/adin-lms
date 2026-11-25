@@ -20,6 +20,10 @@ final class CohortReportsTest extends InsightCase
         $rows = $this->data('/reports?family=completion&term='.$course->semester_id)['table']['rows'];
         $this->assertSame(['Institution total', 2, 3, 1, '33.33%'], end($rows));
         $this->assertSame([2, 3, 1, '33.33%'], array_slice($rows[0], 1));
+        $module = DB::table('modules')->where('offering_id', $course->id)->value('id');
+        $this->record('lesson_progress', ['module_id' => $module, 'enrolment_id' => $member->id, 'last_seen' => now()]);
+        $engagement = $this->data('/reports?family=engagement&offering='.$course->id)['table']['rows'];
+        $this->assertSame([[$course->external_offering_id, 2, 1, 1, '50.00%']], $engagement);
         $this->loginAs('tunde');
         $q = '?offering='.$course->id;
         $this->assertSame(['Selection total', 1, 1, 0, '0.00%'], $this->data('/reports'.$q.'&family=completion')['table']['rows'][1]);
@@ -28,7 +32,7 @@ final class CohortReportsTest extends InsightCase
         $this->assertSame('45.00', $this->data('/reports'.$q.'&family=examinations')['table']['rows'][0][3]);
         $this->get('/reports/export/xlsx'.$q.'&family=examinations')->assertDownload();
         $member->forceFill(['status' => 'withdrawn'])->save();
-        foreach (['completion', 'attendance', 'examinations'] as $family) {
+        foreach (['completion', 'engagement', 'attendance', 'examinations'] as $family) {
             $this->get('/reports/export/pdf'.$q.'&family='.$family)->assertNotFound();
         }
     }

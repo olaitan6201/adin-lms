@@ -77,6 +77,7 @@ class DemoCampusSeeder extends Seeder
                 ]);
                 $this->fixture(TeachingAllocation::class, ['lecturer_id' => $lecturer->id, 'offering_id' => $nextOffering->id]);
             }
+
             $this->seedChapter($offering, $author, $title);
             foreach ($learners as $login => $student) {
                 $withdrawn = $login === 'tunde' && $code === 'CSC102';

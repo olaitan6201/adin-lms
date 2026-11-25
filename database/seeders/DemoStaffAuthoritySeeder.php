@@ -18,6 +18,7 @@ class DemoStaffAuthoritySeeder extends Seeder
         if (! app()->environment('local', 'testing')) {
             throw new LogicException('Staff demo grants require a local or test environment.');
         }
+
         $officer = User::where('email', 'officer@demo.example.test')->firstOrFail();
         $grants->apply($officer->id, RoleCode::InstitutionalAdmin, ScopeType::Institution->key(), false);
         $lecturer = Lecturer::where('staff_number', 'DEMO-L1')->firstOrFail();

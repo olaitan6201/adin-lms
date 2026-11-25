@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 final class InsightExport
 {
-    public function download(InsightTable $table, string $format): HttpResponse
+    public function download(InsightTable $table, ExportFormat $format): HttpResponse
     {
-        if ($format === 'pdf') {
+        if ($format === ExportFormat::Pdf) {
             $pdf = new Dompdf;
             $pdf->loadHtml(view('insights.pdf', ['table' => $table])->render(), 'UTF-8');
             $pdf->setPaper('A4', 'landscape');

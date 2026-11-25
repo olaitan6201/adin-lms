@@ -2,6 +2,10 @@
 
 namespace App\Services\Insights;
 
+use App\Enums\EnrolmentStatus;
+use App\Enums\OfferingStatus;
+use App\Enums\PermissionCode;
+use App\Enums\RoleCode;
 use App\Models\User;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Database\Query\Builder;
@@ -11,19 +15,20 @@ final class InsightScope
 {
     public function __construct(private ScopedAuthority $authority) {}
 
-    public function audience(User $user): string
+    public function audience(User $user): ReportAudience
     {
-        if ($this->authority->institutionAllows($user, 'roster.read')) {
-            return 'Institution';
-        }
-        if ($this->grants($user)->whereIn('r.code', ['dean', 'head_of_department'])->exists()) {
-            return 'Academic unit';
+        if ($this->authority->institutionAllows($user, PermissionCode::RosterRead)) {
+            return ReportAudience::Institution;
         }
 
-        return $user->lecturer()->exists() ? 'Lecturer' : 'Student';
+        if ($this->grants($user)->whereIn('r.code', [RoleCode::Dean, RoleCode::HeadOfDepartment])->exists()) {
+            return ReportAudience::AcademicUnit;
+        }
+
+        return $user->lecturer()->exists() ? ReportAudience::Lecturer : ReportAudience::Student;
     }
 
-    public function offerings(User $user, string $audience): Builder
+    public function offerings(User $user, ReportAudience $audience): Builder
     {
         $query = DB::table('offerings as o')
             ->leftJoin('curriculum_courses as cc', 'cc.id', '=', 'o.curriculum_course_id')
@@ -31,19 +36,19 @@ final class InsightScope
             ->leftJoin('departments as d', 'd.id', '=', 'c.department_id')
             ->leftJoin('semesters as t', 't.id', '=', 'o.semester_id')
             ->leftJoin('academic_sessions as s', 's.id', '=', 't.session_id');
-        if ($audience === 'Academic unit') {
+        if ($audience === ReportAudience::AcademicUnit) {
             $query->where(function (Builder $scope) use ($user): void {
-                $scope->whereIn('d.id', $this->grants($user)->where('r.code', 'head_of_department')->select('a.department_id'))
-                    ->orWhereIn('d.faculty_id', $this->grants($user)->where('r.code', 'dean')->select('a.faculty_id'));
+                $scope->whereIn('d.id', $this->grants($user)->where('r.code', RoleCode::HeadOfDepartment)->select('a.department_id'))
+                    ->orWhereIn('d.faculty_id', $this->grants($user)->where('r.code', RoleCode::Dean)->select('a.faculty_id'));
             });
-        } elseif ($audience === 'Lecturer') {
-            $query->whereIn('o.id', $this->grants($user)->where('r.code', 'lecturer')->select('a.offering_id'))
+        } elseif ($audience === ReportAudience::Lecturer) {
+            $query->whereIn('o.id', $this->grants($user)->where('r.code', RoleCode::Lecturer)->select('a.offering_id'))
                 ->whereIn('o.id', DB::table('teaching_allocations as ta')->join('lecturers as l', 'l.id', '=', 'ta.lecturer_id')
                     ->where('l.user_id', $user->id)->select('ta.offering_id'));
-        } elseif ($audience === 'Student') {
-            $query->where('o.status', 'published')->whereIn('o.id', DB::table('enrolments as e')
+        } elseif ($audience === ReportAudience::Student) {
+            $query->where('o.status', OfferingStatus::Published)->whereIn('o.id', DB::table('enrolments as e')
                 ->join('students as p', 'p.id', '=', 'e.student_id')->where('p.user_id', $user->id)
-                ->where('e.status', 'registered')->select('e.offering_id'));
+                ->where('e.status', EnrolmentStatus::Registered)->select('e.offering_id'));
         }
 
         return $query->select('o.id', 'o.external_offering_id', 'o.status', 'o.approved_at', 'cc.title', 'd.code as department',
@@ -57,6 +62,6 @@ final class InsightScope
             ->join('role_permissions as rp', 'rp.role_id', '=', 'r.id')
             ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
             ->join('access_scopes as a', 'a.id', '=', 'g.scope_id')
-            ->where('g.user_id', $user->id)->where('p.code', 'roster.read');
+            ->where('g.user_id', $user->id)->where('p.code', PermissionCode::RosterRead);
     }
 }

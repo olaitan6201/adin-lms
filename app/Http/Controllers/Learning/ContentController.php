@@ -65,7 +65,7 @@ final class ContentController
                     ->enum('kind', LessonKind::class)
                     ->stored($request->boolean('published')),
             ])
-            ->save();
+            ->saveOrFail();
 
         return to_route('learning.index', $offering);
     }

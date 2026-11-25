@@ -8,7 +8,10 @@ type AcademicLink = {
 };
 
 export function PortalLayout({ children }: { children: ReactNode }) {
-    const { url, props } = usePage<{ signedIn: boolean; academicLinks?: AcademicLink[] }>();
+    const { url, props } = usePage<{
+        signedIn: boolean;
+        academicLinks?: AcademicLink[];
+    }>();
     const path = url.split('?')[0];
     const previousPath = useRef(path);
     const content = useRef<HTMLDivElement>(null);
@@ -16,15 +19,20 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     const [expanded, setExpanded] = useState(false);
 
     const brand = document.body.dataset;
-    const links = props.signedIn ? [
-        { label: 'Dashboard', href: brand.dashboard },
-        { label: 'My courses', href: brand.courses },
-        { label: 'Search courses', href: brand.search },
-        ...(props.academicLinks ?? []),
-        { label: 'Reports', href: brand.reports },
-        { label: 'Inbox', href: brand.inbox },
-        { label: 'Profile', href: brand.profile },
-    ] : [{ label: 'Portal home', href: '/' }, { label: 'Sign in', href: '/login' }];
+    const links = props.signedIn
+        ? [
+              { label: 'Dashboard', href: brand.dashboard },
+              { label: 'My courses', href: brand.courses },
+              { label: 'Search courses', href: brand.search },
+              ...(props.academicLinks ?? []),
+              { label: 'Reports', href: brand.reports },
+              { label: 'Inbox', href: brand.inbox },
+              { label: 'Profile', href: brand.profile },
+          ]
+        : [
+              { label: 'Portal home', href: '/' },
+              { label: 'Sign in', href: '/login' },
+          ];
 
     useEffect(() => {
         if (previousPath.current !== path) {
@@ -52,17 +60,27 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                             <small>Learning management system</small>
                         </span>
                     </Link>
-                    <button ref={menuButton} type="button" className="portal-menu" aria-expanded={expanded}
-                        aria-controls="portal-navigation" onClick={() => setExpanded(!expanded)}>
+                    <button
+                        ref={menuButton}
+                        type="button"
+                        className="portal-menu"
+                        aria-expanded={expanded}
+                        aria-controls="portal-navigation"
+                        onClick={() => setExpanded(!expanded)}
+                    >
                         {expanded ? 'Close menu' : 'Menu'}
                     </button>
                 </div>
-                <div className="portal-navband" data-expanded={expanded} onKeyDown={event => {
-                    if (event.key === 'Escape' && expanded) {
-                        setExpanded(false);
-                        menuButton.current?.focus();
-                    }
-                }}>
+                <div
+                    className="portal-navband"
+                    data-expanded={expanded}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Escape' && expanded) {
+                            setExpanded(false);
+                            menuButton.current?.focus();
+                        }
+                    }}
+                >
                     <nav id="portal-navigation" aria-label="Primary" className="portal-nav">
                         {links.map(
                             ({ label, href }) =>
@@ -77,7 +95,11 @@ export function PortalLayout({ children }: { children: ReactNode }) {
                                     </Link>
                                 ),
                         )}
-                        {props.signedIn && <Link className="portal-exit" href="/logout" method="post" as="button">Sign out</Link>}
+                        {props.signedIn && (
+                            <Link className="portal-exit" href="/logout" method="post" as="button">
+                                Sign out
+                            </Link>
+                        )}
                     </nav>
                 </div>
             </header>

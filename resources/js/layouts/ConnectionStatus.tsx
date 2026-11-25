@@ -4,16 +4,12 @@ type ConnectionState = 'online' | 'offline' | 'reconnected';
 
 const notices: Record<ConnectionState, string> = {
     online: '',
-    offline:
-        'You are offline. Keep this page open. Changes and submissions need a connection.',
-    reconnected:
-        'Connection restored. Check your last save or submission before trying again.',
+    offline: 'You are offline. Keep this page open. Changes and submissions need a connection.',
+    reconnected: 'Connection restored. Check your last save or submission before trying again.',
 };
 
 export function ConnectionStatus() {
-    const [connection, setConnection] = useState<ConnectionState>(
-        navigator.onLine ? 'online' : 'offline',
-    );
+    const [connection, setConnection] = useState<ConnectionState>(navigator.onLine ? 'online' : 'offline');
 
     useEffect(() => {
         const disconnected = () => setConnection('offline');

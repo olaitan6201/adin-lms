@@ -16,13 +16,21 @@ export function ReportTable({ columns, rows }: Props) {
                 <caption className="pb-3 text-left text-xl font-semibold">Academic activity details</caption>
                 <thead className="border-y border-slate-300 bg-slate-50">
                     <tr>
-                        {columns.map(column => <th scope="col" className="p-3" key={column}>{column}</th>)}
+                        {columns.map((column) => (
+                            <th scope="col" className="p-3" key={column}>
+                                {column}
+                            </th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
                     {rows.map((row, index) => (
                         <tr key={index} className="border-b border-slate-200">
-                            {row.map((cell, i) => <td key={columns[i]} className="p-3 align-top break-words">{cell}</td>)}
+                            {row.map((cell, i) => (
+                                <td key={columns[i]} className="p-3 align-top break-words">
+                                    {cell}
+                                </td>
+                            ))}
                         </tr>
                     ))}
                 </tbody>

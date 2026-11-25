@@ -9,11 +9,15 @@ function fixtureCode(role: 'lecturer' | 'officer'): string {
         throw new Error('Missing browser fixture directory.');
     }
 
-    return execFileSync('php', [
-        '-r',
-        'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
-        join(run, `${role}.factor`),
-    ], { encoding: 'utf8' });
+    return execFileSync(
+        'php',
+        [
+            '-r',
+            'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
+            join(run, `${role}.factor`),
+        ],
+        { encoding: 'utf8' },
+    );
 }
 
 test('staff sign-in requires MFA and opens the appropriate workspace', async ({ page }, info) => {

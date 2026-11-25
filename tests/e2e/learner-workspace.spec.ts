@@ -18,7 +18,10 @@ test('a registered learner can find a course and submit a persisted revision', a
     await expect(page.getByRole('heading', { name: /introduction to computing/i }).first()).toBeVisible();
 
     await page.getByRole('link', { name: /^assessments$/i }).click();
-    await page.getByRole('link', { name: /view assignment|computing reflection/i }).first().click();
+    await page
+        .getByRole('link', { name: /view assignment|computing reflection/i })
+        .first()
+        .click();
     await page.getByLabel('Answer', { exact: true }).fill(reflection);
     await page.getByRole('button', { name: /submit revision/i }).click();
     await expect(page.getByText(/receipt:/i).first()).toBeVisible();

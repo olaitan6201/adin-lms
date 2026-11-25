@@ -2,6 +2,10 @@
 
 namespace App\Services\Operations;
 
+use App\Enums\CoursePackageFormat;
+use App\Enums\Learning\LessonKind;
+use App\Enums\OfferingStatus;
+use App\Enums\OperationsEvent;
 use App\Models\LearningMaterial;
 use App\Models\MaterialVersion;
 use App\Models\Module;
@@ -13,49 +17,79 @@ final class CourseTransfer
 {
     public function import(User $actor, Offering $offering, string $path): int
     {
-        $rows = (new CoursePackage)->unpack(TextAssetArchive::read($path));
+        $chapters = (new CoursePackage)->unpack(TextAssetArchive::read($path));
 
-        return DB::transaction(function () use ($actor, $offering, $rows): int {
+        return DB::transaction(function () use ($actor, $offering, $chapters): int {
             $target = Offering::whereKey($offering->id)->lockForUpdate()->firstOrFail();
-            abort_if($target->status !== 'draft' || Module::where('offering_id', $target->id)->exists(), 409, 'Select an empty draft offering.');
-            foreach ($rows as $index => $row) {
-                $module = Module::forceCreate(['offering_id' => $target->id, 'position' => $index + 1,
-                    'title' => $row['title'], 'kind' => 'chapter', 'body' => $row['body']]);
-                foreach ($row['links'] as $link) {
-                    $material = LearningMaterial::forceCreate(['module_id' => $module->id, 'title' => $link['title'], 'download_allowed' => false]);
-                    MaterialVersion::forceCreate(['material_id' => $material->id, 'revision' => 1,
-                        'external_url' => $link['url'], 'created_at' => now(), 'created_by' => $actor->id]);
-                }
-            }
-            OperationsAudit::record($actor, 'course.imported', $target->id, ['chapters' => count($rows)]);
+            $hasModules = Module::where('offering_id', $target->id)->exists();
+            abort_if($target->status !== OfferingStatus::Draft || $hasModules, 409, 'Select an empty draft offering.');
 
-            return count($rows);
+            foreach ($chapters as $index => $chapter) {
+                $this->storeChapter($actor, $target, $index + 1, $chapter);
+            }
+
+            $count = count($chapters);
+            OperationsAudit::record($actor, OperationsEvent::CourseImported, $target->id, ['chapters' => $count]);
+
+            return $count;
         });
     }
 
-    public function export(User $actor, Offering $offering, string $format): string
+    private function storeChapter(User $actor, Offering $target, int $position, PortableChapter $chapter): void
+    {
+        $module = Module::forceCreate([
+            'offering_id' => $target->id,
+            'position' => $position,
+            'title' => $chapter->title,
+            'kind' => LessonKind::Chapter->value,
+            'body' => $chapter->body,
+        ]);
+
+        foreach ($chapter->links as $link) {
+            $material = LearningMaterial::forceCreate([
+                'module_id' => $module->id,
+                'title' => $link['title'],
+                'download_allowed' => false,
+            ]);
+
+            MaterialVersion::forceCreate([
+                'material_id' => $material->id,
+                'revision' => 1,
+                'external_url' => $link['url'],
+                'created_at' => now(),
+                'created_by' => $actor->id,
+            ]);
+        }
+    }
+
+    public function export(User $actor, Offering $offering, CoursePackageFormat $format): string
     {
         $entries = [];
         $chapters = [];
         $modules = Module::where('offering_id', $offering->id)->orderBy('position')->limit(51)->cursor();
         $total = 0;
         foreach ($modules as $index => $module) {
-            if ($index >= 50 || $module->kind !== 'chapter' || $module->opens_at || $module->closes_at
-                || ($total += strlen($module->body ?? '')) > 524288) {
+            $total += strlen($module->body ?? '');
+            if ($index >= 50 || $module->kind !== LessonKind::Chapter->value || $module->opens_at || $module->closes_at
+                || $total > TextAssetArchive::MAX_TOTAL_BYTES) {
                 TextAssetArchive::reject('Only 1–50 unscheduled text chapters within the size limit can be exchanged.');
             }
+
             $file = 'chapter-'.($index + 1).'.txt';
             $entries[$file] = $module->body ?? '';
             $chapters[] = ['title' => $module->title, 'file' => $file, 'links' => $this->links($module)];
         }
-        if ($format === 'scorm') {
-            $entries['imsmanifest.xml'] = (new ScormWriter)->manifest($chapters);
-        } else {
-            $entries['course.json'] = json_encode(['format' => 'adin-text-1', 'chapters' => $chapters], JSON_THROW_ON_ERROR);
-        }
+
+        $entries[$format->manifestName()] = match ($format) {
+            CoursePackageFormat::Scorm => (new ScormWriter)->manifest($chapters),
+            CoursePackageFormat::Native => json_encode(['format' => CoursePackage::NATIVE_VERSION, 'chapters' => $chapters], JSON_THROW_ON_ERROR),
+        };
         (new CoursePackage)->unpack($entries);
         $bytes = TextAssetArchive::write($entries);
-        OperationsAudit::record($actor, 'course.exported', $offering->id, ['format' => $format, 'chapters' => count($chapters)]);
+        OperationsAudit::record($actor, OperationsEvent::CourseExported, $offering->id, [
+            'format' => $format->value,
+            'chapters' => count($chapters),
+        ]);
 
         return $bytes;
     }
@@ -64,16 +98,25 @@ final class CourseTransfer
     private function links(Module $module): array
     {
         $links = [];
-        foreach (LearningMaterial::where('module_id', $module->id)->orderBy('id')->limit(11)->get() as $material) {
-            $versions = MaterialVersion::where('material_id', $material->id)->orderByDesc('revision')->limit(2)->get();
-            $v = $versions->first();
-            if ($material->restrictions || $material->opens_at || $material->closes_at || $material->download_allowed
-                || $versions->count() !== 1 || ! $v->external_url || $v->file_id || $v->caption_file_id || $v->body || $v->transcript) {
-                TextAssetArchive::reject('Unsupported material: expected a single unrestricted, non-downloadable HTTPS link revision.');
-            }
-            $links[] = ['title' => $material->title, 'url' => $v->external_url];
+        $materials = LearningMaterial::where('module_id', $module->id)->orderBy('id')->limit(11)->get();
+        foreach ($materials as $material) {
+            $links[] = ['title' => $material->title, 'url' => $this->exportableUrl($material)];
         }
 
         return $links;
+    }
+
+    private function exportableUrl(LearningMaterial $material): string
+    {
+        $versions = MaterialVersion::where('material_id', $material->id)->limit(2)->get();
+        $version = $versions->first();
+        $restricted = $material->restrictions || $material->opens_at || $material->closes_at || $material->download_allowed;
+        $linkOnly = $version?->external_url && ! $version->file_id && ! $version->caption_file_id && ! $version->body && ! $version->transcript;
+
+        if ($restricted || $versions->count() !== 1 || ! $linkOnly) {
+            TextAssetArchive::reject('Unsupported material: expected a single unrestricted, non-downloadable HTTPS link revision.');
+        }
+
+        return $version->external_url;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Services\Operations;
 
+use App\Enums\OperationsEvent;
+use App\Enums\PrivacyOperation;
 use App\Models\AuditLog;
 use App\Models\PrivacyConsent;
 use App\Models\User;
@@ -11,43 +13,82 @@ final class PrivacyCases
 {
     public function __construct(private ConsentRegister $register) {}
 
-    public function approve(User $operator, User $subject, string $operation, string $reference): AuditLog
+    public function approve(User $operator, User $subject, PrivacyOperation $operation, string $reference): AuditLog
     {
         abort_if($operator->is($subject), 403);
 
-        $details = ['operation' => $operation, 'reference' => $reference];
-        if ($operation === 'purge') {
+        $details = ['operation' => $operation->value, 'reference' => $reference];
+        if ($operation === PrivacyOperation::Purge) {
             $days = $this->register->days();
             abort_if($days === null, 409, 'No retention period configured.');
             $details['days'] = $days;
         }
 
-        return OperationsAudit::record($operator, 'privacy.approved', $subject->id, $details);
+        return OperationsAudit::record($operator, OperationsEvent::PrivacyApproved, $subject->id, $details);
     }
 
     /** @return array<string,mixed> */
     public function execute(User $operator, User $subject, string $approvalId): array
     {
         return DB::transaction(function () use ($operator, $subject, $approvalId): array {
-            $approval = AuditLog::whereKey($approvalId)->where('action', 'privacy.approved')
-                ->where('subject_key', $subject->id)->lockForUpdate()->firstOrFail();
-            abort_if($operator->id === $approval->actor_id || $operator->is($subject), 403);
-            abort_if($approval->occurred_at->lt(now()->subDay()), 409, 'Approval expired.');
-            abort_if(AuditLog::where('subject_key', $approvalId)->where('action', 'privacy.executed')->exists(), 409, 'Already executed.');
-            User::whereKey($subject->id)->lockForUpdate()->firstOrFail();
-            $consents = PrivacyConsent::where('user_id', $subject->id);
-            if ($approval->details['operation'] === 'export') {
-                $result = ['account' => $subject->only(['id', 'full_name', 'email', 'status']),
-                    'consents' => $consents->orderBy('granted_at')->get(['purpose', 'notice_version', 'granted_at', 'withdrawn_at'])];
-            } else {
-                $days = $this->register->days();
-                abort_if($days === null || $days !== $approval->details['days'], 409, 'Retention period changed. Renew approval.');
-                $result = ['deleted' => $consents->where('purpose', ConsentRegister::PURPOSE)
-                    ->where('withdrawn_at', '<=', $approval->occurred_at->subDays($days))->delete()];
-            }
-            OperationsAudit::record($operator, 'privacy.executed', $approvalId, ['operation' => $approval->details['operation']]);
+            $approval = $this->lockExecutableApproval($operator, $subject, $approvalId);
+            $value = $approval->details['operation'] ?? null;
+            $operation = is_string($value) ? PrivacyOperation::tryFrom($value) : null;
+            abort_if($operation === null, 409, 'Unrecognised privacy approval.');
+
+            $lockedSubject = User::whereKey($subject->id)->lockForUpdate()->firstOrFail();
+            $result = match ($operation) {
+                PrivacyOperation::Export => $this->exportAccount($lockedSubject),
+                PrivacyOperation::Purge => $this->purgeExpiredConsents($lockedSubject, $approval),
+            };
+
+            OperationsAudit::record($operator, OperationsEvent::PrivacyExecuted, $approvalId, ['operation' => $operation->value]);
 
             return $result;
         });
+    }
+
+    private function lockExecutableApproval(User $operator, User $subject, string $approvalId): AuditLog
+    {
+        $approval = AuditLog::whereKey($approvalId)
+            ->where('action', OperationsEvent::PrivacyApproved->value)
+            ->where('subject_key', $subject->id)
+            ->lockForUpdate()
+            ->firstOrFail();
+
+        abort_if($operator->id === $approval->actor_id || $operator->is($subject), 403);
+        abort_if($approval->occurred_at->lt(now()->subDay()), 409, 'Approval expired.');
+
+        $used = AuditLog::where('subject_key', $approvalId)
+            ->where('action', OperationsEvent::PrivacyExecuted->value)
+            ->exists();
+        abort_if($used, 409, 'Already executed.');
+
+        return $approval;
+    }
+
+    /** @return array<string,mixed> */
+    private function exportAccount(User $subject): array
+    {
+        return [
+            'account' => $subject->only(['id', 'full_name', 'email', 'status']),
+            'consents' => PrivacyConsent::where('user_id', $subject->id)
+                ->orderBy('granted_at')
+                ->get(['purpose', 'notice_version', 'granted_at', 'withdrawn_at']),
+        ];
+    }
+
+    /** @return array{deleted:int} */
+    private function purgeExpiredConsents(User $subject, AuditLog $approval): array
+    {
+        $days = $this->register->days();
+        abort_if($days === null || $days !== ($approval->details['days'] ?? null), 409, 'Retention period changed. Renew approval.');
+
+        $deleted = PrivacyConsent::where('user_id', $subject->id)
+            ->where('purpose', ConsentRegister::PURPOSE)
+            ->where('withdrawn_at', '<=', $approval->occurred_at->subDays($days))
+            ->delete();
+
+        return ['deleted' => $deleted];
     }
 }

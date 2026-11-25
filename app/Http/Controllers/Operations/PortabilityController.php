@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Operations;
 
-use App\Http\Requests\OperationsInput;
+use App\Enums\CoursePackageFormat;
+use App\Http\Requests\Operations\ImportCoursePackageRequest;
 use App\Models\Offering;
 use App\Services\Operations\CourseTransfer;
 use Illuminate\Http\JsonResponse;
@@ -17,18 +18,20 @@ final class PortabilityController
         return Inertia::render('CourseExchange', ['csrf' => csrf_token()]);
     }
 
-    public function import(OperationsInput $request, Offering $offering, CourseTransfer $transfer): JsonResponse
+    public function import(ImportCoursePackageRequest $request, Offering $offering, CourseTransfer $transfer): JsonResponse
     {
         $count = $transfer->import($request->user(), $offering, $request->file('package')->getRealPath());
 
         return response()->json(['imported' => $count], 201);
     }
 
-    public function export(Request $request, Offering $offering, string $format, CourseTransfer $transfer): Response
+    public function export(Request $request, Offering $offering, CoursePackageFormat $format, CourseTransfer $transfer): Response
     {
         return response($transfer->export($request->user(), $offering, $format), 200, [
-            'Content-Type' => 'application/zip', 'Content-Disposition' => 'attachment; filename="course-'.$format.'.zip"',
-            'Cache-Control' => 'private, no-store', 'X-Content-Type-Options' => 'nosniff',
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="course-'.$format->value.'.zip"',
+            'Cache-Control' => 'private, no-store',
+            'X-Content-Type-Options' => 'nosniff',
         ]);
     }
 }

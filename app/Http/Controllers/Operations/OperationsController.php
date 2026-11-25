@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Operations;
 
-use App\Http\Requests\OperationsInput;
+use App\Enums\AuthenticationOutcome;
+use App\Enums\DeliveryStatus;
+use App\Http\Requests\Operations\ChangeRetentionRequest;
 use App\Models\AuthSession;
 use App\Models\LoginEvent;
 use App\Models\NotificationDelivery;
@@ -17,13 +19,16 @@ final class OperationsController
     {
         return Inertia::render('Operations', [
             'activeSessions' => AuthSession::whereNull('revoked_at')->where('expires_at', '>', now())->count(),
-            'failedDeliveries' => NotificationDelivery::where('status', 'failed')->count(),
-            'failedLogins' => LoginEvent::whereIn('outcome', ['password.failed', 'mfa.failed'])->where('occurred_at', '>=', now()->subDay())->count(),
+            'failedDeliveries' => NotificationDelivery::where('status', DeliveryStatus::Failed)->count(),
+            'failedLogins' => LoginEvent::whereIn('outcome', [
+                AuthenticationOutcome::PasswordFailed,
+                AuthenticationOutcome::ChallengeFailed,
+            ])->where('occurred_at', '>=', now()->subDay())->count(),
             'retentionDays' => $register->days(),
         ]);
     }
 
-    public function retention(OperationsInput $request, ConsentRegister $register): RedirectResponse
+    public function retention(ChangeRetentionRequest $request, ConsentRegister $register): RedirectResponse
     {
         $register->setDays($request->user(), $request->integer('days'));
 

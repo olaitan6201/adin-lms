@@ -17,10 +17,12 @@ final class ScormReader
         if ($xml === '' || str_contains($xml, '<!') || preg_match('/<\?(?!xml\s)|encoding\s*=\s*["\'](?!utf-8["\'])/i', $xml)) {
             TextAssetArchive::reject('Unsupported XML declaration or markup.');
         }
+
         $doc = new DOMDocument;
         if (! @$doc->loadXML($xml, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING)) {
             TextAssetArchive::reject('Malformed manifest.');
         }
+
         $root = $doc->documentElement;
         if ($root->localName !== 'manifest' || $root->namespaceURI !== self::IMS || $doc->doctype) {
             TextAssetArchive::reject('Expected an IMS SCORM 1.2 manifest.');
@@ -35,22 +37,13 @@ final class ScormReader
             || ! in_array($org->getAttribute('structure'), ['', 'hierarchical'], true)) {
             TextAssetArchive::reject('Expected a single default organization.');
         }
-        $files = [];
-        foreach ($this->children($resources) as $resource) {
-            [$file] = $this->sequence($resource, 'file');
-            $id = $resource->getAttribute('identifier');
-            $href = $resource->getAttribute('href');
-            if ($resource->localName !== 'resource' || $resource->getAttribute('type') !== 'webcontent'
-                || $resource->getAttributeNS(self::ADL, 'scormtype') !== 'asset' || $href !== $file->getAttribute('href')
-                || $id === '' || isset($files[$id]) || $this->children($file)) {
-                TextAssetArchive::reject('Unsupported resource: expected one local text asset per resource.');
-            }
-            $files[$id] = $href;
-        }
+
+        $files = $this->resourceFiles($resources);
         $items = $this->children($org);
         if (isset($items[0]) && $items[0]->localName === 'title') {
             $this->text(array_shift($items));
         }
+
         $chapters = [];
         foreach ($items as $item) {
             [$title] = $this->sequence($item, 'title');
@@ -58,14 +51,39 @@ final class ScormReader
             if ($item->localName !== 'item' || ! isset($files[$ref])) {
                 TextAssetArchive::reject('Unsupported item or unresolved resource reference.');
             }
+
             $chapters[] = ['title' => $this->text($title), 'file' => $files[$ref], 'links' => []];
             unset($files[$ref]);
         }
+
         if ($files) {
             TextAssetArchive::reject('Unreferenced resources.');
         }
 
         return $chapters;
+    }
+
+    /** @return array<string,string> Resource identifiers mapped to local file names. */
+    private function resourceFiles(DOMElement $resources): array
+    {
+        $files = [];
+        foreach ($this->children($resources) as $resource) {
+            [$file] = $this->sequence($resource, 'file');
+            $id = $resource->getAttribute('identifier');
+            $href = $resource->getAttribute('href');
+            $isAsset = $resource->localName === 'resource'
+                && $resource->getAttribute('type') === 'webcontent'
+                && $resource->getAttributeNS(self::ADL, 'scormtype') === 'asset';
+            $isLocalFile = $href === $file->getAttribute('href') && ! $this->children($file);
+
+            if (! $isAsset || ! $isLocalFile || $id === '' || isset($files[$id])) {
+                TextAssetArchive::reject('Unsupported resource: expected one local text asset per resource.');
+            }
+
+            $files[$id] = $href;
+        }
+
+        return $files;
     }
 
     private function text(DOMElement $element): string
@@ -93,19 +111,23 @@ final class ScormReader
             if ($element->localName === 'resource' && $attribute->namespaceURI === self::ADL && $attribute->localName === 'scormtype') {
                 continue;
             }
+
             if ($element->localName === 'manifest' && $attribute->namespaceURI === 'http://www.w3.org/2001/XMLSchema-instance' && $attribute->localName === 'schemaLocation') {
                 continue;
             }
+
             if ($attribute->namespaceURI !== null || ! in_array($attribute->name, $allowed, true)) {
                 TextAssetArchive::reject('Unsupported manifest attribute on '.$element->localName.'.');
             }
         }
+
         $children = [];
         foreach ($element->childNodes as $node) {
             if ($node instanceof DOMElement) {
                 if ($node->namespaceURI !== self::IMS || $node->hasAttributeNS('http://www.w3.org/XML/1998/namespace', 'base')) {
                     TextAssetArchive::reject('Unsupported namespace or base location.');
                 }
+
                 $children[] = $node;
             }
         }

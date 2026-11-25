@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Operations;
 
-use App\Http\Requests\OperationsInput;
+use App\Enums\OperationsEvent;
+use App\Enums\PrivacyOperation;
+use App\Http\Requests\Operations\ApprovePrivacyCaseRequest;
+use App\Http\Requests\Operations\CaseReferenceRequest;
+use App\Http\Requests\Operations\ChangeConsentRequest;
 use App\Models\PrivacyConsent;
 use App\Models\User;
 use App\Services\Operations\ConsentRegister;
@@ -19,6 +23,7 @@ final class PrivacyController
     public function show(Request $request): Response
     {
         return Inertia::render('OperationsConsent', [
+            'notice' => ConsentRegister::NOTICE,
             'granted' => PrivacyConsent::where('user_id', $request->user()->id)->where('purpose', ConsentRegister::PURPOSE)
                 ->where('notice_version', ConsentRegister::NOTICE)->whereNull('withdrawn_at')->exists(),
         ]);
@@ -26,26 +31,37 @@ final class PrivacyController
 
     public function desk(): Response
     {
-        return Inertia::render('PrivacyDesk', ['csrf' => csrf_token()]);
+        return Inertia::render('PrivacyDesk', [
+            'csrf' => csrf_token(),
+            'operations' => [
+                ['value' => PrivacyOperation::Export->value, 'label' => 'Export account and consent'],
+                ['value' => PrivacyOperation::Purge->value, 'label' => 'Delete eligible withdrawn feedback consents'],
+            ],
+        ]);
     }
 
-    public function incident(OperationsInput $request): JsonResponse
+    public function incident(CaseReferenceRequest $request): JsonResponse
     {
-        $event = OperationsAudit::record($request->user(), 'privacy.incident_referred', $request->validated('reference'));
+        $event = OperationsAudit::record($request->user(), OperationsEvent::IncidentReferred, $request->validated('reference'));
 
         return response()->json(['audit' => $event->id], 201);
     }
 
-    public function consent(OperationsInput $request, ConsentRegister $register): JsonResponse|RedirectResponse
+    public function consent(ChangeConsentRequest $request, ConsentRegister $register): JsonResponse|RedirectResponse
     {
         $register->change($request->user(), $request->boolean('grant'));
 
         return $request->expectsJson() ? response()->json(['granted' => $request->boolean('grant')]) : to_route('operations.consent.show');
     }
 
-    public function approve(OperationsInput $request, User $subject, PrivacyCases $cases): JsonResponse
+    public function approve(ApprovePrivacyCaseRequest $request, User $subject, PrivacyCases $cases): JsonResponse
     {
-        $approval = $cases->approve($request->user(), $subject, $request->validated('operation'), $request->validated('reference'));
+        $approval = $cases->approve(
+            $request->user(),
+            $subject,
+            PrivacyOperation::from($request->validated('operation')),
+            $request->validated('reference'),
+        );
 
         return response()->json(['approval' => $approval->id], 201);
     }

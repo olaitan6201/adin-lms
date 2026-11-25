@@ -2,6 +2,7 @@
 
 namespace App\Services\Operations;
 
+use App\Enums\OperationsEvent;
 use App\Models\PrivacyConsent;
 use App\Models\SystemConfiguration;
 use App\Models\User;
@@ -22,14 +23,20 @@ final class ConsentRegister
             $active = PrivacyConsent::where('user_id', $user->id)->where('purpose', self::PURPOSE)
                 ->where('notice_version', self::NOTICE)->whereNull('withdrawn_at')->first();
             if ($grant && ! $active) {
-                PrivacyConsent::forceCreate(['user_id' => $user->id, 'purpose' => self::PURPOSE,
-                    'notice_version' => self::NOTICE, 'granted_at' => now()]);
+                PrivacyConsent::forceCreate([
+                    'user_id' => $user->id,
+                    'purpose' => self::PURPOSE,
+                    'notice_version' => self::NOTICE,
+                    'granted_at' => now(),
+                ]);
             } elseif (! $grant && $active) {
                 $active->forceFill(['withdrawn_at' => now()])->save();
             } else {
                 return;
             }
-            OperationsAudit::record($user, $grant ? 'feedback.granted' : 'feedback.withdrawn', $user->id);
+
+            $event = $grant ? OperationsEvent::FeedbackGranted : OperationsEvent::FeedbackWithdrawn;
+            OperationsAudit::record($user, $event, $user->id);
         });
     }
 
@@ -43,7 +50,7 @@ final class ConsentRegister
         DB::transaction(function () use ($actor, $days): void {
             $setting = SystemConfiguration::where('key', self::SETTING)->lockForUpdate()->first() ?? new SystemConfiguration;
             $setting->forceFill(['key' => self::SETTING, 'value' => ['days' => $days], 'updated_by' => $actor->id])->save();
-            OperationsAudit::record($actor, 'retention.changed', self::SETTING, ['days' => $days]);
+            OperationsAudit::record($actor, OperationsEvent::RetentionChanged, self::SETTING, ['days' => $days]);
         });
     }
 }

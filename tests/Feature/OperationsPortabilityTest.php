@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RoleCode;
 use App\Models\LearningMaterial;
 use App\Models\MaterialVersion;
 use App\Models\Module;
@@ -20,13 +21,16 @@ class OperationsPortabilityTest extends TestCase
 
     public static function formats(): array
     {
-        return [['scorm', 'imsmanifest.xml', 'Water & soils'], ['native', 'course.json', 'Field methods']];
+        return [
+            'SCORM 1.2 text asset' => ['scorm', 'imsmanifest.xml', 'Water & soils'],
+            'Adin native chapters' => ['native', 'course.json', 'Field methods'],
+        ];
     }
 
     #[DataProvider('formats')]
     public function test_import_export_reimport_preserves_content_and_link_targets(string $format, string $manifest, string $title): void
     {
-        $this->operator('portability.manage');
+        $this->operator(RoleCode::InstitutionalAdmin);
         $source = Offering::factory()->create();
         $target = Offering::factory()->create();
         $url = "/operations/courses/{$source->id}";
@@ -45,17 +49,26 @@ class OperationsPortabilityTest extends TestCase
             $this->assertSame('https://library.example.test/catalogue', MaterialVersion::where('material_id', $link->id)->sole()->external_url);
             $this->getJson("$url/export/scorm")->assertUnprocessable();
         }
+
         $this->assertDatabaseCount('enrolments', 0);
         $this->assertDatabaseHas('audit_logs', ['action' => 'course.exported', 'subject_key' => $source->id]);
     }
 
-    public function test_invalid_packages_are_atomic_and_permission_is_checked_for_upload_and_download(): void
+    public function test_import_and_export_require_course_exchange_authority(): void
     {
         $source = Offering::factory()->create();
         $url = "/operations/courses/{$source->id}";
         $this->actingAs(User::factory()->create())->postJson("$url/import")->assertForbidden();
         $this->getJson("$url/export/native")->assertForbidden();
-        $this->operator('portability.manage');
+        $this->operator(RoleCode::IctAdmin);
+        $this->getJson("$url/export/native")->assertForbidden();
+    }
+
+    public function test_invalid_packages_leave_the_target_unchanged(): void
+    {
+        $source = Offering::factory()->create();
+        $url = "/operations/courses/{$source->id}";
+        $this->operator(RoleCode::InstitutionalAdmin);
         $manifest = $this->fixture('imsmanifest.xml');
         foreach ([
             ['imsmanifest.xml' => $manifest],
@@ -64,8 +77,11 @@ class OperationsPortabilityTest extends TestCase
             ['imsmanifest.xml' => '<!DOCTYPE manifest>'.$manifest, 'field.txt' => 'lesson'],
             ['course.json' => $this->fixture('course.json'), 'field.txt' => str_repeat('a', 65536)],
         ] as $entries) {
-            $this->postJson("$url/import", ['package' => $this->archive($entries)])->assertUnprocessable()->assertJsonValidationErrors('package');
+            $this->postJson("$url/import", ['package' => $this->archive($entries)])
+                ->assertUnprocessable()
+                ->assertJsonValidationErrors('package');
         }
+
         $this->assertDatabaseCount('modules', 0);
         $this->assertDatabaseMissing('audit_logs', ['action' => 'course.imported']);
     }
@@ -85,6 +101,7 @@ class OperationsPortabilityTest extends TestCase
             foreach ($entries as $name => $body) {
                 $zip->addFromString($name, $body);
             }
+
             $zip->close();
 
             return UploadedFile::fake()->createWithContent('sample.zip', file_get_contents($path));

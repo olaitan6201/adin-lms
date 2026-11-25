@@ -13,6 +13,7 @@ final class ScormWriter
             if ($chapter['links']) {
                 TextAssetArchive::reject('External link materials require the native format.');
             }
+
             $title = htmlspecialchars($chapter['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8');
             $file = $chapter['file'];
             $items .= "<item identifier=\"I$i\" identifierref=\"R$i\"><title>$title</title></item>";

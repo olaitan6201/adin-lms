@@ -6,9 +6,13 @@ const path = `${APP_URL}/courses/${SCORM_OFFERING}/scorm`;
 
 async function capture(page, name) {
     for (const frame of page.frames()) {
-        assert.ok(await frame.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${name}: horizontal overflow`);
+        assert.ok(
+            await frame.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+            `${name}: horizontal overflow`,
+        );
     }
-    await page.screenshot({path: `${run}/${name}.png`, fullPage: true});
+
+    await page.screenshot({ path: `${run}/${name}.png`, fullPage: true });
 }
 
 async function login(page, name) {
@@ -47,10 +51,10 @@ async function login(page, name) {
         await teacher.getByLabel('Reading v1 ZIP').setInputFiles(run + '/reading.zip');
         await teacher.getByRole('button', { name: 'Import reading' }).click();
         await expect(teacher.getByRole('heading', { name: 'Specimen notes' })).toBeVisible();
-        await teacher.setViewportSize({width: 320, height: 800});
+        await teacher.setViewportSize({ width: 320, height: 800 });
         await teacher.getByLabel('Reading title').fill('Specimen notes');
         await teacher.getByLabel('Reading v1 ZIP').setInputFiles(run + '/reading.zip');
-        await teacher.getByRole('button', {name: 'Import reading'}).click();
+        await teacher.getByRole('button', { name: 'Import reading' }).click();
         await expect(teacher.getByLabel('Reading title')).toHaveAttribute('aria-invalid', 'true');
         await capture(teacher, 'mobile-import-error');
         await teacher.close();
@@ -68,12 +72,12 @@ async function login(page, name) {
         await expect(page.getByText('Skip to content')).toBeFocused();
         await page.keyboard.press('Enter');
         await page.keyboard.press('Tab');
-        await expect(page.getByRole('button', {name: 'Open reading'})).toBeFocused();
+        await expect(page.getByRole('button', { name: 'Open reading' })).toBeFocused();
         await capture(page, 'mobile-reading-list');
         await page.keyboard.press('Enter');
         await expect(sco.getByText(/Group the specimens/)).toBeVisible();
         await expect(page.locator('.masthead')).toHaveCSS('background-color', 'rgb(0, 93, 34)');
-        await expect(sco.getByRole('button', {name: 'Save and pause'})).toHaveCSS('min-height', '44px');
+        await expect(sco.getByRole('button', { name: 'Save and pause' })).toHaveCSS('min-height', '44px');
         // Same-origin synthetic message from the LMS itself must not consume a grant.
         await page.evaluate(() => window.postMessage({ type: 'reading-commit', state: {} }, location.origin));
         let claimStatuses;
@@ -88,11 +92,11 @@ async function login(page, name) {
         );
         await sco.getByLabel('Reading note').fill('Last specimen: blue');
         await page.keyboard.press('Tab');
-        await expect(sco.getByRole('button', {name: 'Save and pause'})).toBeFocused();
+        await expect(sco.getByRole('button', { name: 'Save and pause' })).toBeFocused();
         await page.locator('iframe').scrollIntoViewIfNeeded();
-        await expect(sco.getByRole('button', {name: 'Save and pause'})).toBeInViewport();
-        await page.screenshot({path: `${run}/mobile-reading-focus.png`});
-        await sco.locator('main').screenshot({path: `${run}/mobile-exercise.png`});
+        await expect(sco.getByRole('button', { name: 'Save and pause' })).toBeInViewport();
+        await page.screenshot({ path: `${run}/mobile-reading-focus.png` });
+        await sco.locator('main').screenshot({ path: `${run}/mobile-exercise.png` });
         await page.keyboard.press('Enter');
         await expect(page.getByText('Progress recorded.')).toBeVisible();
         await expect(sco.getByText(/Progress saved/)).toBeVisible();

@@ -21,6 +21,7 @@ class Offering extends DomainModel
     protected function casts(): array
     {
         return [
+            'activity_order' => 'array',
             'status' => OfferingStatus::class,
             'approved_at' => 'immutable_datetime',
         ];

@@ -233,6 +233,7 @@ return new class extends Migration
             $table->string('section')->nullable();
             $table->string('status')->default('draft');
             $table->string('delivery_mode')->nullable();
+            $table->jsonb('activity_order')->nullable();
             $table->foreignUuid('approved_by')->nullable()->constrained('users');
             $table->timestampTz('approved_at')->nullable();
             $table->foreignUuid('copied_from')->nullable()->constrained('offerings');

@@ -44,10 +44,10 @@ export function ExternalResource({ href, title }: ExternalResourceProps) {
                 Open {title}
             </a>
             {player && (
-                <div>
+                <div className="grid aspect-video w-full place-items-center rounded border">
                     {playing ? (
                         <iframe
-                            className="aspect-video w-full"
+                            className="h-full w-full"
                             title={title}
                             src={player}
                             referrerPolicy="strict-origin-when-cross-origin"

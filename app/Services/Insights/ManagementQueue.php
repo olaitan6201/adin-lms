@@ -77,6 +77,7 @@ final class ManagementQueue
             [PermissionCode::ExaminationsManage, 'Examinations office', 'assessment.office'],
             [PermissionCode::ComplianceRead, 'Curriculum catalogue', 'academics.curriculum.show'],
             [PermissionCode::OperationsManage, 'System operations', 'operations.index'],
+            [PermissionCode::OperationsManage, 'Active sessions', 'security.sessions'],
             [PermissionCode::PrivacyManage, 'Privacy cases', 'operations.privacy'],
             [PermissionCode::PortabilityManage, 'Course exchange', 'operations.courses'],
         ] as [$permission, $label, $route]) {

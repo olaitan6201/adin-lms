@@ -41,6 +41,9 @@ class CourseController extends Controller
             'course' => $course,
             'teaching' => $teaching,
             'learningToolsUrl' => route('integrations.index', $offering, false),
+            'packageReadingsUrl' => filled(config('scorm_runtime.origin'))
+                ? route('scorm.index', $offering, false)
+                : null,
             ...$outline->build($offering, $request->user(), $teaching),
         ]);
     }

@@ -10,6 +10,23 @@ final class ResourceFileFormat
 {
     public const INLINE_IMAGES = ['image/png', 'image/jpeg', 'image/webp'];
 
+    public const INLINE_MEDIA = ['audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/webm', 'video/mp4', 'video/webm'];
+
+    public function captionMime(UploadedFile $upload): string
+    {
+        $text = $upload->getContent();
+        if (strtolower($upload->getClientOriginalExtension()) !== 'vtt' ||
+            ! mb_check_encoding($text, 'UTF-8') ||
+            ! preg_match('/\A(?:\xEF\xBB\xBF)?WEBVTT[ \t]*\R\R/', $text) ||
+            ! preg_match('/^(?:\d{2,}:)?\d{2}:\d{2}\.\d{3} --> (?:\d{2,}:)?\d{2}:\d{2}\.\d{3}/m', $text) ||
+            preg_match('~[\x00-\x1f\x7f/\\\\]~', $upload->getClientOriginalName()) ||
+            mb_strlen($upload->getClientOriginalName()) > 191) {
+            throw ValidationException::withMessages(['caption' => 'Upload a UTF-8 WebVTT file with timestamped captions.']);
+        }
+
+        return 'text/vtt';
+    }
+
     private const TYPES = [
         'pdf' => 'application/pdf',
         'png' => 'image/png',

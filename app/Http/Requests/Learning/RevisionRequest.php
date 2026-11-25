@@ -20,6 +20,8 @@ class RevisionRequest extends FormRequest
             'body' => 'nullable|required_without_all:file,external_url|string|max:250000',
             'external_url' => 'nullable|url:https|max:2048',
             'file' => 'nullable|file|max:51200',
+            'caption' => 'nullable|file|max:1024',
+            'transcript' => 'nullable|string|max:250000',
             'download_allowed' => 'required|boolean',
             'opens_at' => 'nullable|date',
             'closes_at' => ['nullable', 'date', Rule::when($this->filled('opens_at'), 'after:opens_at')],

@@ -16,9 +16,9 @@ final class RevisionWriter
 
     public function append(RevisionRequest $request, Module $lesson, ?LearningMaterial $material): void
     {
-        $file = null;
+        $files = [];
         try {
-            DB::transaction(function () use ($request, $lesson, $material, &$file): void {
+            DB::transaction(function () use ($request, $lesson, $material, &$files): void {
                 Module::whereKey($lesson->id)->lockForUpdate()->firstOrFail();
                 $material ??= new LearningMaterial;
                 $material
@@ -29,21 +29,27 @@ final class RevisionWriter
                         'closes_at' => $request->date('closes_at')?->utc(),
                     ])
                     ->save();
-                $file = $request->hasFile('file') ? $this->uploads->store($request->file('file')) : null;
+                if ($request->hasFile('file')) {
+                    $files['file'] = $this->uploads->store($request->file('file'));
+                }
+                if ($request->hasFile('caption')) {
+                    $files['caption'] = $this->uploads->store($request->file('caption'), caption: true);
+                }
                 $revision = MaterialVersion::where('material_id', $material->id)->max('revision') + 1;
                 new MaterialVersion()
                     ->forceFill([
-                        ...$request->safe()->only(['body', 'external_url']),
+                        ...$request->safe()->only(['body', 'external_url', 'transcript']),
                         'material_id' => $material->id,
                         'revision' => $revision,
-                        'file_id' => $file?->id,
+                        'file_id' => $files['file']->id ?? null,
+                        'caption_file_id' => $files['caption']->id ?? null,
                         'created_at' => now(),
                         'created_by' => $request->user()->id,
                     ])
                     ->save();
             });
         } catch (Throwable $e) {
-            if ($file) {
+            foreach ($files as $file) {
                 Storage::disk('local')->delete($file->object_key);
             }
 

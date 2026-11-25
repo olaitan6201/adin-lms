@@ -1,20 +1,25 @@
 import { EntryForm } from './EntryForm';
 import { AvailabilityFields } from './AvailabilityFields';
-import type { Lesson } from './contracts';
+import type { Choice, Lesson } from './contracts';
+import { ManuscriptEditor } from './ManuscriptEditor';
 
 export function LessonForm({
     base,
     lesson,
     position,
     lessonKinds,
+    quizzes,
+    startOverview = false,
 }: {
     base: string;
     lesson?: Lesson;
     position: number;
     lessonKinds: string[];
+    quizzes: Choice[];
+    startOverview?: boolean;
 }) {
     return (
-        <details>
+        <details open={startOverview || undefined}>
             <summary>{lesson ? 'Edit lesson or publish' : 'Author a lesson'}</summary>
             <EntryForm
                 action={`${base}/lessons${lesson ? `/${lesson.id}` : ''}`}
@@ -36,16 +41,13 @@ export function LessonForm({
                 </label>
                 <label>
                     Organisation
-                    <select name="kind" defaultValue={lesson?.kind}>
+                    <select name="kind" defaultValue={lesson?.kind ?? (startOverview ? 'overview' : undefined)}>
                         {lessonKinds.map((k) => (
                             <option key={k}>{k}</option>
                         ))}
                     </select>
                 </label>
-                <label>
-                    Lesson text (outcomes, examples, exercises and references)
-                    <textarea rows={8} name="body" defaultValue={lesson?.body || ''} />
-                </label>
+                <ManuscriptEditor lesson={lesson} quizzes={quizzes} />
                 <label>
                     Publication
                     <select name="published" defaultValue={lesson?.published ? '1' : '0'}>

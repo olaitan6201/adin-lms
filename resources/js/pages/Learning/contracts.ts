@@ -4,6 +4,9 @@ export interface Workspace {
     staff: boolean;
 }
 export interface Version {
+    transcript: string | null;
+    caption: string | null;
+    media: { type: string; src: string } | null;
     revision: number;
     author: string | null;
     image: string | null;

@@ -15,9 +15,9 @@ final class PrivateUpload
 
     public function __construct(private ResourceFileFormat $format) {}
 
-    public function store(UploadedFile $upload): File
+    public function store(UploadedFile $upload, bool $caption = false): File
     {
-        $mime = $this->format->validatedMime($upload);
+        $mime = $caption ? $this->format->captionMime($upload) : $this->format->validatedMime($upload);
         $key = self::DIRECTORY.'/'.Str::uuid7();
         $file = new File;
         $file

@@ -38,7 +38,12 @@ final class MaterialResource extends JsonResource
         $route = [$this->offering, $version];
 
         return [
-            ...$version->only(['revision', 'external_url', 'body']),
+            ...$version->only(['revision', 'external_url', 'body', 'transcript']),
+            'caption' => $version->caption_file_id && ($this->staff || $this->download_allowed)
+                ? route('learning.download', [...$route, 'caption' => 1]) : null,
+            'media' => $canDownload && in_array($version->file->media_type, ResourceFileFormat::INLINE_MEDIA, true)
+                ? ['type' => $version->file->media_type, 'src' => route('learning.download', [...$route, 'preview' => 1])]
+                : null,
             'author' => $this->staff ? $version->createdBy->full_name : null,
             'image' => $canDownload && $isImage
                     ? route('learning.download', [...$route, 'preview' => 1])

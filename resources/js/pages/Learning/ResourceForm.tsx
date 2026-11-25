@@ -29,6 +29,14 @@ export function ResourceForm({ action, item }: ResourceFormProps) {
                     <input name="file" type="file" />
                 </label>
                 <label>
+                    English captions (WebVTT, up to 1 MiB)
+                    <input name="caption" type="file" accept=".vtt,text/vtt" />
+                </label>
+                <label>
+                    Transcript or descriptive alternative
+                    <textarea name="transcript" rows={4} />
+                </label>
+                <label>
                     Learner downloads
                     <select
                         name="download_allowed"

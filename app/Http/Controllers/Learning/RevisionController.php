@@ -54,15 +54,17 @@ final class RevisionController
                         ->exists()),
             404,
         );
-        $file = $version->file;
+        $caption = $request->boolean('caption');
+        $file = $caption ? $version->captionFile : $version->file;
         abort_unless(
             $file &&
                 $file->validation_status === PrivateUpload::VALIDATED &&
                 str_starts_with($file->object_key, PrivateUpload::DIRECTORY.'/'),
             404,
         );
-        if ($request->boolean('preview')) {
-            abort_unless(in_array($file->media_type, ResourceFileFormat::INLINE_IMAGES, true), 404);
+        if ($caption || $request->boolean('preview')) {
+            $types = $caption ? ['text/vtt'] : [...ResourceFileFormat::INLINE_IMAGES, ...ResourceFileFormat::INLINE_MEDIA];
+            abort_unless(in_array($file->media_type, $types, true), 404);
 
             return Storage::disk('local')->response($file->object_key, $file->filename, [
                 'Content-Type' => $file->media_type,

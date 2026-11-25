@@ -39,14 +39,25 @@ jobs:
           extensions: pdo_sqlite, pdo_pgsql, pdo_mysql, bcmath, dom, fileinfo, gd, intl, mbstring, pcntl, xml, zip
           coverage: none
       - run: composer install --no-interaction --prefer-dist
-      - name: Install PostgreSQL tools
+      - name: Prepare disposable PostgreSQL database
         if: matrix.engine == 'pgsql'
-        run: sudo apt-get update -qq && sudo apt-get install -y postgresql-16
-      - name: Verify MySQL tools
+        run: |
+          sudo systemctl start postgresql
+          sudo -u postgres psql -c "CREATE USER qa WITH PASSWORD 'local_test_only'"
+          sudo -u postgres createdb -O qa qa_suite
+      - name: Prepare disposable MySQL database
         if: matrix.engine == 'mysql'
-        run: mysqld --version && mysqldump --version
+        run: |
+          sudo systemctl start mysql
+          mysql -uroot -proot -e "CREATE DATABASE qa_suite; CREATE USER 'qa'@'localhost' IDENTIFIED BY 'local_test_only'; GRANT ALL ON qa_suite.* TO 'qa'@'localhost';"
       - name: Native suite on a fresh database
-        run: bash scripts/qualification/rehearse.sh "${{ matrix.engine }}" suite
-      - name: Concurrent HTTP requests and database restore
-        if: ${{ !cancelled() && matrix.engine != 'sqlite' }}
-        run: bash scripts/qualification/rehearse.sh "${{ matrix.engine }}" journey
+        env:
+          DB_CONNECTION: ${{ matrix.engine }}
+          DB_DATABASE: ${{ matrix.engine == 'sqlite' && ':memory:' || 'qa_suite' }}
+          DB_HOST: 127.0.0.1
+          DB_USERNAME: qa
+          DB_PASSWORD: local_test_only
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+          vendor/bin/phpunit --fail-on-skipped

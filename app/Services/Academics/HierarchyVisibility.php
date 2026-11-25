@@ -2,6 +2,8 @@
 
 namespace App\Services\Academics;
 
+use App\Models\AcademicSession;
+use App\Models\Semester;
 use App\Models\User;
 use App\Services\Authority\ScopedAuthority;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +45,8 @@ class HierarchyVisibility
             );
         }
 
+        $calendarDates = ['starts_on' => 'immutable_date:Y-m-d', 'ends_on' => 'immutable_date:Y-m-d'];
+
         return [
             'manage' => $manage,
             'departments' => $departments,
@@ -52,8 +56,8 @@ class HierarchyVisibility
                 ->orderBy('name')
                 ->get(),
             'levels' => DB::table('academic_levels')->orderBy('label')->get(),
-            'sessions' => DB::table('academic_sessions')->orderByDesc('starts_on')->get(),
-            'semesters' => DB::table('semesters')->orderBy('starts_on')->get(),
+            'sessions' => AcademicSession::query()->withCasts($calendarDates)->orderByDesc('starts_on')->get(),
+            'semesters' => Semester::query()->withCasts($calendarDates)->orderBy('starts_on')->get(),
         ];
     }
 }

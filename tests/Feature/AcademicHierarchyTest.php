@@ -6,6 +6,7 @@ use App\Models\AcademicSession;
 use App\Models\Department;
 use App\Models\Faculty;
 use App\Models\Programme;
+use App\Models\Semester;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
@@ -54,6 +55,20 @@ class AcademicHierarchyTest extends TestCase
             $this->post("$base/semesters", $data)->assertSessionHasNoErrors();
             $this->post("$base/semesters", $data)->assertSessionHasErrors('position');
         }
+    }
+
+    public function test_calendar_correction_forms_receive_date_only_values_for_existing_records(): void
+    {
+        $this->academicUser();
+        $dates = ['starts_on' => '2026-09-01', 'ends_on' => '2027-01-31'];
+        $session = AcademicSession::factory()->create($dates);
+        Semester::factory()->create(['session_id' => $session->id] + $dates);
+
+        $this->get('/academics')->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('sessions.0.starts_on', $dates['starts_on'])
+            ->where('sessions.0.ends_on', $dates['ends_on'])
+            ->where('semesters.0.starts_on', $dates['starts_on'])
+            ->where('semesters.0.ends_on', $dates['ends_on']));
     }
 
     public function test_scoped_readers_cannot_open_another_department(): void

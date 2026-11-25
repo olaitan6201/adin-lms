@@ -16,10 +16,12 @@ final class Store
         if (! in_array($this->engine, ['sqlite', 'pgsql', 'mysql'], true)) {
             throw new RuntimeException('Explicit target PDO DSN required.');
         }
+
         if ($this->engine === 'sqlite' && (! is_file(substr($dsn, 7)) || ! is_file($source)
             || realpath(substr($dsn, 7)) === realpath($source))) {
             throw new RuntimeException('Two existing distinct SQLite files required.');
         }
+
         $this->db = new PDO($dsn, getenv('UPGRADE_USER') ?: null, getenv('UPGRADE_PASSWORD') ?: null);
         $this->target = match ($this->engine) {
             'mysql' => $this->db->query('SELECT DATABASE()')->fetchColumn(),
@@ -32,6 +34,7 @@ final class Store
         if (strcasecmp($this->source, $this->target) === 0) {
             throw new RuntimeException('Source and destination coincide.');
         }
+
         if ($this->engine === 'sqlite') {
             $this->db->prepare('ATTACH DATABASE ? AS legacy')->execute(['file:'.str_replace('%2F', '/', rawurlencode(realpath($source))).'?mode=ro']);
             $this->db->exec('PRAGMA foreign_keys=ON');
@@ -50,6 +53,7 @@ final class Store
         if (! preg_match('/^[a-z][a-z0-9_]*$/D', $name)) {
             throw new RuntimeException('Unsupported schema identifier.');
         }
+
         $q = $this->engine === 'mysql' ? '`' : '"';
 
         return $q.$name.$q;
@@ -76,6 +80,7 @@ final class Store
             foreach ($stmt as [$table, $column]) {
                 $columns[$table][] = $column;
             }
+
             if ($this->engine === 'mysql') {
                 $stmt = $this->db->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=? AND COALESCE(engine,'') <> 'InnoDB'");
                 $stmt->execute([$schema]);
@@ -84,6 +89,7 @@ final class Store
                 }
             }
         }
+
         ksort($columns, SORT_STRING);
         foreach ($columns as &$fields) {
             sort($fields, SORT_STRING);

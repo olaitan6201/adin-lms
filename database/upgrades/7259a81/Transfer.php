@@ -17,9 +17,11 @@ final class Transfer
         if ($link !== null) {
             $fields[array_search($link, $columns, true)] = 'NULL';
         }
+
         if ($table === 'migrations') {
             $this->store->db->exec("DELETE FROM {$target}");
         }
+
         $select = implode(',', $fields);
         $this->store->db->exec("INSERT INTO {$target} ({$names}) SELECT {$select} FROM {$source}");
         if ($link !== null) {

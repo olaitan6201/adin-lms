@@ -14,7 +14,11 @@ type Question = {
 type Revision = {
     revision: number;
     reason: string;
-    awards: { position: number; maximum: string; points: string }[];
+    awards: {
+        position: number;
+        maximum: string;
+        points: string;
+    }[];
 };
 
 export default function MarkPaper({
@@ -34,10 +38,7 @@ export default function MarkPaper({
             <header className="assessment-heading">
                 <p className="portal-kicker">Marking workspace</p>
                 <h1 className="portal-title">Review examination</h1>
-                <p>
-                    Award points for each written or practical answer. Objective points are included
-                    automatically.
-                </p>
+                <p>Award points for each written or practical answer. Objective points are included automatically.</p>
             </header>
             <Post key={revision} url={`/attempts/${attempt}/review`} button="Record final mark">
                 <input type="hidden" name="base_revision" value={revision} />
@@ -46,9 +47,7 @@ export default function MarkPaper({
                         <h2>
                             Question {i + 1} · {q.prompt}
                         </h2>
-                        <pre>
-                            {q.answer || 'No response submitted.'}
-                        </pre>
+                        <pre>{q.answer || 'No response submitted.'}</pre>
                         {q.objective ? (
                             <p>
                                 Automatic award: {q.awarded} / {q.possible}

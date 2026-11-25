@@ -76,7 +76,7 @@ async function login(page, name) {
         await capture(page, 'mobile-reading-list');
         await page.keyboard.press('Enter');
         await expect(sco.getByText(/Group the specimens/)).toBeVisible();
-        await expect(page.locator('.masthead')).toHaveCSS('background-color', 'rgb(0, 93, 34)');
+        await expect(page.getByRole('banner')).toHaveCSS('background-color', 'rgb(0, 93, 34)');
         await expect(sco.getByRole('button', { name: 'Save and pause' })).toHaveCSS('min-height', '44px');
         // Same-origin synthetic message from the LMS itself must not consume a grant.
         await page.evaluate(() => window.postMessage({ type: 'reading-commit', state: {} }, location.origin));

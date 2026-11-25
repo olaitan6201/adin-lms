@@ -1,17 +1,31 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>Academic report</title>
-<style>body{font-family:DejaVu Sans,sans-serif;font-size:9pt}table{border-collapse:collapse;width:100%;table-layout:fixed}th,td{padding:5px;text-align:left;vertical-align:top;border-bottom:1px solid #bbb;overflow-wrap:break-word}th{background:#e9efee}</style>
-</head><body><h1>Academic report</h1><table>
-<thead><tr>@foreach ($table->columns as $label)<th>{{ $label }}</th>@endforeach</tr></thead>
-<tbody>
-@foreach ($table->lines() as $row)
-    @unless($loop->first)
-        <tr>
-            @foreach ($row as $value)
-                <td>{{ $value }}</td>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Academic report</title>
+    <style>{!! file_get_contents(resource_path('static-renderers/document.css')) !!}</style>
+</head>
+<body class="font-document text-report text-ink">
+    <h1>Academic report</h1>
+    <table class="w-full table-fixed border-collapse">
+        <thead>
+            <tr>
+                @foreach ($table->columns as $label)
+                    <th scope="col" class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $label }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($table->lines() as $row)
+                @unless ($loop->first)
+                    <tr>
+                        @foreach ($row as $value)
+                            <td class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $value }}</td>
+                        @endforeach
+                    </tr>
+                @endunless
             @endforeach
-        </tr>
-    @endunless
-@endforeach
-</tbody>
-</table></body></html>
+        </tbody>
+    </table>
+</body>
+</html>

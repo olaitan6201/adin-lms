@@ -5,61 +5,61 @@
 @endsection
 
 @section('content')
-    <main id="content" class="rail desk" tabindex="-1">
-        <header class="heading">
-            <p class="eyebrow">Course materials</p>
-            <h1>SCORM readings</h1>
+    <main id="content" class="mx-auto max-w-6xl px-4 sm:px-8 py-8" tabindex="-1">
+        <header class="mb-6 space-y-2 border-b border-neutral-200 pb-5">
+            <p class="text-sm font-semibold text-neutral-600">Course materials</p>
+            <h1 class="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">SCORM readings</h1>
             <p>{{ $staff ? 'Manage the reading exercises for this offering.' : 'Open a reading to begin or return to your saved note.' }}</p>
         </header>
-        <div @class(['columns' => $staff])>
-            <section aria-labelledby="collection">
-                <h2 id="collection">Reading list</h2>
+        <div class="grid items-start gap-8 md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
+            <section class="min-w-0" aria-labelledby="collection">
+                <h2 class="mb-3 text-xl font-semibold" id="collection">Reading list</h2>
                 @forelse ($packages as $package)
-                    <article class="reading-row">
-                        <h3>{{ $package->title }}</h3>
+                    <article class="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-200 py-4">
+                        <h3 class="font-semibold">{{ $package->title }}</h3>
                         @unless ($staff)
                             <form action="{{ route('scorm.launch', [$offering, $package->id]) }}" method="post">
                                 @csrf
-                                <button type="submit" aria-label="Open reading: {{ $package->title }}">Open reading</button>
+                                <button class="min-h-11 rounded-md bg-forest px-4 py-2 font-semibold text-white hover:underline" type="submit" aria-label="Open reading: {{ $package->title }}">Open reading</button>
                             </form>
                         @endunless
                     </article>
                 @empty
-                    <p class="empty">No readings are available.</p>
+                    <p class="border-t border-neutral-200 py-4 text-neutral-600">No readings are available.</p>
                 @endforelse
                 @if ($packages->hasPages())
-                    <nav class="pagination" aria-label="Reading list pages">
+                    <nav class="flex flex-wrap gap-4" aria-label="Reading list pages">
                         @if ($packages->previousPageUrl())
-                            <a href="{{ $packages->previousPageUrl() }}">Previous readings</a>
+                            <a class="inline-flex min-h-11 items-center font-medium text-forest underline underline-offset-4" href="{{ $packages->previousPageUrl() }}">Previous readings</a>
                         @endif
                         @if ($packages->nextPageUrl())
-                            <a href="{{ $packages->nextPageUrl() }}">More readings</a>
+                            <a class="inline-flex min-h-11 items-center font-medium text-forest underline underline-offset-4" href="{{ $packages->nextPageUrl() }}">More readings</a>
                         @endif
                     </nav>
                 @endif
             </section>
             @if ($staff)
-                <section class="import" aria-labelledby="import-title">
-                    <p class="eyebrow">Lecturer workspace</p>
-                    <h2 id="import-title">Add a reading</h2>
+                <section class="min-w-0 rounded-lg border border-neutral-200 p-5" aria-labelledby="import-title">
+                    <p class="text-sm font-semibold text-neutral-600">Lecturer workspace</p>
+                    <h2 class="mb-3 text-xl font-semibold" id="import-title">Add a reading</h2>
                     <p>Registered learners can open it once the offering is published.</p>
                     <form action="{{ route('scorm.store', $offering) }}" method="post" enctype="multipart/form-data">
                         @csrf
-                        <label for="title">Reading title</label>
-                        <input id="title" name="title" required maxlength="160" value="{{ old('title') }}"
+                        <label class="mt-4 mb-1 block font-semibold" for="title">Reading title</label>
+                        <input class="block min-h-11 w-full min-w-0 rounded-md border border-neutral-500 p-2" id="title" name="title" required maxlength="160" value="{{ old('title') }}"
                             @error('title') aria-invalid="true" aria-describedby="title-error" @enderror>
                         @error('title')
-                            <p id="title-error" role="alert">{{ $message }}</p>
+                            <p class="text-sm font-medium text-red-800" id="title-error" role="alert">{{ $message }}</p>
                         @enderror
-                        <label for="package">Reading v1 ZIP</label>
-                        <p id="package-hint">Choose a Reading v1 package, up to 128 KiB.</p>
-                        <input id="package" type="file" name="package" accept=".zip" required
+                        <label class="mt-4 mb-1 block font-semibold" for="package">Reading v1 ZIP</label>
+                        <p class="mb-1 text-sm text-neutral-600" id="package-hint">Choose a Reading v1 package, up to 128 KiB.</p>
+                        <input class="block min-h-11 w-full min-w-0 rounded-md border border-neutral-500 p-2" id="package" type="file" name="package" accept=".zip" required
                             aria-describedby="package-hint{{ $errors->has('package') ? ' package-error' : '' }}"
                             @error('package') aria-invalid="true" @enderror>
                         @error('package')
-                            <p id="package-error" role="alert">{{ $message }}</p>
+                            <p class="text-sm font-medium text-red-800" id="package-error" role="alert">{{ $message }}</p>
                         @enderror
-                        <button type="submit">Import reading</button>
+                        <button class="mt-5 min-h-11 rounded-md bg-forest px-4 py-2 font-semibold text-white hover:underline" type="submit">Import reading</button>
                     </form>
                 </section>
             @endif

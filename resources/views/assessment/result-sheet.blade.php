@@ -3,16 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Published result sheet</title>
-    <style>
-        body { font: 11pt "DejaVu Sans", sans-serif; color: #172b32; }
-        h1 { font-size: 20pt; }
-        h2 { margin-top: 24pt; font-size: 14pt; }
-        table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-        th, td { padding: 6pt; border-bottom: 1px solid #ccc; text-align: left; overflow-wrap: break-word; }
-        th:first-child { width: 43%; }
-    </style>
+    <style>{!! file_get_contents(resource_path('static-renderers/document.css')) !!}</style>
 </head>
-<body>
+<body class="font-document text-result text-ink">
     <h1>Published result sheet</h1>
     <p><strong>Learner:</strong> {{ $learner }}</p>
     @if ($course)<p><strong>Course:</strong> {{ $course }}</p>@endif
@@ -22,13 +15,22 @@
     <p>Total: {{ $grade->total_percent }}%</p>
     <h2>Assessment breakdown</h2>
     @if ($inputs)
-        <table>
-            <thead><tr><th>Assessment</th><th>Points earned</th><th>Maximum</th><th>Weight</th></tr></thead>
+        <table class="w-full table-fixed border-collapse">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-assessment border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">Assessment</th>
+                    <th scope="col" class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">Points earned</th>
+                    <th scope="col" class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">Maximum</th>
+                    <th scope="col" class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">Weight</th>
+                </tr>
+            </thead>
             <tbody>
             @foreach ($inputs as $input)
                 <tr>
-                    <td>{{ $input['item'] }}</td><td>{{ $input['points'] }}</td>
-                    <td>{{ $input['maximum'] }}</td><td>{{ $input['weight'] }}%</td>
+                    <td class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $input['item'] }}</td>
+                    <td class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $input['points'] }}</td>
+                    <td class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $input['maximum'] }}</td>
+                    <td class="border-0 border-b border-solid border-rule p-cell text-left align-top wrap-break-word">{{ $input['weight'] }}%</td>
                 </tr>
             @endforeach
             </tbody>

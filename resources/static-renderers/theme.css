@@ -1,0 +1,11 @@
+@theme inline {
+    --color-forest: #005d22;
+    --color-gold: #d6b469;
+    --color-ink: #1a1a18;
+    --color-rule: #cccccc;
+    --font-document: "DejaVu Sans", sans-serif;
+    --text-report: 9pt;
+    --text-result: 11pt;
+    --spacing-cell: 4pt;
+    --spacing-assessment: 43%;
+}

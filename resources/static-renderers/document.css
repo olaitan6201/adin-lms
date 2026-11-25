@@ -1,0 +1,65 @@
+/*! tailwindcss v4.3.5 | MIT License | https://tailwindcss.com */
+@layer properties;
+.w-assessment {
+  width: 43%;
+}
+.w-full {
+  width: 100%;
+}
+.table-fixed {
+  table-layout: fixed;
+}
+.border-collapse {
+  border-collapse: collapse;
+}
+.border-0 {
+  border-style: var(--tw-border-style);
+  border-width: 0px;
+}
+.border-b {
+  border-bottom-style: var(--tw-border-style);
+  border-bottom-width: 1px;
+}
+.border-solid {
+  --tw-border-style: solid;
+  border-style: solid;
+}
+.border-rule {
+  border-color: #cccccc;
+}
+.p-cell {
+  padding: 4pt;
+}
+.text-left {
+  text-align: left;
+}
+.align-top {
+  vertical-align: top;
+}
+.font-document {
+  font-family: "DejaVu Sans", sans-serif;
+}
+.text-report {
+  font-size: 9pt;
+}
+.text-result {
+  font-size: 11pt;
+}
+.wrap-break-word {
+  overflow-wrap: break-word;
+}
+.text-ink {
+  color: #1a1a18;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: block))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-border-style: solid;
+    }
+  }
+}

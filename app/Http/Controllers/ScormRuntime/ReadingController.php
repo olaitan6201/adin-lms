@@ -47,9 +47,11 @@ final class ReadingController
         $reading = $attempts->open($request, $offering, $package);
         $endpoint = route('scorm.save', [$offering, $package], false);
 
-        return response()->view('scorm-runtime.launch', compact('reading', 'origin', 'endpoint', 'offering'))
+        $styleNonce = base64_encode(random_bytes(20));
+
+        return response()->view('scorm-runtime.launch', compact('reading', 'origin', 'endpoint', 'offering', 'styleNonce'))
             ->header('Cache-Control', 'no-store, private')->header('Referrer-Policy', 'no-referrer')
-            ->header('Content-Security-Policy', "default-src 'none'; script-src 'self'; frame-src $origin; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'");
+            ->header('Content-Security-Policy', "default-src 'none'; style-src 'nonce-$styleNonce'; script-src 'self'; frame-src $origin; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'");
     }
 
     public function save(Request $request, Offering $offering, string $package, ReadingAttempts $attempts): Response

@@ -1,4 +1,6 @@
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useId, useState, type FormEvent } from 'react';
 import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
@@ -19,7 +21,7 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
 
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (busy) return;
+        if (busy || (mode === 'execute' && !checkedReceipt)) return;
         const fields = new FormData(event.currentTarget);
         const subject = encodeURIComponent(String(fields.get('subject')));
         const approval = encodeURIComponent(String(fields.get('approval')));
@@ -55,8 +57,8 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
     }
 
     return (
-        <section className="portal-panel desk-shelf space-y-3">
-            <h2 className="desk-section">{headings[mode]}</h2>
+        <Card role="region" aria-labelledby={`${id}-title`} className="min-w-0 space-y-3"><CardContent className="grid gap-3">
+            <h2 id={`${id}-title`} className="text-xl font-semibold">{headings[mode]}</h2>
             <p>{mode === 'approve' ? 'Verify the case, subject and scope. This records a receipt; it does not run the action.'
                 : mode === 'execute' ? 'Match both identifiers to the case receipt. A different authorised officer must act within 24 hours. Execution releases the approved extract or permanently deletes eligible withdrawn consents.'
                 : 'Contact the privacy lead first. Logging the reference does not send an alert.'}</p>
@@ -75,10 +77,10 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
                 </OperationsSelect>}
                 {mode === 'execute' && <>
                     <OperationsInput name="approval" label="Approval UUID" error={errors.approval} required pattern={uuid} />
-                    <label className="flex items-baseline gap-2 break-all">
-                        <NativeCheckbox required checked={checkedReceipt} onChange={event => setCheckedReceipt(event.target.checked)} />
+                    <Label className="flex items-baseline gap-2 break-all">
+                        <Checkbox required checked={checkedReceipt} onCheckedChange={value => setCheckedReceipt(value === true)} />
                         I checked the subject, approval and scope against {caseReference || 'the case'} in the restricted system.
-                    </label>
+                    </Label>
                 </>}
                 <Button variant={mode === 'execute' ? 'destructive' : 'outline'} disabled={busy}>
                     {actions[mode]}
@@ -87,6 +89,6 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Mode; 
                 {result && <><p role="status">{mode === 'execute' ? 'Approved action completed.' : result}</p>
                     {mode === 'execute' && <pre className="whitespace-pre-wrap break-all">{result}</pre>}</>}
             </form>
-        </section>
+        </CardContent></Card>
     );
 }

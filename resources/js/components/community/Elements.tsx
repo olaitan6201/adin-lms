@@ -1,3 +1,5 @@
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,7 +13,7 @@ type CommunityPageProps = {
 
 export function CommunityPage({ title, children }: CommunityPageProps) {
     return (
-        <main className="mx-auto max-w-2xl space-y-6 px-5 py-10">
+        <main className="mx-auto grid w-full max-w-3xl gap-6 p-4 md:p-8">
             <Head title={title} />
             <nav className="flex gap-5" aria-label="Learning community">
                 <Link className="underline" href="/courses">
@@ -32,20 +34,22 @@ export function EntryForm({
     title,
     children,
     body = true,
+    resetOnSuccess = true,
 }: {
     action: string;
     title: string;
     children?: ReactNode;
     body?: boolean;
+    resetOnSuccess?: boolean;
 }) {
     return (
-        <Form action={action} method="post" resetOnSuccess className="grid gap-3 rounded border p-4">
+        <Card><CardContent><Form action={action} method="post" resetOnSuccess={resetOnSuccess} className="grid gap-3">
             {({ processing, errors, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">{title}</h2>
                     {children}
                     {body && (
-                        <label>
+                        <Label className="grid gap-2">
                             Message
                             <Textarea
                                 name="body"
@@ -53,7 +57,7 @@ export function EntryForm({
                                 maxLength={10000}
                                 rows={3}
                             />
-                        </label>
+                        </Label>
                     )}
                     <Button disabled={processing}>
                         {title}
@@ -61,7 +65,7 @@ export function EntryForm({
                     {recentlySuccessful && <p role="status">Saved.</p>}
                 </FormFeedback>
             )}
-        </Form>
+        </Form></CardContent></Card>
     );
 }
 

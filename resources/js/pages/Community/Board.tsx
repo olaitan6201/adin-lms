@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
 import { Link } from '@inertiajs/react';
@@ -44,7 +45,7 @@ export default function Board({ offering, canManage, forums, groups, registratio
             </section>
             {members.length > 0 && (
                 <EntryForm action={`${base}/messages`} title="Send private message">
-                    <label>
+                    <Label className="grid gap-2">
                         Recipient{' '}
                         <NativeSelect className="max-w-full" name="recipient_id" required defaultValue="">
                             <option value="" disabled>
@@ -56,7 +57,7 @@ export default function Board({ offering, canManage, forums, groups, registratio
                                 </option>
                             ))}
                         </NativeSelect>
-                    </label>
+                    </Label>
                 </EntryForm>
             )}
             {canManage && (
@@ -64,10 +65,10 @@ export default function Board({ offering, canManage, forums, groups, registratio
                     <GroupManager base={base} groups={groups} registrations={registrations} />
                     <EntryForm action={`${base}/announcements`} title="Publish course announcement" />
                     <EntryForm action={`${base}/forums`} title="Create discussion" body={false}>
-                        <label>
+                        <Label className="grid gap-2">
                             Title <Input name="title" maxLength={191} required />
-                        </label>
-                        <label>
+                        </Label>
+                        <Label className="grid gap-2">
                             Audience{' '}
                             <NativeSelect className="max-w-full" name="group_id">
                                 <option value="">Whole course</option>
@@ -77,7 +78,7 @@ export default function Board({ offering, canManage, forums, groups, registratio
                                     </option>
                                 ))}
                             </NativeSelect>
-                        </label>
+                        </Label>
                     </EntryForm>
                 </>
             )}

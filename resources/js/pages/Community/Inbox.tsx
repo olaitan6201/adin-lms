@@ -1,4 +1,5 @@
-import { buttonVariants } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
@@ -15,20 +16,24 @@ type Props = {
 };
 
 export default function Inbox({ notices, messages, announcements, canAnnounce, canRecover }: Props) {
+    const unread = notices.filter(notice => !notice.read_at);
+    const ordered = [...unread, ...notices.filter(notice => notice.read_at)];
+    const empty = !notices.length && !messages.length && !announcements.length;
+
     return (
         <CommunityPage title="Community inbox">
-            {canRecover && (
-                <Link className="underline" href="/community/delivery-failures">
-                    Review failed email deliveries
-                </Link>
+            {empty && (
+                <Alert role="status">
+                    <AlertTitle>You're all caught up</AlertTitle>
+                    <AlertDescription>No notifications, announcements or private messages.</AlertDescription>
+                </Alert>
             )}
-            <section>
+            {notices.length > 0 && <section>
                 <h2 className="text-xl font-semibold">
-                    Notifications ({notices.filter((n) => !n.read_at).length} unread)
+                    Notifications ({unread.length} unread)
                 </h2>
-                {!notices.length && <p>No notifications yet.</p>}
                 <ul>
-                    {notices.map((n) => (
+                    {ordered.map((n) => (
                         <li className="space-y-1 border-b py-3" key={n.id}>
                             <p>
                                 <strong>{n.read_at ? 'Read' : 'Unread'}</strong> · {n.body}
@@ -45,11 +50,10 @@ export default function Inbox({ notices, messages, announcements, canAnnounce, c
                         </li>
                     ))}
                 </ul>
-            </section>
-            <Announcements entries={announcements} />
-            <section>
+            </section>}
+            {announcements.length > 0 && <Announcements entries={announcements} />}
+            {messages.length > 0 && <section>
                 <h2 className="text-xl font-semibold">Private messages</h2>
-                {!messages.length && <p>No private messages yet.</p>}
                 <ul>
                     {messages.map((m) => (
                         <li className="border-b py-3" key={m.id}>
@@ -60,7 +64,8 @@ export default function Inbox({ notices, messages, announcements, canAnnounce, c
                         </li>
                     ))}
                 </ul>
-            </section>
+            </section>}
+            {canRecover && <Button asChild variant="outline"><Link href="/community/delivery-failures">Review failed email deliveries</Link></Button>}
             {canAnnounce && <EntryForm action="/community/announcements" title="Publish institutional announcement" />}
         </CommunityPage>
     );

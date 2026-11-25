@@ -1,3 +1,4 @@
+import { Card, CardContent } from '@/components/ui/card';
 import { Head, Link } from '@inertiajs/react';
 
 type Props = {
@@ -18,21 +19,21 @@ function focusAfterVisit(id: string) {
 
 export default function Progress({ approvals, completed_lessons, previous, next, reference, recordsUrl }: Props) {
     return (
-        <main className="portal-page">
+        <main className="mx-auto grid w-full max-w-5xl gap-6 p-4 md:p-8">
             <Head title="Shared progress" />
-            <header className="desk-heading">
-                <p className="portal-kicker">Guardian workspace</p>
-                <h1 id="progress-title" tabIndex={-1} className="portal-title">{reference ? `Shared progress · ${reference}` : 'Shared progress'}</h1>
+            <header className="space-y-2">
+                <p className="text-sm text-muted-foreground">Guardian workspace</p>
+                <h1 id="progress-title" tabIndex={-1} className="break-words text-3xl font-semibold tracking-tight">{reference ? `Shared progress · ${reference}` : 'Shared progress'}</h1>
                 <p>Lesson completion shared with you by the institution.</p>
             </header>
             {approvals ? (
-                <section className="portal-panel desk-shelf mt-6">
-                    <h2 className="desk-section">Approved records</h2>
+                <Card><CardContent className="grid gap-3">
+                    <h2 className="text-xl font-semibold">Approved records</h2>
                     {approvals.length ? (
                         <ul>
                             {approvals.map(({ reference, href }) => (
                                 <li key={href}>
-                                    <Link href={href} id={`record-${reference}`} onSuccess={() => focusAfterVisit('progress-title')}>
+                                    <Link className="grid gap-1 py-2 text-primary underline underline-offset-4" href={href} id={`record-${reference}`} onSuccess={() => focusAfterVisit('progress-title')}>
                                         View progress · {reference}
                                         <small>Completed lessons</small>
                                     </Link>
@@ -40,30 +41,30 @@ export default function Progress({ approvals, completed_lessons, previous, next,
                             ))}
                         </ul>
                     ) : (
-                        <p className="desk-empty">No progress records are currently shared with you.</p>
+                        <p className="py-3 text-muted-foreground">No progress records are currently shared with you.</p>
                     )}
                     <nav aria-label="Records pages">
                         {previous && (
-                            <Link className="desk-link" href={previous}>
+                            <Link className="text-primary underline underline-offset-4" href={previous}>
                                 Previous records
                             </Link>
                         )}
                         {next && (
-                            <Link className="desk-link" href={next}>
+                            <Link className="text-primary underline underline-offset-4" href={next}>
                                 More records
                             </Link>
                         )}
                     </nav>
-                </section>
+                </CardContent></Card>
             ) : (
-                <section className="portal-panel desk-shelf mt-6">
-                    <h2 className="desk-section">Completed lessons</h2>
-                    <p className="my-3 font-serif text-5xl">{completed_lessons}</p>
+                <Card><CardContent className="grid gap-3">
+                    <h2 className="text-xl font-semibold">Completed lessons</h2>
+                    <p className="my-3 text-4xl font-semibold tabular-nums">{completed_lessons}</p>
                     <p>Across current course registrations.</p>
-                    <Link className="desk-link" href={recordsUrl ?? '/guardian'} onSuccess={() => focusAfterVisit(`record-${reference}`)}>
+                    <Link className="text-primary underline underline-offset-4" href={recordsUrl ?? '/guardian'} onSuccess={() => focusAfterVisit(`record-${reference}`)}>
                         Back to approved records
                     </Link>
-                </section>
+                </CardContent></Card>
             )}
         </main>
     );

@@ -1,3 +1,6 @@
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
@@ -29,17 +32,17 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
     );
 
     return (
-        <main className="portal-page space-y-6">
+        <main className="mx-auto grid w-full max-w-5xl gap-6 p-4 md:p-8">
             <Head title="Course exchange" />
-            <header className="desk-heading">
-                <p className="portal-kicker">Teaching administration</p>
-                <h1 className="portal-title">Course exchange</h1>
+            <header className="space-y-2">
+                <p className="text-sm text-muted-foreground">Teaching administration</p>
+                <h1 className="break-words text-3xl font-semibold tracking-tight">Course exchange</h1>
                 <p>Move teaching content between offerings. Enrolments, posts, submissions and grades stay behind.</p>
             </header>
             <div>
-                <label className="block font-semibold" htmlFor="exchange-offering">
+                <Label className="block font-semibold" htmlFor="exchange-offering">
                     Offering
-                </label>
+                </Label>
                 <Input
                     id="exchange-offering"
                     list="exchange-offerings"
@@ -67,9 +70,9 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                       : 'Choose the source for a download or the destination for a restore.'}
             </p>
             <div className="grid gap-5 md:grid-cols-2">
-                <form onSubmit={(event) => transfer(event, false)} className="portal-panel space-y-4">
-                    <h2 className="desk-section">Download a package</h2>
-                    <label className="block">
+                <Card><CardContent><form onSubmit={(event) => transfer(event, false)} className="min-w-0 space-y-4">
+                    <h2 className="text-xl font-semibold">Download a package</h2>
+                    <Label className="grid gap-2">
                         Format
                         <NativeSelect
                             value={format}
@@ -79,7 +82,7 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                             <option value="native">Adin course backup</option>
                             <option value="scorm">SCORM 1.2 text assets</option>
                         </NativeSelect>
-                    </label>
+                    </Label>
                     <p>
                         {format === 'native'
                             ? 'Current lessons and attachments, course forums, assignment briefs and reference files, exam definitions and course question banks. Assessment archives contain private answer keys; you need exchange permission and teaching authority for the selected offering.'
@@ -88,15 +91,15 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                     <Button disabled={!valid || busy}>
                         Download package
                     </Button>
-                </form>
-                <form onSubmit={(event) => transfer(event, true)} className="portal-panel desk-shelf space-y-4">
-                    <h2 className="desk-section">Restore to a draft</h2>
+                </form></CardContent></Card>
+                <Card><CardContent><form onSubmit={(event) => transfer(event, true)} className="min-w-0 space-y-4">
+                    <h2 className="text-xl font-semibold">Restore to a draft</h2>
                     <p>
                         Choose an empty draft with no enrolments, lessons, forums, classes or gradebook. Nothing is
                         overwritten.
                     </p>
                     <input type="hidden" name="_token" value={csrf} />
-                    <label className="block">
+                    <Label className="grid gap-2">
                         Package (up to {(uploadLimit / 1048576).toFixed(1)} MiB)
                         <Input
                             required
@@ -104,20 +107,18 @@ export default function CourseExchange({ csrf, offerings, uploadLimit }: Props) 
                             accept=".zip,.imscc"
                             name="package"
                         />
-                    </label>
+                    </Label>
                     <Button disabled={!valid || busy || (!!match && match.status !== 'draft')}>
                         Restore package
                     </Button>
-                </form>
+                </form></CardContent></Card>
             </div>
             <div role="status">{busy ? 'Transferring package…' : message}</div>
             {error && (
-                <p role="alert" className="rounded border border-red-700 p-3">
-                    {error}
-                </p>
+                <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>
             )}
-            <section className="space-y-2 border-t border-slate-300 pt-4">
-                <h2 className="desk-section">Compatibility limits</h2>
+            <section className="space-y-2 border-t border-border pt-4">
+                <h2 className="text-xl font-semibold">Compatibility limits</h2>
                 <p>
                     Native backups support 50 unscheduled lessons, 20 unrestricted materials per lesson and 50 forums.
                     Files are limited to 4 MiB each, 50 files and 8 MiB expanded in total. Legacy Adin chapter ZIPs are

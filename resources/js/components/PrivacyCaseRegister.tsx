@@ -1,3 +1,6 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, Link } from '@inertiajs/react';
@@ -38,10 +41,10 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                 The opening officer owns follow-up. Keep identities, correspondence, deadlines and documents in the
                 restricted case system. Enter only its opaque references here.
             </p>
-            <Form id="open-case" className="portal-panel desk-shelf" action="/operations/privacy/cases" method="post">
+            <Card><CardContent><Form id="open-case" className="min-w-0" action="/operations/privacy/cases" method="post">
                 {({ processing, errors, recentlySuccessful }) => (
                     <fieldset className="grid min-w-0 gap-2">
-                        <legend className="desk-section">Open a case</legend>
+                        <legend className="text-xl font-semibold">Open a case</legend>
                         <CorrectionFocus errors={errors} />
                         <OperationsSelect label="Case type" name="kind" error={errors.kind} value={kind}
                             onChange={event => setKind(event.target.value)}>
@@ -53,11 +56,11 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         {kind === 'records_disposition' && <p>For disposition, link the approved schedule and inventory first. A separate officer authorises the
                             decision. The custodian checks holds again before acting in the source system and returns an
                             execution receipt for independent verification. Advancing a case does not delete data.</p>}
-                        <label htmlFor="opening-reference">External case reference</label>
+                        <Label htmlFor="opening-reference">External case reference</Label>
                         <Input id="opening-reference" name="reference" required maxLength={64}
                             aria-invalid={errors.reference ? true : undefined} aria-describedby="reference-format" />
                         <small id="reference-format">{errors.reference && `${errors.reference} `}Use letters, numbers, underscores or hyphens only.</small>
-                        <label htmlFor="opening-subject">Affected account UUID (required except for breaches)</label>
+                        <Label htmlFor="opening-subject">Affected account UUID (required except for breaches)</Label>
                         <Input id="opening-subject" name="subject_id" aria-invalid={errors.subject_id ? true : undefined}
                             aria-describedby="opening-subject-help" />
                         <small id="opening-subject-help" className={errors.subject_id ? 'text-destructive' : undefined}>
@@ -69,8 +72,8 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         {recentlySuccessful && <p role="status">Case opened.</p>}
                     </fieldset>
                 )}
-            </Form>
-            <h2 className="desk-section">Continue a case</h2>
+            </Form></CardContent></Card>
+            <h2 className="text-xl font-semibold">Continue a case</h2>
             {cases.data.length === 0 && <p>No cases recorded.</p>}
             {cases.data.map((row) => (
                 <article key={row.id} className="space-y-2 break-words border-t py-3">
@@ -81,8 +84,9 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                         Stage: {label(row.stage)}. Latest evidence: {row.evidence}.
                     </p>
                     <p>Responsible officer: {row.owner}</p>
-                    <details>
-                        <summary className="cursor-pointer underline">Decision history</summary>
+                    <Collapsible>
+                        <CollapsibleTrigger asChild><Button type="button" variant="outline">Decision history</Button></CollapsibleTrigger>
+                        <CollapsibleContent>
                         <ol className="space-y-2 py-2">
                             {row.receipts.map((receipt) => (
                                 <li key={receipt.id}>
@@ -93,7 +97,8 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
                                 </li>
                             ))}
                         </ol>
-                    </details>
+                    </CollapsibleContent>
+                    </Collapsible>
                     {row.next && (
                         <Form id={`continue-${row.id}`}
                             method="post" action={`/operations/privacy/cases/${row.id}`}>

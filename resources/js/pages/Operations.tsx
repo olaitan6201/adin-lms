@@ -19,20 +19,21 @@ export default function Operations({
     infrastructure,
 }: Status) {
     return (
-        <main className="portal-page space-y-6">
+        <main className="mx-auto grid w-full max-w-5xl gap-6 p-4 md:p-8">
             <Head title="Institution operations" />
-            <header className="desk-heading">
-                <p className="portal-kicker">System administration</p>
-                <h1 className="portal-title">Institution operations</h1>
+            <header className="space-y-2">
+                <p className="text-sm text-muted-foreground">System administration</p>
+                <h1 className="break-words text-3xl font-semibold tracking-tight">Institution operations</h1>
                 <nav aria-label="Operations sections" className="flex flex-wrap gap-x-5 gap-y-2">
-                    <a className="desk-link" href="#monitor-settings">Monitoring settings</a>
-                    <a className="desk-link" href="#branding-heading">Institution identity</a>
-                    <a className="desk-link" href="#retention">Retention policy</a>
+                    <a className="text-primary underline underline-offset-4" href="#monitor-settings">Monitoring settings</a>
+                    <a className="text-primary underline underline-offset-4" href="#branding-heading">Institution identity</a>
+                    <a className="text-primary underline underline-offset-4" href="#retention">Retention policy</a>
                 </nav>
             </header>
-            <dl className="grid gap-4 border-y border-[var(--portal-line)] py-4 sm:grid-cols-3">
+            <dl className="grid gap-4 border-y border-border py-4 sm:grid-cols-3">
                 <div><dt>Unexpired, unrevoked sessions</dt><dd className="text-xl font-semibold">{activeSessions}</dd></div>
-                <div><dt>Failed notification deliveries</dt><dd className="text-xl font-semibold">{failedDeliveries}</dd></div>
+                <div><dt>Failed notification deliveries</dt><dd className="text-xl font-semibold">{failedDeliveries}</dd>
+                    {failedDeliveries > 0 && <dd><Link className="text-primary underline" href="/community/delivery-failures">Review failed deliveries</Link></dd>}</div>
                 <div><dt>Failed password or MFA checks in the last 24 hours</dt><dd className="text-xl font-semibold">{failedLogins}</dd></div>
             </dl>
             <InfrastructurePanel data={infrastructure} />

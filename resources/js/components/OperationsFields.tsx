@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { useId, useLayoutEffect, useRef, type ComponentProps } from 'react';
 import { PortalField } from './PortalForm';
@@ -6,14 +7,14 @@ export function OperationsInput(props: ComponentProps<typeof PortalField>) {
     return <PortalField {...props} announceError={false} />;
 }
 
-export function OperationsSelect({ label, error, children, ...select }: ComponentProps<'select'> & {
+export function OperationsSelect({ label, error, children, ...select }: ComponentProps<typeof NativeSelect> & {
     label: string;
     error?: string;
 }) {
     const id = useId();
     return (
         <div>
-            <label htmlFor={id}>{label}</label>
+            <Label htmlFor={id}>{label}</Label>
             <NativeSelect {...select} id={id} aria-invalid={error ? true : undefined}
                 aria-describedby={error ? `${id}-error` : undefined}>
                 {children}

@@ -1,5 +1,6 @@
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 import { EntryForm } from './Elements';
 
 type MembershipChange = {
@@ -48,7 +49,7 @@ function MembershipHistory({ entries }: { entries: GroupHistory[] }) {
 
                 return (
                     <li key={entry.id} className="border-t pt-3">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             <time dateTime={entry.occurred_at}>{new Date(entry.occurred_at).toLocaleString()}</time>
                             {' · '}
                             {entry.actor}
@@ -95,8 +96,9 @@ export function GroupManager({
             action={`${base}/groups${team ? `/${team.id}` : ''}`}
             title={team ? 'Save membership' : 'Create study group'}
             body={false}
+            resetOnSuccess={!team}
         >
-            <label>
+            <Label className="grid gap-2">
                 Group name
                 <Input
                     name="name"
@@ -104,18 +106,18 @@ export function GroupManager({
                     maxLength={191}
                     defaultValue={team?.name}
                 />
-            </label>
+            </Label>
             <fieldset>
                 <legend>Registered learners</legend>
                 {registrations.map((person) => (
-                    <label key={person.id} className="flex items-center gap-2 py-1">
-                        <NativeCheckbox
+                    <Label key={person.id} className="flex items-center gap-2 py-1">
+                        <Checkbox
                             name="members[]"
                             value={person.id}
                             defaultChecked={team?.members.some((member) => member.enrolment_id === person.id)}
                         />
                         {person.label}
-                    </label>
+                    </Label>
                 ))}
             </fieldset>
         </EntryForm>

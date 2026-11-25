@@ -1,11 +1,12 @@
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
 import { OperationsInput, CorrectionFocus } from './OperationsFields';
 
 export default function RetentionPolicy({ days: retentionDays }: { days: number | null }) {
     return (
-        <section className="portal-panel desk-shelf space-y-3" aria-label="Retention policy">
-            <h2 className="desk-section">Withdrawn feedback consent</h2>
+        <Card role="region" className="min-w-0 space-y-3" aria-label="Retention policy"><CardContent className="grid gap-3">
+            <h2 className="text-xl font-semibold">Withdrawn feedback consent</h2>
             <p>
                 {retentionDays === null
                     ? 'Deletion is disabled until a retention period is configured.'
@@ -31,6 +32,6 @@ export default function RetentionPolicy({ days: retentionDays }: { days: number 
                     </>
                 )}
             </Form>
-        </section>
+        </CardContent></Card>
     );
 }

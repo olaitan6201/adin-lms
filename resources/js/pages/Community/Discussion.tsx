@@ -1,3 +1,4 @@
+import { Label } from '@/components/ui/label';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Link } from '@inertiajs/react';
@@ -62,7 +63,7 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
             </ol>
             <div ref={composer}>
                 <EntryForm action={action} title="Post to discussion">
-                    <label>
+                    <Label className="grid gap-2">
                         Reply to{' '}
                         <NativeSelect
                             name="parent_id"
@@ -76,7 +77,7 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                                 </option>
                             ))}
                         </NativeSelect>
-                    </label>
+                    </Label>
                 </EntryForm>
             </div>
         </CommunityPage>

@@ -1,3 +1,4 @@
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
@@ -30,7 +31,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
     return (
         <section className="space-y-5" aria-label="Infrastructure">
             <InfrastructureReadings data={data} />
-            <Form id="monitor-settings" className="portal-panel desk-shelf"
+            <Card><CardContent><Form id="monitor-settings" className="min-w-0"
                 action="/operations/infrastructure" method="post">
                 {({ errors, processing, recentlySuccessful }) => (
                     <fieldset className="grid gap-3">
@@ -67,7 +68,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                         {recentlySuccessful && <p role="status">Infrastructure settings saved.</p>}
                     </fieldset>
                 )}
-            </Form>
+            </Form></CardContent></Card>
             <h2 className="text-xl font-semibold">Backup and restore evidence</h2>
             <div aria-label="Backup runner outcome">
                 <h3 className="font-semibold">Latest backup job</h3>
@@ -78,7 +79,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                     data.backup.overdue === null ? 'No freshness target configured' : data.backup.overdue ? 'Report overdue' : 'Within reporting interval'
                 }</p>}
             </div>
-            <Form id="backup-receipt" className="portal-panel desk-shelf"
+            <Card><CardContent><Form id="backup-receipt" className="min-w-0"
                 action="/operations/backup-evidence" method="post">
                 {({ errors, processing, recentlySuccessful }) => (
                     <fieldset className="grid gap-3">
@@ -97,7 +98,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                         {recentlySuccessful && <p role="status">Backup receipt recorded.</p>}
                     </fieldset>
                 )}
-            </Form>
+            </Form></CardContent></Card>
             {data.receipts.length === 0 ? (
                 <p>No backup evidence recorded.</p>
             ) : (

@@ -36,7 +36,9 @@ class PrivacyCaseFileTest extends TestCase
         $this->assertSame(PrivacyCaseStage::Closed, $case->fresh()->stage);
         $this->assertDatabaseHas('audit_logs', ['action' => 'privacy.case_advanced', 'subject_key' => $case->id]);
         $this->withoutVite()->get('/operations/privacy')->assertInertia(fn (Page $p) => $p
-            ->where('cases.data.0.evidence', 'RECEIPT-3')->where('cases.data.0.stage', 'closed')->has('cases.links'));
+            ->where('cases.data.0.evidence', 'RECEIPT-3')->where('cases.data.0.stage', 'closed')->has('cases.links')
+            ->has('cases.data.0.receipts', 5)->where('cases.data.0.receipts.0.actor', $owner->id)
+            ->where('cases.data.0.receipts.4.reference', 'RECEIPT-3'));
     }
 
     public function test_subject_hold_blocks_an_existing_approval_until_separately_released(): void

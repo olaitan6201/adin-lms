@@ -35,7 +35,7 @@ final class PrivacyController
     {
         return Inertia::render('PrivacyDesk', [
             'csrf' => csrf_token(),
-            'cases' => CaseFileResource::collection(PrivacyCaseFile::orderByDesc('updated_at')->orderByDesc('id')->simplePaginate(15)),
+            'cases' => CaseFileResource::collection(PrivacyCaseFile::with('receipts')->orderByDesc('updated_at')->orderByDesc('id')->simplePaginate(15)),
             'operations' => [
                 ['value' => PrivacyOperation::Export->value, 'label' => 'Export account and consent'],
                 ['value' => PrivacyOperation::RegistrationExtract->value, 'label' => 'Extract subject registrations for a verified access case'],

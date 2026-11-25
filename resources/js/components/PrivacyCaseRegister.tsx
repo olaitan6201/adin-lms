@@ -2,6 +2,7 @@ import { Form, Link } from '@inertiajs/react';
 
 type CaseFile = {
     id: string; reference: string; kind: string; stage: string; next: string | null; evidence: string; owner: string;
+    receipts: { id: string; time: string; actor: string; stage: string; reference: string }[];
 };
 export type CasePage = { data: CaseFile[]; links: { next: string | null; prev: string | null } };
 const label = (value: string) => value.replaceAll('_', ' ');
@@ -28,6 +29,12 @@ export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
             <h3 className="font-semibold">{row.reference} · {label(row.kind)}</h3>
             <p>Stage: {label(row.stage)}. Latest evidence: {row.evidence}.</p>
             <p>Responsible officer: {row.owner}</p>
+            <details><summary className="cursor-pointer underline">Decision history</summary>
+                <ol className="space-y-2 py-2">{row.receipts.map(receipt => <li key={receipt.id}>
+                    {new Date(receipt.time).toLocaleString()} · {label(receipt.stage)} · {receipt.reference}
+                    <br />Recorded by {receipt.actor}
+                </li>)}</ol>
+            </details>
             {row.next && <Form method="post" action={`/operations/privacy/cases/${row.id}`}>
                 {({ processing, errors }) => <fieldset className="grid min-w-0 gap-2">
                     <legend>Record next step: {label(row.next!)}</legend>

@@ -37,6 +37,66 @@ keep it intact: migrate a new database, transfer and reconcile the pilot
 records (map legacy numeric IDs to new UUIDs and translate all dependent links; preserve password hashes and roster revisions),
 then switch connections. Rolling back this baseline drops the whole schema.
 
+### Transfer an existing `7259a81` UUID database
+
+Use `database/upgrades/7259a81/run.php` offline. Ordinary `artisan migrate`
+skips the already-recorded filename. This transfer expects the original
+UUID schema, a restored source and a new, **unseeded** destination on the
+same engine. It never reads `.env`. First rehearse locally:
+`bash tests/Fixtures/Upgrade7259a81/rehearse.sh sqlite` (also `pgsql` and `mysql`;
+install PHP PDO drivers and local PostgreSQL or MySQL server/client binaries).
+
+1. Stop application writes, workers, scheduled jobs and integrations. Keep the
+   old app/database intact. Back up the database, matching private files and
+   encryption keys; verify restoration in isolation. Keep the backup artifact
+   and the restored source immutable. Budget space for a full copy, indexes
+   and a single transaction’s journal/WAL. Do not expose either copy to traffic.
+2. Prepare a separate destination using this checkout's `php artisan migrate`
+   pointed **only** at the empty target, without seeders. Prepare per engine:
+
+   | Engine | `UPGRADE_SOURCE` | `UPGRADE_DSN` (destination) |
+   |---|---|---|
+   | SQLite | absolute path to restored, checkpointed SQLite file | `sqlite:/absolute/path/new.sqlite` |
+   | MySQL | database name of restored dump on destination server | `mysql:unix_socket=/path/mysql.sock;dbname=new_lms` |
+   | PostgreSQL | `legacy` | `pgsql:host=/path/to/socket;dbname=new_lms` |
+
+   For PostgreSQL, restore the old dump into a **new isolated database**
+   first, rename its restored `public` schema to `legacy`, create a fresh
+   `public`, then run the target migration there. Use a target owner without
+   superuser privileges and grant read access to the restored tables and
+   sequences; use normal constraint enforcement. For MySQL grant SELECT on
+   the restored source, and DML plus ALTER on the isolated InnoDB target.
+   Keep runtime users away from the restored schema.
+3. Export the two variables above and `UPGRADE_BACKUP` (path to the nonempty
+   backup that was restored). Supply server credentials through
+   `UPGRADE_USER` / `UPGRADE_PASSWORD` in the private operator environment.
+   From the checkout root:
+
+   ```sh
+   umask 077
+   php database/upgrades/7259a81/run.php plan > "$PRIVATE_DIR/plan.json"
+   # Inspect backup hash, target migration hash, every table count and digest.
+   php database/upgrades/7259a81/run.php "apply:$PLAN_HASH" > "$PRIVATE_DIR/receipt.json"
+   ```
+
+   Set `PRIVATE_DIR` to a private directory outside the checkout and `PLAN_HASH`
+   to the reviewed 64-character `plan` value. The read-only plan binds the
+   backup, data and target location. Apply recomputes it, copies original
+   values/UUIDs with constraints enabled, restores self-links, verifies counts
+   and every original column in primary-key order, and commits together.
+   It preserves recorded policy/grade history; it does not invent historical
+   rubric snapshots. New tables start empty and new nullable fields stay null.
+4. On any error keep traffic on the old installation. Discard **only the
+   isolated candidate**, prepare a fresh one, diagnose and re-plan. MySQL
+   auto-increment counters can advance even after a failed transaction.
+   Never run `migrate:fresh` or `migrate:rollback` on the source. On success,
+   retain the private receipt and independently verify an actual receipt,
+   published grade, withdrawal/access denial and file readback before any
+   approved switch. Review role-catalogue changes separately. Before admitting
+   writes rollback means pointing the old code at its untouched database;
+   after new writes, freeze and reconcile them before reverting or they will
+   be lost. The transfer neither switches connections nor deploys code.
+
 ## Demo data
 
 After migrating the baseline, run `php artisan db:seed` in a **local** environment.

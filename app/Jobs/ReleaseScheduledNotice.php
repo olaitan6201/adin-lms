@@ -16,6 +16,7 @@ final class ReleaseScheduledNotice implements ShouldQueue
         public readonly TimedNotice $kind,
         public readonly string $source,
         public readonly int $at,
+        public readonly ?int $prerequisiteRevision = null,
     ) {}
 
     public function handle(TimedReleaseCapture $capture): void

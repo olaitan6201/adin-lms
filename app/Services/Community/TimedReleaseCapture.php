@@ -2,12 +2,15 @@
 
 namespace App\Services\Community;
 
+use App\Enums\CommunityAuditAction;
 use App\Enums\Learning\LessonKind;
 use App\Enums\OfferingStatus;
 use App\Enums\TimedNotice;
 use App\Jobs\ReleaseScheduledNotice;
 use App\Models\Assignment;
+use App\Models\AuditLog;
 use App\Models\MaterialVersion;
+use App\Models\Module;
 use App\Models\Offering;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Queue;
@@ -28,9 +31,24 @@ final class TimedReleaseCapture
         $resource = $version->material;
         $module = $resource->module;
         $opens = max($module->opens_at, $resource->opens_at, $version->created_at);
-        if (! $resource->restrictions && ! str_starts_with($module->kind, LessonKind::DRAFT_PREFIX)) {
-            $this->schedule($module->offering, TimedNotice::Material, $version->id, $opens);
+        if ($opens->isFuture() && ! $resource->restrictions && ! str_starts_with($module->kind, LessonKind::DRAFT_PREFIX)) {
+            $this->schedule($module->offering, TimedNotice::Material, $version->id, $opens, $this->prerequisiteRevision($module));
         }
+    }
+
+    public function prerequisiteChanged(Module $module): void
+    {
+        AuditLog::forceCreate([
+            'action' => CommunityAuditAction::LessonPrerequisiteChanged->value,
+            'subject_key' => $module->id,
+            'occurred_at' => now(),
+        ]);
+    }
+
+    private function prerequisiteRevision(Module $module): int
+    {
+        return AuditLog::where('subject_key', $module->id)
+            ->where('action', CommunityAuditAction::LessonPrerequisiteChanged->value)->count();
     }
 
     public function reschedule(string $offering, ?string $module = null): void
@@ -42,14 +60,14 @@ final class TimedReleaseCapture
         }
     }
 
-    private function schedule(Offering $course, TimedNotice $kind, string $id, CarbonImmutable $at): void
+    private function schedule(Offering $course, TimedNotice $kind, string $id, CarbonImmutable $at, ?int $prerequisiteRevision = null): void
     {
         if (! $at->isFuture() || $course->status !== OfferingStatus::Published) {
             return;
         }
 
         Queue::connection('community_events')->later($at, new ReleaseScheduledNotice(
-            $course->id, $kind, $id, $at->timestamp,
+            $course->id, $kind, $id, $at->timestamp, $prerequisiteRevision,
         ));
     }
 
@@ -66,6 +84,9 @@ final class TimedReleaseCapture
             $resource = MaterialVersion::find($event->source)?->material;
             $module = $resource?->module;
             if ($module?->offering_id !== $course->id || $resource->restrictions || str_starts_with($module->kind, LessonKind::DRAFT_PREFIX)) {
+                return;
+            }
+            if (($event->prerequisiteRevision ?? null) !== $this->prerequisiteRevision($module)) {
                 return;
             }
 

@@ -38,7 +38,10 @@ final class CommunityEventServiceProvider extends ServiceProvider
             }
         });
         Module::updated(function (Module $module) use ($academic, $timed): void {
-            if ($module->wasChanged(['kind', 'opens_at', 'closes_at'])) {
+            if ($module->wasChanged('prerequisite_id')) {
+                $timed->prerequisiteChanged($module);
+            }
+            if ($module->wasChanged(['kind', 'opens_at', 'closes_at', 'prerequisite_id'])) {
                 $academic->materials(module: $module->id);
                 $timed->reschedule($module->offering_id, $module->id);
             }

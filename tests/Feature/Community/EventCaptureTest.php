@@ -12,6 +12,44 @@ use Illuminate\Support\Facades\DB;
 
 final class EventCaptureTest extends CommunityTestCase
 {
+    public function test_delayed_material_release_cannot_reuse_an_old_rule_after_prerequisite_edits(): void
+    {
+        $course = $this->course();
+        $prior = Module::where('offering_id', $course->id)->sole();
+        $lesson = Module::factory()->create(['offering_id' => $course->id, 'position' => 2]);
+        $opens = now()->addHour();
+        $resource = LearningMaterial::factory()->create([
+            'module_id' => $lesson->id, 'opens_at' => $opens, 'closes_at' => $opens->copy()->addHour(),
+        ]);
+        $version = MaterialVersion::factory()->create(['material_id' => $resource->id]);
+        $lesson->forceFill(['prerequisite_id' => $prior->id])->save();
+        $this->travel(3)->hours();
+        $lesson->forceFill(['prerequisite_id' => null])->save();
+
+        $this->artisan('community:notify')->assertSuccessful();
+        $this->assertDatabaseMissing('notifications', ['event_key' => 'material:'.$version->id]);
+    }
+
+    public function test_prerequisite_edit_before_release_queues_the_replacement_rule(): void
+    {
+        $course = $this->course();
+        $prior = Module::where('offering_id', $course->id)->sole();
+        $lesson = Module::factory()->create([
+            'offering_id' => $course->id, 'position' => 2, 'prerequisite_id' => $prior->id,
+        ]);
+        $resource = LearningMaterial::factory()->create([
+            'module_id' => $lesson->id, 'opens_at' => now()->addHour(), 'closes_at' => now()->addHours(2),
+        ]);
+        $version = MaterialVersion::factory()->create(['material_id' => $resource->id]);
+        $lesson->forceFill(['prerequisite_id' => null])->save();
+        $this->travel(3)->hours();
+
+        $this->artisan('community:notify')->assertSuccessful();
+        $notices = Notification::where('event_key', 'material:'.$version->id);
+        $this->assertSame(2, $notices->count());
+        $this->assertSame(2, DB::table('notification_deliveries')->whereIn('notification_id', $notices->select('id'))->count());
+    }
+
     public function test_delayed_material_notice_requires_completion_by_the_release_instant(): void
     {
         $course = $this->course();

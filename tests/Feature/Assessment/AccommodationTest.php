@@ -73,7 +73,8 @@ class AccommodationTest extends AssessmentCase
         $this->get("$paper/review")->assertForbidden();
         $this->as($this->marker)->get("$paper/review")->assertOk();
         $this->post("$paper/review", [
-            'points' => '6',
+            'base_revision' => 0,
+            'awards' => [AttemptQuestion::where('attempt_id', $attempt->id)->where('position', 1)->sole()->id => '4'],
             'reason' => 'Manual rubric applied',
         ])->assertRedirect();
         $this->as($this->member->student->user)->post("$url/start")->assertRedirect();

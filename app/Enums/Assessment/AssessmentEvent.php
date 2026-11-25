@@ -8,6 +8,7 @@ enum AssessmentEvent: string
     case ExamStarted = 'exam.started';
     case SaveRejected = 'exam.save_rejected';
     case ExamSubmitted = 'exam.submitted';
+    case QuestionAwards = 'exam.question_awards';
     case AccommodationApproved = 'exam.accommodation';
     case GradeCalculated = 'grade.calculated';
     case GradebookActivated = 'gradebook.activate';

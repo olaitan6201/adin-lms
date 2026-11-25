@@ -3,19 +3,21 @@
 namespace App\Http\Controllers\Assessment;
 
 use App\Enums\Assessment\AssessmentEvent;
-use App\Enums\Assessment\AttemptState;
 use App\Enums\Assessment\ItemKind;
 use App\Http\Requests\Assessment\AccommodationRequest;
 use App\Http\Requests\Assessment\ExamSetupRequest;
-use App\Http\Requests\Assessment\RecordMarkRequest;
+use App\Http\Requests\Assessment\MarkExamRequest;
 use App\Models\Accommodation;
 use App\Models\AssessmentItem;
+use App\Models\AssessmentScore;
 use App\Models\AttemptQuestion;
+use App\Models\AuditLog;
 use App\Models\Enrolment;
 use App\Models\Examination;
 use App\Models\ExaminationAttempt;
 use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\BuildExamination;
+use App\Services\Assessment\MarkExamQuestions;
 use App\Services\Assessment\ScoreLedger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -69,41 +71,32 @@ class ExamAuthorController
     {
         Gate::authorize('mark', $attempt->exam->item);
         abort_unless($attempt->submitted_at, 409);
-        $questions = AttemptQuestion::with(['version:id,prompt', 'latestResponse'])
+        $questions = AttemptQuestion::with(['version:id,prompt,kind,marking_key', 'latestResponse'])
             ->where('attempt_id', $attempt->id)
             ->orderBy('position')
             ->get()
             ->map(fn (AttemptQuestion $question) => [
+                'id' => $question->id,
                 'prompt' => $question->version->prompt,
                 'answer' => $question->latestResponse?->answer['value'] ?? '',
+                'marking_guide' => $question->version->marking_key['guide'] ?? null,
+                'objective' => $question->version->kind->isObjective(),
                 'possible' => $question->possible_points,
-                'automatic' => $question->awarded_points,
+                'awarded' => $question->awarded_points,
             ]);
 
         return Inertia::render('Assessments/MarkPaper', [
             'attempt' => $attempt->id,
             'questions' => $questions,
+            'revision' => (int) AssessmentScore::where('attempt_id', $attempt->id)->max('revision'),
+            'history' => AuditLog::where('attempt_id', $attempt->id)->where('action', AssessmentEvent::QuestionAwards)
+                ->latest('id')->get(['details'])->pluck('details'),
         ]);
     }
 
-    public function mark(RecordMarkRequest $request, ExaminationAttempt $attempt, ScoreLedger $ledger): RedirectResponse
+    public function mark(MarkExamRequest $request, ExaminationAttempt $attempt, MarkExamQuestions $action): RedirectResponse
     {
-        Gate::authorize('mark', $attempt->exam->item);
-        abort_unless($attempt->submitted_at, 409);
-        $data = $request->validated();
-        DB::transaction(function () use ($ledger, $attempt, $request, $data) {
-            $ledger->append(
-                $attempt->exam->item,
-                $attempt->enrolment_id,
-                (string) $data['points'],
-                $data['reason'],
-                $request->user()->id,
-                [
-                    'attempt_id' => $attempt->id,
-                    'released_at' => $request->boolean('release') ? now() : null,
-                ]);
-            $attempt->forceFill(['state' => AttemptState::Marked])->save();
-        });
+        $action->run($attempt, $request->user(), $request->validated());
 
         return back();
     }

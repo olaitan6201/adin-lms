@@ -71,7 +71,7 @@ class ExamDeliveryTest extends AssessmentCase
         $this->assertSame(1, AssessmentScore::count());
         $this->get($this->desk)->assertInertia(fn (Page $p) => $p->where('items.0.returned', null));
         $this->as($this->marker)->post("$paper/review", [
-            'points' => '10',
+            'base_revision' => 1,
             'reason' => 'Verified',
             'release' => 1,
         ])->assertRedirect();

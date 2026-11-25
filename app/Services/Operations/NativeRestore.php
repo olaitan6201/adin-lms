@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Services\Operations;
+
+use App\Models\Forum;
+use App\Models\LearningMaterial;
+use App\Models\MaterialVersion;
+use App\Models\Module;
+use App\Models\Offering;
+use App\Models\User;
+
+final class NativeRestore
+{
+    public function store(array $backup, array $entries, Offering $target, User $actor, array &$written): int
+    {
+        foreach ($backup['lessons'] as $index => $lesson) {
+            $module = Module::forceCreate([
+                'offering_id' => $target->id, 'position' => $index + 1,
+                'kind' => $lesson['kind'], 'title' => $lesson['title'], 'body' => $lesson['body'],
+            ]);
+            foreach ($lesson['materials'] as $row) {
+                $material = LearningMaterial::forceCreate([
+                    'module_id' => $module->id, 'title' => $row['title'], 'download_allowed' => $row['download'],
+                ]);
+                $attachment = $row['attachment'];
+                $file = $attachment ? PackageAttachments::restore($attachment, $entries[$attachment['asset']]) : null;
+                if ($file) {
+                    $written[] = $file->object_key;
+                }
+                MaterialVersion::forceCreate([
+                    'material_id' => $material->id, 'revision' => 1, 'created_at' => now(), 'created_by' => $actor->id,
+                    'body' => $row['body'], 'external_url' => $row['url'], 'transcript' => $row['transcript'], 'file_id' => $file?->id,
+                ]);
+            }
+        }
+        foreach ($backup['forums'] as $title) {
+            Forum::forceCreate(['offering_id' => $target->id, 'title' => $title]);
+        }
+
+        return count($backup['lessons']) + count($backup['forums']);
+    }
+}

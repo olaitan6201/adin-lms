@@ -8,6 +8,6 @@ final class ImportCoursePackageRequest extends FormRequest
 {
     public function rules(): array
     {
-        return ['package' => 'required|file|max:1024'];
+        return ['package' => 'required|file|max:9216'];
     }
 }

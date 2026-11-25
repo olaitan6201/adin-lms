@@ -7,7 +7,7 @@ use ZipArchive;
 
 final class TextAssetArchive
 {
-    public const MAX_TOTAL_BYTES = 524288;
+    public const MAX_TOTAL_BYTES = 8388608;
 
     private const MAX_ENTRY_BYTES = 65535;
 
@@ -20,8 +20,8 @@ final class TextAssetArchive
     public static function read(string $path): array
     {
         $zip = new ZipArchive;
-        if (filesize($path) > 1048576 || $zip->open($path, ZipArchive::CHECKCONS | ZipArchive::RDONLY) !== true) {
-            self::reject('Expected a ZIP of at most 1 MiB.');
+        if (filesize($path) > 9437184 || $zip->open($path, ZipArchive::CHECKCONS | ZipArchive::RDONLY) !== true) {
+            self::reject('Expected a ZIP of at most 9 MiB.');
         }
 
         try {
@@ -39,13 +39,15 @@ final class TextAssetArchive
                     self::reject('Only regular archive files are supported.');
                 }
 
-                if (! preg_match('~^(imsmanifest\.xml|course\.json|[a-z0-9_-]{1,64}\.txt)$~D', $name)
-                    || isset($entries[$name]) || $stat['size'] > self::MAX_ENTRY_BYTES || $stat['encryption_method'] !== 0
+                $binary = preg_match('~^asset-[1-9][0-9]?\.bin$~D', $name);
+                $limit = $binary ? 4194304 : ($name === 'backup.json' ? 1048576 : self::MAX_ENTRY_BYTES);
+                if ((! $binary && ! preg_match('~^(imsmanifest\.xml|backup\.json|course\.json|(?:[a-zA-Z0-9_-]{1,64}/){0,3}[a-zA-Z0-9_-]{1,64}\.txt)$~D', $name))
+                    || isset($entries[$name]) || $stat['size'] > $limit || $stat['encryption_method'] !== 0
                     || $bytes > self::MAX_TOTAL_BYTES) {
                     self::reject('Invalid asset name, size, encryption or duplicate entry.');
                 }
 
-                $entries[$name] = self::readText($zip, $i, $stat['size']);
+                $entries[$name] = self::readEntry($zip, $i, $stat['size'], (bool) $binary);
             }
 
             return $entries;
@@ -65,11 +67,11 @@ final class TextAssetArchive
         return $system !== ZipArchive::OPSYS_UNIX || in_array($unixType, [0, 0100000], true);
     }
 
-    private static function readText(ZipArchive $zip, int $index, int $expectedBytes): string
+    private static function readEntry(ZipArchive $zip, int $index, int $expectedBytes, bool $binary): string
     {
-        $text = $zip->getFromIndex($index, self::MAX_ENTRY_BYTES + 1);
-        if ($text === false || strlen($text) !== $expectedBytes || ! mb_check_encoding($text, 'UTF-8')
-            || preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', $text)) {
+        $text = $zip->getFromIndex($index, $expectedBytes + 1);
+        if ($text === false || strlen($text) !== $expectedBytes || (! $binary && (! mb_check_encoding($text, 'UTF-8')
+            || preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', $text)))) {
             self::reject('Every asset must be plain UTF-8 text.');
         }
 

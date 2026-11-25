@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { GroupManager, type Group, type Registration } from '../../components/community/GroupManager';
 import {
     Announcements,
     CommunityPage,
@@ -16,10 +17,8 @@ type Props = {
         id: string;
         title: string;
     }[];
-    groups: {
-        id: string;
-        name: string;
-    }[];
+    groups: Group[];
+    registrations: Registration[];
     members: {
         id: string;
         full_name: string;
@@ -32,6 +31,7 @@ export default function Board({
     canManage,
     forums,
     groups,
+    registrations,
     members,
     announcements,
 }: Props) {
@@ -77,6 +77,7 @@ export default function Board({
             )}
             {canManage && (
                 <>
+                    <GroupManager base={base} groups={groups} registrations={registrations} />
                     <EntryForm
                         action={`${base}/announcements`}
                         title="Publish course announcement"

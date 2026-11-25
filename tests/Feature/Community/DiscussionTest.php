@@ -4,7 +4,6 @@ namespace Tests\Feature\Community;
 
 use App\Models\AuditLog;
 use App\Models\Forum;
-use App\Models\GroupMember;
 use App\Models\Post;
 use App\Models\StudyGroup;
 use App\Models\User;
@@ -19,11 +18,14 @@ class DiscussionTest extends CommunityTestCase
         $course = $this->course();
         $ada = $this->person('ada');
         $general = Forum::forceCreate(['title' => 'Course discussion', 'offering_id' => $course->id]);
-        $group = StudyGroup::forceCreate(['offering_id' => $course->id, 'name' => 'Team']);
-        GroupMember::forceCreate([
-            'group_id' => $group->id,
-            'enrolment_id' => $ada->student->enrolments()->where('offering_id', $course->id)->sole()->id,
-        ]);
+        $create = route('community.groups.create', $course);
+        $teamData = ['name' => 'Team', 'members' => [$ada->student->enrolments()->where('offering_id', $course->id)->sole()->id]];
+        $this->actingAs($ada)->post($create, $teamData)->assertForbidden();
+        $this->actingAs($this->person('lecturer'))->post($create, [
+            'name' => 'Other course', 'members' => [$ada->student->enrolments()->where('offering_id', '!=', $course->id)->sole()->id],
+        ])->assertSessionHasErrors('members');
+        $this->post($create, $teamData)->assertSessionHasNoErrors()->assertRedirect();
+        $group = StudyGroup::where('name', 'Team')->sole();
         $this->actingAs($this->person('lecturer'))
             ->post(route('community.forums.create', $course), [
                 'title' => 'Team forum',
@@ -42,6 +44,7 @@ class DiscussionTest extends CommunityTestCase
             'parent_id' => $post->id,
         ])->assertSessionHasErrors('parent_id');
         $this->actingAs($this->person('tunde'))->get(route('community.discussion', $team))->assertForbidden();
+        $this->get(route('community.board', $course))->assertDontSee('Team forum');
         $this->post($action, ['body' => 'No access'])->assertForbidden();
         $hide = route('community.hide', [$team, $post]);
         $this->actingAs($ada)->patch($hide)->assertForbidden();

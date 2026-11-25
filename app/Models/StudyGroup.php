@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StudyGroup extends DomainModel
 {
@@ -13,5 +14,10 @@ class StudyGroup extends DomainModel
     public function offering(): BelongsTo
     {
         return $this->belongsTo(Offering::class, 'offering_id');
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(GroupMember::class, 'group_id');
     }
 }

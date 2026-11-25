@@ -6,6 +6,7 @@ use App\Http\Requests\Community\CommunityBodyRequest;
 use App\Http\Requests\Community\CreateForumRequest;
 use App\Http\Requests\Community\SendMessageRequest;
 use App\Models\Announcement;
+use App\Models\Enrolment;
 use App\Models\Forum;
 use App\Models\Offering;
 use App\Models\PrivateMessage;
@@ -36,7 +37,12 @@ class BoardController
                 ->filter(fn (Forum $f) => $request->user()->can('view', $f))
                 ->values()
                 ->map->only(['id', 'title']),
-            'groups' => $teacher ? StudyGroup::where('offering_id', $offering->id)->get(['id', 'name']) : [],
+            'groups' => $teacher ? StudyGroup::with('members:id,group_id,enrolment_id')
+                ->where('offering_id', $offering->id)->orderBy('name')->get(['id', 'name']) : [],
+            'registrations' => $teacher ? Enrolment::with('student.user:id,full_name')
+                ->where('offering_id', $offering->id)->where('status', 'registered')->get()->map(fn ($row) => [
+                    'id' => $row->id, 'label' => $row->student->user?->full_name ?? $row->student->external_student_id,
+                ]) : [],
             'members' => $members
                 ->where('id', '!=', $request->user()->id)
                 ->orderBy('full_name')

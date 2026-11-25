@@ -4,6 +4,7 @@ use App\Http\Controllers\Community\BoardController;
 use App\Http\Controllers\Community\DeliveryRecoveryController;
 use App\Http\Controllers\Community\DiscussionController;
 use App\Http\Controllers\Community\InboxController;
+use App\Http\Controllers\Community\StudyGroupController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')
@@ -22,6 +23,8 @@ Route::middleware('auth')
             ->whereUuid('offering')
             ->group(function (): void {
                 Route::get('/', [BoardController::class, 'show'])->name('board');
+                Route::post('/groups', [StudyGroupController::class, 'save'])->name('groups.create');
+                Route::post('/groups/{group}', [StudyGroupController::class, 'save'])->whereUuid('group')->name('groups.update');
                 Route::post('/forums', [BoardController::class, 'forum'])->name('forums.create');
                 Route::post('/announcements', [BoardController::class, 'announce'])->name('course.announce');
                 Route::post('/messages', [BoardController::class, 'message'])

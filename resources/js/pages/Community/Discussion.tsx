@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { useRef, useState } from 'react';
 import { CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
 type Props = {
@@ -16,6 +17,8 @@ type Props = {
 
 export default function Discussion({ forum, canModerate, posts }: Props) {
     const action = `/community/forums/${forum.id}/posts`;
+    const [reply, setReply] = useState('');
+    const composer = useRef<HTMLDivElement>(null);
     const numbers = new Map(posts.map((post, i) => [post.id, i + 1]));
 
     return (
@@ -39,6 +42,10 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                                 <p>Reply to a hidden post</p>
                             ))}
                         <p className="whitespace-pre-wrap break-words">{post.body}</p>
+                        <button className="mr-4 py-2 underline" onClick={() => {
+                            setReply(post.id);
+                            composer.current?.querySelector('textarea')?.focus();
+                        }}>Reply to post {i + 1}</button>
                         {canModerate && (
                             <Link
                                 as="button"
@@ -52,10 +59,10 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                     </li>
                 ))}
             </ol>
-            <EntryForm action={action} title="Post to discussion">
+            <div ref={composer}><EntryForm action={action} title="Post to discussion">
                 <label>
                     Reply to{' '}
-                    <select name="parent_id" className="border p-2">
+                    <select name="parent_id" className="border p-2" value={reply} onChange={event => setReply(event.target.value)}>
                         <option value="">New topic</option>
                         {posts.map((p, i) => (
                             <option key={p.id} value={p.id}>
@@ -64,7 +71,7 @@ export default function Discussion({ forum, canModerate, posts }: Props) {
                         ))}
                     </select>
                 </label>
-            </EntryForm>
+            </EntryForm></div>
         </CommunityPage>
     );
 }

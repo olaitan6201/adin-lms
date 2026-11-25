@@ -19,6 +19,7 @@ class TrackWebAuthentication
         if ($event->guard !== 'web') {
             return;
         }
+
         if ($event instanceof Failed) {
             AuthEvents::record($event->user, AuthenticationOutcome::PasswordFailed);
         } elseif ($event instanceof Login) {

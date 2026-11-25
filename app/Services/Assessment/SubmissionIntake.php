@@ -6,6 +6,7 @@ use App\Enums\EnrolmentStatus;
 use App\Models\Assignment;
 use App\Models\Enrolment;
 use App\Models\GroupMember;
+use App\Models\StudyGroup;
 use App\Models\Submission;
 use App\Models\SubmissionFile;
 use App\Models\SubmissionRecipient;
@@ -31,17 +32,16 @@ class SubmissionIntake
         return DB::transaction(function () use ($assignment, $user, $body, $file, $group) {
             $assignment = Assignment::lockForUpdate()->findOrFail($assignment->id);
             $offering = $assignment->item->gradebook->offering_id;
+            abort_unless($assignment->group_work === ($group !== null), 422, 'Choose the required submission group.');
+            $team = $group === null ? null : StudyGroup::where('offering_id', $offering)
+                ->lockForUpdate()->findOrFail($group);
             $learner = $this->access->learner($user, $offering)->lockForUpdate()->firstOrFail();
             $open = now()->gte($assignment->opens_at) && now()->lt($assignment->closes_at);
             $acceptsLate = $assignment->late_policy['allow'] ?? false;
             abort_unless($open && ($acceptsLate || now()->lte($assignment->due_at)), 422, 'Submission window closed.');
-            abort_unless($assignment->group_work === ($group !== null), 422, 'Choose the required submission group.');
             $recipients = collect([$learner->id]);
-            if ($group) {
-                $members = GroupMember::where('group_id', $group)
-                    ->whereHas('group', fn ($q) => $q
-                        ->where('offering_id', $offering))
-                    ->pluck('enrolment_id');
+            if ($team) {
+                $members = GroupMember::where('group_id', $team->id)->pluck('enrolment_id');
                 $recipients = Enrolment::whereIn('id', $members)
                     ->where('offering_id', $offering)
                     ->where('status', EnrolmentStatus::Registered)

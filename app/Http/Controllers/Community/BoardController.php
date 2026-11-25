@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Community;
 
+use App\Enums\StudyGroupAuditAction;
 use App\Http\Requests\Community\CommunityBodyRequest;
 use App\Http\Requests\Community\CreateForumRequest;
 use App\Http\Requests\Community\SendMessageRequest;
 use App\Models\Announcement;
+use App\Models\AuditLog;
 use App\Models\Enrolment;
 use App\Models\Forum;
 use App\Models\Offering;
@@ -28,6 +30,15 @@ class BoardController
         $members = $this->audience->members($offering->id);
         abort_unless((clone $members)->whereKey($request->user()->id)->exists(), 403);
         $teacher = $this->audience->teachers($offering->id)->whereKey($request->user()->id)->exists();
+        $groups = $teacher ? StudyGroup::with('members:id,group_id,enrolment_id')
+            ->where('offering_id', $offering->id)->orderBy('name')->get(['id', 'name']) : collect();
+        $history = $teacher ? AuditLog::with('actor:id,full_name')
+            ->where('action', StudyGroupAuditAction::Saved->value)
+            ->whereIn('subject_key', $groups->map(fn (StudyGroup $team): string => 'study-group:'.$team->id))
+            ->orderByDesc('occurred_at')
+            ->orderByDesc('id')
+            ->get()
+            ->groupBy('subject_key') : collect();
 
         return Inertia::render('Community/Board', [
             'offering' => $offering->only('id', 'external_offering_id'),
@@ -37,8 +48,18 @@ class BoardController
                 ->filter(fn (Forum $f) => $request->user()->can('view', $f))
                 ->values()
                 ->map->only(['id', 'title']),
-            'groups' => $teacher ? StudyGroup::with('members:id,group_id,enrolment_id')
-                ->where('offering_id', $offering->id)->orderBy('name')->get(['id', 'name']) : [],
+            'groups' => $groups->map(fn (StudyGroup $team): array => [
+                'id' => $team->id,
+                'name' => $team->name,
+                'members' => $team->members->map->only(['enrolment_id'])->all(),
+                'history' => ($history['study-group:'.$team->id] ?? collect())
+                    ->map(fn (AuditLog $entry): array => [
+                        'id' => $entry->id,
+                        'occurred_at' => $entry->occurred_at->toIso8601String(),
+                        'actor' => $entry->actor?->full_name ?? 'System',
+                        'details' => $entry->details,
+                    ])->values()->all(),
+            ])->all(),
             'registrations' => $teacher ? Enrolment::with('student.user:id,full_name')
                 ->where('offering_id', $offering->id)->where('status', 'registered')->get()->map(fn ($row) => [
                     'id' => $row->id, 'label' => $row->student->user?->full_name ?? $row->student->external_student_id,

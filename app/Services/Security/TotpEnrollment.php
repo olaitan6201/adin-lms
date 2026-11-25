@@ -2,6 +2,7 @@
 
 namespace App\Services\Security;
 
+use App\Enums\AuthenticationOutcome;
 use App\Models\Credential;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,7 @@ class TotpEnrollment
                 'user_id' => $user->id, 'kind' => 'totp', 'expires_at' => now()->addMinutes(15),
                 'protected_value' => Crypt::encrypt(['secret' => $secret, 'step' => 0]),
             ])->save();
-            AuthEvents::record($user, 'mfa.issued');
+            AuthEvents::record($user, AuthenticationOutcome::AuthenticatorIssued);
 
             return $secret;
         });
@@ -42,7 +43,11 @@ class TotpEnrollment
                 $value = Crypt::decrypt($factor->protected_value);
                 $step = $this->totp->verifyKeyNewer($value['secret'], $code, $value['step'], 1, intdiv(now()->timestamp, 30));
                 if (is_int($step)) {
-                    AuthEvents::record($user, $factor->expires_at === null ? 'mfa.accepted' : 'mfa.enrolled');
+                    $outcome = $factor->expires_at === null
+                        ? AuthenticationOutcome::ChallengeAccepted
+                        : AuthenticationOutcome::AuthenticatorEnrolled;
+
+                    AuthEvents::record($user, $outcome);
                     $factor->expires_at = null;
                     $factor->protected_value = Crypt::encrypt(['secret' => $value['secret'], 'step' => $step]);
                     $factor->save();
@@ -50,7 +55,7 @@ class TotpEnrollment
                     return true;
                 }
             }
-            AuthEvents::record($user, 'mfa.failed');
+            AuthEvents::record($user, AuthenticationOutcome::ChallengeFailed);
 
             return false;
         });

@@ -2,6 +2,7 @@
 
 namespace App\Services\Security;
 
+use App\Enums\AuthenticationOutcome;
 use App\Models\AuthSession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,7 +33,7 @@ class WebSessions
             if ($session->expires_at->lte(now())) {
                 $session->revoked_at = now();
                 $session->save();
-                AuthEvents::record($user, 'session.expired');
+                AuthEvents::record($user, AuthenticationOutcome::SessionExpired);
 
                 return false;
             }

@@ -16,7 +16,7 @@ class LoginEventResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'occurred_at' => $this->occurred_at->toISOString(),
-            'outcome' => $this->outcome,
+            'outcome' => $this->outcome->value,
         ];
     }
 }

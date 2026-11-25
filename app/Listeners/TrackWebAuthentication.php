@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Enums\AuthenticationOutcome;
 use App\Services\Security\AuthEvents;
 use App\Services\Security\WebSessions;
 use Illuminate\Auth\Events\CurrentDeviceLogout;
@@ -19,13 +20,13 @@ class TrackWebAuthentication
             return;
         }
         if ($event instanceof Failed) {
-            AuthEvents::record($event->user, 'password.failed');
+            AuthEvents::record($event->user, AuthenticationOutcome::PasswordFailed);
         } elseif ($event instanceof Login) {
             $this->sessions->start(request(), $event->user);
-            AuthEvents::record($event->user, 'password.accepted');
+            AuthEvents::record($event->user, AuthenticationOutcome::PasswordAccepted);
         } elseif ($event->user && request()->hasSession()) {
             $this->sessions->end(request(), $event->user);
-            AuthEvents::record($event->user, 'session.logout');
+            AuthEvents::record($event->user, AuthenticationOutcome::SignedOut);
         }
     }
 }

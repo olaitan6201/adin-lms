@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\AuthenticationOutcome;
 use App\Models\AuthSession;
 use App\Models\User;
 use App\Services\Security\AuthEvents;
@@ -29,7 +30,7 @@ class RevokeWebSessions extends Command
             $count = AuthSession::where('user_id', $user->id)->whereNull('revoked_at')
                 ->when($session, fn ($query) => $query->whereKey($session))->update(['revoked_at' => now()]);
             if ($count > 0) {
-                AuthEvents::record($user, 'session.revoked');
+                AuthEvents::record($user, AuthenticationOutcome::SessionRevoked);
             }
 
             return $count;

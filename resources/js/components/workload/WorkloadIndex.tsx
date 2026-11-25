@@ -5,14 +5,14 @@ import type { WorkloadData } from './contracts';
 
 export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900">
+        <main className="portal-page">
             <Head title="Teaching workload" />
-            <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-                <header>
-                    <p className="text-sm font-semibold uppercase tracking-wide text-teal-800">
+            <div>
+                <header className="desk-heading">
+                    <p className="portal-kicker">
                         Lecturer workspace
                     </p>
-                    <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+                    <h1 className="portal-title">
                         Teaching workload
                     </h1>
                     <p className="mt-2 text-slate-600">
@@ -47,7 +47,7 @@ export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
                             {workload.classes.map((course) => (
                                 <li
                                     key={course.id}
-                                    className="rounded-xl border border-slate-200 bg-white p-5"
+                                    className="portal-panel desk-shelf"
                                 >
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>

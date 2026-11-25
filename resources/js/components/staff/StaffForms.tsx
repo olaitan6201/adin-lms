@@ -21,8 +21,8 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
                         />
                     </label>
                     <label>
-                        Verified account UUID{' '}
-                        <input className="block w-full border p-2" name="user_id" required />
+                        Verified account email{' '}
+                        <input className="block w-full border p-2" type="email" name="account_email" required />
                     </label>
                     <label>
                         Department{' '}

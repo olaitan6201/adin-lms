@@ -1,5 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import PrivacyCaseRegister, { type CasePage } from '../components/PrivacyCaseRegister';
 
 type OperationChoice = {
     value: string;
@@ -9,6 +10,7 @@ type OperationChoice = {
 type PrivacyDeskProps = {
     csrf: string;
     operations: OperationChoice[];
+    cases: CasePage;
 };
 
 function CaseReference({ label }: { label: string }) {
@@ -19,7 +21,7 @@ function CaseReference({ label }: { label: string }) {
     );
 }
 
-export default function PrivacyDesk({ csrf, operations }: PrivacyDeskProps) {
+export default function PrivacyDesk({ csrf, operations, cases }: PrivacyDeskProps) {
     const [subject, setSubject] = useState('');
     const [approval, setApproval] = useState('');
     const errors = usePage().props.errors;
@@ -37,6 +39,7 @@ export default function PrivacyDesk({ csrf, operations }: PrivacyDeskProps) {
             <p>
                 Verify identity, authority and holds in the institution's case system. Use only its reference here.
             </p>
+            <PrivacyCaseRegister cases={cases} />
             <label>
                 Subject account UUID
                 <input
@@ -51,7 +54,7 @@ export default function PrivacyDesk({ csrf, operations }: PrivacyDeskProps) {
                 <CaseReference label="Case reference" />
                 <label>
                     Scope{' '}
-                    <select name="operation">
+                    <select className="block w-full min-w-0 rounded border p-2" name="operation">
                         {operations.map((operation) => (
                             <option key={operation.value} value={operation.value}>
                                 {operation.label}

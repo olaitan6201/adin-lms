@@ -7,6 +7,8 @@ use App\Enums\PrivacyOperation;
 use App\Http\Requests\Operations\ApprovePrivacyCaseRequest;
 use App\Http\Requests\Operations\CaseReferenceRequest;
 use App\Http\Requests\Operations\ChangeConsentRequest;
+use App\Http\Resources\Operations\CaseFileResource;
+use App\Models\PrivacyCaseFile;
 use App\Models\PrivacyConsent;
 use App\Models\User;
 use App\Services\Operations\ConsentRegister;
@@ -33,8 +35,10 @@ final class PrivacyController
     {
         return Inertia::render('PrivacyDesk', [
             'csrf' => csrf_token(),
+            'cases' => CaseFileResource::collection(PrivacyCaseFile::orderByDesc('updated_at')->orderByDesc('id')->simplePaginate(15)),
             'operations' => [
                 ['value' => PrivacyOperation::Export->value, 'label' => 'Export account and consent'],
+                ['value' => PrivacyOperation::RegistrationExtract->value, 'label' => 'Extract subject registrations for a verified access case'],
                 ['value' => PrivacyOperation::Purge->value, 'label' => 'Delete eligible withdrawn feedback consents'],
             ],
         ]);

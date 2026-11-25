@@ -55,6 +55,20 @@ For isolated tests, use factories instead of seeding the whole campus, e.g.
 `Enrolment::factory()->withdrawn()->create()`. The default seeder skips demo
 data outside `local` and `testing`.
 
+To exercise a teaching week with a reading, class, forum and open assignment,
+run `php artisan db:seed --class=DemoTeachingWeekSeeder` after the default
+local seed. The example grade boundaries belong only to this demo scenario.
+
+### Repeatable browser journey
+
+After `composer install` and `npm ci`, install a browser with
+`npx playwright install chromium`, then run `npm run test:e2e`. Alternatively,
+set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to an installed Chrome executable.
+The runner builds the frontend, launches its own loopback-only Laravel server,
+migrates and seeds a new SQLite database, then verifies real assignment
+submission and readback on phone and desktop. It never resets the developer
+database. Artifacts stay in `.agent-work/browser-tests/`.
+
 ## Checks
 
 ### Identity and scoped access

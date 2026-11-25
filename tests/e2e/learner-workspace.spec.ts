@@ -45,7 +45,8 @@ test('a registered learner can find a course and submit a persisted revision', a
     await expect(page.getByRole('heading', { name: 'First reading' })).toBeVisible();
     await page.getByRole('link', { name: 'Return to course activities' }).press('Enter');
 
-    const activity = page.locator('.activity-sequence li').filter({ hasText: assignment });
+    const activity = page.getByRole('navigation', { name: 'Course sequence' }).getByRole('listitem')
+        .filter({ hasText: assignment });
     await expect(activity.locator('time')).toHaveText(due);
     await activity.getByRole('link', { name: assignment }).press('Enter');
     await expect(page.getByText('Due', { exact: true }).locator('..').locator('time')).toHaveText(due);

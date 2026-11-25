@@ -10,6 +10,7 @@ use App\Models\AssessmentItem;
 use App\Models\Enrolment;
 use App\Models\Grade;
 use App\Models\Gradebook;
+use App\Models\GradeBoundary;
 use App\Models\GradeInput;
 use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\GradeCalculation;
@@ -86,6 +87,9 @@ class GradebookController
         return response(json_encode([
             'enrolment' => $grade->enrolment_id,
             'policy' => $grade->policy_id,
+            'rounding' => $grade->policy->rounding_rule->value,
+            'boundaries' => GradeBoundary::where('policy_id', $grade->policy_id)
+                ->orderByDesc('minimum_percent')->get(['minimum_percent', 'grade']),
             'revision' => $grade->revision,
             'total' => (string) $grade->total_percent,
             'grade' => $grade->grade,

@@ -1,4 +1,4 @@
-import { Field, Post } from './Fields';
+import { Link } from '@inertiajs/react';
 
 export type Grade = {
     id: string;
@@ -20,35 +20,22 @@ interface Props {
 
 export function ResultRevisions({ grades, teacher, officer, who }: Props) {
     return (
-        <section>
+        <section id="result-revisions" className="portal-panel">
             <h2>Result revisions</h2>
             {!grades.length && <p>No results available.</p>}
             {grades.map((g) => (
                 <article key={g.id}>
                     <h3>
-                        {who(g.enrolment_id)} · Revision {g.revision}
+                        {who(g.enrolment_id) ?? 'Your result'} · Revision {g.revision}
                     </h3>
                     <p>
                         {g.total_percent}% · {g.grade} ·{' '}
                         {g.published_at ? 'Published' : g.moderation_status}
                     </p>
                     {(teacher || officer) && <p>{g.moderation_note}</p>}
-                    {g.published_at ? (
+                    {officer && <Link href={`/grades/${g.id}/evidence`}>Inspect marks and moderation history</Link>}
+                    {g.published_at && (
                         <a href={`/grades/${g.id}/sheet`}>Download published result sheet</a>
-                    ) : (
-                        officer && (
-                            <Post url={`/grades/${g.id}/review`} button="Record decision">
-                                <label>
-                                    Decision
-                                    <select name="decision">
-                                        <option value="correct">Request correction</option>
-                                        <option value="approve">Approve</option>
-                                        <option value="publish">Publish approved result</option>
-                                    </select>
-                                </label>
-                                <Field label="Reason" name="reason" />
-                            </Post>
-                        )
                     )}
                 </article>
             ))}

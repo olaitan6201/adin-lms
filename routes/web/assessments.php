@@ -7,6 +7,7 @@ use App\Http\Controllers\Assessment\AssignmentInstructionsController;
 use App\Http\Controllers\Assessment\ExamAuthorController;
 use App\Http\Controllers\Assessment\ExamSessionController;
 use App\Http\Controllers\Assessment\GradebookController;
+use App\Http\Controllers\Assessment\ModerationEvidenceController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function (): void {
@@ -44,6 +45,7 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::controller(GradebookController::class)->group(function (): void {
+        Route::get('grades/{grade}/evidence', ModerationEvidenceController::class)->name('assessment.evidence');
         Route::post('gradebooks/{book}/compute/{enrolment}', 'compute')->name('assessment.compute');
         Route::post('grades/{grade}/review', 'review')->name('assessment.moderate');
         Route::get('grades/{grade}/sheet', 'sheet')->name('assessment.sheet');

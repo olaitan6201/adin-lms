@@ -33,6 +33,7 @@ type Props = {
         id: string;
         instructions: string;
         group_work: boolean;
+        opens_at: string;
         due_at: string;
         closes_at: string;
         accepted_formats: string[];

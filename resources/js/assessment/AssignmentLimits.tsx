@@ -1,6 +1,7 @@
 import { LearnerTime } from '../components/LearnerTime';
 
 type Limits = {
+    opens_at: string;
     due_at: string;
     closes_at: string;
     accepted_formats: string[];
@@ -19,7 +20,11 @@ function uploadLimit(bytes: number) {
 export function AssignmentLimits({ assignment }: { assignment: Limits }) {
     return (
         <>
-            <dl className="my-3 grid gap-3 sm:grid-cols-2">
+            <dl className="my-3 grid gap-3 sm:grid-cols-3">
+                <div>
+                    <dt className="font-semibold">Opens</dt>
+                    <dd><LearnerTime instant={assignment.opens_at} /></dd>
+                </div>
                 <div>
                     <dt className="font-semibold">Due</dt>
                     <dd><LearnerTime instant={assignment.due_at} /></dd>

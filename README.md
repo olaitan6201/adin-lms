@@ -22,7 +22,7 @@ For frontend hot reload, also run `npm run dev` in another terminal. Select `pgs
 ## Database baseline
 
 `database/migrations/2026_11_25_000001_create_uuid_lms_schema.php` is a single
-initial migration: 69 LMS domain tables plus seven Laravel storage tables
+initial migration: the LMS domain schema plus seven Laravel storage tables
 for sessions, password resets, cache and queues. The migration is
 self-contained; it does not read the local `.agents/docs/schema.dbml`.
 Domain primary keys are application-generated UUIDv7 values; foreign keys referencing them are UUIDs, including `sessions.user_id`. Framework-owned job counters and opaque session/cache keys keep their Laravel types. The default Schema string length is 191; explicit lengths override it.

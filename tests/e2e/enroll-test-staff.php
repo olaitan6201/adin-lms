@@ -30,6 +30,7 @@ foreach (['group-desktop', 'group-phone'] as $login) {
     TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $offering->id]);
     app(ChangeRoleGrant::class)->apply($user->id, RoleCode::Lecturer, 'offering:'.$offering->id, false);
 }
+
 foreach (['lecturer', 'officer', 'group-desktop', 'group-phone'] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
     $secret = app(TotpEnrollment::class)->issue($account);

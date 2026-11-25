@@ -20,12 +20,12 @@ export function Answer({
     question: q,
     url,
     active,
-    onDirty,
+    onProgress,
 }: {
     question: Question;
     url: string;
     active: boolean;
-    onDirty: (id: string, dirty: boolean) => void;
+    onProgress: (id: string, dirty: boolean, answered: boolean) => void;
 }) {
     const [value, setValue] = useState<AnswerValue>(q.value);
     const [message, setMessage] = useState('Saved');
@@ -57,7 +57,10 @@ export function Answer({
 
         return () => window.clearTimeout(timer);
     }, [value, busy, failed, saved, retry, url, active]);
-    useEffect(() => onDirty(q.id, saved !== value || busy), [q.id, saved, value, busy, onDirty]);
+    const answered = q.matching
+        ? typeof saved === 'object' && q.matching.left.every(({ id }) => Boolean(saved[id]))
+        : typeof saved === 'string' && saved.trim().length > 0;
+    useEffect(() => onProgress(q.id, saved !== value || busy, answered), [q.id, saved, value, busy, answered, onProgress]);
     const edit = (next: AnswerValue) => {
         setValue(next);
         setMessage(next === saved && !busy ? 'Saved' : 'Unsaved');

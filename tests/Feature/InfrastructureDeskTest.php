@@ -25,7 +25,10 @@ class InfrastructureDeskTest extends TestCase
         $this->postJson('/operations/infrastructure', $settings)->assertUnprocessable();
         config(['learning.attendance_bridge_standby_key' => $secret = str_repeat('X', 32)]);
         $this->postJson('/operations/infrastructure', ['bridge_slot' => $secret] + $settings)->assertUnprocessable();
-        $this->post('/operations/infrastructure', $settings + ['key' => $secret])->assertRedirect('/operations');
+        $this->post('/operations/infrastructure', $settings + ['key' => $secret])->assertSessionHasErrors('bridge_slot');
+        $this->assertStringNotContainsString($secret, serialize(session()->getOldInput()));
+        $this->assertDatabaseMissing('audit_logs', ['action' => 'operations.infrastructure_changed']);
+        $this->post('/operations/infrastructure', $settings)->assertRedirect('/operations');
         $this->assertEquals($settings, SystemConfiguration::sole()->value);
         $this->assertEquals($settings, AuditLog::whereAction('operations.infrastructure_changed')->sole()->details);
         $this->withoutVite()->get('/operations')->assertDontSee($secret);

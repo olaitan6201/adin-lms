@@ -11,5 +11,4 @@ export SESSION_DRIVER=file CACHE_STORE=array MAIL_MAILER=array QUEUE_CONNECTION=
 export APP_URL="http://127.0.0.1:${PORTAL_TEST_PORT:-19173}"
 touch "$DB_DATABASE"
 php artisan migrate --seed --force
-php artisan db:seed --class=DemoTeachingWeekSeeder --force
 exec php artisan serve --no-reload --host=127.0.0.1 --port="${PORTAL_TEST_PORT:-19173}"

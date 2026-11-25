@@ -55,9 +55,8 @@ For isolated tests, use factories instead of seeding the whole campus, e.g.
 `Enrolment::factory()->withdrawn()->create()`. The default seeder skips demo
 data outside `local` and `testing`.
 
-To exercise a teaching week with a reading, class, forum and open assignment,
-run `php artisan db:seed --class=DemoTeachingWeekSeeder` after the default
-local seed. The example grade boundaries belong only to this demo scenario.
+The local demo includes a teaching week with a reading, class, forum and open
+assignment. The example grade boundaries belong only to this demo scenario.
 
 ### Repeatable browser journey
 

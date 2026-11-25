@@ -26,7 +26,7 @@ final class InfrastructureDesk
     public function configure(User $operator, array $settings): void
     {
         $slot = BridgeSlot::from($settings['bridge_slot']);
-        if ($slot !== BridgeSlot::Disabled && strlen($slot->key() ?? '') < 32) {
+        if ($slot !== BridgeSlot::Disabled && strlen($slot->key() ?? '') < 32 && $this->settings()['bridge_slot'] !== $slot->value) {
             throw ValidationException::withMessages(['bridge_slot' => 'Provision this slot on the host first, or disable the bridge.']);
         }
 

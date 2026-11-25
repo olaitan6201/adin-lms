@@ -41,7 +41,7 @@ class MatchingCredit
         }
 
         return BigDecimal::of($correct)
-            ->multipliedBy($question->possible_points)
+            ->multipliedBy((string) $question->possible_points)
             ->dividedBy($pairs, 8, $rounding)
             ->toScale(8, $rounding)
             ->toString();

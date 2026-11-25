@@ -54,8 +54,8 @@ export function HierarchyForms({
             <h2 className="text-xl font-semibold">Configure organisation</h2>
             {forms.map(([label, path, fields]) => (
                 <details className="border-b py-2" key={path}>
-                    <summary>Maintain {label}</summary>
-                    <label>
+                    <summary className="cursor-pointer py-2 font-medium">Maintain {label}</summary>
+                    <label className="grid gap-2 text-sm font-medium">
                         Record{' '}
                         <NativeSelect
                             value={selection[path] ?? ''}

@@ -1,8 +1,8 @@
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { VerifiedRecord } from '../identity/VerifiedRecord';
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
+import { PortalField } from '../PortalForm';
+import { RecordField } from '../academics/RecordField';
 import { Form } from '@inertiajs/react';
 
 export type DepartmentOption = {
@@ -16,31 +16,10 @@ export function RegisterLecturer({ departments }: { departments: DepartmentOptio
             {({ errors, processing, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">Register a lecturer</h2>
-                    <label>
-                        Staff number{' '}
-                        <Input name="staff_number" maxLength={191} required />
-                    </label>
-                    <label>
-                        Verified account email{' '}
-                        <Input type="email" name="account_email" required />
-                    </label>
-                    <label>
-                        Department{' '}
-                        <NativeSelect name="department_id" required defaultValue="">
-                            <option value="" disabled>
-                                Select department
-                            </option>
-                            {departments.map((d) => (
-                                <option key={d.id} value={d.id}>
-                                    {d.name}
-                                </option>
-                            ))}
-                        </NativeSelect>
-                    </label>
-                    <label>
-                        <NativeCheckbox name="verified" value="1" required /> I verified this account against the
-                        staff record.
-                    </label>
+                    <PortalField label="Staff number" name="staff_number" maxLength={191} required error={errors.staff_number} announceError={false} />
+                    <PortalField label="Verified account email" name="account_email" type="email" required error={errors.account_email} announceError={false} />
+                    <RecordField field={{ name: 'department_id', label: 'Department', options: departments }} error={errors.department_id} />
+                    <VerifiedRecord error={errors.verified}>I verified this account against the staff record.</VerifiedRecord>
                     <Button disabled={processing}>
                         Register lecturer
                     </Button>
@@ -57,19 +36,11 @@ export function ChangeAllocation() {
             {({ errors, processing, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     <h2 className="text-xl font-semibold">Teaching allocation</h2>
-                    <label>
-                        Staff number <Input name="staff_number" required />
-                    </label>
-                    <label>
-                        Upstream offering ID <Input name="offering" required />
-                    </label>
-                    <label>
-                        Action{' '}
-                        <NativeSelect name="operation">
-                            <option value="assign">Assign</option>
-                            <option value="remove">Remove</option>
-                        </NativeSelect>
-                    </label>
+                    <PortalField label="Staff number" name="staff_number" required error={errors.staff_number} announceError={false} />
+                    <PortalField label="Upstream offering ID" name="offering" required error={errors.offering} announceError={false} />
+                    <RecordField field={{ name: 'operation', label: 'Action', initial: 'assign', options: [
+                        { id: 'assign', name: 'Assign' }, { id: 'remove', name: 'Remove' },
+                    ] }} error={errors.operation} />
                     <Button disabled={processing}>
                         Update allocation
                     </Button>

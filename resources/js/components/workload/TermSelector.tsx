@@ -4,8 +4,8 @@ import type { WorkloadData } from './contracts';
 
 export function TermSelector({ workload }: { workload: Pick<WorkloadData, 'terms' | 'selected_term'> }) {
     return (
-        <section aria-labelledby="term-heading" className="portal-panel mt-8">
-            <h2 id="term-heading" className="desk-section">
+        <section aria-labelledby="term-heading" className="min-w-0 rounded-lg border p-4 sm:p-6 mt-8">
+            <h2 id="term-heading" className="text-xl font-semibold tracking-tight">
                 Select a term
             </h2>
             <form action="/workload" method="get" className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">

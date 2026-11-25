@@ -19,18 +19,18 @@ export default function Delivery({
     return (
         <main className="mx-auto max-w-3xl space-y-5 px-5 py-12">
             <Head title="Offering delivery" />
-            <Link href="/courses" className="underline">
+            <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
             </Link>
             <h1 className="text-3xl font-semibold">Offering delivery</h1>
             <p>Prepare an upstream section, assign its lecturer in the staff directory, then publish.</p>
-            <section className="portal-panel p-4" aria-label="Pending teaching plans">
+            <section className="space-y-2 rounded-lg border p-4" aria-label="Pending teaching plans">
                 <h2 className="font-semibold">Teaching plans awaiting review</h2>
                 {pendingPlans.length ? (
                     <ul>
                         {pendingPlans.map((p) => (
                             <li key={p.offering_id}>
-                                <Link className="underline" href={`/courses/${p.offering_id}/learning/teaching-plan`}>
+                                <Link className="text-primary underline underline-offset-4" href={`/courses/${p.offering_id}/learning/teaching-plan`}>
                                     Review {p.external_offering_id} · revision {p.revision}
                                 </Link>
                             </li>
@@ -51,7 +51,7 @@ export default function Delivery({
                         open={new URLSearchParams(location.search).get('offering') === o.id}
                         className="rounded border p-3"
                     >
-                        <summary>
+                        <summary className="cursor-pointer py-2 font-medium">
                             {o.external_offering_id} · {o.status}
                         </summary>
                         <p>
@@ -61,7 +61,7 @@ export default function Delivery({
                         {o.copied_from && (
                             <p>Copied from {offerings.find((s) => s.id === o.copied_from)?.external_offering_id}</p>
                         )}
-                        <Link className="underline" href={`/courses/${o.id}/learning/teaching-plan`}>
+                        <Link className="text-primary underline underline-offset-4" href={`/courses/${o.id}/learning/teaching-plan`}>
                             Teaching plan history
                         </Link>
                         {prepare && (
@@ -75,7 +75,7 @@ export default function Delivery({
                         )}
                         {o.status !== 'archived' && (
                             <details>
-                                <summary>Archive permanently</summary>
+                                <summary className="cursor-pointer py-2 font-medium">Archive permanently</summary>
                                 <RecordForm title="Archive offering" action={`${path}/archive`} />
                             </details>
                         )}

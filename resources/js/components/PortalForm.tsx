@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useId, type ComponentProps } from 'react';
 
@@ -14,8 +15,8 @@ export function PortalField({ label, error, announceError = true, 'aria-describe
     const description = [hint, error && errorId].filter(Boolean).join(' ') || undefined;
 
     return (
-        <div>
-            <label htmlFor={id}>{label}</label>
+        <Field data-invalid={error ? true : undefined}>
+            <FieldLabel htmlFor={id}>{label}</FieldLabel>
             <Input
                 {...input}
                 id={id}
@@ -23,11 +24,11 @@ export function PortalField({ label, error, announceError = true, 'aria-describe
                 aria-describedby={description}
             />
             {error && (
-                <p className="mt-1 text-sm text-destructive" id={errorId} role={announceError ? 'alert' : undefined}>
+                <FieldError id={errorId} role={announceError ? 'alert' : undefined}>
                     {error}
-                </p>
+                </FieldError>
             )}
-        </div>
+        </Field>
     );
 }
 

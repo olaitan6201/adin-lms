@@ -19,7 +19,7 @@ export default function Sessions({
     next: string | null;
 }) {
     return (
-        <main className="portal-page space-y-4">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Active sessions" />
             <DeskHeading title="Active sessions" area="ICT operations">
                 Check the account and last active time before revoking a session. That device must then sign in again.

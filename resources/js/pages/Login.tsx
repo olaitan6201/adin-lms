@@ -15,17 +15,17 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
     const identifier = useRef<HTMLInputElement>(null);
     const password = useRef<HTMLInputElement>(null);
     return (
-        <main className="portal-page portal-entry">
+        <main className="mx-auto grid w-full max-w-xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
             <Head title="Sign in" />
-            <header className="entry-intro">
-                <p className="portal-kicker">Learning portal</p>
-                <h1 className="portal-title">Sign in</h1>
+            <header className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Learning portal</p>
+                <h1 className="break-words text-3xl font-semibold tracking-tight">Sign in</h1>
                 <p>Use your institutional account to open your academic workspace.</p>
             </header>
-            <section aria-label="Account details" className="portal-panel desk-shelf entry-form">
+            <section aria-label="Account details" className="min-w-0 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
                 {institutionSignIn && (
                     <p className="mb-5">
-                        <Button asChild>
+                        <Button asChild className="h-auto min-h-9 max-w-full whitespace-normal">
                             <a href={institutionSignIn}>
                                 Continue with institutional sign-in
                             </a>
@@ -40,11 +40,11 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                     className="grid gap-4"
                     onError={(errors) => {
                         const firstInvalid = errors.email ? identifier : password;
-                        requestAnimationFrame(() => {
-                            // Clear after focus moves so the old field's caret does not interrupt the error.
+                        // Publish the description before moving focus, then clear the previous field.
+                        requestAnimationFrame(() => requestAnimationFrame(() => {
                             firstInvalid.current?.focus();
                             form.current?.reset('password');
-                        });
+                        }));
                     }}
                 >
                     {({ errors, processing }) => (

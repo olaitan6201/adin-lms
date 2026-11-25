@@ -21,10 +21,10 @@ export default function AccessError({ status, returnTo }: AccessErrorProps) {
     const message = explanations[status];
 
     return (
-        <main className="portal-page">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title={message.title} />
-            <p className="portal-kicker">Learning portal · {status}</p>
-            <h1 className="portal-title">{message.title}</h1>
+            <p className="text-sm font-medium text-muted-foreground">Learning portal · {status}</p>
+            <h1 className="break-words text-3xl font-semibold tracking-tight">{message.title}</h1>
             <p className="my-6 max-w-prose">{message.detail}</p>
             <Button asChild>
                 <Link href={returnTo}>

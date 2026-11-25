@@ -26,9 +26,9 @@ export default function Catalogue({
     const draft = edit && version?.status === 'draft';
 
     return (
-        <main className="portal-page space-y-5">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Curriculum catalogue" />
-            <Link href="/courses" className="underline">
+            <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
             </Link>
             <DeskHeading area="Academic registry" title="Curriculum catalogue">
@@ -40,7 +40,7 @@ export default function Catalogue({
                     <ul>
                         {versions.map((v) => (
                             <li key={v.id}>
-                                <Link className="underline" href={`${base}/${v.id}`}>
+                                <Link className="text-primary underline underline-offset-4" href={`${base}/${v.id}`}>
                                     {v.name} · v{v.version} · {v.status}
                                 </Link>
                             </li>
@@ -52,7 +52,7 @@ export default function Catalogue({
             </nav>
             {edit && (
                 <details>
-                    <summary>Start a curriculum</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Start a curriculum</summary>
                     <RecordForm
                         title="Create draft"
                         action={base}

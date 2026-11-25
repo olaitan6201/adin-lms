@@ -29,7 +29,7 @@ export function CatalogueCourses({
         <>
             {entries.map((e) => (
                 <details key={e.id}>
-                    <summary>
+                    <summary className="cursor-pointer py-2 font-medium">
                         {e.code} · {e.title}
                     </summary>
                     <p>{e.description}</p>
@@ -64,7 +64,7 @@ export function CatalogueCourses({
             ))}
             {draft && (
                 <details>
-                    <summary>Add catalogue course</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Add catalogue course</summary>
                     <RecordForm title="Save course" action={`${path}/entry`} fields={entryFields} />
                 </details>
             )}

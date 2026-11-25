@@ -14,7 +14,7 @@ export function OutcomeEditor({
 
     return (
         <details>
-            <summary>Configure prerequisites and outcomes</summary>
+            <summary className="cursor-pointer py-2 font-medium">Configure prerequisites and outcomes</summary>
             <RecordForm
                 title="Add prerequisite"
                 action={`${path}/prerequisite`}

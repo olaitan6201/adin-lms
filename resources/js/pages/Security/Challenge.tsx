@@ -11,7 +11,7 @@ export default function Challenge() {
             introduction="Open your authenticator app to finish signing in."
         >
             <Head title="Verify your sign-in" />
-            <p id="code-help" className="desk-note">
+            <p id="code-help" className="text-sm text-muted-foreground">
                 Enter the current six-digit code, including any leading zero.
             </p>
             <Form action="/security/challenge" method="post" resetOnError={['code']} className="grid gap-4">
@@ -33,11 +33,11 @@ export default function Challenge() {
                     </>
                 )}
             </Form>
-            <details className="border-t border-[var(--portal-line)] pt-2">
+            <details className="border-t border-border pt-2">
                 <summary className="min-h-11 cursor-pointer py-2 font-semibold">
                     Need help with your authenticator?
                 </summary>
-                <p className="desk-note">
+                <p className="text-sm text-muted-foreground">
                     For first-time setup, ask ICT for a setup key and add it to your app. If you no longer have access
                     to your authenticator, contact ICT.
                 </p>

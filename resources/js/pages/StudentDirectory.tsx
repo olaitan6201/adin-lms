@@ -1,6 +1,8 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { NativeCheckbox } from '@/components/ui/native-checkbox';
+import { VerifiedRecord } from '../components/identity/VerifiedRecord';
+import { PortalField } from '../components/PortalForm';
+import { FormFeedback } from '@/components/ui/form-feedback';
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../components/academics/DeskHeading';
 
@@ -23,14 +25,14 @@ type Props = {
 
 export default function StudentDirectory({ students, q, previous, next, manage, link, receipt }: Props) {
     return (
-        <main className="portal-page space-y-5">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Student records" />
             <DeskHeading area="Registrar" title="Student records">
                 Find a student to inspect their academic history, including withdrawn registrations and released
                 results.
             </DeskHeading>
-            <Form action="/students" method="get">
-                <label>
+            <Form action="/students" method="get" className="grid max-w-xl gap-3">
+                <label className="grid gap-2 text-sm font-medium">
                     Find by name, matric number or upstream ID{' '}
                     <Input name="q" defaultValue={q} />
                 </label>
@@ -39,7 +41,7 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
             <ul className="divide-y">
                 {students.map((s) => (
                     <li key={s.id} className="py-3">
-                        <Link className="underline" href={`/students/${s.id}/history`}>
+                        <Link className="text-primary underline underline-offset-4" href={`/students/${s.id}/history`}>
                             {s.source_name || s.external_student_id}
                         </Link>
                         {' · '}
@@ -52,44 +54,31 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
             {receipt && <p role="status">{receipt}</p>}
             {link && (
                 <details>
-                    <summary>Link a verified LMS account</summary>
+                    <summary className="cursor-pointer py-2 font-medium">Link a verified LMS account</summary>
                     <Form action="/students/link" method="post" className="grid gap-3">
                         {({ errors, processing }) => (
-                            <>
-                                <label>
-                                    Upstream student ID <Input name="student" required />
-                                </label>
-                                <label>
-                                    Existing LMS account email{' '}
-                                    <Input type="email" name="account" required />
-                                </label>
-                                <label>
-                                    <NativeCheckbox name="verified" value="1" required /> I checked both
-                                    identities against the registrar's record.
-                                </label>
-                                {Object.entries(errors).map(([k, v]) => (
-                                    <p role="alert" key={k}>
-                                        {v}
-                                    </p>
-                                ))}
+                            <FormFeedback errors={errors}>
+                                <PortalField label="Upstream student ID" name="student" required error={errors.student} announceError={false} />
+                                <PortalField label="Existing LMS account email" name="account" type="email" required error={errors.account} announceError={false} />
+                                <VerifiedRecord error={errors.verified}>I checked both identities against the registrar's record.</VerifiedRecord>
                                 <Button className="justify-self-start" disabled={processing}>
                                     Link verified account
                                 </Button>
-                            </>
+                            </FormFeedback>
                         )}
                     </Form>
                 </details>
             )}
             {manage && (
-                <section className="portal-panel desk-shelf">
-                    <h2 className="desk-section">Reconcile registrar feeds</h2>
+                <section className="min-w-0 space-y-3 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
+                    <h2 className="text-xl font-semibold tracking-tight">Reconcile registrar feeds</h2>
                     <p>
                         Use an authorised upstream export. Corrections to official registration belong with the
                         registrar.
                     </p>
                     {(['registrations', 'profiles'] as const).map((kind) => (
                         <details key={kind} className="border-b py-3">
-                            <summary>Import {kind}</summary>
+                            <summary className="cursor-pointer py-2 font-medium">Import {kind}</summary>
                             <p>
                                 {kind === 'profiles'
                                     ? 'CSV or single-sheet XLSX: student_id, matric_number, name, email, programme, level, session, status. The optional photo column accepts a JPEG data URL up to 256 KiB and 1024 × 1024 pixels. Blank leaves the existing photo unchanged.'
@@ -98,21 +87,13 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                             <Form action={`/students/feeds/${kind}`} method="post">
                                 {({ processing, errors }) => (
                                     <>
-                                        <label>
-                                            Registrar export{' '}
-                                            <Input
-                                                type="file"
-                                                name="feed"
-                                                accept={kind === 'profiles' ? '.csv,.xlsx' : '.csv'}
-                                                required
-                                            />
-                                        </label>
+                                        <PortalField label="Registrar export" type="file" name="feed"
+                                            accept={kind === 'profiles' ? '.csv,.xlsx' : '.csv'} required error={errors.feed} />
                                         <Button
                                             disabled={processing}
                                         >
                                             Reconcile {kind}
                                         </Button>
-                                        {errors.feed && <p role="alert">{errors.feed}</p>}
                                     </>
                                 )}
                             </Form>

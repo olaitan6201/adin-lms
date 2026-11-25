@@ -31,9 +31,9 @@ type Props = {
 
 export default function Hierarchy({ manage, faculties, departments, programmes, levels, sessions, semesters }: Props) {
     return (
-        <main className="portal-page space-y-5">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Academic organisation" />
-            <Link className="underline" href="/courses">
+            <Link className="text-primary underline underline-offset-4" href="/courses">
                 My courses
             </Link>
             <DeskHeading area="Academic registry" title="Academic organisation">
@@ -50,7 +50,7 @@ export default function Hierarchy({ manage, faculties, departments, programmes, 
                         .filter((d) => d.faculty_id === f.id)
                         .map((d) => (
                             <details className="ml-4" key={d.id}>
-                                <summary>{d.name}</summary>
+                                <summary className="cursor-pointer py-2 font-medium">{d.name}</summary>
                                 <ul>
                                     {programmes
                                         .filter((p) => p.department_id === d.id)

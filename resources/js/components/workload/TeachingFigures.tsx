@@ -16,8 +16,8 @@ export function TeachingFigures({ row }: { row: Omit<Activity, 'offering'> }) {
                 ] as const
             ).map(([label, value]) => (
                 <div key={label} className="border-t pt-2">
-                    <dt className="desk-note">{label}</dt>
-                    <dd className="font-serif text-3xl">{value}</dd>
+                    <dt className="text-sm text-muted-foreground">{label}</dt>
+                    <dd className="text-3xl font-semibold tracking-tight">{value}</dd>
                 </div>
             ))}
         </dl>

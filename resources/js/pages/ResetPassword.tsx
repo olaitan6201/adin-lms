@@ -19,7 +19,7 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
             <Head title="Set your password">
                 <meta name="referrer" content="no-referrer" />
             </Head>
-            <p id="password-help" className="desk-note">
+            <p id="password-help" className="text-sm text-muted-foreground">
                 Choose a password with at least {minimumPasswordLength} characters.
             </p>
             <Form
@@ -64,7 +64,7 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
                     </>
                 )}
             </Form>
-            <Link href="/forgot-password" className="desk-link">
+            <Link href="/forgot-password" className="font-medium text-primary underline underline-offset-4">
                 Request a new link
             </Link>
         </AccountTask>

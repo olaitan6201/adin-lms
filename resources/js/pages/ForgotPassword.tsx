@@ -29,7 +29,7 @@ export default function ForgotPassword({ requested }: { requested: boolean }) {
                     </>
                 )}
             </Form>
-            <Link href="/login" className="desk-link">
+            <Link href="/login" className="font-medium text-primary underline underline-offset-4">
                 Back to sign in
             </Link>
         </AccountTask>

@@ -20,31 +20,31 @@ type Props = {
 
 export default function StaffDirectory({ staff, departments, previous, next }: Props) {
     return (
-        <main className="portal-page">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Lecturer directory" />
-            <Link href="/courses" className="underline">
+            <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
             </Link>
-            <header className="desk-heading">
-                <p className="portal-kicker">Staff administration</p>
-                <h1 className="portal-title">Lecturer directory</h1>
+            <header className="min-w-0 space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Staff administration</p>
+                <h1 className="break-words text-3xl font-semibold tracking-tight">Lecturer directory</h1>
                 <p>Review teaching records, update departments and manage class allocations.</p>
             </header>
-            <div className="desk-grid">
+            <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
                 <section>
-                    <h2 className="desk-section">Registered staff</h2>
+                    <h2 className="text-xl font-semibold tracking-tight">Registered staff</h2>
                     {staff.length ? (
                         <ul className="divide-y">
                             {staff.map((s) => (
                                 <li key={s.staff_number} className="py-3">
                                     <strong>{s.full_name}</strong> · {s.staff_number} · {s.department}
                                     <p>
-                                        <Link href={`/staff/${s.id}/activity`} className="underline">
+                                        <Link href={`/staff/${s.id}/activity`} className="text-primary underline underline-offset-4">
                                             View teaching activity
                                         </Link>
                                     </p>
                                     <details>
-                                        <summary>Transfer department</summary>
+                                        <summary className="cursor-pointer py-2 font-medium">Transfer department</summary>
                                         <RecordForm
                                             method="patch"
                                             title="Save department"
@@ -75,8 +75,8 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
                     {previous && <Link href={previous}>Previous page</Link>}{' '}
                     {next && <Link href={next}>Next page</Link>}
                 </section>
-                <aside className="portal-panel desk-shelf space-y-4">
-                    <h2 className="desk-section">Staff actions</h2>
+                <aside className="min-w-0 space-y-4 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
+                    <h2 className="text-xl font-semibold tracking-tight">Staff actions</h2>
                     <details>
                         <summary className="cursor-pointer py-3 font-semibold">Register a lecturer</summary>
                         <RegisterLecturer departments={departments} />

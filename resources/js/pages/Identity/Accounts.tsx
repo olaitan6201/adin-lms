@@ -20,13 +20,13 @@ type Props = {
 };
 export default function Accounts({ accounts, self, grant, q, previous, next }: Props) {
     return (
-        <main className="portal-page space-y-4">
+        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
             <Head title="Account administration" />
             <DeskHeading area="Identity and access" title="Account administration">
                 Find an institutional account to review access or change its LMS status.
             </DeskHeading>
             <details>
-                <summary>Provision an LMS account</summary>
+                <summary className="cursor-pointer py-2 font-medium">Provision an LMS account</summary>
                 <p>The account holder sets their password using the link sent by email.</p>
                 <RecordForm
                     action="/accounts"
@@ -37,8 +37,8 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                     ]}
                 />
             </details>
-            <Form action="/accounts" method="get">
-                <label>
+            <Form action="/accounts" method="get" className="grid max-w-xl gap-3">
+                <label className="grid gap-2 text-sm font-medium">
                     Find by name or email <Input name="q" defaultValue={q} />
                 </label>
                 <Button>Search</Button>
@@ -50,14 +50,14 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                         <strong>{a.full_name}</strong> · {a.email} · {a.status}
                         {grant && (
                             <p>
-                                <Link className="underline" href={`/accounts/${a.id}/access`}>
+                                <Link className="text-primary underline underline-offset-4" href={`/accounts/${a.id}/access`}>
                                     Inspect roles and permissions
                                 </Link>
                             </p>
                         )}
                         {a.id !== self && (
                             <details>
-                                <summary>Change access status</summary>
+                                <summary className="cursor-pointer py-2 font-medium">Change access status</summary>
                                 <Form action={`/accounts/${a.id}`} method="patch">
                                     {({ errors, processing }) => (
                                         <>
@@ -66,7 +66,7 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                                                 name="status"
                                                 value={a.status === 'active' ? 'suspended' : 'active'}
                                             />
-                                            <Button disabled={processing}>
+                                            <Button className="h-auto min-h-9 max-w-full whitespace-normal break-words" disabled={processing}>
                                                 {a.status === 'active' ? 'Suspend' : 'Reactivate'} {a.full_name}
                                             </Button>
                                             {errors.status && <p role="alert">{errors.status}</p>}

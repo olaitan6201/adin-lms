@@ -1,7 +1,6 @@
 import { FormFeedback } from '@/components/ui/form-feedback';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { NativeSelect } from '@/components/ui/native-select';
+import { RecordField } from './RecordField';
 import { Form } from '@inertiajs/react';
 
 export type Choice = {
@@ -30,36 +29,13 @@ export default function RecordForm({
     method?: 'post' | 'delete' | 'patch';
 }) {
     return (
-        <Form action={action} method={method} className="my-3 grid gap-3 border-l-2 border-teal-800 pl-4">
+        <Form action={action} method={method} className="my-3 grid gap-3 border-l-2 border-border pl-4">
             {({ processing, errors, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     {fields.map((f) => (
-                        <label key={f.name}>
-                            {f.label}
-                            {f.options ? (
-                                <NativeSelect
-                                    name={f.name}
-                                    required={!f.optional}
-                                    defaultValue={f.initial ?? ''}
-                                >
-                                    <option value="">Select an option</option>
-                                    {f.options.map((o) => (
-                                        <option key={o.id} value={o.id}>
-                                            {o.name}
-                                        </option>
-                                    ))}
-                                </NativeSelect>
-                            ) : (
-                                <Input
-                                    type={f.type ?? 'text'}
-                                    name={f.name}
-                                    defaultValue={f.initial}
-                                    required={!f.optional}
-                                />
-                            )}
-                        </label>
+                        <RecordField key={f.name} field={f} error={errors[f.name]} />
                     ))}
-                    <Button disabled={processing}>
+                    <Button variant={method === 'delete' ? 'destructive' : 'default'} disabled={processing}>
                         {title}
                     </Button>
                     {recentlySuccessful && <p role="status">Saved.</p>}

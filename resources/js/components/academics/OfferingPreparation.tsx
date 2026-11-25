@@ -52,7 +52,7 @@ export function OfferingPreparation({
                 ]}
             />
             <details>
-                <summary>Copy teaching structure from another term</summary>
+                <summary className="cursor-pointer py-2 font-medium">Copy teaching structure from another term</summary>
                 <p>
                     The receiving offering must be empty. Scheduled activities shift by the difference between semester
                     start dates.

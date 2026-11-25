@@ -19,8 +19,8 @@ export default function Profile({ profile, sharedProgressUrl, guardianPermission
             introduction="Update the name shown on your learning portal profile."
         >
             <Head title="My profile" />
-            <dl className="border-b border-[var(--portal-line)] pb-4">
-                <dt className="desk-note">Sign-in email</dt>
+            <dl className="border-b border-border pb-4">
+                <dt className="text-sm text-muted-foreground">Sign-in email</dt>
                 <dd className="break-all font-semibold">{profile.email}</dd>
             </dl>
             <Form action="/profile" method="patch" className="grid gap-3">
@@ -43,16 +43,16 @@ export default function Profile({ profile, sharedProgressUrl, guardianPermission
                 )}
             </Form>
             {sharedProgressUrl && (
-                <Link className="desk-link" href={sharedProgressUrl}>
+                <Link className="font-medium text-primary underline underline-offset-4" href={sharedProgressUrl}>
                     Shared progress
                 </Link>
             )}
             {guardianPermissionsUrl && (
-                <Link className="desk-link" href={guardianPermissionsUrl}>
+                <Link className="font-medium text-primary underline underline-offset-4" href={guardianPermissionsUrl}>
                     Manage guardian permissions
                 </Link>
             )}
-            <Link className="desk-link" href="/courses">
+            <Link className="font-medium text-primary underline underline-offset-4" href="/courses">
                 My courses
             </Link>
         </AccountTask>

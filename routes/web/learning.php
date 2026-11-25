@@ -4,11 +4,17 @@ use App\Http\Controllers\Learning\ClassroomController;
 use App\Http\Controllers\Learning\ContentController;
 use App\Http\Controllers\Learning\RegisterController;
 use App\Http\Controllers\Learning\RevisionController;
+use App\Http\Controllers\Learning\TeachingPlanController;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('courses/{offering}/learning')->name('learning.')->group(function (): void {
     Route::get('/', [ContentController::class, 'index'])->name('index');
+    Route::prefix('teaching-plan')->controller(TeachingPlanController::class)->group(function (): void {
+        Route::get('/', 'show')->name('plan');
+        Route::post('/', 'submit')->name('plan.submit');
+        Route::post('{plan}/review', 'review')->whereUuid('plan')->name('plan.review');
+    });
     Route::put('sequence', [ContentController::class, 'order'])->name('sequence');
     Route::post('lessons/{lesson?}', [ContentController::class, 'save'])->name('lessons.save');
     Route::post('lessons/{lesson}/complete', [ContentController::class, 'complete'])->name('complete');

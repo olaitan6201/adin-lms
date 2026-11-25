@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { ResultSheetDownloads } from './ResultSheetDownloads';
 
 export type Grade = {
     id: string;
@@ -33,7 +34,7 @@ export function ResultRevisions({ grades, teacher, officer, who }: Props) {
                     </p>
                     {(teacher || officer) && <p>{g.moderation_note}</p>}
                     {officer && <Link href={`/grades/${g.id}/evidence`}>Inspect marks and moderation history</Link>}
-                    {g.published_at && <a href={`/grades/${g.id}/sheet`}>Download published result sheet</a>}
+                    {g.published_at && <ResultSheetDownloads href={`/grades/${g.id}/sheet`} />}
                 </article>
             ))}
         </section>

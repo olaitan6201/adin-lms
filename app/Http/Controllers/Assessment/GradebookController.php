@@ -15,6 +15,7 @@ use App\Policies\AssessmentItemPolicy;
 use App\Services\Assessment\FrozenGradeInputs;
 use App\Services\Assessment\GradeCalculation;
 use App\Services\Assessment\ModerateResult;
+use App\Services\Assessment\PublishedResultPdf;
 use App\Services\Assessment\ScoreLedger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -78,8 +79,12 @@ class GradebookController
         $staff = $access->teaches($user, $offering) || $access->examOfficer($user);
         abort_unless($ownsResult || $staff, 404);
 
-        $inputs = app(FrozenGradeInputs::class)->forGrade($grade);
+        $inputs = GradeInputResource::collection(app(FrozenGradeInputs::class)->forGrade($grade))->resolve($request);
         $ledger->audit(AssessmentEvent::GradeExported, $grade->id, $request->user()->id);
+
+        if ($request->query('format') === 'pdf') {
+            return app(PublishedResultPdf::class)->download($grade, $inputs);
+        }
 
         return response(json_encode([
             'enrolment' => $grade->enrolment_id,
@@ -90,7 +95,7 @@ class GradebookController
             'revision' => $grade->revision,
             'total' => (string) $grade->total_percent,
             'grade' => $grade->grade,
-            'inputs' => GradeInputResource::collection($inputs)->resolve($request),
+            'inputs' => $inputs,
         ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), 200, [
             'Content-Type' => 'application/json',
             'Cache-Control' => 'private, no-store',

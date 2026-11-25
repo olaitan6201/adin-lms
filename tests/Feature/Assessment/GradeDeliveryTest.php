@@ -9,6 +9,7 @@ use App\Models\Gradebook;
 use App\Models\GradingPolicy;
 use Brick\Math\BigDecimal;
 use Inertia\Testing\AssertableInertia as Page;
+use Symfony\Component\Process\Process;
 
 class GradeDeliveryTest extends AssessmentCase
 {
@@ -72,12 +73,14 @@ class GradeDeliveryTest extends AssessmentCase
         $this->assertTrue(BigDecimal::of($grade->total_percent)->isEqualTo('75'));
         $this->assertSame('A', $grade->grade);
         $sheet = "/grades/$grade->id/sheet";
+        $pdf = $sheet.'?format=pdf';
         $review = "/grades/$grade->id/review";
         $decision = fn ($d) => [
             'decision' => $d,
             'reason' => 'Reviewed frozen evidence',
         ];
         $this->as($this->member->student->user)->get($sheet)->assertNotFound();
+        $this->get($pdf)->assertNotFound();
         $this->get("/grades/$grade->id/evidence")->assertNotFound();
         $this->get($this->desk)->assertInertia(fn (Page $p) => $p->has('grades', 0));
         $this->as($this->marker)->post($review, $decision('approve'))->assertForbidden();
@@ -99,6 +102,7 @@ class GradeDeliveryTest extends AssessmentCase
         $this->get($this->desk)->assertInertia(fn (Page $p) => $p->has('grades', 1));
         $outsider = Enrolment::factory()->create(['offering_id' => $this->offering->id]);
         $this->as($outsider->student->user)->get($sheet)->assertNotFound();
+        $this->get($pdf)->assertNotFound();
         $this->as($this->marker);
         $score(0, '5.125');
         $this->post($compute)->assertRedirect();
@@ -107,6 +111,18 @@ class GradeDeliveryTest extends AssessmentCase
         $this->as($this->officer)->post("/grades/$revised->id/review", $decision('correct'))->assertRedirect();
         $this->post("/grades/$revised->id/review", $decision('approve'))->assertConflict();
         $this->as($this->member->student->user)->get($sheet)->assertContent($first);
+        $document = $this->get($pdf)->assertOk()->assertDownload("result-$grade->id.pdf")
+            ->assertHeader('Content-Type', 'application/pdf');
+        $this->assertTrue($document->headers->hasCacheControlDirective('no-store'));
+        $text = (new Process(['pdftotext', '-layout', '-', '-']))->setInput($document->getContent())->mustRun()->getOutput();
+        $this->assertStringContainsString($this->member->student->user->full_name, $text);
+        $this->assertStringContainsString($this->offering->external_offering_id, $text);
+        $this->assertStringContainsString('Final grade: A', $text);
+        $this->assertMatchesRegularExpression('/Total: 75(?:\.0+)?%/', $text);
+        $this->assertMatchesRegularExpression('/manual\s+7\.1250*\s+10(?:\.0+)?\s+50(?:\.0+)?%/', $text);
+        $this->assertMatchesRegularExpression('/attendance\s+7\.8750*\s+10(?:\.0+)?\s+50(?:\.0+)?%/', $text);
+        $this->assertStringNotContainsString('5.125', $text);
+        $this->assertStringNotContainsString('Checked evidence', $text);
         $frozen = json_decode($first, true, flags: JSON_THROW_ON_ERROR);
         $replayed = BigDecimal::zero();
         foreach ($frozen['inputs'] as $input) {
@@ -120,5 +136,6 @@ class GradeDeliveryTest extends AssessmentCase
         $this->get("/grades/$revised->id/sheet")->assertNotFound();
         $this->member->forceFill(['status' => 'withdrawn'])->save();
         $this->get($sheet)->assertNotFound();
+        $this->get($pdf)->assertNotFound();
     }
 }

@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { ResultSheetDownloads } from '../assessment/ResultSheetDownloads';
 
 export type Release = {
     title: string;
@@ -29,9 +30,7 @@ export function ReleasedWork({ releases }: { releases: Release[] }) {
                                 </time>
                             </p>
                             {row.download ? (
-                                <a className="desk-link" href={row.href}>
-                                    Download result sheet (JSON)
-                                </a>
+                                <ResultSheetDownloads href={row.href} />
                             ) : (
                                 <Link className="desk-link" href={row.href}>
                                     Read assignment feedback

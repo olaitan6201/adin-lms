@@ -6,6 +6,7 @@ enum PermissionCode: string
 {
     case RosterRead = 'roster.read';
     case AccountsManage = 'accounts.manage';
+    case GrantsManage = 'grants.manage';
     case LoginEventsRead = 'login_events.read';
     case StaffManage = 'staff.manage';
     case AcademicsManage = 'academics.manage';

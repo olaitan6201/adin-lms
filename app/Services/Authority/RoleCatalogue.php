@@ -17,7 +17,7 @@ final class RoleCatalogue
     public static function permissions(RoleCode $role): array
     {
         return match ($role) {
-            RoleCode::SuperAdmin => [...self::ADMIN_PERMISSIONS, PermissionCode::LoginEventsRead,
+            RoleCode::SuperAdmin => [...self::ADMIN_PERMISSIONS, PermissionCode::GrantsManage, PermissionCode::LoginEventsRead,
                 PermissionCode::CurriculumApprove, PermissionCode::OperationsManage, PermissionCode::PrivacyManage],
             RoleCode::InstitutionalAdmin => self::ADMIN_PERMISSIONS,
             RoleCode::IctAdmin => [PermissionCode::LoginEventsRead, PermissionCode::OperationsManage],

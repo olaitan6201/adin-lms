@@ -6,6 +6,7 @@ use App\Enums\PermissionCode;
 use App\Jobs\SendAccountResetLink;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Models\RoleGrant;
 use App\Services\Authority\ScopedAuthority;
 use DomainException;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,11 @@ class AccountAdministration
                 throw new DomainException('Unknown account.');
             }
             $status = $suspend ? 'suspended' : 'active';
+            if ($userId === $actorId || (RoleGrant::where('user_id', $userId)->whereHas('role', fn ($q) => $q
+                ->whereIn('code', ['super_admin', 'ict_admin', 'institutional_admin']))->exists()
+                && ! $this->authority->institutionAllows(User::findOrFail($actorId), PermissionCode::GrantsManage))) {
+                throw new DomainException('You cannot change the status of this administrator account.');
+            }
             if ($user->status !== $status) {
                 $user->status = $status;
                 $user->auth_version++;

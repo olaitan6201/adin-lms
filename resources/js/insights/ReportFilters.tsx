@@ -1,3 +1,4 @@
+import { Disclosure } from './Disclosure';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import { Link, router } from '@inertiajs/react';
@@ -42,8 +43,7 @@ export function ReportFilters({ path, filters, options, family }: Props) {
     }
 
     return (
-        <details className="border-b border-[var(--portal-line)]">
-            <summary className="cursor-pointer py-3 font-semibold">Report filters</summary>
+        <Disclosure label="Report filters">
             <form aria-label="Report filters" onSubmit={apply} className="grid gap-4 pb-4 sm:grid-cols-3">
                 {fields.map(({ name, label, empty }) => {
                     const selected = filters[name];
@@ -51,9 +51,10 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                     const missing = selected && !choices.some((choice) => choice.id === selected);
 
                     return (
-                        <label key={name} className="grid min-w-0 gap-1 font-medium">
+                        <label key={name} className="grid min-w-0 gap-1 font-medium [&>div]:w-full [&>div]:min-w-0">
                             {label}
                             <NativeSelect
+                                className="w-full min-w-0"
                                 name={name}
                                 defaultValue={selected ?? ''}
                             >
@@ -75,6 +76,6 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                     </Link>
                 </div>
             </form>
-        </details>
+        </Disclosure>
     );
 }

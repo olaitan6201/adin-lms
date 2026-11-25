@@ -1,3 +1,4 @@
+import { Disclosure } from './Disclosure';
 import { Link } from '@inertiajs/react';
 import { LearnerTime } from '../components/LearnerTime';
 
@@ -14,17 +15,17 @@ export function Counts({ values }: { values: Measures }) {
 
 function ReadingList({ title, entries, empty }: { title: string; entries: Entry[]; empty: string }) {
     return <section className="mt-6 border-t pt-4">
-        <h2 className="desk-section">{title}</h2>
+        <h2 className="text-xl font-semibold">{title}</h2>
         {entries.length ? <ul className="divide-y">{entries.map((row, i) => <li className="py-2 break-words" key={`${row.href}:${i}`}>
-            <Link className="desk-link" href={row.href}>{row.title}</Link>
-            <p className="desk-note">{row.context}{row.at && <> · <LearnerTime instant={row.at} /></>}</p>
-        </li>)}</ul> : <p className="desk-note">{empty}</p>}
+            <Link className="inline-block py-1 underline underline-offset-4" href={row.href}>{row.title}</Link>
+            <p className="text-sm text-muted-foreground">{row.context}{row.at && <> · <LearnerTime instant={row.at} /></>}</p>
+        </li>)}</ul> : <p className="text-sm text-muted-foreground">{empty}</p>}
     </section>;
 }
 
 export function StudyDetails({ study }: { study: Study }) {
     return <section className="mt-6" aria-label="Course updates">
-        <h2 className="desk-section">Learning progress</h2>
+        <h2 className="text-xl font-semibold">Learning progress</h2>
         <p>{study.available ? `${study.completed} of ${study.available} available lessons completed` : 'No lessons available yet.'}</p>
         <div className="grid gap-x-8 md:grid-cols-2">
             <ReadingList title="Available lecture materials" entries={study.materials} empty="No released materials yet." />
@@ -35,14 +36,14 @@ export function StudyDetails({ study }: { study: Study }) {
 
 export function TeachingDetails({ teaching }: { teaching: Teaching }) {
     return <section aria-label="Allocated course activity" className="mt-8 border-t pt-5">
-        <h2 className="desk-section">Across your courses</h2><Counts values={teaching.summary} />
+        <h2 className="text-xl font-semibold">Across your courses</h2><Counts values={teaching.summary} />
         <p>{teaching.mean === null ? 'No published final grades for enrolled students yet.' : `Mean final grade: ${teaching.mean}% · latest published grade per registration`}</p>
         <ReadingList title="Upcoming examinations" entries={teaching.exams} empty="No examinations scheduled to open." />
         <ReadingList title="Assignments accepting submissions" entries={teaching.assignments} empty="No assignments are open." />
         <ReadingList title="Recent submissions" entries={teaching.submissions} empty="No submission revisions received." />
-        <details className="mt-4"><summary>Roster and recent uploads</summary>
+        <Disclosure label="Roster and recent uploads">
             <ReadingList title="Registered learners · first five registrations" entries={teaching.members} empty="No registered learners." />
             <ReadingList title="My recent file uploads" entries={teaching.uploads} empty="No file revisions uploaded yet." />
-        </details>
+        </Disclosure>
     </section>;
 }

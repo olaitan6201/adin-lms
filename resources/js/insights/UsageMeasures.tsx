@@ -8,7 +8,7 @@ export function UsageMeasures({ rows }: Props) {
             <dt className="font-semibold">{label}</dt>
             <dd>
                 <strong className="block text-2xl tabular-nums">{count}</strong>
-                <span className="desk-note block">{period}</span>
+                <span className="text-sm text-muted-foreground block">{period}</span>
                 <span className="mt-1 block">{rule}</span>
             </dd>
         </div>)}

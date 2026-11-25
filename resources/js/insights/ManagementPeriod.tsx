@@ -18,8 +18,8 @@ export function ManagementPeriod({ period }: { period: Period }) {
             const [key, id] = selection.split(':');
             router.get('/dashboard', id ? { [key]: id } : {});
         }}>
-            <label className="grid min-w-0 gap-1">Academic period
-                <NativeSelect className="max-w-full" value={selection} onChange={event => setSelection(event.target.value)}>
+            <label className="grid w-full min-w-0 gap-1 sm:max-w-md [&>div]:w-full [&>div]:min-w-0">Academic period
+                <NativeSelect className="w-full max-w-full" value={selection} onChange={event => setSelection(event.target.value)}>
                     <option value="">All periods</option>
                     <optgroup label="Academic sessions">{period.sessions.map(o => <option key={o.id} value={`session:${o.id}`}>{o.label}</option>)}</optgroup>
                     <optgroup label="Semesters">{period.terms.map(o => <option key={o.id} value={`term:${o.id}`}>{o.label}</option>)}</optgroup>
@@ -27,21 +27,20 @@ export function ManagementPeriod({ period }: { period: Period }) {
             </label>
             <Button type="submit">Apply period</Button>
         </form>
-        <Counts values={period.summary} />
     </section>;
 }
 
 export function ActivitySummary({ activity }: { activity: Activity }) {
     return <section className="mt-8 border-t pt-5">
-        <h2 className="desk-section">Activity in the last seven days</h2>
-        <p className="desk-note">After <LearnerTime instant={activity.from} /> through <LearnerTime instant={activity.until} />.</p>
+        <h2 className="text-xl font-semibold">Activity in the last seven days</h2>
+        <p className="text-sm text-muted-foreground">After <LearnerTime instant={activity.from} /> through <LearnerTime instant={activity.until} />.</p>
         <Counts values={activity.academic} />
         {activity.latest.length > 0 && <><h3>Latest academic activity</h3>
             <ul className="mb-4">{activity.latest.map(row => <li key={row.kind} className="py-1">
                 <strong>{row.title}</strong> · {row.course}<br />
-                <span className="desk-note">{row.kind} · <LearnerTime instant={row.at} /></span>
+                <span className="text-sm text-muted-foreground">{row.kind} · <LearnerTime instant={row.at} /></span>
             </li>)}</ul></>}
         {activity.usage && <><h3>Institution sign-ins</h3><Counts values={activity.usage} />
-            <p className="desk-note">Accepted password and institutional sign-ins; does not indicate MFA completion.</p></>}
+            <p className="text-sm text-muted-foreground">Accepted password and institutional sign-ins; does not indicate MFA completion.</p></>}
     </section>;
 }

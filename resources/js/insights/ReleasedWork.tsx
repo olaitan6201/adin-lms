@@ -13,17 +13,17 @@ export type Release = {
 export function ReleasedWork({ releases }: { releases: Release[] }) {
     return (
         <section className="mt-8 border-t pt-5" aria-labelledby="published-work">
-            <h2 className="desk-section" id="published-work">
+            <h2 className="text-xl font-semibold" id="published-work">
                 Results & feedback
             </h2>
-            <p className="desk-note">Latest published course results and returned assignment marks.</p>
+            <p className="text-sm text-muted-foreground">Latest published course results and returned assignment marks.</p>
             {releases.length ? (
                 <ul className="mt-3 divide-y">
                     {releases.map((row) => (
                         <li key={row.href} className="py-3">
                             <h3 className="font-semibold">{row.title}</h3>
                             <p>{row.detail}</p>
-                            <p className="desk-note">
+                            <p className="text-sm text-muted-foreground">
                                 {row.context} ·{' '}
                                 <time dateTime={row.at}>
                                     {new Date(row.at).toLocaleDateString(undefined, { dateStyle: 'medium' })}
@@ -32,7 +32,7 @@ export function ReleasedWork({ releases }: { releases: Release[] }) {
                             {row.download ? (
                                 <ResultSheetDownloads href={row.href} />
                             ) : (
-                                <Link className="desk-link" href={row.href}>
+                                <Link className="inline-block py-1 underline underline-offset-4" href={row.href}>
                                     Read assignment feedback
                                 </Link>
                             )}

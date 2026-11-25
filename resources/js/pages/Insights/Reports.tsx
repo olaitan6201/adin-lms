@@ -1,3 +1,4 @@
+import { Disclosure } from '../../insights/Disclosure';
 import { ReportTable } from '../../insights/ReportTable';
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
@@ -52,11 +53,11 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
         : limitMessage || (hasRecords ? `${count} report ${count === 1 ? 'row' : 'rows'}`
             : active ? 'No records match these filters.' : 'No records for this report yet.');
     return (
-        <main className="portal-page min-w-0 space-y-4">
+        <main className="mx-auto w-full max-w-6xl p-4 md:p-6 min-w-0 space-y-4">
             <Head title="Academic reports" />
-            <header className="border-b border-[var(--portal-line)] pb-4">
-                <p className="portal-kicker">{audience} · Academic reports</p>
-                <h1 id="report-title" tabIndex={-1} className="portal-title">{names[family]}</h1>
+            <header className="border-b border-border pb-4">
+                <p className="text-sm text-muted-foreground">{audience} · Academic reports</p>
+                <h1 id="report-title" tabIndex={-1} className="text-3xl font-semibold">{names[family]}</h1>
                 {reportScope && <p>Scope: {reportScope}</p>}
                 <p className="font-semibold" role={limitMessage ? 'alert' : 'status'}>{summary}</p>
                 {!reportScope && <p>Contact your academic office if you expected access to course reports.</p>}
@@ -64,8 +65,7 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
                     Clear {active} applied {active === 1 ? 'filter' : 'filters'}
                 </Link>}
             </header>
-            <details key={family} className="border-b border-[var(--portal-line)]">
-                <summary className="cursor-pointer py-3 font-semibold">Change report type</summary>
+            <Disclosure key={family} label="Change report type">
                 <nav aria-label="Report types" className="flex flex-wrap gap-x-4 pb-3">
                     {(Object.keys(names) as Family[]).filter(key => key !== 'institution-usage' || canViewInstitutionUsage).map((key) => (
                         <Link
@@ -78,7 +78,7 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
                         </Link>
                     ))}
                 </nav>
-            </details>
+            </Disclosure>
             {options && reportScope && <ReportFilters
                 key={path('/reports', family)}
                 path="/reports"
@@ -91,8 +91,7 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
                 {!limitMessage && reportScope && (
                     <>
                         {Object.keys(table.totals).length > 0 && (
-                            <details>
-                                <summary className="cursor-pointer">Activity totals</summary>
+                            <Disclosure label="Activity totals">
                                 <dl className="grid gap-2 py-3 sm:grid-cols-3">
                                     {Object.entries(table.totals).map(([key, value]) => (
                                         <div key={key}>
@@ -101,11 +100,11 @@ export default function Reports({ family, audience, reportScope, canViewInstitut
                                         </div>
                                     ))}
                                 </dl>
-                            </details>
+                            </Disclosure>
                         )}
                         {family === 'institution-usage' && <UsageMeasures rows={table.rows} />}
                         {family !== 'institution-usage' && count > 0 && (
-                            <p id="scroll-hint" className="desk-note sm:hidden">Scroll the table sideways to see every column.</p>
+                            <p id="scroll-hint" className="text-sm text-muted-foreground sm:hidden">Scroll the table sideways to see every column.</p>
                         )}
                         {table.rows.length > 0 && (
                             <ReportTable title={names[family]} columns={columns} rows={table.rows}

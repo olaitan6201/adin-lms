@@ -71,6 +71,12 @@ class LecturerDirectoryTest extends TestCase
         $this->post('/staff/allocations', $args)->assertRedirect(route('staff.index'));
         $this->post('/staff/allocations', $args)->assertRedirect(route('staff.index'));
         $this->assertDatabaseCount('teaching_allocations', 1);
+        $registered = Lecturer::where('user_id', $teacher->id)->sole();
+        $destination = Department::factory()->create();
+        $this->patch("/staff/$registered->id/department", ['department_id' => $destination->id])->assertSessionHasNoErrors();
+        $this->assertSame($destination->id, $registered->fresh()->department_id);
+        $this->assertDatabaseHas('teaching_allocations', ['lecturer_id' => $registered->id, 'offering_id' => $offering->id]);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'staff.transferred', 'actor_id' => $admin->id]);
         $this->get('/staff')->assertInertia(
             fn (AssertableInertia $page) => $page->where(
                 'staff.0.offerings.0',
@@ -78,12 +84,13 @@ class LecturerDirectoryTest extends TestCase
             ),
         );
         $this->actingAs($teacher->fresh())->withSession(['security.mfa_user' => $teacher->id]);
+        $this->patch("/staff/$registered->id/department", ['department_id' => $department->id])->assertForbidden();
         $this->getJson(route('offerings.roster', $offering))->assertOk();
         $this->patch('/profile', [
             'full_name' => 'Updated Lecturer',
             'staff_number' => 'WRONG',
         ])->assertRedirect();
-        $this->assertDatabaseHas('lecturers', $profile);
+        $this->assertDatabaseHas('lecturers', ['department_id' => $destination->id] + $profile);
         $this->post('/staff/allocations', $args)->assertForbidden();
         $this->actingAs($admin->fresh())->withSession(['security.mfa_user' => $admin->id]);
         $this->post('/staff/allocations', array_merge($args, ['operation' => 'remove']))->assertRedirect(

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\PermissionCode;
 use App\Services\Authority\ScopedAuthority;
+use App\Services\Identity\AccountLookup;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -28,5 +29,12 @@ class StoreLecturerRequest extends FormRequest
             'department_id' => ['bail', 'required', 'uuid', 'exists:departments,id'],
             'verified' => ['accepted'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('account_email') && is_string($this->input('account_email'))) {
+            $this->merge(['user_id' => app(AccountLookup::class)->emailQuery($this->input('account_email'))->value('id')]);
+        }
     }
 }

@@ -35,7 +35,7 @@ class LecturerDirectoryController extends Controller
 
         return Inertia::render('StaffDirectory', [
             'staff' => $staff->getCollection()->map(
-                fn (Lecturer $lecturer) => $lecturer->only('staff_number', 'full_name', 'department') + [
+                fn (Lecturer $lecturer) => $lecturer->only('id', 'staff_number', 'full_name', 'department') + [
                     'offerings' => $lecturer->allocations
                         ->pluck('offering.external_offering_id')
                         ->sort()
@@ -73,5 +73,23 @@ class LecturerDirectoryController extends Controller
         }
 
         return to_route('staff.index');
+    }
+
+    public function transfer(Request $request, Lecturer $lecturer, ScopedAuthority $authority): RedirectResponse
+    {
+        abort_unless($authority->institutionAllows($request->user(), PermissionCode::StaffManage) && $lecturer->user_id !== $request->user()->id, 403);
+        $department = $request->validate(['department_id' => 'required|uuid|exists:departments,id'])['department_id'];
+        DB::transaction(function () use ($request, $lecturer, $department): void {
+            $staff = Lecturer::lockForUpdate()->findOrFail($lecturer->id);
+            $previous = $staff->department_id;
+            if ($previous === $department) {
+                return;
+            }
+            $staff->forceFill(['department_id' => $department])->save();
+            AuditLog::forceCreate(['actor_id' => $request->user()->id, 'action' => StaffAuditEvent::Transferred->value,
+                'subject_key' => "lecturer:$staff->id", 'occurred_at' => now(), 'details' => ['from' => $previous, 'to' => $department]]);
+        });
+
+        return back();
     }
 }

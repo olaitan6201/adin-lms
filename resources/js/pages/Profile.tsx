@@ -1,5 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
+import { AccountTask } from '../components/identity/AccountTask';
 
 type ProfileProps = {
     profile: {
@@ -10,13 +11,16 @@ type ProfileProps = {
 
 export default function Profile({ profile }: ProfileProps) {
     return (
-        <main className="mx-auto max-w-xl px-6 py-16">
+        <AccountTask
+            context="My account"
+            title="My profile"
+            introduction="Update the name shown on your learning portal profile."
+        >
             <Head title="My profile" />
-            <Link className="underline" href="/courses">
-                My courses
-            </Link>
-            <h1 className="my-4 text-3xl font-semibold">My profile</h1>
-            <p className="mb-6 break-words">Sign-in email: {profile.email}</p>
+            <dl className="border-b border-[var(--portal-line)] pb-4">
+                <dt className="desk-note">Sign-in email</dt>
+                <dd className="break-all font-semibold">{profile.email}</dd>
+            </dl>
             <Form action="/profile" method="patch" className="grid gap-3">
                 {({ errors, processing, recentlySuccessful }) => (
                     <>
@@ -30,10 +34,15 @@ export default function Profile({ profile }: ProfileProps) {
                             error={errors.full_name}
                         />
                         <SubmitButton processing={processing}>Save profile</SubmitButton>
-                        <p role="status">{recentlySuccessful ? 'Profile saved.' : ''}</p>
+                        <p className="empty:hidden" role="status">
+                            {recentlySuccessful ? 'Profile saved.' : ''}
+                        </p>
                     </>
                 )}
             </Form>
-        </main>
+            <Link className="desk-link" href="/courses">
+                My courses
+            </Link>
+        </AccountTask>
     );
 }

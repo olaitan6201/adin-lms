@@ -1,6 +1,11 @@
 import { defineConfig } from '@playwright/test';
+import { mkdirSync, mkdtempSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const baseURL = `http://127.0.0.1:${process.env.PORTAL_TEST_PORT ?? '19173'}`;
+const runRoot = resolve('.agent-work/browser-tests');
+mkdirSync(runRoot, { recursive: true });
+process.env.PORTAL_E2E_RUN ??= mkdtempSync(`${runRoot}/run-`);
 
 export default defineConfig({
     testDir: 'tests/e2e',

@@ -22,20 +22,33 @@ final class ExamIntegrity
         });
     }
 
-    public function signal(ExaminationAttempt $attempt, User $actor, ExamSession $sessions): void
+    public function signal(ExaminationAttempt $attempt, User $actor, ExamSession $sessions, ?string $observation): void
     {
-        DB::transaction(function () use ($attempt, $actor, $sessions) {
+        DB::transaction(function () use ($attempt, $actor, $sessions, $observation) {
             $attempt = ExaminationAttempt::lockForUpdate()->findOrFail($attempt->id);
             $sessions->authorize($actor, $attempt);
             abort_unless($attempt->exam->security_policy['observe_visibility'] ?? false, 403);
             abort_if($attempt->submitted_at || now()->gte($attempt->expires_at), 409);
+            if ($observation !== null) {
+                $receipts = $attempt->visibility_receipts ?? [];
+                $receipt = strtolower($observation);
+                if (in_array($receipt, $receipts, true)) {
+                    return;
+                }
+
+                abort_if(count($receipts) >= 1000, 409, 'Visibility receipt limit reached.');
+                // Remember coalesced receipts too: losing their 204 must not create a later signal.
+                $receipts[] = $receipt;
+                $attempt->forceFill(['visibility_receipts' => $receipts])->save();
+            }
+
             $signals = AuditLog::where('attempt_id', $attempt->id)->where('action', IntegrityEvent::PageHidden);
             if ((clone $signals)->where('occurred_at', '>', now()->subSeconds(10))->exists() || $signals->count() >= 100) {
                 return;
             }
 
             $this->event(IntegrityEvent::PageHidden, $actor, $attempt->exam_id, $attempt->id);
-        });
+        }, 3);
     }
 
     public function review(Examination $exam, AuditLog $signal, User $actor, string $note): void

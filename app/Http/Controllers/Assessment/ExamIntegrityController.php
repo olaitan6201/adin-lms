@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Assessment;
 
 use App\Enums\Assessment\IntegrityEvent;
+use App\Http\Requests\Assessment\VisibilitySignalRequest;
 use App\Models\AuditLog;
 use App\Models\Examination;
 use App\Models\ExaminationAttempt;
@@ -50,9 +51,9 @@ class ExamIntegrityController
         return back();
     }
 
-    public function signal(Request $request, ExaminationAttempt $attempt, ExamIntegrity $integrity, ExamSession $sessions): Response
+    public function signal(VisibilitySignalRequest $request, ExaminationAttempt $attempt, ExamIntegrity $integrity, ExamSession $sessions): Response
     {
-        $integrity->signal($attempt, $request->user(), $sessions);
+        $integrity->signal($attempt, $request->user(), $sessions, $request->validated('observation_id'));
 
         return response()->noContent();
     }

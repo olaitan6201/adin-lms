@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { observeVisibility } from './observeVisibility';
 
 export type IntegrityPolicy = {
     observe_visibility?: boolean;
@@ -14,22 +15,11 @@ export function IntegrityNotice({
     active: boolean;
     attempt: string;
 }) {
+    const [unconfirmed, setUnconfirmed] = useState<string | null>(null);
     useEffect(() => {
         if (!active || !policy.observe_visibility) return;
 
-        const changed = () => {
-            if (!document.hidden) return;
-
-            const token = decodeURIComponent(document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
-            void fetch(`/attempts/${attempt}/visibility-signal`, {
-                method: 'POST',
-                keepalive: true,
-                headers: { Accept: 'application/json', 'X-XSRF-TOKEN': token },
-            }).catch(() => {});
-        };
-
-        document.addEventListener('visibilitychange', changed);
-        return () => document.removeEventListener('visibilitychange', changed);
+        return observeVisibility(attempt, () => setUnconfirmed(attempt));
     }, [active, attempt, policy.observe_visibility]);
     return (
         <aside aria-label="Exam conditions">
@@ -43,6 +33,9 @@ export function IntegrityNotice({
                 <p>Copying from this paper is disabled in supported browsers while the attempt is open.</p>
             )}
             <p>This browser cannot identify who is present, monitor other apps or detect another device.</p>
+            {active && policy.observe_visibility && unconfirmed === attempt && (
+                <p role="status">Delivery of a page visibility signal could not be confirmed. This does not affect your mark.</p>
+            )}
         </aside>
     );
 }

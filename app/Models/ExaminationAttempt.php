@@ -9,11 +9,14 @@ class ExaminationAttempt extends DomainModel
 {
     protected $table = 'examination_attempts';
 
+    protected $hidden = ['visibility_receipts'];
+
     public $timestamps = false;
 
     protected function casts(): array
     {
         return [
+            'visibility_receipts' => 'array',
             'state' => AttemptState::class,
             'started_at' => 'immutable_datetime',
             'expires_at' => 'immutable_datetime',

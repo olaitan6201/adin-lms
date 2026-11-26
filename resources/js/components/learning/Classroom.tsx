@@ -1,6 +1,6 @@
-import type { ClassSessions, Room, Archive, Session } from '@/types/learning/study';
+import type { ClassSession, Room, Archive } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { SessionDrawer } from '@/components/learning/SessionDrawer';
+import { SessionDrawer, type ClassroomSelection } from '@/components/learning/SessionDrawer';
 import { LiveRoom, Recordings } from '@/components/learning/LiveRoom';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -10,7 +10,12 @@ import { Table } from '@/components/ui/data-display/Table';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Note } from '@/components/learning/Parts';
 
-function SessionTable({ liveClasses, label, openSession }: { liveClasses: ClassSessions; label: string; openSession: () => void }) {
+function SessionTable({ liveClasses, label, openDetails, openSchedule }: {
+    liveClasses: ClassSession[];
+    label: string;
+    openDetails: (sessionId: string) => void;
+    openSchedule: () => void;
+}) {
     const { notify } = useWorkspaceOverlays();
     const rows = liveClasses.map((session) => [
         <div className="min-w-0">
@@ -30,7 +35,7 @@ function SessionTable({ liveClasses, label, openSession }: { liveClasses: ClassS
                     Recording
                 </button>
             ) : (
-                <button type="button" className="btn btn-outline btn-sm" onClick={openSession}>
+                <button type="button" className="btn btn-outline btn-sm" onClick={() => openDetails(session.id)}>
                     Details
                 </button>
             )}
@@ -45,13 +50,13 @@ function SessionTable({ liveClasses, label, openSession }: { liveClasses: ClassS
             actions={
                 <>
                     <Badge tone="sky">{label}</Badge>
-                    <Action icon="plus" variant="primary" size="sm" onClick={openSession}>
+                    <Action icon="plus" variant="primary" size="sm" onClick={openSchedule}>
                         Schedule class
                     </Action>
                 </>
             }
         >
-            <Table columns={['Session', 'Starts', 'Duration', 'Mode', 'Attendees', 'State', '']} rows={rows} />
+            <Table columns={['Session', 'Starts', 'Duration', 'Mode', 'Attendees', 'State', '']} rows={rows} rowKeys={liveClasses.map(session => session.id)} />
         </Card>
     );
 }
@@ -59,17 +64,18 @@ export default function Classroom({
     liveClasses,
     room,
     archive,
-    session,
     scheduleLabel,
 }: {
-    liveClasses: ClassSessions;
+    liveClasses: ClassSession[];
     room: Room;
     archive: Archive;
-    session: Session;
     scheduleLabel: string;
 }) {
-    const [open, setOpen] = useState(false);
-    const openSession = () => setOpen(true);
+    const [panel, setPanel] = useState<{ selection: ClassroomSelection; open: boolean }>({ selection: { kind: 'schedule' }, open: false });
+    const { selection, open } = panel;
+    const openDetails = (sessionId: string) => setPanel({ selection: { kind: 'details', sessionId }, open: true });
+    const openSchedule = () => setPanel({ selection: { kind: 'schedule' }, open: true });
+    const session = selection.kind === 'details' ? liveClasses.find(row => row.id === selection.sessionId) : undefined;
 
     return (
         <div className="learning-surface">
@@ -82,7 +88,7 @@ export default function Classroom({
                         <Action icon="chart" variant="outline">
                             Attendance report
                         </Action>
-                        <Action icon="plus" variant="primary" onClick={openSession}>
+                        <Action icon="plus" variant="primary" onClick={openSchedule}>
                             Schedule class
                         </Action>
                     </>
@@ -91,14 +97,14 @@ export default function Classroom({
 
             <div className="space-y-5">
                 <LiveRoom room={room} />
-                <SessionTable liveClasses={liveClasses} label={scheduleLabel} openSession={openSession} />
+                <SessionTable liveClasses={liveClasses} label={scheduleLabel} openDetails={openDetails} openSchedule={openSchedule} />
                 <Recordings archive={archive} />
                 <Note tone="sky">
                     Conferencing is vendor neutral. A session can run on any provider that issues a meeting link, and every session keeps its own
                     attendance and participation record.
                 </Note>
             </div>
-            <SessionDrawer session={session} open={open} setOpen={setOpen} />
+            <SessionDrawer session={session} selection={selection} open={open} closeSession={() => setPanel({ selection, open: false })} />
         </div>
     );
 }

@@ -36,9 +36,7 @@ export const archive = {
     attachmentMessage: 'Recording attached to Week 3',
 };
 
-export const session = {
-    title: 'Tutorial: consolidation of accounts',
-    summary: 'ACC302 · Today, 16:00 · 60 minutes',
+const tutorialDetails = {
     date: '2026-11-26',
     start: '16:00',
     meetingLink: 'Issued to enrolled students 15 minutes before start',
@@ -48,3 +46,40 @@ export const session = {
 export const schedule = {
     label: '3 scheduled',
 };
+
+export const liveClasses = [
+    {
+        id: 'lc-1',
+        details: tutorialDetails,
+        title: 'Tutorial: consolidation of accounts',
+        course: 'ACC302',
+        starts: 'Today, 16:00',
+        duration: '60 min',
+        mode: 'Conferencing link',
+        attendees: 0,
+        capacity: 68,
+        state: 'scheduled',
+    },
+    {
+        id: 'lc-2',
+        title: 'Workshop: narrative voice in prose',
+        course: 'ENG210',
+        starts: 'Tomorrow, 09:00',
+        duration: '90 min',
+        mode: 'Conferencing link',
+        attendees: 0,
+        capacity: 82,
+        state: 'scheduled',
+    },
+    {
+        id: 'lc-3',
+        title: 'Practical briefing: titration',
+        course: 'CHM401',
+        starts: '12 Nov 2026, 10:00',
+        duration: '120 min',
+        mode: 'Recording available',
+        attendees: 41,
+        capacity: 41,
+        state: 'completed',
+    },
+];

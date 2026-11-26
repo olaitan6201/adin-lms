@@ -55,8 +55,3 @@ export const assignments = [
   { id: 'as-4', title: 'Group presentation: narrative voice', course: 'ENG210', due: '20 Nov 2026, 12:00', submissions: 78, total: 82, late: 2, marked: 0, state: 'open' },
   { id: 'as-5', title: 'Practical: titration and concentration', course: 'CHM401', due: '24 Nov 2026, 23:59', submissions: 36, total: 41, late: 1, marked: 29, state: 'open' }
 ];
-export const liveClasses = [
-  { id: 'lc-1', title: 'Tutorial: consolidation of accounts', course: 'ACC302', starts: 'Today, 16:00', duration: '60 min', mode: 'Conferencing link', attendees: 0, capacity: 68, state: 'scheduled' },
-  { id: 'lc-2', title: 'Workshop: narrative voice in prose', course: 'ENG210', starts: 'Tomorrow, 09:00', duration: '90 min', mode: 'Conferencing link', attendees: 0, capacity: 82, state: 'scheduled' },
-  { id: 'lc-3', title: 'Practical briefing: titration', course: 'CHM401', starts: '12 Nov 2026, 10:00', duration: '120 min', mode: 'Recording available', attendees: 41, capacity: 41, state: 'completed' }
-];

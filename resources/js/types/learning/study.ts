@@ -58,9 +58,10 @@ export type Archive = {
     attachmentMessage: string;
 };
 
-export type Session = { title: string; summary: string; date: string; start: string; meetingLink: string; checkin: string };
+export type SessionDetails = { date: string; start: string; meetingLink: string; checkin: string };
 
-export type ClassSessions = {
+export type ClassSession = {
+    details?: SessionDetails;
     id: string;
     title: string;
     course: string;
@@ -70,4 +71,4 @@ export type ClassSessions = {
     attendees: number;
     capacity: number;
     state: string;
-}[];
+};

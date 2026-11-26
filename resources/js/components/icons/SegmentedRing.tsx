@@ -2,7 +2,11 @@ type RingProps = {
     size: number;
     strokeWidth: number;
     label: string;
-    segments: readonly { label: string; value: number; color: string }[];
+    segments: readonly {
+        label: string;
+        value: number;
+        color: string;
+    }[];
 };
 
 export function SegmentedRing({ size, strokeWidth, label, segments }: RingProps) {

@@ -1,6 +1,13 @@
-type Step = { title: string; detail: string };
+type Step = {
+    title: string;
+    detail: string;
+};
 
-function FlowStep({ x, textY, step }: { x: number; textY: number; step: Step }) {
+function FlowStep({ x, textY, step }: {
+    x: number;
+    textY: number;
+    step: Step;
+}) {
     return (
         <g transform={`translate(${x} 0)`}>
             <rect x="0" y="45" width="104" height="60" rx="10" fill="#ffffff" stroke="#D5DDE6" />
@@ -14,7 +21,10 @@ function FlowStep({ x, textY, step }: { x: number; textY: number; step: Step }) 
     );
 }
 
-export function PostingFlow({ steps, result }: { steps: readonly [Step, Step, Step]; result: string }) {
+export function PostingFlow({ steps, result }: {
+    steps: readonly [Step, Step, Step];
+    result: string;
+}) {
     return (
         <svg viewBox="0 0 520 150" className="h-auto w-full" role="img"
             aria-label={[...steps.map(step => `${step.title}: ${step.detail}`), result].join(' → ')}>

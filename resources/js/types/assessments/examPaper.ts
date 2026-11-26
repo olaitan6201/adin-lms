@@ -7,5 +7,10 @@ export interface PaperQuestion {
 }
 
 export interface Sitting {
-    paper: PaperQuestion[]; storageKey: string; minutes: number; title: string; eyebrow: string; facts: [string,string][];
+    paper: PaperQuestion[];
+    storageKey: string;
+    minutes: number;
+    title: string;
+    eyebrow: string;
+    facts: [string,string][];
 }

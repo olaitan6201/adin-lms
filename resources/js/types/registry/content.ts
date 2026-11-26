@@ -5,6 +5,7 @@ export type UploadGroup = {
     description?: string;
     validation: string;
 };
+
 export type LibraryModule = {
     id: string;
     week: string;
@@ -15,6 +16,7 @@ export type LibraryModule = {
     items: number;
     completion: number;
 };
+
 export type LibraryResource = {
     id: string;
     name: string;
@@ -30,6 +32,7 @@ export type LibraryResource = {
     source: boolean;
     download: boolean;
 };
+
 export type ContentSummary = {
     code: string;
     manuscriptModule: string;
@@ -37,6 +40,7 @@ export type ContentSummary = {
     attachedWeek: string;
     items: number;
 };
+
 export type ContentLibraryInputs = {
     contentSummary: ContentSummary;
     initialResources: LibraryResource[];
@@ -45,6 +49,9 @@ export type ContentLibraryInputs = {
     items: string[][];
     contents: string[];
     resourceAuthor: string;
-    versionHistory: { date: string; size: string }[];
+    versionHistory: {
+        date: string;
+        size: string;
+    }[];
     attachedResourceId: string | undefined;
 };

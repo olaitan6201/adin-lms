@@ -1,4 +1,10 @@
-export type PreviewDevice = { id: string; title: string; detail: string; current: boolean };
+export type PreviewDevice = {
+    id: string;
+    title: string;
+    detail: string;
+    current: boolean;
+};
+
 export type StaffRecord = {
     id: string;
     name: string;
@@ -10,6 +16,7 @@ export type StaffRecord = {
     idle: string;
     mfa: boolean;
 };
+
 export type StudentRecord = {
     id: string;
     name: string;
@@ -21,7 +28,15 @@ export type StudentRecord = {
     attendance: number;
     gpa: number;
 };
-export type RoleEntry = { role: string; scope: string; modules: string; mfa: string; users: number };
+
+export type RoleEntry = {
+    role: string;
+    scope: string;
+    modules: string;
+    mfa: string;
+    users: number;
+};
+
 export type DirectorySummary = {
     superAdminId: string;
     staffNumber: string;
@@ -30,6 +45,7 @@ export type DirectorySummary = {
     students: number;
     roles: number;
 };
+
 export type PeopleDirectoryInputs = {
     staffDirectory: StaffRecord[];
     studentDirectory: StudentRecord[];

@@ -12,7 +12,15 @@ export type Offering = {
     sessions: number;
     completion: number;
 };
-export type RosterStudent = { id: string; name: string; matric: string; programme: string; status: string };
+
+export type RosterStudent = {
+    id: string;
+    name: string;
+    matric: string;
+    programme: string;
+    status: string;
+};
+
 export type DeliveryRegisterInputs = {
     stages: readonly (readonly [string, number, string])[];
     rosterMetrics: [string, string, string?][];
@@ -21,8 +29,18 @@ export type DeliveryRegisterInputs = {
     initialOfferings: Offering[];
     currentTerm: string;
     offeringTotal: number;
-    offerings: { code: string; students: number; state: string }[];
-    courses: { code: string; title: string }[];
+    offerings: {
+        code: string;
+        students: number;
+        state: string;
+    }[];
+    courses: {
+        code: string;
+        title: string;
+    }[];
     students: RosterStudent[];
-    staff: { name: string; role: string }[];
+    staff: {
+        name: string;
+        role: string;
+    }[];
 };

@@ -7,24 +7,55 @@ export type Guardian = {
         programme: string;
         level: number;
     };
-    timeline: { title: string; meta: string; body: string }[];
+    timeline: {
+        title: string;
+        meta: string;
+        body: string;
+    }[];
     initials: string;
     consentState: string;
 };
 
 export type Health = {
-    tiles: { label: string; value: string }[];
-    attention: { icon: string; tone: string; title: string; meta: string }[];
+    tiles: {
+        label: string;
+        value: string;
+    }[];
+    attention: {
+        icon: string;
+        tone: string;
+        title: string;
+        meta: string;
+    }[];
     rosterLabel: string;
-    classmates: { name: string; attendance: number; needsAttention: boolean }[];
+    classmates: {
+        name: string;
+        attendance: number;
+        needsAttention: boolean;
+    }[];
     completion: number;
     submissions: number;
     attendanceRate: number;
 };
 
-export type TeachingModules = { id: string; week: string; title: string; items: number; completion: number; state: string }[];
+export type TeachingModules = {
+    id: string;
+    week: string;
+    title: string;
+    items: number;
+    completion: number;
+    state: string;
+}[];
 
-export type TeachingResources = { name: string; type: string; size: string; version: string; updated: string; access: string; icon: string }[];
+export type TeachingResources = {
+    name: string;
+    type: string;
+    size: string;
+    version: string;
+    updated: string;
+    access: string;
+    icon: string;
+}[];
 
 export type TeachingAssignments = {
     id: string;
@@ -40,7 +71,14 @@ export type TeachingAssignments = {
 
 export type GradeRows = Pick<GradeRow, 'student' | 'ca' | 'mid' | 'total' | 'grade'>[];
 
-export type StudyModules = { id: string; week: string; title: string; state: string; duration: string; type: string }[];
+export type StudyModules = {
+    id: string;
+    week: string;
+    title: string;
+    state: string;
+    duration: string;
+    type: string;
+}[];
 
 export type Room = {
     title: string;
@@ -54,11 +92,23 @@ export type Room = {
 };
 
 export type Archive = {
-    recordings: { title: string; course: string; date: string; length: string; views: number }[];
+    recordings: {
+        title: string;
+        course: string;
+        date: string;
+        length: string;
+        views: number;
+    }[];
     attachmentMessage: string;
 };
 
-export type SessionDetails = { date: string; start: string; meetingLink: string; announcement?: string; checkin?: string };
+export type SessionDetails = {
+    date: string;
+    start: string;
+    meetingLink: string;
+    announcement?: string;
+    checkin?: string;
+};
 
 export type SessionDraft = {
     title: string;

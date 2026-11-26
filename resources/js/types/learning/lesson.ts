@@ -19,7 +19,12 @@ export type Practice = {
     readingSummary: string;
     readingTitle: string;
     readingSource: string;
-    resources: { name: string; type: string; size: string; icon: string }[];
+    resources: {
+        name: string;
+        type: string;
+        size: string;
+        icon: string;
+    }[];
 };
 
 export type Manuscript = {

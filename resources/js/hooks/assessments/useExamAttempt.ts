@@ -18,7 +18,9 @@ function createAttemptPersistence() {
         snapshot: () => saved,
         subscribe(listener: () => void) {
             listeners.add(listener);
-            return () => { listeners.delete(listener); };
+            return () => {
+                listeners.delete(listener);
+            };
         },
         persist(key: string, attempt: Attempt) {
             try {
@@ -27,6 +29,7 @@ function createAttemptPersistence() {
             } catch {
                 saved = null;
             }
+
             for (const listener of listeners) listener();
         },
     };
@@ -43,7 +46,10 @@ function readAttempt({ paper, storageKey: key, minutes }: Sitting): Attempt {
             && (v.submitted === null || Number.isFinite(v.submitted))) {
             return { ...v, submitted: v.submitted ?? (Date.now() >= v.deadline ? v.deadline : null) };
         }
-    } catch { /* An unavailable store still permits an in-memory sitting. */ }
+    } catch {
+        /* An unavailable store still permits an in-memory sitting. */
+    }
+
     return { index: 0, answers: {}, flags: [], deadline: Date.now() + minutes * 60_000, submitted: null };
 }
 
@@ -54,33 +60,44 @@ export function useExamAttempt(sitting: Sitting) {
     const [persistence] = useState(createAttemptPersistence);
     const saved = useSyncExternalStore(persistence.subscribe, persistence.snapshot, () => null);
     const stored = saved === attempt;
+
     useEffect(() => {
         persistence.persist(key, attempt);
     }, [attempt, key, persistence]);
+
     useEffect(() => {
         if (attempt.submitted !== null) return;
+
         function tick() {
             const time = Date.now();
             setNow(time);
             if (time >= attempt.deadline) setAttempt(a => ({ ...a, submitted: a.submitted ?? a.deadline }));
         }
+
         const interval = window.setInterval(tick, 500);
         window.addEventListener('focus', tick);
-        return () => { window.clearInterval(interval); window.removeEventListener('focus', tick); };
+        return () => {
+            window.clearInterval(interval);
+            window.removeEventListener('focus', tick);
+        };
     }, [attempt.deadline, attempt.submitted]);
+
     function update(fn: (a: Attempt) => Attempt) {
         const time = Date.now();
         setAttempt(a => a.submitted !== null ? a : time >= a.deadline ? { ...a, submitted: a.deadline } : fn(a));
     }
+
     function answer(value: string) {
         update(a => {
             const answers = { ...a.answers };
             const id = paper[a.index].id;
             if (value) answers[id] = value;
             else delete answers[id];
+
             return { ...a, answers };
         });
     }
+
     return {
         attempt, stored, answer,
         remaining: Math.max(0, Math.ceil((attempt.deadline - now) / 1000)),

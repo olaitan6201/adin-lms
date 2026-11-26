@@ -12,6 +12,7 @@ export type Faculty = {
         students: number;
     }[];
 };
+
 export type Programme = {
     id: string;
     code: string;
@@ -21,6 +22,7 @@ export type Programme = {
     level: number;
     units: number;
 };
+
 export type AcademicSession = {
     id: string;
     label: string;
@@ -31,11 +33,16 @@ export type AcademicSession = {
     endDate: string;
     semester: string;
 };
+
 export type AcademicStructureInputs = {
     initialFaculties: Faculty[];
     initialProgrammes: Programme[];
     academicSessions: AcademicSession[];
     windows: Record<string, [string, string][]>;
     healthScope: [string, string][];
-    structureChecks: { result: string; title: string; detail: string }[];
+    structureChecks: {
+        result: string;
+        title: string;
+        detail: string;
+    }[];
 };

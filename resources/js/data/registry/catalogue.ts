@@ -21,6 +21,7 @@ export const description =
     'Preparation and interpretation of financial statements for reporting entities, including the recognition, measurement and presentation of assets, liabilities and equity.';
 export const catalogueEntries = catalogue.map((c) => ({
     ...c,
+    revision: 1,
     description: c.code === 'ACC302' ? description : '',
 }));
 export const programmeVersions = programmes.map((programme) => ({

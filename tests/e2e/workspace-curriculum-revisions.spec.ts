@@ -1,6 +1,55 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
+test('an approved definition stays intact while its separate draft survives reload', async ({ page, context }) => {
+    await page.goto('/admin/curriculum');
+    const rows = page.getByRole('row').filter({ hasText: 'Intermediate Financial Accounting' });
+    const approved = rows.filter({ hasText: 'v1 approved' });
+    const draft = rows.filter({ hasText: 'v2 draft' });
+    const dialog = page.getByRole('dialog');
+    await approved.getByRole('button', { name: 'Open' }).click();
+    await dialog.getByLabel('Credit units').fill('4');
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.reload();
+    await expect(approved.getByRole('cell').nth(2)).toHaveText('3');
+    await expect(draft.getByRole('cell').nth(2)).toHaveText('4');
+    await approved.getByRole('button', { name: 'Open' }).click();
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(dialog.getByRole('alert')).toContainText('draft already exists');
+    await page.keyboard.press('Escape');
+    await draft.getByRole('button', { name: 'Open' }).click();
+    await dialog.getByLabel('Credit units').fill('5');
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(rows).toHaveCount(2);
+    await expect(draft.getByRole('cell').nth(2)).toHaveText('5');
+    const fresh = await context.newPage();
+    await fresh.goto('/admin/curriculum');
+    await expect(fresh.getByRole('row').filter({ hasText: 'v2 draft' })).toHaveCount(0);
+});
+
+test('invalid draft storage leaves seeded history usable and a failed save keeps the editor open', async ({ page }) => {
+    await page.goto('/admin/curriculum');
+    await page.evaluate(() => {
+        sessionStorage.setItem('adin.fixture.course-definition-drafts.v1', '[{"state":"approved","units":99}]');
+    });
+    await page.reload();
+    const approved = page.getByRole('row').filter({ hasText: 'Intermediate Financial Accounting' });
+    await expect(approved.getByRole('cell').nth(2)).toHaveText('3');
+    await approved.getByRole('button', { name: 'Open' }).click();
+    await page.evaluate(() => {
+        Storage.prototype.setItem = () => {
+            throw new DOMException('Storage is full', 'QuotaExceededError');
+        };
+    });
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('Credit units').fill('4');
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(dialog.getByRole('alert')).toContainText('could not save');
+    await expect(dialog.getByLabel('Credit units')).toHaveValue('4');
+    await page.keyboard.press('Escape');
+    await expect(approved.getByRole('cell').nth(2)).toHaveText('3');
+});
+
 test('Chemistry revision is isolated from approved history, Accounting and the exported catalogue', async ({
     page,
 }) => {

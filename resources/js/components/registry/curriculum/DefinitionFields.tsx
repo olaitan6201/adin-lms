@@ -55,8 +55,8 @@ export function DefinitionFields({
                 value={course?.prereq === prerequisite.code ? prerequisite.title : course?.prereq}
                 options={
                     course
-                        ? [course.prereq === prerequisite.code ? prerequisite.title : course.prereq, 'None']
-                        : ['None', ...courses.map((record) => record.code)]
+                        ? [...new Set([course.prereq === prerequisite.code ? prerequisite.title : course.prereq, 'None'])]
+                        : ['None', ...new Set(courses.map((record) => record.code))]
                 }
             />
             {course?.code === selectedCourse.definition.code && (
@@ -70,8 +70,8 @@ export function DefinitionFields({
                 </section>
             )}
             <Note>
-                Changing a published course definition creates a new curriculum version. Existing offerings and results
-                keep the version they were created under.
+                Editing an approved or published definition creates a separate draft. Existing offerings and results
+                keep their original version. Sample drafts stay in this browser tab after reload.
             </Note>
         </>
     );

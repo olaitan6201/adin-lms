@@ -1,4 +1,5 @@
 export type CourseDefinition = {
+    revision: number;
     code: string;
     title: string;
     type: string;

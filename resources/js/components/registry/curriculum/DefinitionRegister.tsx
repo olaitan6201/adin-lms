@@ -16,7 +16,7 @@ export function DefinitionRegister({
             subtitle="Approved and draft course definitions with credit units, prerequisites and level placement"
             actions={
                 <>
-                    {status(`${courses.length} courses`)}
+                    {status(`${new Set(courses.map((course) => course.code)).size} courses`)}
                     <Action
                         size="sm"
                         variant="primary"
@@ -45,7 +45,11 @@ export function DefinitionRegister({
                 <span key="prerequisites" className="text-[13px] text-ink-500">
                     {course.prereq}
                 </span>,
-                status(course.state, course.state === 'published' ? 'sky' : undefined),
+                status(`v${course.revision} ${course.state}`, {
+                    approved: 'emerald',
+                    draft: 'amber',
+                    published: 'sky',
+                }[course.state]),
                 <Action key="edit" size="sm" onClick={() => courseForm(course)}>
                     Open
                 </Action>,

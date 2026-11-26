@@ -21,10 +21,19 @@ function PanelForm({ panel, close }: { panel: Panel; close: () => void }) {
     const ref = useRef<HTMLDialogElement>(null);
     useEffect(() => {
         const dialog = ref.current;
+        const opener = document.activeElement;
         dialog?.showModal();
-        return () => dialog?.close();
+        return () => {
+            dialog?.close();
+            if (opener instanceof HTMLElement && opener.isConnected) {
+                opener.focus({ preventScroll: true });
+            }
+        };
     }, []);
-    return <dialog ref={ref} aria-labelledby="registry-panel-title" onCancel={close}
+    return <dialog ref={ref} aria-labelledby="registry-panel-title" onCancel={event => {
+        event.preventDefault();
+        close();
+    }}
         className={panel.confirm ? 'm-auto w-[min(92vw,460px)] rounded-xl p-0 shadow-xl backdrop:bg-ink-950/45' : 'fixed inset-y-0 right-0 ml-auto mr-0 h-dvh max-h-none w-full max-w-[560px] border-l border-ink-100 bg-white p-0 shadow-xl backdrop:bg-ink-950/45 backdrop:backdrop-blur-[2px]'}>
         <form className="flex max-h-dvh h-full flex-col" onSubmit={e => {
             e.preventDefault();

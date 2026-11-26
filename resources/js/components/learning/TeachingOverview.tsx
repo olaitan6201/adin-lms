@@ -1,10 +1,13 @@
 import type { Health } from '@/types/learning/study';
-import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Card } from '@/components/ui/layout/Card';
 import { Meter, StudyIcon } from '@/components/learning/Parts';
 
-export function TeachingOverview({ health }: { health: Health }) {
-    const { notify } = useWorkspaceOverlays();
+export function TeachingOverview({ health, select, settings, change }: {
+    health: Health;
+    select: (tab: string) => void;
+    settings: Record<string, string>;
+    change: (key: string, value: string) => void;
+}) {
     const tiles = health.tiles;
 
     return (
@@ -43,7 +46,7 @@ export function TeachingOverview({ health }: { health: Health }) {
                                     <span className="block text-[13.5px] font-medium text-ink-800">{item.title}</span>
                                     <span className="mt-0.5 block text-xs text-ink-500">{item.meta}</span>
                                 </span>
-                                <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Opened')}>
+                                <button type="button" className="btn btn-outline btn-sm" onClick={() => select(item.tab)}>
                                     Open
                                 </button>
                             </li>
@@ -52,11 +55,15 @@ export function TeachingOverview({ health }: { health: Health }) {
                 </Card>
             </div>
             <div className="xl:col-span-4 space-y-5">
-                <Card title="Offering settings">
+                <Card title="Offering settings" subtitle="Draft selections for this visit; no published policy changes">
                     <div className="space-y-3">
                         <label className="block">
                             <span className="label">Delivery mode</span>
-                            <select className="select">
+                            <select
+                                className="select"
+                                value={settings.mode ?? 'Blended'}
+                                onChange={(event) => change('mode', event.target.value)}
+                            >
                                 <option>Blended</option>
                                 <option>Fully online</option>
                                 <option>Face-to-face</option>
@@ -64,21 +71,33 @@ export function TeachingOverview({ health }: { health: Health }) {
                         </label>
                         <label className="block">
                             <span className="label">Content release</span>
-                            <select className="select">
+                            <select
+                                className="select"
+                                value={settings.release ?? 'By week'}
+                                onChange={(event) => change('release', event.target.value)}
+                            >
                                 <option>By week</option>
                                 <option>All published content</option>
                             </select>
                         </label>
                         <label className="block">
                             <span className="label">Assignment visibility</span>
-                            <select className="select">
+                            <select
+                                className="select"
+                                value={settings.visibility ?? 'To enrolled students'}
+                                onChange={(event) => change('visibility', event.target.value)}
+                            >
                                 <option>To enrolled students</option>
                                 <option>Hidden</option>
                             </select>
                         </label>
                         <label className="block">
                             <span className="label">Discussion</span>
-                            <select className="select">
+                            <select
+                                className="select"
+                                value={settings.discussion ?? 'Open, moderated'}
+                                onChange={(event) => change('discussion', event.target.value)}
+                            >
                                 <option>Open, moderated</option>
                                 <option>Open, unmoderated</option>
                                 <option>Closed</option>
@@ -104,9 +123,7 @@ export function TeachingOverview({ health }: { health: Health }) {
                                 </li>
                             ))}
                         </ul>
-                        <button type="button" className="btn btn-outline btn-sm mt-3 w-full" onClick={() => notify('Full roster opened')}>
-                            Open full roster
-                        </button>
+                        <p className="mt-3 text-xs">Showing the {health.classmates.length} sample roster entries.</p>
                     </>
                 </Card>
             </div>

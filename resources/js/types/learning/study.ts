@@ -22,6 +22,7 @@ export type Health = {
         value: string;
     }[];
     attention: {
+        tab: string;
         icon: string;
         tone: string;
         title: string;

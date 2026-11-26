@@ -1,3 +1,4 @@
+import { useCourseDrafts } from '@/components/learning/useCourseDrafts';
 import { allocation } from '@/data/learning/teaching';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { offerings } from '@/data/learning/courseWorkspace';
@@ -10,6 +11,7 @@ import { Meter, Note } from '@/components/learning/Parts';
 import { TeachingAllocationDetails } from '@/components/staff/TeachingAllocationDetails';
 
 export default function Courses() {
+    const { drafts, edit } = useCourseDrafts();
     const rows = offerings.slice(0, 4).map((offering) => [
         <div key="course" className="min-w-0">
             <p className="truncate font-medium text-ink-800">{offering.title}</p>
@@ -30,7 +32,7 @@ export default function Courses() {
             <Meter value={offering.completion} showValue={true} />
         </div>,
         <div key="workspace" className="flex justify-end gap-1.5">
-            <Action href={workspaceUrl('lecturer/course')} variant="outline" size="sm">
+            <Action href={workspaceUrl(`lecturer/course?course=${offering.code}`)} variant="outline" size="sm">
                 Workspace
             </Action>
         </div>,
@@ -44,10 +46,10 @@ export default function Courses() {
                 description="Course allocations are scoped by the institution. You can only see and act on the courses assigned to you."
                 actions={
                     <>
-                        <Action icon="chart" variant="outline">
+                        <a className="btn btn-outline" href="#teaching-workload">
                             Teaching workload
-                        </Action>
-                        <Action icon="plus" variant="primary">
+                        </a>
+                        <Action variant="primary" onClick={() => edit('Allocation request')}>
                             Request allocation
                         </Action>
                     </>
@@ -69,7 +71,12 @@ export default function Courses() {
                     <Table columns={['Course', 'Students', 'Mode', 'State', 'Learner progress', '']} rows={rows} />
                 </Card>
 
-                <TeachingAllocationDetails allocation={allocation} />
+                {drafts.map((draft) => (
+                    <p key={draft.id}>Allocation request draft: {draft.title} · {draft.detail} (not sent)</p>
+                ))}
+                <div id="teaching-workload" tabIndex={-1}>
+                    <TeachingAllocationDetails allocation={allocation} />
+                </div>
                 <Note tone="sky">
                     A lecturer can publish content, set and mark assignments, and enter scores for assigned courses only. Result publication
                     stays with an authorised officer.

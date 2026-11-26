@@ -26,7 +26,7 @@ function RegisteredCourse({ course }: { course: (typeof registration.courses)[nu
                     <StudyIcon name="target" className="w-4 h-4 shrink-0 text-brand-600" />
                     <span className="truncate">Next: {course.next}</span>
                 </span>
-                <Action href={workspaceUrl('student/course')} variant="primary" size="sm">
+                <Action href={workspaceUrl(`student/course?course=${course.code}`)} variant="primary" size="sm">
                     Continue
                 </Action>
             </div>

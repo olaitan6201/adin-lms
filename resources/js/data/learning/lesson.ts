@@ -70,3 +70,9 @@ export const manuscript = {
     reading: 'IFRS Foundation, IAS 2 Inventories (summary note)',
     next: 'Next lesson · Week 4',
 };
+
+export const lessonExcerpts: Record<string, string> = {
+    'sm-4': 'Record a cash sale of 50,000. Debit Cash 50,000 and credit Sales 50,000. Download the practice set for the worked exercises.',
+    'sm-1': 'Financial statements describe the resources a business controls, what it owes and the residual interest of its owners. Compare a statement of financial position with a statement of profit or loss.',
+    'sm-2': 'Assets = liabilities + equity. A cash purchase of equipment increases one asset and reduces another by the same amount. Total assets and the accounting equation remain in balance.',
+};

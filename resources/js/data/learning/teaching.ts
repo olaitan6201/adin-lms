@@ -10,7 +10,7 @@ export const health = {
         },
         {
             label: 'Resources',
-            value: '7',
+            value: '9',
         },
         {
             label: 'Assignments',
@@ -20,18 +20,21 @@ export const health = {
     attention: [
         {
             icon: 'alert',
+            tab: 'content',
             tone: 'text-amber-600',
             title: 'Week 6 and Week 7 modules are still in draft',
             meta: '14 students have reached Week 6',
         },
         {
             icon: 'clipboard',
+            tab: 'assignments',
             tone: 'text-amber-600',
             title: '34 submissions are waiting for a score',
             meta: 'Oldest received 12 Nov 2026',
         },
         {
             icon: 'users',
+            tab: 'attendance',
             tone: 'text-rose-600',
             title: '5 students are below 60% attendance',
             meta: 'Head of department has been notified',
@@ -61,8 +64,8 @@ export const teachingCourse = {
 
 export const allocation = {
     term: '2025/2026 first semester',
-    courseCount: '3 courses',
-    studentCount: '195 students',
+    courseCount: '4 courses',
+    studentCount: '245 students',
     workload: [
         {
             label: 'Scheduled classes',
@@ -78,12 +81,12 @@ export const allocation = {
         },
         {
             label: 'Students supervised',
-            value: '195',
+            value: '245',
         },
     ],
     preparation: [
         {
-            title: 'Week 6 module published',
+            title: 'Week 6 module',
             state: 'Draft',
             tone: 'amber',
         },

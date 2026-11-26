@@ -1,5 +1,4 @@
 import type { StudyModules } from '@/types/learning/study';
-import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { StudyIcon } from '@/components/learning/Parts';
 
 const stateIcon: Record<string, string> = {
@@ -8,17 +7,20 @@ const stateIcon: Record<string, string> = {
     available: 'document',
     locked: 'lock',
 };
-export function LessonMenu({ studentModules, summary }: {
+export function LessonMenu({ studentModules, summary, selected, select }: {
     summary: string;
+    selected: string;
+    select: (id: string) => void;
     studentModules: StudyModules;
 }) {
-    const { notify } = useWorkspaceOverlays();
     const items = studentModules.map((module) => (
         <li key={module.title}>
             <button
                 type="button"
-                className={`flex w-full items-start gap-3 border-l-2 px-4 py-3 text-left transition-colors ${module.state === 'in progress' ? 'border-brand-500 bg-ink-50' : 'border-transparent hover:bg-ink-50/70'}`}
-                onClick={() => notify(`${module.title} opened`)}
+                className={`flex w-full items-start gap-3 border-l-2 px-4 py-3 text-left transition-colors ${module.id === selected ? 'border-brand-500 bg-ink-50' : 'border-transparent hover:bg-ink-50/70'}`}
+                aria-current={module.id === selected ? 'step' : undefined}
+                disabled={module.state === 'locked'}
+                onClick={() => select(module.id)}
             >
                 <span
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
@@ -40,7 +42,7 @@ export function LessonMenu({ studentModules, summary }: {
                         <StudyIcon name="clock" className="w-3.5 h-3.5" />
                         {module.duration}
                         <span className="text-ink-300">|</span>
-                        {module.type}
+                        {module.type} · {module.state}
                     </span>
                 </span>
             </button>

@@ -1,3 +1,4 @@
+import type { DraftKind, CourseDraft } from './CourseDraftForm';
 import type { TeachingResources, TeachingModules } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -6,11 +7,11 @@ import { Action } from '@/components/ui/controls/Action';
 import { Table } from '@/components/ui/data-display/Table';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export function ContentPanel({ courseModules, outline }: {
+export function ContentPanel({ courseModules, outline, edit }: {
     courseModules: TeachingModules;
     outline: string[];
+    edit: (kind: DraftKind, initial?: CourseDraft, id?: string) => void;
 }) {
-    const { notify } = useWorkspaceOverlays();
     const rows = courseModules.map((module) => [
         <span key="week" className="font-mono text-[11.5px] font-medium text-ink-500">
             {module.week}
@@ -33,7 +34,7 @@ export function ContentPanel({ courseModules, outline }: {
             {module.state === 'published' ? 'Published' : 'Draft'}
         </Badge>,
         <div key="actions" className="flex justify-end gap-1.5">
-            <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Module editor opened')}>
+            <button type="button" className="btn btn-outline btn-sm" onClick={() => edit('Module', { title: module.title, detail: module.week }, module.id)}>
                 Edit
             </button>
         </div>,
@@ -47,10 +48,10 @@ export function ContentPanel({ courseModules, outline }: {
                 subtitle="Content structure and learner progress per module"
                 actions={
                     <>
-                        <Action icon="plus" variant="outline" size="sm">
+                        <Action size="sm" onClick={() => edit('Module')}>
                             Add module
                         </Action>
-                        <Action icon="document" variant="primary" size="sm">
+                        <Action size="sm" onClick={() => edit('Chapter')}>
                             Write chapter
                         </Action>
                     </>
@@ -81,8 +82,16 @@ export function ContentPanel({ courseModules, outline }: {
     );
 }
 
-export function ResourcesPanel({ resources }: { resources: TeachingResources }) {
-    const { notify } = useWorkspaceOverlays();
+export function ResourcesPanel({ resources, upload }: { resources: TeachingResources; upload: () => void }) {
+    const { openDrawer } = useWorkspaceOverlays();
+    function showResource(resource: TeachingResources[number]) {
+        openDrawer({
+            title: resource.name,
+            description: `${resource.type} · ${resource.size} · ${resource.version}`,
+            content: <p>{resource.access}. Updated {resource.updated}. This catalogue record is read-only.</p>,
+        });
+    }
+
     const rows = resources.map((resource) => [
         <div key="resource" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500">
@@ -105,8 +114,8 @@ export function ResourcesPanel({ resources }: { resources: TeachingResources }) 
             {resource.updated}
         </span>,
         <div key="actions" className="flex justify-end gap-1.5">
-            <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Resource options opened')}>
-                Manage
+            <button type="button" className="btn btn-outline btn-sm" onClick={() => showResource(resource)}>
+                Details
             </button>
         </div>,
     ]);
@@ -117,7 +126,7 @@ export function ResourcesPanel({ resources }: { resources: TeachingResources }) 
             title="Resources"
             subtitle="Files, links and embeds attached to this course"
             actions={
-                <Action icon="upload" variant="primary" size="sm">
+                <Action size="sm" onClick={upload}>
                     Upload resource
                 </Action>
             }

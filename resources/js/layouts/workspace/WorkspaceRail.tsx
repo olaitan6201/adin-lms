@@ -1,6 +1,6 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Link } from '@inertiajs/react';
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import type { ReactNode } from 'react';
 import { WorkspaceInstall } from './WorkspaceInstall';
 import { groupsFor, roles, type RoleKey } from './navigation';

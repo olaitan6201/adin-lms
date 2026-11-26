@@ -1,5 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Action, Card, Icon, StatTile } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
+import { StatTile } from '@/components/ui/data-display/StatTile';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Sparkline } from './Charts';
 

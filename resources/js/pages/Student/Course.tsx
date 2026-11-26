@@ -1,6 +1,8 @@
 import { LessonMenu } from '@/components/learning/LessonMenu';
 import { Lesson } from '@/components/learning/Lesson';
-import { Card, Action, PageHeader } from '@/components/workspace/Elements';
+import { Card } from '@/components/ui/layout/Card';
+import { Action } from '@/components/ui/controls/Action';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Meter, Note } from '@/components/learning/Parts';
 
 export default function Course() {

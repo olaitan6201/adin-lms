@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { Action, Badge, Card, PageHeader, Table } from '@/components/workspace/Elements';
-import { Note, type WorkspaceRole } from '@/components/workspace/EngagementControls';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { Table } from '@/components/ui/data-display/Table';
+import { Note } from '@/components/ui/feedback/Note';
+import { type WorkspaceRole } from '@/components/identity/roles';
 
 const categories = [
     ['Assignments and submissions', 'New assignments, deadline reminders and submission receipts.', 'Daily'],

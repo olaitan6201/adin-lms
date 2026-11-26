@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Action, Card, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Table } from '@/components/ui/data-display/Table';
 import { examBlueprint, exams, invigilationLog, questionBanks, questions } from './cbtData';
 import { Drawer, Note, Status, exportSheet, type Values } from './Controls';
 import { Checks, Editor } from './Editor';

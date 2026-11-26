@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Action, Card, Icon } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
 import { Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { Details, Progress, Records, status, val, cap } from '@/components/registry/Records';
 import { courseOverviews, courseModules, offerings } from '@/components/registry/fixtures/academics';

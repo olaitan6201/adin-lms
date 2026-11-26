@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Tabs } from 'radix-ui';
-import { Action, Card, Icon, PageHeader } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 
 export type Panel = {
     title: string;

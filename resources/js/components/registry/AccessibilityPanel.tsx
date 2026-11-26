@@ -1,4 +1,5 @@
-import { Card, Icon } from '@/components/workspace/Elements';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
 import { Note } from './Desk';
 import { Metrics, Records, status } from './Records';
 import { verified, targets } from './fixtures/accessibility';

@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Icon } from '@/components/workspace/Elements';
+import { Icon } from '@/components/icons/Icon';
 import './learning.css';
 
 export { Icon as StudyIcon };

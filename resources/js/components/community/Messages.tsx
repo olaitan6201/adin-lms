@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
-import { Badge, Card } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
 import { messages } from './engagementFixtures';
-import { Drawer, Field } from '@/components/workspace/EngagementControls';
+import { Drawer } from '@/components/ui/overlays/DialogDrawer';
+import { Field } from '@/components/ui/controls/Field';
 
 const initial = messages.map((m,i) => ({ ...m, conversation: i === 0 ? [
     { mine: false, body: 'Some of you asked whether the deadline can move to Friday because of the mid-term on the 18th. I have extended the submission window to Friday 20 November 23:59 for everyone, not only for those who asked.' },

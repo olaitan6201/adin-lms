@@ -4,8 +4,9 @@ import { workspaceUrl } from '@/lib/workspaceUrl';
 import { ContentPanel, ResourcesPanel } from '@/components/learning/TeachingPanels';
 import { AssignmentsPanel, GradebookPanel } from '@/components/learning/TeachingAssessment';
 import { course } from '@/components/learning/TeachingPanels';
-import { Tabs } from '@/components/workspace/Panels';
-import { Action, PageHeader } from '@/components/workspace/Elements';
+import { Tabs } from '@/components/ui/navigation/Tabs';
+import { Action } from '@/components/ui/controls/Action';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Note } from '@/components/learning/Parts';
 
 export default function Course() {

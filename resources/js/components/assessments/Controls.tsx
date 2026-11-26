@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { Action, Badge, Card } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
 
 export function Sections({ labels, active, change }: { labels: string[]; active: number; change: (n: number) => void }) {
     return <Card bodyClassName="p-0"><nav aria-label="Page sections" className="flex flex-wrap px-3">

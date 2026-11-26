@@ -1,6 +1,10 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { offerings } from '@/components/learning/fixtures';
-import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Action } from '@/components/ui/controls/Action';
+import { Table } from '@/components/ui/data-display/Table';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Meter, Note } from '@/components/learning/Parts';
 
 export default function Courses() {

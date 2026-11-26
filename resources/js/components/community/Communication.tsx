@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Action, PageHeader } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Forums } from './Forums';
 import { Groups } from './Groups';
 import { Messages } from './Messages';
 import { Announcements } from './Announcements';
-import { Note, Sections, type TeachingRole } from '@/components/workspace/EngagementControls';
+import { Note } from '@/components/ui/feedback/Note';
+import { Sections } from '@/components/ui/navigation/Sections';
+import { type TeachingRole } from '@/components/identity/roles';
 
 export function Communication({ role }: { role: TeachingRole }) {
     const student = role === 'student';

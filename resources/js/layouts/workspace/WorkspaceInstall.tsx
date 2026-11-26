@@ -1,4 +1,4 @@
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import { useSyncExternalStore } from 'react';
 import { useWorkspaceOverlays } from './WorkspaceOverlays';
 

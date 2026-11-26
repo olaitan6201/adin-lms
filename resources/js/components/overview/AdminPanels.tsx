@@ -1,4 +1,7 @@
-import { Action, Badge, Card, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Table } from '@/components/ui/data-display/Table';
 import { activityFeed, approvals, completionByFaculty, enrolmentTrend, performanceMetrics } from './adminFixtures';
 import { AreaChart, DeliveryColumns, HorizontalBars } from './Charts';
 import { Go } from './OverviewParts';

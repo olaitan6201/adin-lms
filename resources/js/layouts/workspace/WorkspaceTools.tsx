@@ -1,6 +1,6 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Link } from '@inertiajs/react';
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import { Popover } from 'radix-ui';
 import { useEffect, useState } from 'react';
 import type { RoleKey } from './navigation';

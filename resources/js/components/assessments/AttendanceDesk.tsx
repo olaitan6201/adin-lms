@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Action, Badge, Card, Icon, PageHeader, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { Table } from '@/components/ui/data-display/Table';
 import { attendanceSessions, learners } from './attendanceData';
 import { Drawer, RecordName, Sections, Status, exportSheet } from './Controls';
 

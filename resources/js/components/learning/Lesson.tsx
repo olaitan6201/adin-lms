@@ -1,7 +1,8 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { LessonResources } from './LessonResources';
 import { AccountingLesson } from './AccountingLesson';
-import { Card, Action } from '@/components/workspace/Elements';
+import { Card } from '@/components/ui/layout/Card';
+import { Action } from '@/components/ui/controls/Action';
 import { StudyIcon } from '@/components/learning/Parts';
 
 export function Lesson() {

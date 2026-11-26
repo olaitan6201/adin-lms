@@ -1,4 +1,5 @@
-import { Action, PageHeader } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Activity, ApprovalQueue, Delivery, Enrolment, Participation, ServiceHealth } from '@/components/overview/AdminPanels';
 import { ExamReadiness } from '@/components/overview/ExamReadiness';
 import { Columns, Note, Tiles, useFeedback } from '@/components/overview/OverviewParts';

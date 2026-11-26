@@ -2,7 +2,7 @@ import '../../css/portal-shell.css';
 import '../../css/workspace-shell.css';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePage } from '@inertiajs/react';
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { entries } from './workspace/navigation';
 import { RoleSwitcher } from './workspace/RoleSwitcher';

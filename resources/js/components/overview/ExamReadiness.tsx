@@ -1,4 +1,5 @@
-import { Badge, Card } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
 
 const bank = [
     { label: 'Objective', value: 118, color: '#10B981' },

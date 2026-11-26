@@ -1,6 +1,6 @@
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 type Tone = 'emerald' | 'amber' | 'rose' | 'sky';

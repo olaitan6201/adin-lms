@@ -1,6 +1,9 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { courseModules, offerings, resources } from '@/components/learning/fixtures';
-import { Badge, Card, Action, Table } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Action } from '@/components/ui/controls/Action';
+import { Table } from '@/components/ui/data-display/Table';
 import { StudyIcon } from '@/components/learning/Parts';
 
 export { course };

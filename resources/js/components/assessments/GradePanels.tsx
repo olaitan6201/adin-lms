@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Action, Badge, Card } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
 import { gradeRows, gradeWeights } from './gradeData';
 import { Details } from './Controls';
 

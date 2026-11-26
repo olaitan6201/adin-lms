@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Action, Card, PageHeader, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { Table } from '@/components/ui/data-display/Table';
 import { exams, questionBanks, questions } from './cbtData';
 import { Drawer, Note, RecordName, Sections, Status, exportSheet } from './Controls';
 import { Editor } from './Editor';

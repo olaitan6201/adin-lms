@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { Action, Badge, Card, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Table } from '@/components/ui/data-display/Table';
 import { forums, threads } from './engagementFixtures';
-import { Drawer, Field } from '@/components/workspace/EngagementControls';
+import { Drawer } from '@/components/ui/overlays/DialogDrawer';
+import { Field } from '@/components/ui/controls/Field';
 
 const initialThreads = threads.map((t, i) => ({ ...t, forum: forums[i].id, pinned: false, allowReplies: true, responses: [] as string[] }));
 

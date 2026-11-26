@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
-import { Badge, Card, Table } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Table } from '@/components/ui/data-display/Table';
 
 export function status(text: string, tone?: string) {
     return <Badge tone={tone ?? ({

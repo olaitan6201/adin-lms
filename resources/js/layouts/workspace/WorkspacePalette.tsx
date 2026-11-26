@@ -1,7 +1,7 @@
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Link } from '@inertiajs/react';
-import { Icon } from '@/components/workspace/Icon';
+import { Icon } from '@/components/icons/Icon';
 import { useEffect, useRef, useState } from 'react';
 import { entries, roles } from './navigation';
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Action, Card } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
 import { exportRecords, Field, Register, useDesk } from '@/components/registry/Desk';
 import { cap, Details, Metrics, Records, status, val } from '@/components/registry/Records';
 import { InstitutionSettings, Privacy } from '@/components/registry/InstitutionSettings';

@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Action, Card, Icon } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Icon } from '@/components/icons/Icon';
 import { Field, type Desk } from './Desk';
 import { Records, status, val } from './Records';
 

@@ -1,6 +1,6 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { useEffect, useRef } from 'react';
-import { Card } from '@/components/workspace/Elements';
+import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
 
 export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {

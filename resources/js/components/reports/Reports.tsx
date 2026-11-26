@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { Action, Badge, Card, PageHeader, Table } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { Table } from '@/components/ui/data-display/Table';
 import { enrolmentTrend, examPerformance } from './analyticsFixtures';
 import { Bars, Columns, Mix, Trend } from './ReportCharts';
 import { attention, course, courseProgress, faculty, heatmap, participation, progress, scopes, sheets } from './reportData';
-import { Note, Sections, download } from '@/components/workspace/EngagementControls';
+import { Note } from '@/components/ui/feedback/Note';
+import { Sections } from '@/components/ui/navigation/Sections';
+import { download } from '@/lib/download';
 
 function exportSheet(scope: string) {
     const escape = (s: string | number) => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');

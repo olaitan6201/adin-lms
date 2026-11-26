@@ -1,6 +1,7 @@
 import { StudyIcon } from './Parts';
 import { Timeline } from '@/components/learning/Parts';
-import { Badge, Card } from '@/components/workspace/Elements';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
 
 const LINKED_STUDENT = {
     name: 'Blessing Okonkwo',

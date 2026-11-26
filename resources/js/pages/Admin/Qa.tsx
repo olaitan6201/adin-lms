@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Action, Card, Ring, Icon } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Card } from '@/components/ui/layout/Card';
+import { Ring } from '@/components/ui/data-display/Ring';
+import { Icon } from '@/components/icons/Icon';
 import { exportRecords, Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { cap, Records, status, val } from '@/components/registry/Records';
 import { qaChecks, qaFindings, qaReviewQueue, qaSummary as s } from '@/components/registry/fixtures/quality';

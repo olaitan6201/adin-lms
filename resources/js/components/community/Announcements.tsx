@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { Action, Badge, Card, Table } from '@/components/workspace/Elements';
-import { Drawer, Field } from '@/components/workspace/EngagementControls';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { Table } from '@/components/ui/data-display/Table';
+import { Drawer } from '@/components/ui/overlays/DialogDrawer';
+import { Field } from '@/components/ui/controls/Field';
 
 const options = ['In-platform', 'Email', 'SMS', 'Push notification'];
 const notices = [

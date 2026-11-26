@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Action, Badge, Card, PageHeader } from '@/components/workspace/Elements';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Card } from '@/components/ui/layout/Card';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Details, Drawer, Note, Status, inputClass } from './Controls';
 import { paper } from './paper';

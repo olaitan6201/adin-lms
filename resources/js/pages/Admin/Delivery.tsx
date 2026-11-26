@@ -1,40 +1,32 @@
-import { stages, rosterMetrics, formats, previousSessions, initialOfferings, currentTerm, offeringTotal } from '@/data/registry/deliveryRegister';
-import { useState } from 'react';
-import { Action } from '@/components/ui/controls/Action';
-import { Card } from '@/components/ui/layout/Card';
-import { Field, Register, useDesk, exportRecords } from '@/components/registry/Desk';
-import { Details, Metrics, Progress, Records, status, val } from '@/components/registry/Records';
+import {
+    stages,
+    rosterMetrics,
+    formats,
+    previousSessions,
+    initialOfferings,
+    currentTerm,
+    offeringTotal,
+} from '@/data/registry/deliveryRegister';
 import { offerings, courses } from '@/data/registry/academics';
 import { students, staff } from '@/data/registry/people';
+import { DeliveryRegister } from '@/components/registry/delivery/DeliveryRegister';
 
 export default function Delivery() {
-    const desk = useDesk();
-    const [tab,setTab] = useState(0);
-    const [list,setList] = useState(initialOfferings);
-    const [roster,setRoster] = useState(students.slice(0,5));
-    const [filter,setFilter] = useState('');
-    function unpublish(o: typeof list[number]) {
-        desk.show({title:'Unpublish this offering',confirm:true,submit:'Unpublish offering',body:`Unpublishing ${o.code} withdraws the course from students who are not yet enrolled. Existing registrations, submissions and results are kept, and students already enrolled keep access to what they have been given.`,message:`${o.code} was unpublished. Existing registrations and results are unchanged.`,save:() => setList(all => all.map(v => v.id===o.id ? {...v,state:'approved'}:v))});
-    }
-    function manage(o: typeof list[number]) {
-        desk.show({title:`${o.code} · ${o.title}`,subtitle:`${o.term.replace('S1','First Semester')} · ${o.mode}`,submit:'Save offering',message:'Offering saved',body:<>
-            <Card title="Instructor allocation"><div className="space-y-3"><Field label="Lead instructor" value={o.instructor} options={o.instructor==='Unassigned' ? ['Unassigned',...staff.filter(s => s.role==='Lecturer').map(s => s.name)] : [o.instructor,'Unassigned']}/><Field label="Teaching assistants" value={o.assistants} options={['2 assigned','None']}/><Field label="Access scope" value={o.scope} options={['Assigned class only','Whole course']}/></div></Card>
-            <Card title="Reusable structure" subtitle="Copy a previous session without grades or registrations"><select className="select" aria-label="Previous session">{previousSessions.map(term => <option key={term}>{o.code} · {term}</option>)}</select><Action size="sm" onClick={() => desk.notify('Structure copied: modules and resources only')}>Copy structure</Action><p className="mt-2 text-xs">Copies weekly modules, resource links and assessment shells. Grades, submissions and registrations are never copied.</p></Card>
-            <Card title="Publication"><Details entries={[['Approved by HoD',status(o.state==='draft'?'Pending':'Done')],['Instructor allocated',status(o.instructor==='Unassigned'?'Pending':'Done')],['Roster consumed',status(`${o.students} enrolled`,'emerald')],['Published to students',status(o.state==='published'?'Live':'Not live',o.state==='published'?'emerald':'slate')]]}/></Card>
-            {o.state==='published' && <Card title="Unpublish this offering" subtitle="Withdraws the course from students who are not yet enrolled"><p className="mb-3 text-sm">Unpublishing keeps the existing registrations, submissions and results. Students already enrolled keep access to the material they have been given, and the offering returns to the approved state rather than to draft.</p><Action variant="danger" onClick={() => unpublish(o)}>Unpublish {o.code}</Action><small> Requires an authorised officer and is written to the audit log.</small></Card>}</>,save:d => setList(all => all.map(v => v.id!==o.id?v:{...v,instructor:val(d,'Lead instructor'),assistants:val(d,'Teaching assistants'),scope:val(d,'Access scope')}))});
-    }
-    function add() {
-        desk.show({title:'New offering',submit:'Create offering',body:<><Field label="Course" options={courses.map(c => c.code)}/><Field label="Term" value={currentTerm} required/><Field label="Mode" options={['Blended','Online','Face-to-face']}/></>,save:d => {
-            const c = courses.find(c => c.code===val(d,'Course'))!;
-            setList(all => [...all,{id:crypto.randomUUID(),code:c.code,title:c.title,instructor:'Unassigned',students:0,sessions:0,completion:0,state:'draft',mode:val(d,'Mode'),term:val(d,'Term'),assistants:'None',scope:'Assigned class only'}]);
-            setTab(0);
-            setFilter('');
-        }});
-    }
-    return <Register eyebrow="Course delivery" title="Course delivery" description="Offerings move from approved structure to published learning space, with rosters consumed from the institutional feed." actions={<><Action icon="chart" onClick={() => exportRecords('delivery-report',list)}>Delivery report</Action><Action icon="plus" variant="primary" onClick={add}>New offering</Action></>} tabs={[[ 'Offerings',list.length],['Roster'],['Import and export']]} active={tab} select={setTab} overlay={desk.overlay}>
-        {tab===0 && <><Card title="Delivery pipeline" subtitle="Where offerings sit in the approval to publication flow"><div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{stages.map(([name,count,hint]) => <button type="button" key={name} aria-pressed={filter===name} className="rounded-xl border border-ink-100 p-3.5 text-left hover:bg-ink-50" onClick={() => setFilter(filter===name?'':name)}><span className="flex items-center justify-between gap-2"><strong className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">{name}</strong><span className={`size-2 rounded-full ${name==='Draft'?'bg-ink-300':name==='Approved'?'bg-amber-500':name==='Published'?'bg-brand-500':'bg-sky-500'}`}/></span><p className="mt-2 text-2xl font-semibold">{count + list.filter(o => o.state===name.toLowerCase()).length - offerings.filter(o => o.state===name.toLowerCase()).length}</p><p className="mt-1 text-[11.5px] leading-relaxed text-ink-500">{hint}</p></button>)}</div></Card>
-            <Records tableClass="[&_th:last-child]:w-[110px] [&_td:last-child]:text-right" title="Course offerings" subtitle="Approved structure, assigned instructor, consumed roster and publication state" actions={<>{status(`${offeringTotal} offerings`,'emerald')}<Action size="sm" icon="upload" onClick={() => setTab(1)}>Import roster</Action><Action size="sm" variant="primary" icon="plus" onClick={add}>New offering</Action></>} columns={['Course','Term','Mode','Instructor','Students','Completion','State','']} rows={list.filter(o => !filter || o.state===filter.toLowerCase()).map(o => [<div className="min-w-0"><p className="truncate font-medium text-ink-800">{o.title}</p><p className="truncate font-mono text-[11px] text-ink-400">{o.code}</p></div>,<span className="text-[13px] text-ink-600">{o.term}</span>,status(o.mode),<span className="text-[13px] text-ink-600">{o.instructor}</span>,<span className="text-[13px] tnum">{o.students}</span>,o.completion ? <Progress n={o.completion}/>:'-',status(o.state,o.state==='approved'?'amber':o.state==='draft'?'slate':undefined),<div className="flex justify-end gap-1.5"><Action size="sm" onClick={() => manage(o)}>Manage</Action>{o.state==='published' && <Action size="sm" onClick={() => unpublish(o)}>Unpublish</Action>}</div>])}/></>}
-        {tab===1 && <Records tableClass="[&_th:last-child]:w-[100px] [&_td:last-child]:text-right" title="Roster ingestion" subtitle={`${offerings[0].code} · ${offerings[0].students} enrolled from the institutional enrolment feed`} actions={status('Feed: nightly CSV','sky')} columns={['Matric number','Student','Programme','Status','']} rows={roster.map(s => [s.matric,s.name,s.programme,status(s.status==='active'?'Enrolled':'Pending',s.status==='active'?'emerald':'amber'),<Action size="sm" onClick={() => setRoster(rs => rs.filter(v => v.id!==s.id))}>Remove</Action>])}><Metrics rows={rosterMetrics}/></Records>}
-        {tab===2 && <Records title="Import and export" subtitle="Reusable structures and materials, with formats verified by round trip before commitment" columns={['Format','Support','Verification']} rows={formats.map(([format,support,detail]) => [format,status(support,support==='Planned'?'slate':undefined),detail])}/>}
-    </Register>;
+    return (
+        <DeliveryRegister
+            {...{
+                stages,
+                rosterMetrics,
+                formats,
+                previousSessions,
+                initialOfferings,
+                currentTerm,
+                offeringTotal,
+                offerings,
+                courses,
+                students,
+                staff,
+            }}
+        />
+    );
 }

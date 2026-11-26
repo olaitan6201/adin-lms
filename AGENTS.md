@@ -19,10 +19,20 @@ it rather than substituting another copy or claiming compliance.
    in `.agent-work/`. Apply the pack’s architecture, UI and domain guidance
    throughout the work, not as a formatting pass at the end.
 3. **Before handover:** verify real workflows and failure cases at the required
-   boundaries. For qualification, apply `references/qa/qualification-protocol.md`
+   boundaries. Use the `design-principles` MCP for qualification together with the
+   required local pack. Apply `references/qa/qualification-protocol.md`
    and `references/qualification/enterprise-qualification.md`, preserve independent
    review and give only their evidence-backed verdict. Passing tests, compiling
    or finishing a sprint is not acceptance of a complete product.
+
+## Frontend boundaries
+
+- Put application stylesheets in `resources/css/`, grouped by surface or domain.
+- Keep illustrative records in `resources/js/data/<domain>/`. Route/page
+  composition supplies them to views through typed inputs. Reusable components,
+  hooks and layouts must not import sample records or contain substitute records.
+- Keep page components in their functional or role directory under
+  `resources/js/pages/`, and shared SVGs in `resources/js/components/icons/`.
 
 ## Commands
 

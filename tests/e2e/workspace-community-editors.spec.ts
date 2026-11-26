@@ -16,6 +16,7 @@ test('an absent recipient cannot submit, then a non-first recipient gets the mes
     await dialog.getByRole('button', { name: 'Send message' }).click();
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Examinations Office New timetable' })).toBeVisible();
+    await expect(page.getByRole('tabpanel').getByText(/^Today, \d\d:\d\d$/)).toBeVisible();
     await expect(page.getByRole('tabpanel').getByRole('listitem')).toHaveCount(4);
 });
 

@@ -1,0 +1,33 @@
+@media print {
+    .workspace-shell:has(.report-workspace) {
+        display: block;
+        min-height: 0;
+    }
+
+    .workspace-shell:has(.report-workspace) > :is(aside, .skip-link),
+    .workspace-shell:has(.report-workspace) > div > header,
+    .report-workspace header > div:has(button),
+    .report-workspace .card:has([role="tablist"]) {
+        display: none;
+    }
+
+    .workspace-shell:has(.report-workspace) > div,
+    .workspace-shell:has(.report-workspace) main {
+        display: block;
+        padding: 0;
+    }
+
+    .report-workspace .card {
+        break-inside: avoid;
+        box-shadow: none;
+        print-color-adjust: exact;
+    }
+
+    .report-workspace [data-scroll] {
+        overflow: visible;
+    }
+
+    .report-workspace .tbl :is(td, th) {
+        white-space: normal;
+    }
+}

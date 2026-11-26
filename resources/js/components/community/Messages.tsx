@@ -1,6 +1,8 @@
 import { MessageComposer } from './MessageComposer';
 
-import type { FormEvent } from 'react';
+import { useRef, type FormEvent } from 'react';
+import { Avatar } from '@/components/registry/people/Person';
+import { Action } from '@/components/ui/controls/Action';
 import type { useConversations } from './useConversations';
 import { Send } from 'lucide-react';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -16,6 +18,8 @@ type MessagesProps = {
 
 export function Messages({ inbox, recipients, composing, close }: MessagesProps) {
     const { messages, thread, open, send, reply } = inbox;
+    const composer = useRef<HTMLInputElement>(null);
+
     function submitReply(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!thread) {
@@ -41,13 +45,7 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
                                 className={`flex w-full items-start gap-3 border-l-2 px-4 py-3 text-left ${thread?.id === m.id ? 'border-brand-500 bg-ink-50' : 'border-transparent hover:bg-ink-50'}`}
                                 onClick={() => open(m.id)}
                             >
-                                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-bold text-brand-800">
-                                    {m.name
-                                        .split(' ')
-                                        .slice(-2)
-                                        .map((n) => n[0])
-                                        .join('')}
-                                </span>
+                                <Avatar name={m.name} />
                                 <span className="min-w-0 flex-1">
                                     <span className="flex justify-between gap-2 text-sm">
                                         <strong>{m.name}</strong>
@@ -63,20 +61,33 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
                 </ul>
                 {thread ? (
                     <section className="min-w-0 space-y-4 p-5">
-                        <h2 className="text-sm font-semibold">
-                            {thread.name}
-                            <small className="block font-normal text-ink-500">{thread.subject}</small>
-                        </h2>
+                        <div className="flex items-start gap-3">
+                            <Avatar name={thread.name} large />
+                            <h2 className="min-w-0 flex-1 text-sm font-semibold">
+                                {thread.name}
+                                <small className="block font-normal text-ink-500">{thread.subject}</small>
+                            </h2>
+                            <Action
+                                variant="primary"
+                                size="sm"
+                                icon="send"
+                                onClick={() => composer.current?.focus()}
+                            >
+                                Reply
+                            </Action>
+                        </div>
                         {thread.conversation.map((post, i) => (
                             <p
                                 key={i}
                                 className={`rounded-xl border p-3.5 text-sm ${post.mine ? 'ml-8 border-brand-200 bg-brand-50' : 'bg-ink-50'}`}
                             >
                                 {post.body}
+                                <small className="mt-2 block text-ink-500">{post.time}</small>
                             </p>
                         ))}
                         <form key={thread.id} className="flex gap-2" onSubmit={submitReply}>
                             <input
+                                ref={composer}
                                 className="input min-w-0 flex-1"
                                 required
                                 pattern=".*\S.*"

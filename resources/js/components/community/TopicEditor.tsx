@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
+import { Note } from '@/components/ui/feedback/Note';
 import { Card } from '@/components/ui/layout/Card';
 import type { Forum, Thread } from '@/types/community/communication';
 import type { TopicChange } from './forumBoard';
@@ -84,6 +85,12 @@ export function TopicEditor({ topic, forums, student, close, save }: Props) {
                                 defaultValue={student ? undefined : topic.suggestedReply}
                             />
                         </Field>
+                        {!student && (
+                            <Note>
+                                Course records retain threads and the moderation audit trail. Changes in this sample
+                                workspace are local and do not update the course record.
+                            </Note>
+                        )}
                         <div className="flex justify-end gap-2">
                             <button type="button" className="btn btn-outline" onClick={close}>
                                 Close

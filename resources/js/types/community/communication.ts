@@ -55,6 +55,7 @@ export type Conversation = {
     conversation: {
         mine: boolean;
         body: string;
+        time: string;
     }[];
 };
 

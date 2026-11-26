@@ -1,4 +1,5 @@
 import type { ReportsData, ReportScopeId, ReportTableData } from '@/types/reports/analytics';
+import '../../../css/reports/print.css';
 import { useState, type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -62,7 +63,7 @@ export function Reports({ data }: { data: ReportsData }) {
     }
 
     return (
-        <div className="engagement-workspace space-y-5">
+        <div className="report-workspace engagement-workspace space-y-5">
             <PageHeader
                 eyebrow="Reporting and analytics"
                 title="Reports and analytics"
@@ -80,11 +81,13 @@ export function Reports({ data }: { data: ReportsData }) {
                 }
             />
             {error && <p role="alert">{error}</p>}
+            <h2 className="hidden text-lg font-semibold print:block">{selected.label}</h2>
             <Sections items={items} active={selected.id} change={setSelectedId} />
-            <Note>
-                Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written
-                to the audit log.
-            </Note>
+            <div className="print:hidden">
+                <Note>
+                    Export the selected sample report as PDF or Excel. Export activity is recorded in this browser session.
+                </Note>
+            </div>
         </div>
     );
 }

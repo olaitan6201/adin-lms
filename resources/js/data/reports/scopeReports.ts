@@ -34,7 +34,14 @@ export const attention = {
 export const progress = {
     title: 'Student progress report', subtitle: 'Registrations, completed lessons, assignments, scores and outstanding work',
     columns: ['Student','Programme','Level','Attendance','GPA','Units earned'],
-    rows: students.map(s => [`${s.name} · ${s.matric}`,s.programme,`Level ${s.level}`,`${s.attendance}%`,s.gpa ? s.gpa.toFixed(2) : '–',`${Math.round(s.gpa * 5)} / 20`]),
+    rows: students.map(student => [
+        `${student.name} · ${student.matric}`,
+        student.programme,
+        `Level ${student.level}`,
+        `${student.attendance}%`,
+        student.gpa ? student.gpa.toFixed(2) : '–',
+        'Not reported',
+    ]),
 };
 export const courseProgress = course.rows.map((r,i) => ({ label: `${r[0]} ${r[1]}`, value: parseInt(String(r[6])), color: ['#10B981','#3B82F6','#F59E0B','#10B981','#F43F5E'][i] }));
 

@@ -22,7 +22,9 @@ export function Forums({ student, forums, threads }: {
     threads: Thread[];
     student: boolean;
 }) {
-    const [{ forums: list, topics }, setBoard] = useState<ForumBoard>({ forums, topics: threads });
+    const [board, setBoard] = useState<ForumBoard>({ forums, topics: threads });
+    const list = board.forums;
+    const topics = [...board.topics].sort((a, b) => Number(b.pinned) - Number(a.pinned));
     const [selected, setSelected] = useState<Selection>(null);
     const courses = availableCourses(forums);
     const topic = selected?.kind === 'topic' ? topics.find((topic) => topic.id === selected.id) : undefined;
@@ -38,8 +40,9 @@ export function Forums({ student, forums, threads }: {
         const first = topics.find((topic) => topic.forum === id);
         if (first) {
             openTopic(first.id);
+        } else {
+            setSelected({ kind: 'forum', id });
         }
-        else setSelected({ kind: 'forum', id });
     }
 
     function createForum(created: Forum) {

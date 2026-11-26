@@ -7,10 +7,13 @@ const notices = [
     { id: 'a3', title: 'Lecturer workshop on CBT question design', audience: 'Academic staff', date: '20 Nov 2026', channels: ['In-platform','Email'], status: 'Draft', body: 'Workshop on CBT question design for academic staff.' },
 ];
 
-const conversations = messages.map((m,i) => ({ ...m, conversation: i === 0 ? [
-    { mine: false, body: 'Some of you asked whether the deadline can move to Friday because of the mid-term on the 18th. I have extended the submission window to Friday 20 November 23:59 for everyone, not only for those who asked.' },
-    { mine: true, body: 'Thank you. Will the mark split stay the same, or will the rubric change for the extended window?' },
-] : [{ mine: false, body: m.preview }] }));
+const conversations = messages.map(message => ({
+    ...message,
+    conversation: message.id === 'm-1' ? [
+        { mine: false, time: 'Today, 09:12', body: 'Some of you asked whether the deadline can move to Friday because of the mid-term on the 18th. I have extended the submission window to Friday 20 November 23:59 for everyone, not only for those who asked.' },
+        { mine: true, time: 'Today, 09:34', body: 'Thank you. Will the mark split stay the same, or will the rubric change for the extended window?' },
+    ] : [{ mine: false, body: message.preview, time: message.time }],
+}));
 
 export const communication: CommunicationData = {
     forums, posts: groupPosts, messages: conversations, announcements: notices,

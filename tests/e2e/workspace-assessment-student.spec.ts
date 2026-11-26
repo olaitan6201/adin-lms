@@ -67,7 +67,8 @@ test('a replacement receipt stays with its assignment; closed work remains read-
     await page.keyboard.press('Escape');
     await page.getByRole('row').filter({ hasText: 'IFRS 15' }).getByRole('button').click();
     await expect(dialog).toContainText('Not open yet.');
-    await expect(dialog).toContainText('RCP-2026-11-09-0412-573');
+    await expect(dialog.getByText('Existing submission')).toHaveCount(0);
+    await expect(dialog).not.toContainText('Receipt no.');
     await expect(dialog.locator('input[type=file]')).toHaveCount(0);
     await expect(dialog.getByRole('button', { name: 'Submit work' })).toHaveCount(0);
 });

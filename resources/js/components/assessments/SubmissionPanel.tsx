@@ -46,6 +46,7 @@ export function SubmissionPanel({
         }
 
         save({
+            issuedAt: sampleTime,
             number: `RCP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
             file: file.name,
             size: `${(file.size / 1048576).toFixed(1)} MB`,

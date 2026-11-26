@@ -38,6 +38,7 @@ export interface MarkingGuide {
 export type AssignmentDraft = Pick<Assignment, 'title' | 'course' | 'due' | 'settings' | 'instructions' | 'attachments'>;
 
 export type Receipt = {
+    issuedAt: number;
     number: string;
     file: string;
     size: string;

@@ -18,7 +18,7 @@ function windowOf(opens: InstitutionalMinute, closes: InstitutionalMinute) {
 // Illustrative records for the local assessment workspace.
 export const assignments: WindowedAssignment[] = [
   { id: 'as-1', instructions: 'Answer questions 1 to 8. For each transaction, state the journal entry, post it to the ledger and extract a trial balance.', attachments: 'problem-set.pdf (1.2 MB), template-trial-balance.xlsx (94 KB)', title: 'Journal entry and trial balance problem set', course: 'ACC302', ...windowOf('2026-11-01T08:00', '2026-11-14T23:59'), submissions: 51, total: 68, late: 7, marked: 44, state: 'open' },
-  { id: 'as-2', title: 'Case analysis: IFRS 15 revenue recognition', course: 'ACC302', ...windowOf('2026-11-16T08:00', '2026-11-28T23:59'), submissions: 22, total: 68, late: 0, marked: 0, state: 'scheduled' },
+  { id: 'as-2', title: 'Case analysis: IFRS 15 revenue recognition', course: 'ACC302', ...windowOf('2026-11-16T08:00', '2026-11-28T23:59'), submissions: 0, total: 68, late: 0, marked: 0, state: 'scheduled' },
   { id: 'as-3', title: 'Lab report: mitosis observation', course: 'BSC205', ...windowOf('2026-11-01T08:00', '2026-11-10T18:00'), submissions: 54, total: 54, late: 4, marked: 54, state: 'closed' },
   { id: 'as-4', title: 'Group presentation: narrative voice', course: 'ENG210', ...windowOf('2026-11-01T08:00', '2026-11-20T12:00'), submissions: 78, total: 82, late: 2, marked: 0, state: 'open' },
   { id: 'as-5', shortTitle: 'Practical: titration', title: 'Practical: titration and concentration', course: 'CHM401', ...windowOf('2026-11-01T08:00', '2026-11-24T23:59'), submissions: 36, total: 41, late: 1, marked: 29, state: 'open' }

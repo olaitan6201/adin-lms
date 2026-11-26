@@ -115,11 +115,43 @@ test('student rows and the submission drawer respect the same half-open WAT wind
         assert.ok(list.includes(`>${Number(accepting)} outstanding<`));
         assert.ok(list.includes('14 Nov 2026, 23:59'));
         const drawer = renderToStaticMarkup(createElement(SubmissionPanel, {
-            row, sampleTime, sizeLimit: 25, previous: [], revision: studentAssignments.work[0].current,
+            row, sampleTime, sizeLimit: 25, previous: [],
         }));
         assert.ok(drawer.includes('closes 14 Nov 2026, 23:59'));
-        assert.ok(drawer.includes('RCP-2026-11-12-0412-884'));
         assert.equal(drawer.includes('type="file"'), accepting);
         assert.equal(drawer.includes('>Submit work<'), accepting);
     }
+});
+
+test('all seeded receipts and submission counts fit their assignment windows and sample clock', async () => {
+    const { studentAssignments: { work, sampleTime } } = await server.ssrLoadModule('/resources/js/data/assessments/studentAssignments.ts');
+    const owners = [];
+    for (const { assignment, current, previous } of work) {
+        assert.ok(assignment.marked <= assignment.submissions && assignment.submissions <= assignment.total);
+        if (sampleTime < assignment.opensAt) {
+            assert.equal(assignment.submissions, 0);
+        }
+
+        const revisions = current ? [current, ...previous] : previous;
+        for (const { receipt } of revisions) {
+            assert.ok(assignment.opensAt <= receipt.issuedAt && receipt.issuedAt < assignment.closesAt, assignment.id);
+            assert.ok(receipt.issuedAt <= sampleTime && assignment.submissions > 0, assignment.id);
+            owners.push(assignment.id);
+        }
+    }
+
+    assert.deepEqual(owners, ['as-1', 'as-3', 'as-4', 'as-5']);
+});
+
+test('a closed assignment retains a valid earlier revision without accepting uploads', async () => {
+    const { SubmissionPanel } = await server.ssrLoadModule('/resources/js/components/assessments/SubmissionPanel.tsx');
+    const { studentAssignments } = await server.ssrLoadModule('/resources/js/data/assessments/studentAssignments.ts');
+    const { assignment, current } = studentAssignments.work[0];
+    const html = renderToStaticMarkup(createElement(SubmissionPanel, {
+        row: { ...assignment, state: 'closed' }, sampleTime: assignment.closesAt,
+        sizeLimit: 25, previous: [current],
+    }));
+    assert.match(html, /Previous receipts \(1\)/);
+    assert.match(html, /RCP-2026-11-12-0412-884/);
+    assert.doesNotMatch(html, /type="file"|>Submit work</);
 });

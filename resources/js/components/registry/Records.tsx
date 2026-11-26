@@ -12,15 +12,19 @@ export function status(text: string, tone?: string) {
 }
 export const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 export const val = (data: FormData, key: string) => String(data.get(key) ?? '').trim();
-export function Records({ title, subtitle, columns, rows, actions, children }: {
+export function Records({ title, subtitle, columns, rows, actions, children, tableClass, footer, bodyClassName }: {
     title: string; subtitle?: string; columns: string[]; rows: ReactNode[][]; actions?: ReactNode; children?: ReactNode;
+    tableClass?: string; footer?: ReactNode; bodyClassName?: string;
 }) {
-    return <Card {...{ title, subtitle, actions }}>{children}<Table {...{ columns, rows }} empty="No matching records." /></Card>;
+    return <Card {...{ title, subtitle, actions, bodyClassName }}>{children}<div className={`[&_.tbl]:leading-[1.25rem] [&_.tbl_.btn-sm]:leading-[1.25rem] ${tableClass ?? ''}`}><Table {...{ columns, rows: columns.at(-1) === '' ? rows.map(row => [...row.slice(0,-1),<div className="flex justify-end gap-1.5">{row.at(-1)}</div>]) : rows }} empty="No matching records." /></div>{footer}</Card>;
 }
 export function Details({ entries }: { entries: [string, ReactNode][] }) {
-    return <dl className="divide-y divide-slate-100 text-[13px]">{entries.map(([k,v]) => <div key={k} className="flex items-center justify-between gap-3 py-2"><dt className="text-slate-500">{k}</dt><dd className="font-medium">{v}</dd></div>)}</dl>;
+    return <dl className="divide-y divide-ink-100 text-[13px]">{entries.map(([k,v]) => <div key={k} className="flex items-start justify-between gap-6 py-2.5"><dt className="text-slate-500">{k}</dt><dd className="text-right font-medium text-ink-800">{v}</dd></div>)}</dl>;
 }
-export function Progress({ n }: { n: number }) {
+export function Progress({ n, label, stacked }: { n: number; label?: string; stacked?: boolean }) {
+    if (stacked) return <div className="space-y-1.5"><div className="flex items-center justify-between gap-3 text-xs">
+        {label && <span className="font-medium text-ink-500">{label}</span>}<span className="tnum font-semibold text-ink-700">{n}%</span></div>
+        <div className="prog-track" role="progressbar" aria-label={label ?? 'Completion'} aria-valuemin={0} aria-valuemax={100} aria-valuenow={n}><div className="prog-fill" style={{width:`${n}%`}}/></div></div>;
     return <span className="flex w-28 items-center gap-2"><span className="prog-track flex-1" role="progressbar" aria-label="Completion" aria-valuemin={0} aria-valuemax={100} aria-valuenow={n}><span className="prog-fill block" style={{ width: `${n}%` }}/></span><span className="text-[11px] font-medium text-ink-600">{n}%</span></span>;
 }
 export function Metrics({ rows }: { rows: [string,string,string?][] }) {

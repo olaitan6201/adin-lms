@@ -48,7 +48,11 @@ test('a newly created bank starts empty and owns its added question', async ({ p
     await dialog.getByLabel('Access window opens').fill('2026-12-01T10:00');
     await dialog.getByLabel('Access window closes').fill('2026-12-01T11:00');
     await dialog.getByRole('button', { name: 'Save', exact: true }).click();
-    await expect(biology).toContainText('2026-12-01 10:00');
+    await expect(biology).toContainText('21 Nov 2026, 13:00');
+    await biology.getByRole('button', { name: 'Blueprint' }).click();
+    await expect(dialog.getByLabel('Access window opens')).toHaveValue('2026-12-01T10:00');
+    await expect(dialog.getByLabel('Access window closes')).toHaveValue('2026-12-01T11:00');
+    await page.keyboard.press('Escape');
     await expect(page.getByRole('row').filter({ hasText: 'ACC302' })).toContainText('18 Nov 2026');
     await page.getByRole('button', { name: 'Schedule examination' }).first().click();
     await dialog.getByLabel('Examination', { exact: true }).fill('Winter sitting');

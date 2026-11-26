@@ -18,10 +18,10 @@ export const questions = [
 ];
 
 export const exams = [
-  { id: 'ex-1', title: 'ACC302 mid-term examination', course: 'ACC302', date: '18 Nov 2026, 09:00', duration: '90 min', candidates: 68, attempts: 68, state: 'scheduled', release: 'Manual approval' },
-  { id: 'ex-2', title: 'BSC205 mid-term examination', course: 'BSC205', date: '21 Nov 2026, 13:00', duration: '60 min', candidates: 54, attempts: 54, state: 'scheduled', release: 'Manual approval' },
-  { id: 'ex-3', title: 'ENG210 continuous test 1', course: 'ENG210', date: '07 Nov 2026, 09:00', duration: '45 min', candidates: 82, attempts: 81, state: 'completed', release: 'Released' },
-  { id: 'ex-4', title: 'CHM401 practical quiz', course: 'CHM401', date: '12 Nov 2026, 10:00', duration: '40 min', candidates: 41, attempts: 41, state: 'completed', release: 'Pending moderation' }
+  { id: 'ex-1', window: { opens: '2026-11-18T08:45', closes: '2026-11-18T10:45' }, title: 'ACC302 mid-term examination', course: 'ACC302', date: '18 Nov 2026, 09:00', duration: '90 min', candidates: 68, attempts: 68, state: 'scheduled', release: 'Manual approval' },
+  { id: 'ex-2', window: { opens: '2026-11-21T13:00', closes: '2026-11-21T14:00' }, title: 'BSC205 mid-term examination', course: 'BSC205', date: '21 Nov 2026, 13:00', duration: '60 min', candidates: 54, attempts: 54, state: 'scheduled', release: 'Manual approval' },
+  { id: 'ex-3', window: { opens: '2026-11-07T09:00', closes: '2026-11-07T09:45' }, title: 'ENG210 continuous test 1', course: 'ENG210', date: '07 Nov 2026, 09:00', duration: '45 min', candidates: 82, attempts: 81, state: 'completed', release: 'Released' },
+  { id: 'ex-4', window: { opens: '2026-11-12T10:00', closes: '2026-11-12T10:40' }, title: 'CHM401 practical quiz', course: 'CHM401', date: '12 Nov 2026, 10:00', duration: '40 min', candidates: 41, attempts: 41, state: 'completed', release: 'Pending moderation' }
 ];
 
 export const examBlueprint = [

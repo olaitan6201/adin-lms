@@ -18,12 +18,15 @@ export function Blueprint({
     save: (draft: SittingDraft) => void;
 }) {
     function submit(values: Values) {
+        const { Examination, Course, 'Duration (minutes)': minutes, 'Access window opens': opens,
+            'Access window closes': closes, ...config } = values;
         save({
-            title: values.Examination,
-            course: values.Course,
-            duration: `${values['Duration (minutes)']} min`,
-            date: values['Access window opens'].replace('T', ' '),
-            config: values,
+            title: Examination,
+            course: Course,
+            duration: `${minutes} min`,
+            date: exam?.date ?? opens.replace('T', ' '),
+            window: { opens, closes },
+            config,
         });
     }
 
@@ -51,8 +54,8 @@ export function Blueprint({
                                   { label: 'Duration (minutes)', type: 'number', min: 1, initial: data.duration, required: true },
                               ]
                             : []),
-                        { label: 'Access window opens', type: 'datetime-local', initial: data.opens, required: true },
-                        { label: 'Access window closes', type: 'datetime-local', initial: data.closes, required: true },
+                        { label: 'Access window opens', type: 'datetime-local', initial: exam ? exam.window.opens : data.opens, required: true },
+                        { label: 'Access window closes', type: 'datetime-local', initial: exam ? exam.window.closes : data.closes, required: true },
                         { label: 'Attempt limit', options: ['1 attempt', '2 attempts'] },
                         { label: 'Auto-submit on expiry', options: ['Always', 'Prompt only'] },
                         { label: 'Random draw', options: ['Per candidate', 'Fixed paper'] },

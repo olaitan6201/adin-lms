@@ -9,6 +9,12 @@ Start at `.agents/design-principles/design-principles/SKILL.md` and its authorit
 design, implementation, review, verification and handover. Framework guidance,
 sprint handoffs and tooling below support that workflow; none replaces it.
 The same entry point applies to delegated work and resumed sessions.
+Before planning, editing, delegating or reviewing, read `agents/bootstrap.md`
+and `agents/registry.yaml` in that pack, then read and follow the instruction
+file for each applicable role. Use the role's stated scope, write permissions
+and evidence requirements. Give delegated agents the exact role file to read.
+If the user's intent is unresolved after checking the instructions and the
+repository, ask the user rather than making the product decision for them.
 `.agents/` is intentionally local: if the pack is missing, stop and request
 it rather than substituting another copy or claiming compliance.
 

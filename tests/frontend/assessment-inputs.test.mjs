@@ -43,6 +43,7 @@ for (const [scenario, bands, expected] of [
 }
 
 for (const [view, dataset, name, empty] of [
+    ['AssignmentsDesk', 'assignments', 'assignmentDesk', { assignments: [], submissions: [] }],
     ['CbtDesk', 'cbt', 'cbtDesk', { questionBanks: [], exams: [] }],
     ['AttendanceDesk', 'attendance', 'attendanceDesk', { attendanceSessions: [] }],
     ['StudentAssignments', 'studentAssignments', 'studentAssignments', { work: [], assignments: [] }],
@@ -55,3 +56,27 @@ for (const [view, dataset, name, empty] of [
         assert.doesNotMatch(html, /<dialog\b/);
     });
 }
+
+test('an empty exam paper shows no answer controls or attempt receipt', async () => {
+    const { default: Exam } = await server.ssrLoadModule('/resources/js/components/assessments/StudentExam.tsx');
+    const html = renderToStaticMarkup(createElement(Exam, { paper: [], title: 'Empty paper' }));
+    assert.match(html, /No questions are available for this sitting/);
+    assert.doesNotMatch(html, /Submit examination|Examination submitted|role="timer"/);
+});
+
+test('returning the non-first same-title script counts precisely one assignment, even after a draft', async () => {
+    const { recordMark } = await server.ssrLoadModule('/resources/js/components/assessments/assignmentRecords.ts');
+    const records = {
+        rows: ['a', 'b'].map(id => ({ id, title: 'Essay', submissions: 4, marked: 1 })),
+        queue: ['a', 'b'].map(id => ({ id: `script-${id}`, assignmentId: id, status: 'awaiting marking', score: null })),
+        awaiting: 6,
+    };
+    const draft = { ...records.queue[1], status: 'feedback draft', score: 70 };
+    const drafted = recordMark(records, draft);
+    assert.deepEqual(drafted.rows, records.rows);
+    const returned = recordMark(drafted, { ...draft, status: 'feedback returned' });
+    assert.deepEqual(returned.rows.map(row => row.marked), [1, 2]);
+    assert.equal(returned.awaiting, 5);
+    assert.equal(returned.queue[0], records.queue[0]);
+    assert.deepEqual(recordMark(returned, returned.queue[1]), returned);
+});

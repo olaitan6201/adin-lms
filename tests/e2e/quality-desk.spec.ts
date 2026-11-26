@@ -4,8 +4,9 @@ import { join } from 'node:path';
 import { loginWithPassword } from './exam-fixture';
 
 test('QA can inspect an approved version from its mapping evidence with the keyboard', async ({ page }, info) => {
-    await loginWithPassword(page, 'report-qa');
-    const factor = join(process.env.PORTAL_E2E_RUN!, 'report-qa.factor');
+    const identity = `quality-desk-${info.project.name}`;
+    await loginWithPassword(page, identity);
+    const factor = join(process.env.PORTAL_E2E_RUN!, `${identity}.factor`);
     const otp = execFileSync('php', ['-r',
         'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));',
         factor], { encoding: 'utf8' });

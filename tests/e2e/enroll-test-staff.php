@@ -39,6 +39,9 @@ $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole(
 $authors = ['group-desktop', 'group-phone', 'lesson-desktop', 'lesson-phone'];
 foreach (['desktop', 'phone'] as $project) {
     seedWorkspaceFixtures($offering, $project, $run);
+    $qa = User::factory()->create(['email' => "quality-desk-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($qa->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
+    file_put_contents($run."/quality-desk-{$project}.factor", app(TotpEnrollment::class)->issue($qa), LOCK_EX);
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);

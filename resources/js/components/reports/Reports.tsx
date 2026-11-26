@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { enrolmentTrend, examPerformance } from './analyticsFixtures';
-import { Bars, Columns, Mix, Trend } from './ReportCharts';
+import { Bars, Columns, DepartmentHeatmap, Mix, Trend } from './ReportCharts';
 import { attention, course, courseProgress, faculty, heatmap, participation, progress, scopes, sheets } from './reportData';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
@@ -19,12 +19,12 @@ function exportSheet(scope: string) {
 }
 
 function Institution() {
-    return <div className="space-y-5"><div className="grid gap-5 xl:grid-cols-[2fr_1fr]">
-        <Card title="Enrolment and delivery over the session" subtitle="Registered students against active course offerings"><Trend data={enrolmentTrend} label="Enrolment trend"/></Card>
-        <Card title="Engagement mix" subtitle="Counted learning actions this semester"><Mix/></Card>
-    </div><div className="grid gap-5 xl:grid-cols-[7fr_5fr]">
-        <Card title="Examination performance by course" subtitle="Mean score against the pass threshold"><Trend data={examPerformance} label="Examination performance"/></Card>
-        <Card title="Departmental participation" subtitle="Share of published material completed"><Bars items={participation}/></Card>
+    return <div className="space-y-5"><div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-12">
+        <Card className="xl:col-span-8" title="Enrolment and delivery over the session" subtitle="Registered students against active course offerings"><Trend data={enrolmentTrend} label="Enrolment trend"/></Card>
+        <Card className="xl:col-span-4" title="Engagement mix" subtitle="Counted learning actions this semester"><Mix/></Card>
+    </div><div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-12">
+        <Card className="xl:col-span-7" title="Examination performance by course" subtitle="Mean score against the pass threshold"><Trend data={examPerformance} height={220} label="Examination performance"/></Card>
+        <Card className="xl:col-span-5" title="Departmental participation" subtitle="Share of published material completed"><Bars items={participation}/></Card>
     </div><Card title="Completion by faculty" subtitle="Published course material completed by enrolled students"><Columns/></Card></div>;
 }
 
@@ -34,17 +34,32 @@ function DataTable({ data }: { data: typeof course }) {
 
 export function Reports() {
     const [scope, setScope] = useState(scopes[0]);
-    return <div className="space-y-5"><PageHeader eyebrow="Reporting and analytics" title="Reports and analytics"
+    const [error, setError] = useState('');
+    function exportReport(format: 'PDF' | 'Excel') {
+        const key = 'adin:sample-report-audit';
+        try {
+            const audit = JSON.parse(sessionStorage.getItem(key) ?? '[]');
+            sessionStorage.setItem(key, JSON.stringify([...(Array.isArray(audit) ? audit.slice(-99) : []), { screen: location.pathname, scope, format, at: new Date().toISOString() }]));
+        } catch {
+            setError('The export could not be recorded. Allow browser storage and try again.');
+            return;
+        }
+        setError('');
+        if (format === 'PDF') window.print();
+        else exportSheet(scope);
+    }
+    return <div className="space-y-5 [&_.btn-sm]:leading-5 [&_.tbl_th]:leading-5"><PageHeader eyebrow="Reporting and analytics" title="Reports and analytics"
         description="The same measures read at four scopes, from the institution down to one student."
-        actions={<><Badge>Figures refresh nightly</Badge><Action icon="document" size="sm" onClick={() => window.print()}>PDF</Action>
-            <Action icon="sheet" size="sm" onClick={() => exportSheet(scope)}>Excel</Action></>}/>
+        actions={<><Badge>Figures refresh nightly</Badge><Action icon="document" size="sm" onClick={() => exportReport('PDF')}>PDF</Action>
+            <Action icon="sheet" size="sm" onClick={() => exportReport('Excel')}>Excel</Action></>}/>
+        {error && <p role="alert">{error}</p>}
         <Sections names={scopes} active={scope} change={setScope} panels={[
             <Institution/>, <><Card title={heatmap.title} subtitle={heatmap.subtitle}>
-            <Table columns={heatmap.columns} rows={heatmap.rows.map(([d,...values]) => [d,...values.map(v => <span className={`block rounded px-2 py-2 text-center font-medium ${Number(v) >= 80 ? 'bg-brand-700 text-white' : Number(v) >= 65 ? 'bg-brand-200 text-brand-900' : 'bg-brand-50 text-brand-900'}`}>{v}%</span>)])}/>
+            <DepartmentHeatmap/>
         </Card><DataTable data={faculty}/></>,
             <><DataTable data={course}/><DataTable data={attention}/></>,
             <><DataTable data={progress}/><Card title="Progress by course" subtitle="Completed lessons against the published total"><Bars items={courseProgress}/></Card></>,
         ]}/>
-        <Note>Export the current report to Excel or use the print dialog to save it as a PDF. Figures shown are local sample data.</Note>
+        <Note>Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written to the audit log.</Note>
     </div>;
 }

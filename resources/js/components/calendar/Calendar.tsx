@@ -39,23 +39,23 @@ export function Calendar({ role }: { role: TeachingRole }) {
             actions={<><Action icon="download" onClick={() => exportCalendar(events)}>Export calendar</Action>{add}</>}/>
         <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <Card title={month} subtitle={`${academicCalendar.term} - dates published by the Registrar and the Examinations Office`} bodyClassName="p-0"
-                className="max-sm:[&>.card-head]:flex-col" actions={<><Action icon="calendar" size="sm" onClick={() => setOffset(0)}>Today</Action>
+                actions={<><Action icon="calendar" size="sm" onClick={() => setOffset(0)}>Today</Action>
                     <Action icon="plus" size="sm" variant="primary" onClick={() => setSelected('new')}>Add event</Action></>}>
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3 text-[13px]">
                     <div className="flex items-center gap-2"><button className="btn btn-ghost btn-sm" aria-label="Previous month" onClick={() => setOffset(offset-1)}><ChevronLeft size={16}/></button>
-                        <strong>{month}</strong><button className="btn btn-ghost btn-sm" aria-label="Next month" onClick={() => setOffset(offset+1)}><ChevronRight size={16}/></button></div>
-                    <div className="flex flex-wrap rounded-lg bg-ink-50 p-1">{['All','Examination','Deadline','Teaching'].map(kind =>
-                        <button key={kind} aria-pressed={filter === kind} onClick={() => setFilter(kind)} className={`rounded-md px-2 py-1 text-xs ${filter === kind ? 'bg-white font-semibold shadow-sm' : ''}`}>{kind === 'Deadline' || kind === 'Examination' ? `${kind}s` : kind}</button>)}</div>
+                        <span className="font-semibold">{month}</span><button className="btn btn-ghost btn-sm" aria-label="Next month" onClick={() => setOffset(offset+1)}><ChevronRight size={16}/></button></div>
+                    <div className="flex max-w-full gap-0.5 overflow-x-auto rounded-lg bg-ink-100 p-0.5">{['All','Examination','Deadline','Teaching'].map(kind =>
+                        <button key={kind} aria-pressed={filter === kind} onClick={() => setFilter(kind)} className={`rounded-md px-2.5 py-1 text-xs font-semibold ${filter === kind ? 'bg-white font-semibold shadow-sm' : ''}`}>{kind === 'Deadline' || kind === 'Examination' ? `${kind}s` : kind}</button>)}</div>
                 </div>
-                <div className="overflow-x-auto"><div className="grid grid-cols-7">
-                    {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day => <span key={day} className="bg-ink-50 px-2 py-2 text-xs font-semibold uppercase text-ink-500">{day}</span>)}
+                <div className="overflow-x-auto"><div className="grid grid-cols-7 border-l">
+                    {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day => <span key={day} className="border-b bg-ink-50/60 px-2 py-2 text-[10.5px] font-semibold tracking-wide uppercase text-ink-400">{day}</span>)}
                     {Array.from({ length: 42 }, (_, i) => {
                         const date = new Date(Date.UTC(2026, 10 + offset, i-first.getUTCDay()+1));
                         const iso = date.toISOString().slice(0,10);
-                        return <div key={iso} className={`min-h-[74px] min-w-0 border-t border-r p-1.5 ${date.getUTCMonth() !== first.getUTCMonth() ? 'bg-ink-50 text-ink-400' : ''}`}>
-                            <div className="flex justify-between text-xs"><span className={iso === today ? 'rounded-full bg-brand-600 px-1 text-white' : ''}>{date.getUTCDate()}</span>{iso === today && <small>Today</small>}</div>
+                        return <div key={iso} className={`min-h-[74px] min-w-0 border-b border-r p-1.5 ${date.getUTCMonth() !== first.getUTCMonth() ? 'bg-ink-50 text-ink-400' : ''}`}>
+                            <div className="flex items-center justify-between text-[11.5px] font-semibold tnum"><span className={iso === today ? 'flex size-5 items-center justify-center rounded-full bg-brand-600 text-white' : ''}>{date.getUTCDate()}</span>{iso === today && <small className="text-[9.5px] font-semibold tracking-wide text-brand-700 uppercase">Today</small>}</div>
                             {events.filter(e => e.date === iso && (filter === 'All' || e.kind === filter)).map(e =>
-                                <button key={e.id} title={e.title} onClick={() => setSelected(e)} className={`mt-1 block w-full truncate rounded px-1 text-left text-[11px] ${colors[e.kind] ?? 'bg-ink-100 text-ink-700'}`}>{e.time} {e.title}</button>)}
+                                <button key={e.id} title={e.title} onClick={() => setSelected(e)} className={`mt-1 block w-full truncate rounded px-1.5 py-0.5 text-left text-[10.5px] font-medium ${colors[e.kind] ?? 'bg-ink-100 text-ink-700'}`}>{e.time} {e.title}</button>)}
                         </div>;
                     })}
                 </div></div>
@@ -63,10 +63,10 @@ export function Calendar({ role }: { role: TeachingRole }) {
             <div className="min-w-0 space-y-5"><Card title="Upcoming dates" subtitle="From today onwards, in date order" bodyClassName="p-0">
                 {upcoming.map(e => <button key={e.id} onClick={() => setSelected(e)} className="flex w-full items-center gap-3 border-b px-4 py-3 text-left last:border-0 hover:bg-ink-50">
                     <span className="grid size-9 shrink-0 place-content-center rounded-lg bg-ink-50 text-center text-xs">{e.date.slice(-2)}<small>{e.date.slice(5,7)}</small></span>
-                    <span className="min-w-0 flex-1"><strong className="block truncate text-sm">{e.title}</strong><small className="block truncate text-ink-500">{e.time} · {e.course} · {e.owner}</small></span><Badge tone={calendarKinds.find(k => k.kind === e.kind)?.tone}>{e.kind}</Badge>
+                    <span className="min-w-0 flex-1"><strong className="block truncate text-[13.5px] font-medium">{e.title}</strong><small className="mt-0.5 block truncate text-[12px] text-ink-500">{e.time} · {e.course} · {e.owner}</small></span><Badge tone={calendarKinds.find(k => k.kind === e.kind)?.tone}>{e.kind}</Badge>
                 </button>)}</Card>
-                <Card title="Key institutional dates" subtitle="Fixed by the academic calendar and published to every role"><ul className="space-y-3">{milestones.map(([name,date],i) =>
-                    <li key={name} className="flex items-baseline gap-2 text-sm"><span className={`size-1.5 shrink-0 rounded-full ${i < 2 ? 'bg-ink-300' : 'bg-brand-500'}`}/><span className="flex-1">{name}</span><small>{date}</small></li>)}</ul></Card>
+                <Card title="Key institutional dates" subtitle="Fixed by the academic calendar and published to every role"><ul className="space-y-2.5">{milestones.map(([name,date],i) =>
+                    <li key={name} className="flex items-center gap-2 text-[13px]"><span className={`size-1.5 shrink-0 rounded-full ${i < 2 ? 'bg-ink-300' : 'bg-brand-500'}`}/><span className="min-w-0 flex-1 truncate">{name}</span><small className="shrink-0 text-[12.5px] font-medium">{date}</small></li>)}</ul></Card>
             </div>
         </div>
         {selected && <Drawer title={selected === 'new' ? 'Add event' : selected.title} close={() => setSelected(null)}>

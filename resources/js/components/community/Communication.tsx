@@ -17,7 +17,7 @@ export function Communication({ role }: { role: TeachingRole }) {
     const [compose, setCompose] = useState(false);
     const [notice, setNotice] = useState('');
     const [unread, setUnread] = useState(3);
-    return <div className="space-y-5"><PageHeader eyebrow="Communication" title="Communication"
+    return <div className="space-y-5 [&_.btn-sm]:leading-5 [&_.tbl_th]:leading-5 [&_.tbl_td_p]:leading-5 [&_.tbl_td_.badge]:leading-5"><PageHeader eyebrow="Communication" title="Communication"
         description={student ? 'Ask questions in course forums, message your lecturers directly, and read the notices published for your cohort.' : 'Moderated course forums, private messages, and announcements to cohorts and to the whole institution.'}
         actions={<><Action icon="bell" href={workspaceUrl(`${role}/settings/notifications`)}>Notification settings</Action>
             <Action variant="primary" icon="send" onClick={() => {

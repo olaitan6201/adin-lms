@@ -17,7 +17,8 @@ void createInertiaApp({
 });
 
 if ('serviceWorker' in navigator && window.isSecureContext) {
-    void navigator.serviceWorker.register('/portal-worker.js').catch(() => {
+    const worker = import.meta.env.PROD ? '/portal-worker.js?fixtures' : '/portal-worker.js';
+    void navigator.serviceWorker.register(worker, { updateViaCache: 'none' }).catch(() => {
         // The online portal remains usable when installation is unavailable.
     });
 }

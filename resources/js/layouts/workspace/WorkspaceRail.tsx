@@ -5,15 +5,17 @@ import type { ReactNode } from 'react';
 import { WorkspaceInstall } from './WorkspaceInstall';
 import { groupsFor, roles, type RoleKey } from './navigation';
 import { RoleSwitcher } from './RoleSwitcher';
+import { useWorkspaceShell } from './shellModel';
 
 export function WorkspaceRail({ role, screen, close, onNavigate }: {
     role: RoleKey; screen: string; close?: ReactNode; onNavigate?: () => void;
 }) {
+    const { brand, session } = useWorkspaceShell();
     return <>
         <div className="portal-brand-row">
             <Link href={workspaceUrl(`${role}/${roles[role].home}`)} className="portal-brand" onClick={onNavigate}>
-                <img src="/brand/adin/crest.svg" width="42" height="36" alt="" />
-                <span><strong>AdinOpen LMS</strong><small>Adin Open University</small></span>
+                <img src={brand.crest} width="42" height="36" alt="" />
+                <span><strong>{brand.name}</strong><small>{brand.institution}</small></span>
             </Link>{close}
         </div>
         <RoleSwitcher role={role} onNavigate={onNavigate} />
@@ -29,7 +31,7 @@ export function WorkspaceRail({ role, screen, close, onNavigate }: {
             </div>)}
         </nav>
         <footer className="portal-rail-footer">
-            <div><Icon name="shield" className="size-4" /><span>Protected session<small>MFA enforced for privileged roles</small></span></div>
+            <div><Icon name="shield" className="size-4" /><span>{session.title}<small>{session.detail}</small></span></div>
             <WorkspaceInstall />
             <Link href={workspaceUrl('auth/signin')} onClick={onNavigate} className="mt-1 rounded-lg hover:bg-white/10 hover:text-white">
                 <Icon name="logout" className="size-4" />Sign out of this session

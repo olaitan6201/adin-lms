@@ -4,33 +4,31 @@ import { Icon } from '@/components/icons/Icon';
 import { Popover } from 'radix-ui';
 import { useEffect, useState } from 'react';
 import type { RoleKey } from './navigation';
+import { useWorkspaceShell, type ShellNotice } from './shellModel';
 
-const notices = [
-    ['Mid-term examination timetable published', 'ACC302 - 18 Nov 2026, 09:00', '18 min ago', 'bg-sky-500'],
-    ['34 submissions awaiting marking', 'Journal entry and trial balance problem set', '2 h ago', 'bg-amber-500'],
-    ['Course structure copied from 2024/2025', 'ENG210 - no grades or registrations copied', 'Yesterday', 'bg-brand-500'],
-    ['Backup completed', 'Nightly 02:00 job, 41.2 GB written', 'Yesterday', 'bg-brand-500'],
-    ['MFA enrolment required for exam officers', 'Policy effective 01 Dec 2026', '2 days ago', 'bg-rose-500'],
-    ['Results released: ENG210 continuous test 1', '82 candidates, released to students', '25 Nov 2026, 13:05', 'bg-brand-500'],
-    ['New assignment set: case analysis on IFRS 15', 'ACC302 - due 28 Nov 2026, 23:59', '25 Nov 2026, 09:12', 'bg-sky-500'],
-];
+const noticeColors: Record<ShellNotice['tone'], string> = {
+    info: 'bg-sky-500', warning: 'bg-amber-500', success: 'bg-brand-500', danger: 'bg-rose-500',
+};
 
 export function Notifications({ notify }: { notify: (message: string) => void }) {
+    const { notices } = useWorkspaceShell();
+    const attention = notices.filter(notice => notice.needsAttention).length;
     return <Popover.Root>
         <Popover.Trigger className="btn btn-ghost btn-sm relative" aria-label="Notifications"><Icon name="bell" className="size-5" />
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[#f43f5e] ring-2 ring-white" />
+            {attention > 0 && <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[#f43f5e] ring-2 ring-white" />}
         </Popover.Trigger>
         <Popover.Portal><Popover.Content align="end" sideOffset={8} collisionPadding={8} aria-label="Notifications"
             className="z-50 w-[min(92vw,360px)] overflow-hidden rounded-xl border border-ink-100 bg-white shadow-lift">
             <div className="flex items-center justify-between border-b border-ink-100 px-4 py-3">
-                <strong className="text-[13px] font-semibold">Notifications</strong><small className="text-[11px] text-ink-500">2 need attention</small>
+                <strong className="text-[13px] font-semibold">Notifications</strong><small className="text-[11px] text-ink-500">{attention} need attention</small>
             </div>
             <ul data-scroll className="max-h-[min(340px,52dvh)] divide-y divide-ink-100 overflow-auto">
-                {notices.map(([title, meta, time, color]) => <li key={title} className="flex gap-3 px-4 py-3 hover:bg-ink-50">
-                    <span className={`mt-1 size-2 shrink-0 rounded-full ${color}`} />
+                {notices.map(({ id, title, meta, time, tone }) => <li key={id} className="flex gap-3 px-4 py-3 hover:bg-ink-50">
+                    <span className={`mt-1 size-2 shrink-0 rounded-full ${noticeColors[tone]}`} />
                     <span><strong className="block text-[13px] font-medium">{title}</strong>
                         <span className="mt-0.5 block text-xs text-ink-500">{meta}</span><small className="mt-1 block text-[11px] text-ink-500">{time}</small></span>
                 </li>)}
+                {!notices.length && <li className="px-4 py-3 text-xs text-ink-500">No notifications.</li>}
             </ul>
             <div className="border-t border-ink-100 bg-ink-50/60 px-4 py-2.5">
                 <Popover.Close className="text-[12.5px] font-medium text-brand-700 hover:underline" onClick={() => notify('Notification centre opened')}>

@@ -14,14 +14,14 @@ const modules = {
 
 type ModuleKey = keyof typeof modules;
 export type RoleKey = 'admin' | 'lecturer' | 'student' | 'guardian';
-type Role = { label: string; short: string; person: string; home: ModuleKey; groups: Record<string, ModuleKey[]> };
+type Role = { label: string; short: string; home: ModuleKey; groups: Record<string, ModuleKey[]> };
 const personal: ModuleKey[] = ['settings/notifications'];
 const engagement: ModuleKey[] = ['communication', 'calendar', 'reports'];
 const assessment: ModuleKey[] = ['assignments', 'cbt', 'gradebook', 'attendance'];
 
 export const roles: Record<RoleKey, Role> = {
     admin: {
-        label: 'Super Admin', short: 'ICT', person: 'Dr. Ifeoma Nwachukwu', home: 'overview',
+        label: 'Super Admin', short: 'ICT', home: 'overview',
         groups: {
             Overview: ['overview'], Academic: ['structure', 'people', 'curriculum', 'delivery'],
             Content: ['content', 'course', 'classroom'], Assessment: assessment, Engagement: engagement,
@@ -29,21 +29,21 @@ export const roles: Record<RoleKey, Role> = {
         },
     },
     lecturer: {
-        label: 'Lecturer', short: 'LECT', person: 'Dr. Peter Adeyemi', home: 'overview',
+        label: 'Lecturer', short: 'LECT', home: 'overview',
         groups: {
             Overview: ['overview'], Teaching: ['courses', 'course', 'classroom'], Assessment: assessment,
             Engagement: engagement, Personal: personal,
         },
     },
     student: {
-        label: 'Student', short: 'STU', person: 'Blessing Okonkwo', home: 'overview',
+        label: 'Student', short: 'STU', home: 'overview',
         groups: {
             Overview: ['overview'], Learning: ['courses', 'course', 'downloads'],
             Assessment: ['assignments', 'exam', 'results'], Engagement: ['communication', 'calendar'], Personal: personal,
         },
     },
     guardian: {
-        label: 'Guardian', short: 'GUARD', person: 'Mrs. Tonia Okonkwo', home: 'progress',
+        label: 'Guardian', short: 'GUARD', home: 'progress',
         groups: { Learning: ['progress'], Personal: personal },
     },
 };

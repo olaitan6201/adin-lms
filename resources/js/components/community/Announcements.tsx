@@ -34,7 +34,7 @@ export function Announcements({
             body: String(data.get('body')).trim(),
             channels: ['In-platform', ...data.getAll('channel').map(String)],
             date: publicationDate,
-            status: draft ? 'Draft' : 'Sent',
+            status: draft ? 'Draft' : 'Published locally',
         };
         setList(item ? list.map((n) => (n === item ? entry : n)) : [entry, ...list]);
         select('');
@@ -43,7 +43,7 @@ export function Announcements({
     return (
         <Card
             title="Announcements and notices"
-            subtitle="Lecturer announcements and administrative notices, with optional SMS and push"
+            subtitle="Publishing adds a sample notice to this workspace. No email, SMS or push notification is sent."
             actions={
                 <Action
                     icon="megaphone"
@@ -63,7 +63,7 @@ export function Announcements({
                     <Badge key="audience">{n.audience}</Badge>,
                     n.date,
                     n.channels.join(' and '),
-                    <Badge key="status" tone={n.status === 'Sent' ? 'emerald' : 'amber'}>
+                    <Badge key="status" tone={n.status === 'Draft' ? 'amber' : 'emerald'}>
                         {n.status}
                     </Badge>,
                     <Action key="actions" size="sm" onClick={() => select(n.id)}>
@@ -74,7 +74,7 @@ export function Announcements({
             {selected && (
                 <Drawer
                     title={item ? 'Edit announcement' : 'New announcement'}
-                    subtitle="In-platform notice with optional email, SMS and push"
+                    subtitle="Publish a sample notice here. No email, SMS or push notification is sent."
                     close={() => select('')}
                 >
                     <form className="space-y-4" onSubmit={saveAnnouncement}>
@@ -103,7 +103,7 @@ export function Announcements({
                             />
                         </Field>
                         <fieldset className="space-y-2 rounded-xl border p-4">
-                            <legend>Delivery channels</legend>
+                            <legend>Sample delivery channels</legend>
                             {options.map((o) => (
                                 <label key={o} className="block">
                                     <input
@@ -124,7 +124,7 @@ export function Announcements({
                                 Save draft
                             </button>
                             <button value="publish" className="btn btn-primary">
-                                Publish
+                                Publish locally
                             </button>
                         </div>
                     </form>

@@ -36,7 +36,7 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
     }
 
     return (
-        <Card title="Messages" subtitle="Lecturer, student and private conversations" bodyClassName="p-0">
+        <Card title="Messages" subtitle="Sample conversations. Messages and replies stay in this workspace and are not delivered." bodyClassName="p-0">
             <div className="grid divide-y lg:grid-cols-[320px_1fr] lg:divide-x lg:divide-y-0">
                 <ul className="divide-y">
                     {messages.map((m) => (

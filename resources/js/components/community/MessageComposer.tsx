@@ -26,7 +26,7 @@ export function MessageComposer({ recipients, close, send }: Props) {
     }
 
     return (
-        <Drawer title="New message" close={close}>
+        <Drawer title="New message" subtitle="This sample message stays in this workspace. The recipient will not receive it." close={close}>
             <form className="space-y-4" onSubmit={submitMessage}>
                 <Field label="Recipient">
                     <select
@@ -55,7 +55,7 @@ export function MessageComposer({ recipients, close, send }: Props) {
                     <textarea name="body" className="input min-h-24" required />
                 </Field>
                 <button className="btn btn-primary" disabled={!available.length}>
-                    Send message
+                    Send sample message
                 </button>
             </form>
         </Drawer>

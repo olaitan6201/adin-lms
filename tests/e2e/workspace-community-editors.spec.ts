@@ -5,16 +5,18 @@ test('an absent recipient cannot submit, then a non-first recipient gets the mes
     await page.getByRole('button', { name: 'New message' }).click();
     const dialog = page.getByRole('dialog');
     const recipient = dialog.getByLabel('Recipient');
+    await expect(dialog).toContainText('The recipient will not receive it.');
     await dialog.getByLabel('Subject').fill('New timetable');
     await dialog.getByLabel('Message', { exact: true }).fill('Could you confirm the new time?');
     // Disabled controls are omitted from FormData; simulate a recipient disappearing during composition.
     await recipient.evaluate((select: HTMLSelectElement) => { select.disabled = true; });
-    await dialog.getByRole('button', { name: 'Send message' }).click();
+    await dialog.getByRole('button', { name: 'Send sample message' }).click();
     await expect(dialog).toBeVisible();
     await recipient.evaluate((select: HTMLSelectElement) => { select.disabled = false; });
     await recipient.selectOption({ label: 'Examinations Office' });
-    await dialog.getByRole('button', { name: 'Send message' }).click();
+    await dialog.getByRole('button', { name: 'Send sample message' }).click();
     await expect(dialog).toHaveCount(0);
+    await expect(page.getByRole('tabpanel')).toContainText('not delivered');
     await expect(page.getByRole('heading', { name: 'Examinations Office New timetable' })).toBeVisible();
     await expect(page.getByRole('tabpanel').getByText(/^Today, \d\d:\d\d$/)).toBeVisible();
     await expect(page.getByRole('tabpanel').getByRole('listitem')).toHaveCount(4);
@@ -68,6 +70,7 @@ test('cancel preserves draft channels and publishing uses the edited selection',
     await page.goto('/lecturer/communication');
     await page.getByRole('button', { name: 'New announcement' }).click();
     const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('No email, SMS or push notification is sent.');
     await dialog.getByLabel('Title').fill('Seminar moved');
     await dialog.getByLabel('Message', { exact: true }).fill('Meet in room 2.');
     await dialog.getByLabel('Email').uncheck();
@@ -83,8 +86,9 @@ test('cancel preserves draft channels and publishing uses the edited selection',
     await expect(dialog.getByLabel('SMS')).toBeChecked();
     await dialog.getByLabel('SMS').uncheck();
     await dialog.getByLabel('Push notification').check();
-    await dialog.getByRole('button', { name: 'Publish' }).click();
-    await expect(row).toContainText('Sent');
+    await dialog.getByRole('button', { name: 'Publish locally' }).click();
+    await expect(row.getByRole('cell', { name: 'Published locally' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Sent', exact: true })).toHaveCount(2);
     await expect(row).toContainText('In-platform and Push notification');
     await expect(row).not.toContainText('SMS');
 });

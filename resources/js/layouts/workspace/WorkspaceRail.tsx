@@ -6,7 +6,7 @@ import { WorkspaceInstall } from './WorkspaceInstall';
 import { groupsFor, roles, type RoleKey } from './navigation';
 import { RoleSwitcher } from './RoleSwitcher';
 import { useWorkspaceShell } from './shellModel';
-import { InstitutionMark } from '@/components/shared/branding/InstitutionMark';
+import { InstitutionMark } from '@/components/icons/InstitutionMark';
 
 export function WorkspaceRail({ role, screen, close, onNavigate }: {
     role: RoleKey; screen: string; close?: ReactNode; onNavigate?: () => void;

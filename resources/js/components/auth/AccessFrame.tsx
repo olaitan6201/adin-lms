@@ -3,7 +3,7 @@ import { AlertIcon, CheckIcon, HistoryIcon, InfoIcon, KeyIcon, LockIcon, PhoneIc
 import { useEffect, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { WorkspaceShellModel } from '@/types/navigation/shell';
-import { InstitutionMark } from '@/components/shared/branding/InstitutionMark';
+import { InstitutionMark } from '@/components/icons/InstitutionMark';
 
 const identityCopy = {
     signin: {

@@ -32,18 +32,28 @@ export function PaperNavigator({ expires, active, questions, progress }: Props) 
             <section className="assessment-panel">
                 <h2 className="font-semibold">Access window</h2>
                 {active && <RemainingTime expires={expires} />}
-                <p className="mt-3">Deadline: <time dateTime={expires}>{new Date(expires).toLocaleString()}</time></p>
+                <p className="mt-3">
+                    Deadline: <time dateTime={expires}>{new Date(expires).toLocaleString()}</time>
+                </p>
             </section>
             <nav aria-label="Question palette" className="assessment-panel question-palette">
                 <h2 className="font-semibold">Question palette</h2>
-                <p>Saved answers: {questions.filter(q => progress[q.id]?.answered).length} of {questions.length}</p>
+                <p>
+                    Saved answers: {questions.filter((q) => progress[q.id]?.answered).length} of{' '}
+                    {questions.length}
+                </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                     {questions.map(({ id }, i) => {
                         const answered = progress[id]?.answered;
                         return (
-                            <a key={id} href={`#question-${id}`} aria-label={`Question ${i + 1}, ${answered ? 'answered' : 'unanswered'}`}
-                                className={`inline-flex min-h-9 min-w-9 items-center justify-center gap-1 rounded-lg border px-1 font-semibold ${answered ? 'bg-brand-700 text-white' : 'bg-card'}`}>
-                                {i + 1}{answered && <span aria-hidden="true">✓</span>}
+                            <a
+                                key={id}
+                                href={`#question-${id}`}
+                                aria-label={`Question ${i + 1}, ${answered ? 'answered' : 'unanswered'}`}
+                                className={`inline-flex min-h-9 min-w-9 items-center justify-center gap-1 rounded-lg border px-1 font-semibold ${answered ? 'bg-brand-700 text-white' : 'bg-card'}`}
+                            >
+                                {i + 1}
+                                {answered && <span aria-hidden="true">✓</span>}
                             </a>
                         );
                     })}

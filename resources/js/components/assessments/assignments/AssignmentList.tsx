@@ -2,9 +2,8 @@ import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
-import type { Assignment, Submission } from '@/types/assessments/assignments';
-import { RecordName, Status } from './Controls';
-import { exportSheet } from '@/lib/csv';
+import type { Assignment } from '@/types/assessments/assignments';
+import { RecordName, Status } from '../RecordDetails';
 
 export function AssignmentList({
     rows,
@@ -33,13 +32,18 @@ export function AssignmentList({
                 columns={['Assignment', 'State', 'Submitted', 'Late', 'Marked', '']}
                 rowKeys={rows.map((row) => row.id)}
                 rows={rows.map((r) => [
-                    <RecordName name={r.title} meta={`${r.course} · due ${r.due}`} />,
-                    <Status value={r.state} />,
-                    <span className="tnum text-[13px]">
+                    <RecordName key="assignment" name={r.title} meta={`${r.course} · due ${r.due}`} />,
+                    <Status key="state" value={r.state} />,
+                    <span key="submitted" className="tnum text-[13px]">
                         {r.submissions} / {r.total}
                     </span>,
-                    <span className={`tnum text-[13px] ${r.late ? 'text-amber-700' : 'text-ink-500'}`}>{r.late}</span>,
-                    <div className="flex w-28 items-center gap-2">
+                    <span
+                        key="late"
+                        className={`tnum text-[13px] ${r.late ? 'text-amber-700' : 'text-ink-500'}`}
+                    >
+                        {r.late}
+                    </span>,
+                    <div key="marked" className="flex w-28 items-center gap-2">
                         <div className="prog-track">
                             <div
                                 className={`prog-fill ${r.marked === r.total ? 'bg-brand-500' : 'bg-amber-500'}`}
@@ -50,7 +54,7 @@ export function AssignmentList({
                             {Math.round((100 * r.marked) / (r.total || 1))}%
                         </span>
                     </div>,
-                    <div className="flex justify-end gap-1.5">
+                    <div key="actions" className="flex justify-end gap-1.5">
                         <Action size="sm" onClick={() => edit(r)}>
                             Edit
                         </Action>
@@ -58,53 +62,6 @@ export function AssignmentList({
                             Mark
                         </Action>
                     </div>,
-                ])}
-            />
-        </Card>
-    );
-}
-
-export function MarkingQueue({
-    rows,
-    filterTitle,
-    open,
-}: {
-    rows: Submission[];
-    filterTitle?: string;
-    open: (row: Submission) => void;
-}) {
-    return (
-        <Card
-            title="Marking queue"
-            subtitle={filterTitle || 'Submissions awaiting a score, written feedback and a returned script'}
-            actions={
-                <Action
-                    size="sm"
-                    onClick={() =>
-                        exportSheet(
-                            'submission-queue',
-                            ['Student', 'Matric', 'Score'],
-                            rows.map((r) => [r.student, r.matric, r.score]),
-                        )
-                    }
-                >
-                    Export sheet
-                </Action>
-            }
-        >
-            <Table
-                columns={['Student', 'Submitted', 'Timing', 'Status', 'Score', '']}
-                empty="No submissions for this assignment."
-                rowKeys={rows.map((script) => script.id)}
-                rows={rows.map((r) => [
-                    <RecordName name={r.student} meta={r.matric} />,
-                    r.submitted,
-                    r.late ? 'Late' : 'On time',
-                    <Status value={r.status} />,
-                    r.score ?? '—',
-                    <Action size="sm" onClick={() => open(r)}>
-                        Open
-                    </Action>,
                 ])}
             />
         </Card>

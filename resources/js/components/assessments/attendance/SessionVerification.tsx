@@ -28,14 +28,18 @@ export function SessionVerification({ course, codeSuffix }: VerificationProps) {
                     <Icon name="qr" className="size-10" />
                 </span>
                 <div>
-                    <p className="text-sm font-medium">Session code <output>{code}</output></p>
+                    <p className="text-sm font-medium">
+                        Session code <output>{code}</output>
+                    </p>
                     <p className="my-2 text-sm text-ink-500">
-                        Refreshes every 60 seconds. A scan records the time and the device,
-                        and marks the student present.
+                        Refreshes every 60 seconds. A scan records the time and the device, and marks the
+                        student present.
                     </p>
                 </div>
             </div>
-            <Action size="sm" onClick={() => setCode(nextCode(course))}>Refresh code</Action>
+            <Action size="sm" onClick={() => setCode(nextCode(course))}>
+                Refresh code
+            </Action>
         </Card>
     );
 }

@@ -1,6 +1,10 @@
-import type { AnswerValue } from './Answer';
+import type { AnswerValue } from './useAnswerAutosave';
 
-export async function saveAnswer(url: string, value: AnswerValue, revision: number): Promise<{ revision: number }> {
+export async function saveAnswer(
+    url: string,
+    value: AnswerValue,
+    revision: number,
+): Promise<{ revision: number }> {
     const token = decodeURIComponent(document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]+)/)?.[1] ?? '');
     const response = await fetch(url, {
         method: 'PUT',
@@ -11,7 +15,7 @@ export async function saveAnswer(url: string, value: AnswerValue, revision: numb
         },
         body: JSON.stringify({ answer: value, revision }),
     });
-    if (!response.ok)
+    if (!response.ok) {
         throw new Error(
             response.status === 409
                 ? 'Paper changed or closed. Copy your draft before reloading.'
@@ -19,6 +23,7 @@ export async function saveAnswer(url: string, value: AnswerValue, revision: numb
                   ? 'Check the matching selections; each option can be used once.'
                   : 'Save failed. Retry before submitting.',
         );
+    }
 
     return (await response.json()) as { revision: number };
 }

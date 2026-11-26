@@ -3,7 +3,8 @@ import type { FieldSpec } from '@/types/assessments/fields';
 
 export type { FieldSpec } from '@/types/assessments/fields';
 export type Values = Record<string, string>;
-export const inputClass = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800';
+export const inputClass =
+    'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800';
 
 interface FieldsProps {
     fields: FieldSpec[];
@@ -11,7 +12,15 @@ interface FieldsProps {
     change: (values: Values) => void;
 }
 
-function FieldInput({ field, value, change }: { field: FieldSpec; value: string; change: (value: string) => void }) {
+function FieldInput({
+    field,
+    value,
+    change,
+}: {
+    field: FieldSpec;
+    value: string;
+    change: (value: string) => void;
+}) {
     const props = {
         className: inputClass,
         value,
@@ -42,7 +51,9 @@ export function Fields({ fields, values, change }: FieldsProps) {
         <div className="grid gap-4">
             {fields.map((field) => (
                 <label key={field.label} className="grid gap-1.5 text-sm font-medium">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">{field.label}</span>
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+                        {field.label}
+                    </span>
                     <FieldInput
                         field={field}
                         value={values[field.label] ?? field.initial ?? field.options?.[0] ?? ''}
@@ -54,7 +65,8 @@ export function Fields({ fields, values, change }: FieldsProps) {
     );
 }
 
-export const submitClass = 'rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800';
+export const submitClass =
+    'rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800';
 
 export function Editor({
     fields,
@@ -106,7 +118,10 @@ export function Checks({
     return (
         <div className="space-y-2">
             {labels.map((label) => (
-                <label key={label} className="flex items-start gap-3 rounded-lg border border-slate-200 p-3 text-sm">
+                <label
+                    key={label}
+                    className="flex items-start gap-3 rounded-lg border border-slate-200 p-3 text-sm"
+                >
                     <input
                         type="checkbox"
                         checked={selected.includes(label)}

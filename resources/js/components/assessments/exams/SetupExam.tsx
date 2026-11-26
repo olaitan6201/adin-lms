@@ -4,7 +4,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ExamWindow } from './ExamWindow';
 import { useState } from 'react';
-import { Check, Field, Post } from '@/components/assessments/Fields';
+import { Post } from '../Post';
+import { Check, Field } from '../Fields';
 import { questionKinds } from '@/components/assessments/contracts';
 
 export function SetupExam({ id }: { id: string }) {
@@ -47,7 +48,11 @@ export function SetupExam({ id }: { id: string }) {
                             Matching pairs (one left =&gt; right pair per line)
                             <ValidatedTextarea name={`${n}[pairs]`} />
                         </Label>
-                        <Field optional label="Exact accepted answer (legacy objective input)" name={`${n}[key]`} />
+                        <Field
+                            optional
+                            label="Exact accepted answer (legacy objective input)"
+                            name={`${n}[key]`}
+                        />
                         <Field type="number" name={`${n}[points]`} label="Possible points" />
                         <Check name={`${n}[draw]`} label="Draw randomly from this topic" />
                     </fieldset>

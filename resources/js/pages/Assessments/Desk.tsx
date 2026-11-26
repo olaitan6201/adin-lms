@@ -2,19 +2,16 @@ import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspac
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { AssessmentItemPanel, type Item } from '@/components/assessments/grading/AssessmentItemPanel';
 import { Head, Link } from '@inertiajs/react';
-import { SetupBook, type PolicyDefinition } from '@/components/assessments/grading/SetupBook';
-import { Post, type Member } from '@/components/assessments/Fields';
+import { SetupBook } from '@/components/assessments/grading/SetupBook';
+import { Post } from '@/components/assessments/Post';
+import { type Member } from '@/components/assessments/Fields';
 import { ResultRevisions, type Grade } from '@/components/assessments/grading/ResultRevisions';
+import { AmendPolicy, type ApprovedPolicy } from '@/components/assessments/grading/AmendPolicy';
 
 type Props = {
     offering: string;
     book: string | null;
-    policy:
-        | (Omit<PolicyDefinition, 'items'> & {
-              id: string;
-              version: number;
-          })
-        | null;
+    policy: ApprovedPolicy | null;
     items: Item[];
     grades: Grade[];
     teacher: boolean;
@@ -22,7 +19,17 @@ type Props = {
     learner: boolean;
     roster: Member[];
 };
-export default function Desk({ offering, book, policy, items, grades, teacher, officer, learner, roster }: Props) {
+export default function Desk({
+    offering,
+    book,
+    policy,
+    items,
+    grades,
+    teacher,
+    officer,
+    learner,
+    roster,
+}: Props) {
     const who = (id: string) => roster.find((m) => m.id === id)?.name;
 
     return (
@@ -41,9 +48,25 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                           : 'Open your assignments and exams, then follow returned marks and published results.'}
                 </p>
                 <nav aria-label="Assessment sections" className="flex flex-wrap gap-x-5 gap-y-2">
-                    {teacher && <Link className="text-primary underline underline-offset-4" href={`/community/courses/${offering}#study-groups`}>Manage study groups</Link>}
-                    {teacher && <Link className="text-primary underline underline-offset-4" href={`/courses/${offering}/question-banks`}>Question banks</Link>}
-                    <a className="text-primary underline underline-offset-4" href="#result-revisions">Result history</a>
+                    {teacher && (
+                        <Link
+                            className="text-primary underline underline-offset-4"
+                            href={`/community/courses/${offering}#study-groups`}
+                        >
+                            Manage study groups
+                        </Link>
+                    )}
+                    {teacher && (
+                        <Link
+                            className="text-primary underline underline-offset-4"
+                            href={`/courses/${offering}/question-banks`}
+                        >
+                            Question banks
+                        </Link>
+                    )}
+                    <a className="text-primary underline underline-offset-4" href="#result-revisions">
+                        Result history
+                    </a>
                 </nav>
             </header>
             {!book &&
@@ -52,33 +75,19 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                 ) : (
                     <p>No assessments configured.</p>
                 ))}
-            {officer && policy && (
-                <CourseDisclosure label={`Amend grading policy · version ${policy.version}`}>
-                    <SetupBook
-                        key={policy.id}
-                        url={`/courses/${offering}/assessments`}
-                        policy={{
-                            ...policy,
-                            items: items.map((i) => ({
-                                id: i.id,
-                                title: i.title,
-                                kind: i.kind,
-                                weight: String(i.weight_percent),
-                                maximum: String(i.maximum_score),
-                                rubric: i.rubric?.guide ?? '',
-                                criteria: i.rubric?.criteria ?? [],
-                            })),
-                        }}
-                    />
-                </CourseDisclosure>
-            )}
+            {officer && policy && <AmendPolicy offering={offering} items={items} policy={policy} />}
             {items.length > 0 && (
                 <section aria-label="Assessment weights">
                     <h2 className="font-semibold">Assessment weights</h2>
                     <ul className="divide-y">
-                        {items.map(item => (
+                        {items.map((item) => (
                             <li key={item.id} className="flex items-center justify-between gap-4 py-2">
-                                <a className="text-primary underline underline-offset-4" href={`#item-${item.id}`}>{item.title}</a>
+                                <a
+                                    className="text-primary underline underline-offset-4"
+                                    href={`#item-${item.id}`}
+                                >
+                                    {item.title}
+                                </a>
                                 <span className="shrink-0 font-mono text-xs">{item.weight_percent}%</span>
                             </li>
                         ))}
@@ -99,7 +108,11 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
             {book && teacher && (
                 <CourseDisclosure label="Compute results">
                     {roster.map((m) => (
-                        <Post key={m.id} url={`/gradebooks/${book}/compute/${m.id}`} button={`Compute ${m.name}`} />
+                        <Post
+                            key={m.id}
+                            url={`/gradebooks/${book}/compute/${m.id}`}
+                            button={`Compute ${m.name}`}
+                        />
                     ))}
                 </CourseDisclosure>
             )}

@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
-import { AssignmentList, MarkingQueue } from './AssignmentTables';
+import { AssignmentList } from './assignments/AssignmentList';
+import { MarkingQueue } from './assignments/MarkingQueue';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
-import type { Assignment, AssignmentDraft, Submission, MarkingGuide } from '@/types/assessments/assignments';
-import { recordMark } from './assignmentRecords';
-import { AssignmentEditor, MarkingPanel, feedbackChecks } from './AssignmentPanels';
+import type { Assignment, Submission, MarkingGuide } from '@/types/assessments/assignments';
+import { feedbackChecks } from './assignments/feedbackChecks';
+import { AssignmentEditor } from './assignments/AssignmentEditor';
+import { MarkingPanel } from './assignments/MarkingPanel';
 import { Checks, Fields, type FieldSpec, type Values } from './Editor';
 import { Note } from '@/components/ui/feedback/Note';
-import { Sections } from './Controls';
+import { Sections } from './Sections';
 import { exportSheet } from '@/lib/csv';
+import { useAssignmentRecords } from './assignments/useAssignmentRecords';
 
 export default function AssignmentsDesk({
     lecturer = false,
@@ -33,10 +36,17 @@ export default function AssignmentsDesk({
     enrolment: number;
 }) {
     const [tab, setTab] = useState(0);
-    const [records, setRecords] = useState({ rows: assignments, queue: submissions, awaiting });
-    const { rows, queue } = records;
-    const [edit, setEdit] = useState<Assignment | 'new'>();
-    const [mark, setMark] = useState<Submission>();
+    const {
+        rows,
+        queue,
+        awaiting: awaitingCount,
+        edit,
+        setEdit,
+        mark,
+        setMark,
+        saveMark,
+        saveAssignment,
+    } = useAssignmentRecords(assignments, submissions, awaiting, enrolment);
     const [rules, setRules] = useState<Values>({});
     const [checks, setChecks] = useState(feedbackChecks.slice(0, 3));
     const [filter, setFilter] = useState('');
@@ -58,24 +68,6 @@ export default function AssignmentsDesk({
         setTab(index);
     }
 
-    function saveAssignment(draft: AssignmentDraft) {
-        if (!edit) return;
-        const base =
-            edit === 'new'
-                ? { id: crypto.randomUUID(), marked: 0, total: enrolment, submissions: 0, late: 0, state: 'scheduled' }
-                : edit;
-        const updated = { ...base, ...draft };
-        setRecords((current) => ({
-            ...current,
-            rows: edit === 'new' ? [...current.rows, updated] : current.rows.map((row) => (row.id === updated.id ? updated : row)),
-        }));
-        setEdit(undefined);
-    }
-
-    function saveMark(updated: Submission) {
-        setRecords((current) => recordMark(current, updated));
-        setMark(undefined);
-    }
     const report = () =>
         exportSheet(
             'marking-report',
@@ -108,7 +100,7 @@ export default function AssignmentsDesk({
             />
             <Sections
                 labels={['Assignments', `${lecturer ? 'Marking' : 'Submission'} queue`, 'Rules and feedback']}
-                counts={[rows.length, records.awaiting]}
+                counts={[rows.length, awaitingCount]}
                 active={tab}
                 change={changeTab}
             />
@@ -116,7 +108,10 @@ export default function AssignmentsDesk({
             {tab === 1 && <MarkingQueue rows={filteredQueue} filterTitle={filterTitle} open={setMark} />}
             {tab === 2 && (
                 <div className="grid gap-5 lg:grid-cols-2">
-                    <Card title="Submission rules" subtitle="Applied per assignment unless the lecturer overrides them">
+                    <Card
+                        title="Submission rules"
+                        subtitle="Applied per assignment unless the lecturer overrides them"
+                    >
                         <Fields fields={ruleFields} values={rules} change={setRules} />
                     </Card>
                     <Card title="Feedback and return" subtitle="How marked work reaches the student">
@@ -124,7 +119,10 @@ export default function AssignmentsDesk({
                     </Card>
                 </div>
             )}
-            <Note>A submission receipt is issued on upload and every score change is retained with the reason and the author.</Note>
+            <Note>
+                A submission receipt is issued on upload and every score change is retained with the reason
+                and the author.
+            </Note>
             {edit && (
                 <AssignmentEditor
                     timing={timing}

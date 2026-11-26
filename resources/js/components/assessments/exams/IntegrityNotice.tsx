@@ -17,7 +17,9 @@ export function IntegrityNotice({
 }) {
     const [unconfirmed, setUnconfirmed] = useState<string | null>(null);
     useEffect(() => {
-        if (!active || !policy.observe_visibility) return;
+        if (!active || !policy.observe_visibility) {
+            return;
+        }
 
         return observeVisibility(attempt, () => setUnconfirmed(attempt));
     }, [active, attempt, policy.observe_visibility]);
@@ -26,8 +28,8 @@ export function IntegrityNotice({
             <h2 className="font-semibold">Exam conditions</h2>
             {policy.observe_visibility && (
                 <p>
-                    This exam records when the page becomes hidden. Your lecturer reviews the context; a signal never
-                    changes your mark.
+                    This exam records when the page becomes hidden. Your lecturer reviews the context; a
+                    signal never changes your mark.
                 </p>
             )}
             {policy.prevent_copy && (
@@ -35,7 +37,10 @@ export function IntegrityNotice({
             )}
             <p>This browser cannot identify who is present, monitor other apps or detect another device.</p>
             {active && policy.observe_visibility && unconfirmed === attempt && (
-                <p role="status">Delivery of a page visibility signal could not be confirmed. This does not affect your mark.</p>
+                <p role="status">
+                    Delivery of a page visibility signal could not be confirmed. This does not affect your
+                    mark.
+                </p>
             )}
         </aside>
     );

@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Table } from '@/components/ui/data-display/Table';
 import { Card } from '@/components/ui/layout/Card';
 import type { Learner } from '@/types/assessments/attendance';
-import { RecordName } from '../Controls';
+import { RecordName } from '../RecordDetails';
 
 function standing(percent: number) {
     if (percent < 50) {
@@ -21,9 +21,9 @@ interface HistoryProps {
 
 export function AttendanceHistory({ learners, sessionCount }: HistoryProps) {
     const rows = learners.map(({ name, matric, percent }) => [
-        <RecordName name={name} meta={matric} />,
+        <RecordName key="student" name={name} meta={matric} />,
         `${percent}%`,
-        `${Math.round(percent * sessionCount / 100)} / ${sessionCount}`,
+        `${Math.round((percent * sessionCount) / 100)} / ${sessionCount}`,
         standing(percent),
     ]);
 
@@ -32,7 +32,7 @@ export function AttendanceHistory({ learners, sessionCount }: HistoryProps) {
             <Table
                 columns={['Student', 'Percentage', 'Sessions', 'Standing']}
                 rows={rows}
-                rowKeys={learners.map(learner => learner.matric)}
+                rowKeys={learners.map((learner) => learner.matric)}
             />
         </Card>
     );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import type { Assignment, Receipt, StudentRevision } from '@/types/assessments/assignments';
-import { Drawer } from './Controls';
+import { Drawer } from './Drawer';
 import { inputClass, submitClass } from './Editor';
 
 export function SubmissionPanel({
@@ -29,9 +29,13 @@ export function SubmissionPanel({
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        if (row.state === 'closed') return;
-        if (!file || !/\.(pdf|docx|xlsx)$/i.test(file.name) || file.size > sizeLimit * 1024 * 1024)
-            return setError(`Choose a PDF, DOCX or XLSX file no larger than ${sizeLimit} MB.`);
+        if (row.state === 'closed') {
+            return;
+        }
+        if (!file || !/\.(pdf|docx|xlsx)$/i.test(file.name) || file.size > sizeLimit * 1024 * 1024) {
+            setError(`Choose a PDF, DOCX or XLSX file no larger than ${sizeLimit} MB.`);
+            return;
+        }
         save({
             number: `RCP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
             file: file.name,
@@ -44,7 +48,10 @@ export function SubmissionPanel({
     return (
         <Drawer title={row.title} subtitle={`${row.course} · closes ${row.due}`} close={close}>
             <Card title="Instructions">
-                <p>{row.instructions ?? `Submit your ${row.course} work for “${row.title}” in an accepted format.`}</p>
+                <p>
+                    {row.instructions ??
+                        `Submit your ${row.course} work for “${row.title}” in an accepted format.`}
+                </p>
             </Card>
             <form className="space-y-4" onSubmit={submit}>
                 {row.state !== 'closed' && (
@@ -74,13 +81,19 @@ export function SubmissionPanel({
                             {receipt.file} · {receipt.size} · uploaded {receipt.time}
                         </p>
                         <p className="mt-2 font-mono text-xs">Receipt no. {receipt.number}</p>
-                        <p>{revision?.feedback ? `Graded ${revision.feedback.score} / 100` : 'Awaiting marking'}</p>
+                        <p>
+                            {revision?.feedback
+                                ? `Graded ${revision.feedback.score} / 100`
+                                : 'Awaiting marking'}
+                        </p>
                     </Card>
                 )}
                 {row.state !== 'closed' && (
                     <>
                         <label className="block text-sm">
-                            <span className="text-[11px] font-semibold uppercase tracking-wider">Note to your lecturer</span>
+                            <span className="text-[11px] font-semibold uppercase tracking-wider">
+                                Note to your lecturer
+                            </span>
                             <textarea
                                 className={inputClass}
                                 value={note}
@@ -89,7 +102,8 @@ export function SubmissionPanel({
                             />
                         </label>
                         {error && <p role="alert">{error}</p>}
-                        <Action onClick={close}>Cancel</Action> <button className={submitClass}>Submit work</button>
+                        <Action onClick={close}>Cancel</Action>{' '}
+                        <button className={submitClass}>Submit work</button>
                     </>
                 )}
             </form>

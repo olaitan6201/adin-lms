@@ -22,7 +22,11 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
     const subjective = kind === 'essay' || kind === 'programming' || kind === 'practical';
 
     return (
-        <Form action={action} method={method} className="grid min-w-0 gap-4 rounded-lg border p-4 sm:p-5 [&_button[type=submit]]:h-auto [&_button[type=submit]]:min-h-9 [&_button[type=submit]]:whitespace-normal">
+        <Form
+            action={action}
+            method={method}
+            className="grid min-w-0 gap-4 rounded-lg border p-4 sm:p-5 [&_button[type=submit]]:h-auto [&_button[type=submit]]:min-h-9 [&_button[type=submit]]:whitespace-normal"
+        >
             {({ processing, errors, recentlySuccessful }) => (
                 <>
                     <PortalField
@@ -74,7 +78,9 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                     )}
                     {accepted && (
                         <Label className="grid min-w-0 gap-2 leading-normal">
-                            {choices ? 'Accepted answer (must match a choice)' : 'Accepted answers (one per line)'}
+                            {choices
+                                ? 'Accepted answer (must match a choice)'
+                                : 'Accepted answers (one per line)'}
                             <Textarea
                                 name="accepted"
                                 required
@@ -86,23 +92,13 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                     {kind === 'matching' && (
                         <Label className="grid min-w-0 gap-2 leading-normal">
                             Matching pairs (one left =&gt; right pair per line)
-                            <Textarea
-                                name="pairs"
-                                required
-                                rows={6}
-                                defaultValue={initial?.pairs}
-                            />
+                            <Textarea name="pairs" required rows={6} defaultValue={initial?.pairs} />
                         </Label>
                     )}
                     {subjective && (
                         <Label className="grid min-w-0 gap-2 leading-normal">
                             Marking guide
-                            <Textarea
-                                name="guide"
-                                rows={4}
-                                maxLength={5000}
-                                defaultValue={initial?.guide}
-                            />
+                            <Textarea name="guide" rows={4} maxLength={5000} defaultValue={initial?.guide} />
                         </Label>
                     )}
                     {Object.entries(errors).map(([key, error]) => (

@@ -1,9 +1,10 @@
 import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
-import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { ValidatedInput } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head } from '@inertiajs/react';
-import { Post, Field, Check } from '@/components/assessments/Fields';
+import { Post } from '@/components/assessments/Post';
+import { Field, Check } from '@/components/assessments/Fields';
+import { PaperMarkHistory, type MarkRevision } from '@/components/assessments/exams/PaperMarkHistory';
 
 type Question = {
     id: string;
@@ -14,16 +15,6 @@ type Question = {
     objective: boolean;
     awarded: string | null;
 };
-type Revision = {
-    revision: number;
-    reason: string;
-    awards: {
-        position: number;
-        maximum: string;
-        points: string;
-    }[];
-};
-
 export default function MarkPaper({
     attempt,
     questions,
@@ -33,7 +24,7 @@ export default function MarkPaper({
     attempt: string;
     questions: Question[];
     revision: number;
-    history: Revision[];
+    history: MarkRevision[];
 }) {
     return (
         <AssessmentWorkspace>
@@ -41,7 +32,10 @@ export default function MarkPaper({
             <header className="space-y-3 border-b pb-5">
                 <p className="text-sm font-medium text-muted-foreground">Marking workspace</p>
                 <h1 className="text-3xl font-semibold tracking-tight">Review examination</h1>
-                <p>Award points for each written or practical answer. Objective points are included automatically.</p>
+                <p>
+                    Award points for each written or practical answer. Objective points are included
+                    automatically.
+                </p>
             </header>
             <Post key={revision} url={`/attempts/${attempt}/review`} button="Record final mark">
                 <input type="hidden" name="base_revision" value={revision} />
@@ -52,7 +46,9 @@ export default function MarkPaper({
                             {q.objective ? 'Automatic marking' : 'Manual marking'} · {q.possible} points
                         </p>
                         <h2 className="font-semibold">{q.prompt}</h2>
-                        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3">{q.answer || 'No response submitted.'}</pre>
+                        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3">
+                            {q.answer || 'No response submitted.'}
+                        </pre>
                         {q.objective ? (
                             <p>
                                 Automatic award: {q.awarded} / {q.possible}
@@ -79,22 +75,7 @@ export default function MarkPaper({
                 <Field name="reason" label="Reason for mark" />
                 <Check name="release" label="Return score to learner" />
             </Post>
-            {!!history.length && (
-                <section className="min-w-0 space-y-3">
-                    <h2 className="text-xl font-semibold tracking-tight">Mark history</h2>
-                    {history.map((h) => (
-                        <CourseDisclosure key={h.revision} label={`Score revision ${h.revision} · ${h.reason}`}>
-                            <ol>
-                                {h.awards.map((a) => (
-                                    <li key={a.position}>
-                                        Question {a.position}: {a.points} / {a.maximum}
-                                    </li>
-                                ))}
-                            </ol>
-                        </CourseDisclosure>
-                    ))}
-                </section>
-            )}
+            {!!history.length && <PaperMarkHistory history={history} />}
         </AssessmentWorkspace>
     );
 }

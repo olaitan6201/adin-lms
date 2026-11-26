@@ -3,7 +3,7 @@ import type { AttendanceBand } from '@/types/assessments/attendance';
 
 export function AttendanceDistribution({ bands }: { bands: readonly AttendanceBand[] }) {
     const total = bands.reduce((sum, band) => sum + band.count, 0);
-    const belowThreshold = bands.filter(band => band.upperExclusive !== null && band.upperExclusive <= 50);
+    const belowThreshold = bands.filter((band) => band.upperExclusive !== null && band.upperExclusive <= 50);
     const belowThresholdCount = belowThreshold.reduce((sum, band) => sum + band.count, 0);
 
     return (
@@ -19,7 +19,7 @@ export function AttendanceDistribution({ bands }: { bands: readonly AttendanceBa
                         <div className="h-2 overflow-hidden rounded-full bg-ink-100">
                             <div
                                 className={`h-full rounded-full ${color}`}
-                                style={{ width: `${total ? count / total * 100 : 0}%` }}
+                                style={{ width: `${total ? (count / total) * 100 : 0}%` }}
                             />
                         </div>
                     </div>
@@ -28,10 +28,12 @@ export function AttendanceDistribution({ bands }: { bands: readonly AttendanceBa
             ))}
             {belowThreshold.length > 0 && (
                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/60 p-3.5">
-                    <p className="text-[13px] font-semibold text-amber-900">{belowThresholdCount} students below 50%</p>
+                    <p className="text-[13px] font-semibold text-amber-900">
+                        {belowThresholdCount} students below 50%
+                    </p>
                     <p className="mt-1 text-xs leading-relaxed text-amber-800/90">
-                        Heads of department are notified for students below the threshold,
-                        and the register export is attached to that notification.
+                        Heads of department are notified for students below the threshold, and the register
+                        export is attached to that notification.
                     </p>
                 </div>
             )}

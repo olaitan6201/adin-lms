@@ -1,6 +1,13 @@
 import { Button } from '@/components/ui/button';
 import {
-    Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
@@ -28,12 +35,20 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
         };
     }, [deadline]);
 
-    const reason = expired ? 'The deadline has passed. Reload the paper to see the server’s final status.'
-        : !online ? 'You are offline. Reconnect before submitting.'
-        : pending ? 'Wait for all answers to save. If a save failed, return to the paper and retry.' : '';
+    const reason = expired
+        ? 'The deadline has passed. Reload the paper to see the server’s final status.'
+        : !online
+          ? 'You are offline. Reconnect before submitting.'
+          : pending
+            ? 'Wait for all answers to save. If a save failed, return to the paper and retry.'
+            : '';
     function submit() {
-        if (Date.now() >= deadline) setExpired(true);
-        if (reason || !navigator.onLine || Date.now() >= deadline || lock.current) return;
+        if (Date.now() >= deadline) {
+            setExpired(true);
+        }
+        if (reason || !navigator.onLine || Date.now() >= deadline || lock.current) {
+            return;
+        }
         lock.current = true;
         setSending(true);
         setError('');
@@ -41,16 +56,29 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
             setError('Submission could not be confirmed. Reload to check your attempt before trying again.');
             return false;
         };
-        router.post(`/attempts/${attempt}/finish`, {}, {
-            onNetworkError: failed, onHttpException: failed, onError: failed,
-            onFinish: () => {
-                lock.current = false;
-                setSending(false);
+        router.post(
+            `/attempts/${attempt}/finish`,
+            {},
+            {
+                onNetworkError: failed,
+                onHttpException: failed,
+                onError: failed,
+                onFinish: () => {
+                    lock.current = false;
+                    setSending(false);
+                },
             },
-        });
+        );
     }
     return (
-        <Dialog open={open} onOpenChange={(next) => { if (!lock.current) setOpen(next); }}>
+        <Dialog
+            open={open}
+            onOpenChange={(next) => {
+                if (!lock.current) {
+                    setOpen(next);
+                }
+            }}
+        >
             <DialogTrigger asChild>
                 <Button type="button">Review final submission</Button>
             </DialogTrigger>
@@ -72,15 +100,27 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
                         </span>
                     </DialogDescription>
                 </DialogHeader>
-                <p role="status" className="text-sm empty:hidden">{error || reason}</p>
+                <p role="status" className="text-sm empty:hidden">
+                    {error || reason}
+                </p>
                 <DialogFooter className="flex-col">
                     <DialogClose asChild>
-                        <Button ref={returnButton} variant="outline" type="button"
-                            aria-describedby="review-summary review-consequence" disabled={sending}>
+                        <Button
+                            ref={returnButton}
+                            variant="outline"
+                            type="button"
+                            aria-describedby="review-summary review-consequence"
+                            disabled={sending}
+                        >
                             Return to paper
                         </Button>
                     </DialogClose>
-                    <Button variant="destructive" type="button" disabled={Boolean(reason || error) || sending} onClick={submit}>
+                    <Button
+                        variant="destructive"
+                        type="button"
+                        disabled={Boolean(reason || error) || sending}
+                        onClick={submit}
+                    >
                         {sending ? 'Submitting…' : 'Submit final answers'}
                     </Button>
                 </DialogFooter>

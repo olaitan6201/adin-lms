@@ -21,13 +21,21 @@ export default function Office({ offerings }: { offerings: Offerings }) {
                 <p>Choose an offering to configure its grading policy or review result revisions.</p>
             </header>
             <section aria-labelledby="available-offerings">
-                <h2 id="available-offerings" className="font-semibold">Course offerings</h2>
+                <h2 id="available-offerings" className="font-semibold">
+                    Course offerings
+                </h2>
                 {!offerings.data.length && <p>No course offerings are available.</p>}
                 <ul className="divide-y">
                     {offerings.data.map((o) => (
                         <li key={o.href} className="py-3">
-                            <Link className="flex items-center justify-between gap-3 text-primary hover:underline" href={o.href}>
-                                <span>{o.title && `${o.title} · `}<span className="font-mono text-xs">{o.code}</span></span>
+                            <Link
+                                className="flex items-center justify-between gap-3 text-primary hover:underline"
+                                href={o.href}
+                            >
+                                <span>
+                                    {o.title && `${o.title} · `}
+                                    <span className="font-mono text-xs">{o.code}</span>
+                                </span>
                                 <span aria-hidden="true">→</span>
                             </Link>
                         </li>
@@ -35,8 +43,22 @@ export default function Office({ offerings }: { offerings: Offerings }) {
                 </ul>
             </section>
             <nav aria-label="Offering pages" className="flex flex-wrap gap-x-5 gap-y-2">
-                {offerings.prev_page_url && <Link className="text-primary underline underline-offset-4" href={offerings.prev_page_url}>Previous offerings</Link>}
-                {offerings.next_page_url && <Link className="text-primary underline underline-offset-4" href={offerings.next_page_url}>Next offerings</Link>}
+                {offerings.prev_page_url && (
+                    <Link
+                        className="text-primary underline underline-offset-4"
+                        href={offerings.prev_page_url}
+                    >
+                        Previous offerings
+                    </Link>
+                )}
+                {offerings.next_page_url && (
+                    <Link
+                        className="text-primary underline underline-offset-4"
+                        href={offerings.next_page_url}
+                    >
+                        Next offerings
+                    </Link>
+                )}
             </nav>
         </AssessmentWorkspace>
     );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import type { AttendanceBand, Learner, Session } from '@/types/assessments/attendance';
-import { Sections } from './Controls';
+import { Sections } from './Sections';
 import { AttendanceDistribution } from './attendance/AttendanceDistribution';
 import { AttendanceHistory } from './attendance/AttendanceHistory';
 import { AttendanceReport } from './attendance/AttendanceReport';
@@ -21,7 +21,13 @@ interface AttendanceDeskProps {
 }
 
 export default function AttendanceDesk({
-    lecturer = false, attendanceSessions, learners, bands, sessionCount, roster, codeSuffix,
+    lecturer = false,
+    attendanceSessions,
+    learners,
+    bands,
+    sessionCount,
+    roster,
+    codeSuffix,
 }: AttendanceDeskProps) {
     const [tab, setTab] = useState(0);
     const [sessions, setSessions] = useState(attendanceSessions);
@@ -42,8 +48,8 @@ export default function AttendanceDesk({
 
         const original = registers[session.id] ?? initialMarks(session, roster);
         const updated = applyMarks(session, original, marks);
-        setRegisters(previous => ({ ...previous, [session.id]: marks }));
-        setSessions(previous => previous.map(row => row.id === session.id ? updated : row));
+        setRegisters((previous) => ({ ...previous, [session.id]: marks }));
+        setSessions((previous) => previous.map((row) => (row.id === session.id ? updated : row)));
         closeRegister();
     }
 
@@ -53,17 +59,19 @@ export default function AttendanceDesk({
                 eyebrow="Attendance"
                 title="Attendance"
                 description={description}
-                actions={<>
-                    <AttendanceReport sessions={sessions} />
-                    <Action
-                        variant="primary"
-                        icon="calendarCheck"
-                        disabled={!sessions.length}
-                        onClick={() => selectSession(sessions[0])}
-                    >
-                        Open register
-                    </Action>
-                </>}
+                actions={
+                    <>
+                        <AttendanceReport sessions={sessions} />
+                        <Action
+                            variant="primary"
+                            icon="calendarCheck"
+                            disabled={!sessions.length}
+                            onClick={() => selectSession(sessions[0])}
+                        >
+                            Open register
+                        </Action>
+                    </>
+                }
             />
             <Sections
                 counts={[sessions.length]}

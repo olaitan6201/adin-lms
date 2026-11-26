@@ -30,7 +30,11 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
                         )}
                         <Label className="grid min-w-0 gap-2 rounded-xl border-2 border-dashed bg-muted/40 p-4 leading-normal">
                             Attach submission
-                            <ValidatedInput type="file" name="script" accept={formats.map((f) => `.${f}`).join(',')} />
+                            <ValidatedInput
+                                type="file"
+                                name="script"
+                                accept={formats.map((f) => `.${f}`).join(',')}
+                            />
                         </Label>
                         {groupWork && (
                             <Label className="grid min-w-0 gap-2 leading-normal">
@@ -51,7 +55,17 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
                             {processing ? 'Submitting…' : 'Submit revision'}
                         </Button>
                         <p role="status">
-                            {wasSuccessful && <>Revision received. <a className="text-primary underline underline-offset-4" href="#submissions">View submission history</a></>}
+                            {wasSuccessful && (
+                                <>
+                                    Revision received.{' '}
+                                    <a
+                                        className="text-primary underline underline-offset-4"
+                                        href="#submissions"
+                                    >
+                                        View submission history
+                                    </a>
+                                </>
+                            )}
                         </p>
                     </FormFeedback>
                 )}

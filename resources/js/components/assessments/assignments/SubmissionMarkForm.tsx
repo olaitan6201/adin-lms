@@ -2,7 +2,8 @@ import { NativeSelectOption } from '@/components/ui/native-select';
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
-import { Check, Field, Post } from '@/components/assessments/Fields';
+import { Post } from '../Post';
+import { Check, Field } from '../Fields';
 
 export type Rubric = {
     guide?: string;

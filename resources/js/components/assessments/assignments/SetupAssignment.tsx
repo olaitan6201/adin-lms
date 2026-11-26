@@ -1,7 +1,8 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
-import { Check, Field, Post } from '@/components/assessments/Fields';
+import { Post } from '../Post';
+import { Check, Field } from '../Fields';
 
 export function SetupAssignment({ id }: { id: string }) {
     return (
@@ -21,7 +22,13 @@ export function SetupAssignment({ id }: { id: string }) {
             <Field label="Maximum file size in bytes" name="max_bytes" type="number" value="1048576" />
             <Label className="grid min-w-0 gap-2 leading-normal">
                 Accepted formats
-                <ValidatedSelect className="h-auto min-h-32 w-full" multiple name="formats[]" defaultValue={['pdf', 'txt']} required>
+                <ValidatedSelect
+                    className="h-auto min-h-32 w-full"
+                    multiple
+                    name="formats[]"
+                    defaultValue={['pdf', 'txt']}
+                    required
+                >
                     {[
                         'txt',
                         'pdf',

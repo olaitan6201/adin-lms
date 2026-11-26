@@ -51,6 +51,7 @@ export function LiveRoom({ room }: { room: Room }) {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 border-t border-white/10 px-4 py-2.5">
                     <button
+                        disabled
                         type="button"
                         className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
                     >
@@ -58,6 +59,7 @@ export function LiveRoom({ room }: { room: Room }) {
                         <span>Mute</span>
                     </button>
                     <button
+                        disabled
                         type="button"
                         className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
                     >
@@ -65,6 +67,7 @@ export function LiveRoom({ room }: { room: Room }) {
                         <span>Share screen</span>
                     </button>
                     <button
+                        disabled
                         type="button"
                         className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
                     >
@@ -72,6 +75,7 @@ export function LiveRoom({ room }: { room: Room }) {
                         <span>Questions</span>
                     </button>
                     <button
+                        disabled
                         type="button"
                         className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
                     >
@@ -79,7 +83,7 @@ export function LiveRoom({ room }: { room: Room }) {
                         <span>Record</span>
                     </button>
                     <span className="ml-auto text-[11.5px] text-ink-400">
-                        Attendance and participation are captured automatically
+                        Classroom preview only. Microphone, recording and screen sharing are unavailable.
                     </span>
                 </div>
             </div>
@@ -88,8 +92,16 @@ export function LiveRoom({ room }: { room: Room }) {
 }
 
 export function Recordings({ archive }: { archive: Archive }) {
-    const { notify } = useWorkspaceOverlays();
+    const { openDrawer } = useWorkspaceOverlays();
     const recordings = archive.recordings;
+
+    function showDetails(recording: Archive['recordings'][number]) {
+        openDrawer({
+            title: recording.title,
+            description: `${recording.course} · ${recording.date} · ${recording.length}`,
+            content: <p>No playback file or transcript is included with this sample record.</p>,
+        });
+    }
 
     const rows = recordings.map((recording) => [
         <div key="recording" className="flex items-center gap-2.5">
@@ -110,11 +122,8 @@ export function Recordings({ archive }: { archive: Archive }) {
             {recording.views}
         </span>,
         <div key="actions" className="flex justify-end gap-1.5">
-            <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Transcript opened')}>
-                Transcript
-            </button>
-            <button type="button" className="btn btn-outline btn-sm" onClick={() => notify(archive.attachmentMessage)}>
-                Attach
+            <button type="button" className="btn btn-outline btn-sm" onClick={() => showDetails(recording)}>
+                View recording record
             </button>
         </div>,
     ]);

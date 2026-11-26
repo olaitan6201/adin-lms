@@ -1,5 +1,4 @@
 import type { ClassSession } from '@/types/learning/study';
-import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
@@ -14,7 +13,6 @@ export function SessionTable({
     openDetails: (sessionId: string) => void;
     openSchedule: () => void;
 }) {
-    const { notify } = useWorkspaceOverlays();
     const rows = liveClasses.map((session) => [
         <div key="session" className="min-w-0">
             <p className="truncate font-medium text-ink-800">{session.title}</p>
@@ -39,8 +37,8 @@ export function SessionTable({
         </Badge>,
         <div key="actions" className="flex justify-end gap-1.5">
             {session.state === 'completed' ? (
-                <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Recording opened')}>
-                    Recording
+                <button type="button" className="btn btn-outline btn-sm" onClick={() => openDetails(session.id)}>
+                    Completed session
                 </button>
             ) : (
                 <button type="button" className="btn btn-outline btn-sm" onClick={() => openDetails(session.id)}>

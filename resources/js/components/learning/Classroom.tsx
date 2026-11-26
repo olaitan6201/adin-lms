@@ -18,7 +18,7 @@ export default function Classroom({
     archive: Archive;
 }) {
     const [sessions, setSessions] = useState(liveClasses);
-    const { notify } = useWorkspaceOverlays();
+    const { notify, openDrawer } = useWorkspaceOverlays();
     const [panel, setPanel] = useState<{
         selection: ClassroomSelection;
         open: boolean;
@@ -30,6 +30,20 @@ export default function Classroom({
     const openDetails = (sessionId: string) => setPanel({ selection: { kind: 'details', sessionId }, open: true });
     const openSchedule = () => setPanel({ selection: { kind: 'schedule' }, open: true });
     const session = selection.kind === 'details' ? sessions.find((row) => row.id === selection.sessionId) : undefined;
+
+    function showAttendance() {
+        openDrawer({
+            title: 'Attendance report',
+            description: 'Sample attendance by classroom session',
+            content: (
+                <ul>
+                    {sessions.map((row) => (
+                        <li key={row.id}>{row.course} · {row.title}: {row.attendees} joined</li>
+                    ))}
+                </ul>
+            ),
+        });
+    }
 
     function closeSession() {
         setPanel({ selection, open: false });
@@ -69,7 +83,7 @@ export default function Classroom({
                 description="Schedule live classes, announce times and links, and capture attendance and participation alongside asynchronous material."
                 actions={
                     <>
-                        <Action icon="chart" variant="outline">
+                        <Action icon="chart" variant="outline" onClick={showAttendance}>
                             Attendance report
                         </Action>
                         <Action icon="plus" variant="primary" onClick={openSchedule}>

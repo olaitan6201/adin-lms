@@ -6,7 +6,9 @@ import { Table } from '@/components/ui/data-display/Table';
 
 export function PublishedResults({
     results,
+    onIssue,
 }: {
+    onIssue: () => void;
     results: {
         course: string;
         title: string;
@@ -34,7 +36,13 @@ export function PublishedResults({
             title="Published results"
             subtitle="Only results released by the Examinations Office are shown"
             actions={
-                <Action icon="help" variant="outline" size="sm">
+                <Action
+                    icon="help"
+                    variant="outline"
+                    size="sm"
+                    onClick={onIssue}
+                    disabled={!results.length}
+                >
                     Report an issue
                 </Action>
             }

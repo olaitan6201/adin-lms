@@ -15,7 +15,7 @@ export function RecoverySettings({ backups, metrics, drillDate, runBackup, desk 
         desk.show({
             title: 'Restore',
             submit: 'Schedule restore',
-            message: 'Restore scheduled',
+            previewNotice: 'Restore preview complete. No restore was scheduled.',
             body: <Field label="Backup" options={backups.map(([name, when]) => `${name} · ${when}`)} />,
         });
     }

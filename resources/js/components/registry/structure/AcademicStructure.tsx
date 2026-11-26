@@ -1,4 +1,5 @@
-import { useDesk, Register, Note, Field } from '@/components/registry/Desk';
+import { useDesk, Register, Field } from '@/components/registry/Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { Details, status } from '@/components/registry/Records';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
@@ -29,7 +30,7 @@ export function AcademicStructure({
             title: 'Import structure',
             body: <Field label="Structure file" type="file" required />,
             submit: 'Import',
-            message: 'Structure file selected for review',
+            previewNotice: 'Structure file selected for review',
         });
     }
 

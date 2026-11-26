@@ -22,7 +22,7 @@ export function StudentRegister({
             title: 'Import roster',
             body: <Field label="Roster file" type="file" required />,
             submit: 'Import',
-            message: 'Roster file selected for review',
+            previewNotice: 'Roster file selected for review',
         });
     }
 

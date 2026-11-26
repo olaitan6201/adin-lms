@@ -4,8 +4,16 @@ import { Icon } from '@/components/icons/Icon';
 import { Popover } from 'radix-ui';
 import { useEffect, useState } from 'react';
 import type { RoleKey } from './navigation';
+import { useWorkspaceOverlays } from './WorkspaceOverlays';
+
+const textSizes = [
+    { value: 'md', label: 'Default' },
+    { value: 'lg', label: 'Large' },
+    { value: 'xl', label: 'Larger' },
+] as const;
 
 export function AccessibilityOptions({ role }: { role: RoleKey }) {
+    const { notify } = useWorkspaceOverlays();
     const [scale, setScale] = useState(() => {
         try {
             return localStorage.getItem('workspace-text-size') || 'md';
@@ -25,6 +33,12 @@ export function AccessibilityOptions({ role }: { role: RoleKey }) {
             delete document.documentElement.dataset.fontScale;
         };
     }, [scale]);
+
+    function selectSize(size: (typeof textSizes)[number]) {
+        setScale(size.value);
+        notify(`Text size set to ${size.label.toLowerCase()}`);
+    }
+
     return (
         <Popover.Root>
             <Popover.Trigger className="btn btn-ghost btn-sm" aria-label="Accessibility options">
@@ -40,15 +54,15 @@ export function AccessibilityOptions({ role }: { role: RoleKey }) {
                 >
                     <strong>Text size</strong>
                     <div>
-                        {['md', 'lg', 'xl'].map((size, i) => (
+                        {textSizes.map(size => (
                             <button
                                 type="button"
-                                key={size}
+                                key={size.value}
                                 className="flex-1"
-                                onClick={() => setScale(size)}
-                                aria-pressed={scale === size}
+                                onClick={() => selectSize(size)}
+                                aria-pressed={scale === size.value}
                             >
-                                {['Default', 'Large', 'Larger'][i]}
+                                {size.label}
                             </button>
                         ))}
                     </div>

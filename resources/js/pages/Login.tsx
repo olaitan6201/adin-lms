@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
+import { Info, TriangleAlert } from 'lucide-react';
 import { useRef, useState, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
 import { AccountTask } from '../components/identity/AccountTask';
@@ -18,7 +19,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
     const [submittedIdentifier, setSubmittedIdentifier] = useState('');
     return (
         <AccountTask
-            context="Institutional sign in"
+            context="Sign in"
             title="Sign in to your learning record"
             introduction="Use the identifier issued to you. The portal accepts a matric number, staff ID or institutional email address."
         >
@@ -59,6 +60,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 label="Email, matric number or staff ID"
                                 placeholder="AOU/2023/0412"
                                 name="email"
+                                aria-describedby="identifier-hint"
                                 autoComplete="username"
                                 autoCapitalize="none"
                                 spellCheck={false}
@@ -66,6 +68,9 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 announceError={false}
                                 required
                             />
+                            <p id="identifier-hint" className="-mt-3 text-xs leading-relaxed text-ink-500">
+                                The identifier shown on your registration or staff card.
+                            </p>
                             <PortalField
                                 ref={password}
                                 label="Password"
@@ -77,23 +82,25 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 announceError={false}
                                 required
                             />
+                            <Link className="justify-self-end text-[12.5px] font-medium text-brand-700 hover:underline" href="/forgot-password">
+                                Forgot your password?
+                            </Link>
                             <SubmitButton processing={processing}>Sign in</SubmitButton>
                         </>
                     )}
                 </Form>
-                <Link
-                    className="mt-4 inline-block text-[13px] font-medium text-brand-700 hover:underline"
-                    href="/forgot-password"
-                >
-                    Forgot your password?
-                </Link>
             </section>
-            <p className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-[13px] text-sky-900">
+            <p className="mt-2 flex items-start gap-2.5 rounded-xl border border-sky-200 bg-sky-50/70 px-3.5 py-3 text-[13px] leading-relaxed text-sky-900">
+                <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
                 If you need an institutional account, contact your university’s ICT office.
             </p>
-            <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+            <p className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-3 text-[13px] leading-relaxed text-amber-900">
+                <TriangleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
                 Some roles require an authenticator code after the password check. Have your authenticator app ready.
             </p>
+            <div className="mt-4 border-t border-ink-100 pt-5">
+                <Link className="text-[12.5px] font-medium text-ink-600 hover:text-ink-900" href="/">Return to the learning portal</Link>
+            </div>
         </AccountTask>
     );
 }

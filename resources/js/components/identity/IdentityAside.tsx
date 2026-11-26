@@ -43,7 +43,7 @@ export function IdentityAside({ recovery }: { recovery: boolean }) {
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-300">
                     {recovery
                         ? 'Use the email address on your university account to request a password reset.'
-                        : 'Course delivery, assessment and reporting share the same institutional identity.'}
+                        : 'Course delivery, computer based testing, grading and reporting share the same identity and the same register, so a result is traceable to the assessment that produced it.'}
                 </p>
                 <ul className="mt-10 space-y-4">
                     {(recovery ? recover : signIn).map(([Icon, title, text]) => (

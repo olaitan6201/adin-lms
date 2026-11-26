@@ -116,7 +116,7 @@ export function QuestionPicker({ item, maximum, questions, topics }: Props) {
                                 </Label>
                             </div>
                         ))}
-                        <div className="flex flex-wrap gap-3">
+                        <div className="assessment-slot-actions">
                             <Button ref={addSlot} variant="outline" type="button" disabled={!topics.length || draws.length >= 200} onClick={() => setDraws([...draws, '1'])}>
                                 Add random slot
                             </Button>

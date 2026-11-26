@@ -1,3 +1,4 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -27,13 +28,14 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
     }, {});
 
     return (
-        <main className="mx-auto w-full min-w-0 wrap-anywhere max-w-4xl space-y-6 px-5 py-10">
+        <AssessmentWorkspace>
             <Head title="Question bank" />
             <nav aria-label="Assessment navigation" className="flex flex-wrap gap-5 underline">
                 <Link href={`/courses/${offering}/assessments`}>Assessments</Link>
                 <Link href={base} aria-current="page">
                     Question bank
                 </Link>
+                <a href="#author-title">Author a question</a>
             </nav>
             <header>
                 <p className="text-sm font-medium text-muted-foreground">Course assessment authoring</p>
@@ -110,6 +112,6 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                 </h2>
                 <QuestionForm action={base} submitLabel="Create question" cancelHref={base} />
             </section>
-        </main>
+        </AssessmentWorkspace>
     );
 }

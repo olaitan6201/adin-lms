@@ -1,3 +1,4 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedSelect } from '../../assessment/ValidatedFields';
@@ -55,7 +56,7 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
     const pending = grade.moderation_status === 'pending';
     const approved = grade.moderation_status === 'approved';
     return (
-        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
+        <AssessmentWorkspace>
             <Head title="Moderation evidence" />
             <Link className="text-primary underline underline-offset-4" href={desk}>Back to assessments</Link>
             <header className="space-y-3 border-b pb-5">
@@ -134,9 +135,9 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
             )}
             <section className="min-w-0 space-y-3">
                 <h2 className="text-xl font-semibold tracking-tight">Revision history</h2>
-                <ol>
+                <ol className="ml-2 space-y-4 border-l pl-5">
                     {history.map((e, i) => (
-                        <li key={i}>
+                        <li key={i} className="relative before:absolute before:top-1.5 before:-left-[26px] before:size-2.5 before:rounded-full before:bg-primary">
                             <strong>{eventLabels[e.action] ?? e.action}</strong> · {e.actor ?? 'System'} ·{' '}
                             <time dateTime={e.at}>{new Date(e.at).toLocaleString()}</time>
                             {e.reason && <p>{e.reason}</p>}
@@ -144,6 +145,6 @@ export default function Moderation({ desk, learner, grade, superseded, policy, i
                     ))}
                 </ol>
             </section>
-        </main>
+        </AssessmentWorkspace>
     );
 }

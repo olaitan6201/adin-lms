@@ -1,3 +1,4 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { ValidatedInput } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
@@ -35,7 +36,7 @@ export default function MarkPaper({
     history: Revision[];
 }) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
+        <AssessmentWorkspace>
             <Head title="Review examination" />
             <header className="space-y-3 border-b pb-5">
                 <p className="text-sm font-medium text-muted-foreground">Marking workspace</p>
@@ -45,10 +46,12 @@ export default function MarkPaper({
             <Post key={revision} url={`/attempts/${attempt}/review`} button="Record final mark">
                 <input type="hidden" name="base_revision" value={revision} />
                 {questions.map((q, i) => (
-                    <article key={q.id} className="space-y-2 border-t py-4">
-                        <h2 className="text-xl font-semibold tracking-tight">
-                            Question {i + 1} · {q.prompt}
-                        </h2>
+                    <article key={q.id} className="space-y-3 rounded-xl border p-4">
+                        <p className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
+                            <span className="badge bg-muted">Question {i + 1}</span>
+                            {q.objective ? 'Automatic marking' : 'Manual marking'} · {q.possible} points
+                        </p>
+                        <h2 className="font-semibold">{q.prompt}</h2>
                         <pre className="whitespace-pre-wrap rounded-md bg-muted p-3">{q.answer || 'No response submitted.'}</pre>
                         {q.objective ? (
                             <p>
@@ -92,6 +95,6 @@ export default function MarkPaper({
                     ))}
                 </section>
             )}
-        </main>
+        </AssessmentWorkspace>
     );
 }

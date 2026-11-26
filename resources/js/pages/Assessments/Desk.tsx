@@ -1,3 +1,4 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { CourseDisclosure } from '@/components/CourseDisclosure';
 import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
 import { Head, Link } from '@inertiajs/react';
@@ -25,7 +26,7 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
     const who = (id: string) => roster.find((m) => m.id === id)?.name;
 
     return (
-        <main className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10">
+        <AssessmentWorkspace>
             <Head title="Assessments" />
             <header className="space-y-3 border-b pb-5">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -71,6 +72,19 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                     />
                 </CourseDisclosure>
             )}
+            {items.length > 0 && (
+                <section aria-label="Assessment weights">
+                    <h2 className="font-semibold">Assessment weights</h2>
+                    <ul className="divide-y">
+                        {items.map(item => (
+                            <li key={item.id} className="flex items-center justify-between gap-4 py-2">
+                                <a className="text-primary underline underline-offset-4" href={`#item-${item.id}`}>{item.title}</a>
+                                <span className="shrink-0 font-mono text-xs">{item.weight_percent}%</span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
             {items.map((i) => (
                 <AssessmentItemPanel
                     key={i.id}
@@ -90,6 +104,6 @@ export default function Desk({ offering, book, policy, items, grades, teacher, o
                 </CourseDisclosure>
             )}
             <ResultRevisions grades={grades} teacher={teacher} officer={officer} who={who} />
-        </main>
+        </AssessmentWorkspace>
     );
 }

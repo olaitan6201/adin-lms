@@ -1,3 +1,4 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { Head, Link } from '@inertiajs/react';
 import { QuestionPicker } from '../../assessment/QuestionPicker';
 import type { BankQuestion } from '../../assessment/contracts';
@@ -16,7 +17,7 @@ type Props = {
 
 export default function SelectQuestions({ item, title, maximum, questions, bank, topics }: Props) {
     return (
-        <main className="mx-auto w-full min-w-0 wrap-anywhere max-w-4xl space-y-6 px-5 py-10">
+        <AssessmentWorkspace>
             <Head title="Select questions" />
             <nav aria-label="Assessment navigation" className="flex flex-wrap gap-5 underline">
                 <Link className="text-primary underline underline-offset-4" href={`/courses/${bank.split('/')[2]}/assessments`}>Assessments</Link>
@@ -27,7 +28,19 @@ export default function SelectQuestions({ item, title, maximum, questions, bank,
                 <h1 className="text-3xl font-semibold tracking-tight">Select bank questions</h1>
                 <p>Choose fixed revisions or draw unused questions from a topic. The total must equal {maximum}.</p>
             </header>
+            <dl className="grid grid-cols-2 gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-3">
+                {[
+                    ['Available revisions', questions.length],
+                    ['Draw topics', topics.length],
+                    ['Required points', maximum],
+                ].map(([label, value]) => (
+                    <div key={label}>
+                        <dt className="text-xs text-muted-foreground">{label}</dt>
+                        <dd className="mt-1 font-mono text-lg">{value}</dd>
+                    </div>
+                ))}
+            </dl>
             <QuestionPicker item={item} maximum={maximum} questions={questions} topics={topics} />
-        </main>
+        </AssessmentWorkspace>
     );
 }

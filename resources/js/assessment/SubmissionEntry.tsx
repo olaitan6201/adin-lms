@@ -28,7 +28,7 @@ export function SubmissionEntry({ url, formats, groupWork, groups }: Props) {
                                 <ValidatedTextarea name="body" />
                             </Label>
                         )}
-                        <Label className="grid min-w-0 gap-2 leading-normal">
+                        <Label className="grid min-w-0 gap-2 rounded-xl border-2 border-dashed bg-muted/40 p-4 leading-normal">
                             Attach submission
                             <ValidatedInput type="file" name="script" accept={formats.map((f) => `.${f}`).join(',')} />
                         </Label>

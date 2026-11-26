@@ -1,7 +1,9 @@
+import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { Head } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 
 import { FinalReview } from '../../assessment/FinalReview';
+import { PaperNavigator } from '../../assessment/PaperNavigator';
 import { Answer, type Question } from '../../assessment/Answer';
 import type { AttemptState } from '../../assessment/contracts';
 import { IntegrityNotice, type IntegrityPolicy } from '../../assessment/IntegrityNotice';
@@ -25,8 +27,7 @@ export default function Paper({ attempt, questions, title, integrity }: Props) {
     const active = attempt.state === 'active';
 
     return (
-        <main
-            className="mx-auto w-full min-w-0 max-w-4xl space-y-6 px-4 py-6 wrap-anywhere sm:px-6 lg:py-10"
+        <AssessmentWorkspace
             onCopy={(event) => {
                 if (active && integrity.prevent_copy) event.preventDefault();
             }}
@@ -35,26 +36,28 @@ export default function Paper({ attempt, questions, title, integrity }: Props) {
             <header className="space-y-2 border-b pb-5">
                 <p className="text-sm font-medium text-muted-foreground">Examination paper</p>
                 <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-                <p>
-                    Status: {attempt.state} · Deadline: {new Date(attempt.expires_at).toLocaleString()}
-                </p>
+                <p>Status: {attempt.state}</p>
                 <p>Answers save online. Wait for Saved before leaving.</p>
             </header>
-            <IntegrityNotice policy={integrity} active={active} attempt={attempt.id} />
-            {questions.map((q) => (
-                <Answer
-                    key={q.id}
-                    question={q}
-                    url={`/attempts/${attempt.id}/answers/${q.id}`}
-                    active={active}
-                    onProgress={change}
-                />
-            ))}
+            <div className="assessment-split">
+                <div className="space-y-5">
+                    <PaperNavigator active={active} expires={attempt.expires_at} questions={questions} progress={progress} />
+                    <IntegrityNotice policy={integrity} active={active} attempt={attempt.id} />
+                </div>
+                <div className="space-y-5">
+                    {questions.map((q, i) => (
+                        <section key={q.id} id={`question-${q.id}`} tabIndex={-1} className="assessment-panel scroll-mt-6">
+                            <h2 className="font-semibold">Question {i + 1} · {q.kind.replaceAll('_', ' ')}</h2>
+                            <Answer question={q} url={`/attempts/${attempt.id}/answers/${q.id}`} active={active} onProgress={change} />
+                        </section>
+                    ))}
+                </div>
+            </div>
             {active && (
                 <FinalReview attempt={attempt.id} expires={attempt.expires_at} total={questions.length}
                     pending={questions.some(({ id }) => !progress[id] || progress[id].dirty)}
                     answered={questions.filter(({ id }) => progress[id]?.answered).length} />
             )}
-        </main>
+        </AssessmentWorkspace>
     );
 }

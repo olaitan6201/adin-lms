@@ -5,7 +5,6 @@ import { Icon } from '@/components/icons/Icon';
 import { StatTile } from '@/components/ui/data-display/StatTile';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Sparkline } from './Charts';
-import '../../../css/layouts/overview.css';
 
 type Tile = { label: string; value: string; delta?: string; deltaLabel: string; icon: string; spark?: Parameters<typeof Sparkline>[0] };
 

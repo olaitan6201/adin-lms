@@ -17,7 +17,6 @@
     .workspace-shell *, .ws-detail-drawer, .ws-confirm { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 .ws-command-palette[data-slot="dialog-content"] {
-    --radius: 0.5rem;
     top: 12vh;
     translate: -50% 0;
     width: min(36rem, calc(100vw - 2rem));

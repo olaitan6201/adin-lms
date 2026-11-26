@@ -1,11 +1,3 @@
-.learning-surface {
-    --color-rose-500: #f43f5e;
-    --color-rose-600: #e11d48;
-    --color-amber-500: #f59e0b;
-    --color-amber-600: #d97706;
-    --color-sky-500: #0ea5e9;
-}
-
 .learning-note-info {
     background-color: rgb(from var(--color-sky-50) r g b / 70%);
 }
@@ -18,8 +10,6 @@
     background-color: rgb(255 255 255 / 5%);
 }
 
-.learning-surface .tbl,
-.learning-surface .btn-sm,
 .learning-tabs [role="tab"] {
     line-height: 1.25rem;
 }

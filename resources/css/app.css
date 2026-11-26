@@ -7,6 +7,7 @@
 @import './workspace-foundation.css';
 @import './layouts/portal.css';
 @import './layouts/workspace.css';
+@import './layouts/overview.css';
 @import './learning/study.css';
 @import './learning/course.css';
 @import './assessments/desk.css';

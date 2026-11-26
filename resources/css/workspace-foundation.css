@@ -35,25 +35,56 @@
     font-display: swap;
 }
 
-body:has(.workspace-shell, #access-content) {
-    --font-sans: 'Academic Outfit', ui-sans-serif, sans-serif;
-    --font-mono: 'Academic JetBrains Mono', ui-monospace, monospace;
-    --text-xs--line-height: 1rem;
-    --text-sm--line-height: 1.25rem;
-    font-family: var(--font-sans);
-}
-
-@layer components {
-    :where(.workspace-shell, .auth-shell) :is(.tbl, .btn) {
-        line-height: 1.25rem;
+/* Fixture portals mount on body. Live account screens keep only their local theme. */
+@scope (body:has(.workspace-shell, #access-content), .portal-bare .auth-shell) {
+    :scope {
+        --radius: 0.5rem;
+        --color-sky-50: #f0f9ff;
+        --color-sky-100: #e0f2fe;
+        --color-sky-200: #bae6fd;
+        --color-sky-500: #0ea5e9;
+        --color-sky-700: #0369a1;
+        --color-sky-800: #075985;
+        --color-sky-900: #0c4a6e;
+        --color-amber-50: #fffbeb;
+        --color-amber-100: #fef3c7;
+        --color-amber-200: #fde68a;
+        --color-amber-500: #f59e0b;
+        --color-amber-400: #fbbf24;
+        --color-amber-600: #d97706;
+        --color-amber-700: #b45309;
+        --color-amber-800: #92400e;
+        --color-amber-900: #78350f;
+        --color-rose-50: #fff1f2;
+        --color-rose-100: #ffe4e6;
+        --color-rose-200: #fecdd3;
+        --color-rose-500: #f43f5e;
+        --color-rose-600: #e11d48;
+        --color-rose-700: #be123c;
+        --color-rose-800: #9f1239;
+        --color-rose-900: #881337;
+        --academic-control-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-sm: var(--academic-control-shadow);
     }
-    :where(.workspace-shell, .auth-shell) .btn-primary {
-        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
-    }
-}
 
-@layer utilities {
-    :is(.workspace-shell, .auth-shell, .ws-mobile-rail) {
+    :scope:where(body) {
+        --font-sans: 'Academic Outfit', ui-sans-serif, sans-serif;
+        --font-mono: 'Academic JetBrains Mono', ui-monospace, monospace;
+        --text-xs--line-height: 1rem;
+        --text-sm--line-height: 1.25rem;
+        font-family: var(--font-sans);
+    }
+
+    @layer components {
+        :is(.tbl, .btn) {
+            line-height: 1.25rem;
+        }
+        .btn-primary {
+            box-shadow: var(--academic-control-shadow);
+        }
+    }
+
+    @layer utilities {
         .bg-white\/10 { background-color: rgb(255 255 255 / 10%); }
         .bg-white\/85 { background-color: rgb(255 255 255 / 85%); }
         .bg-ink-50\/50 { background-color: rgb(243 246 249 / 50%); }

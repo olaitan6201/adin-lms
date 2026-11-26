@@ -1,7 +1,6 @@
 .assessment-view .tbl thead th,
 .assessment-view .tbl td p,
-.assessment-view .section-count,
-.assessment-view .btn-sm {
+.assessment-view .section-count {
     line-height: 1.25rem;
 }
 
@@ -41,10 +40,4 @@
 .assessment-view .attendance-distribution {
     --color-emerald-500: var(--color-brand-500);
     --color-blue-500: #3b82f6;
-    --color-rose-500: #f43f5e;
-    --color-amber-800: #92400e;
-}
-
-.assessment-view {
-    --color-amber-400: #fbbf24;
 }

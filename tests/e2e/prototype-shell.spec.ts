@@ -24,4 +24,15 @@ test('the portal uses the prototype canvas, bundled type and responsive rail', a
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(info.project.use.viewport!.width);
     await page.screenshot({ path: info.outputPath('dashboard.png') });
+    if (info.project.name === 'phone') await page.getByRole('button', { name: 'Menu', exact: true }).press('Enter');
+    const install = page.getByRole('button', { name: 'Install as an app' });
+    const captured = await page.evaluate(() => !window.dispatchEvent(Object.assign(
+        new Event('beforeinstallprompt', { cancelable: true }),
+        { prompt: async () => {}, userChoice: Promise.resolve({ outcome: 'dismissed' }) },
+    )));
+    expect(captured).toBe(true);
+    await install.press('Enter');
+    await expect(page.getByText('Installation cancelled.', { exact: true })).toBeVisible();
+    await install.press('Enter');
+    await expect(page.getByText(/choose Install app or Add to Home Screen/)).toBeVisible();
 });

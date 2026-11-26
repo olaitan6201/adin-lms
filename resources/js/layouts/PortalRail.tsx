@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ChevronRight, LogOut, ShieldCheck } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { InstallPortal } from './InstallPortal';
 import { SidebarNavigation, type Destination } from './SidebarNavigation';
 
 export type PortalBrand = { institution: string; logoFull: string; logoWhite: string };
@@ -26,7 +27,8 @@ export function PortalRail({ branding, signedIn, account, academicLinks, path, c
         </Link>}
         <SidebarNavigation {...{ signedIn, academicLinks, path, onCurrentPage }} />
         {signedIn && <footer className="portal-rail-footer">
-            <div><ShieldCheck size={16} aria-hidden="true" /><span>Protected session<small>Institutional learning portal</small></span></div>
+            <div><ShieldCheck size={16} aria-hidden="true" /><span>Protected session<small>MFA enforced for privileged roles</small></span></div>
+            <InstallPortal />
             <Link href="/logout" as="button" method="post" aria-label="Sign out"><LogOut size={16} aria-hidden="true" />Sign out of this session</Link>
         </footer>}
     </>;

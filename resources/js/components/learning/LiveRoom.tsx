@@ -28,16 +28,16 @@ export function LiveRoom({ room }: { room: Room }) {
                         </div>
                     </div>
                     <div className="flex flex-col gap-3">
-                        <div className="rounded-lg bg-white/5 p-3">
+                        <div className="learning-room-panel rounded-lg p-3">
                             <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">Questions</p>
                             <ul className="mt-2 space-y-2">
-                                <li className="rounded-md bg-white/5 p-2 text-[12px] leading-relaxed text-ink-200">{room.dividendQuestion}</li>
-                                <li className="rounded-md bg-white/5 p-2 text-[12px] leading-relaxed text-ink-200">
+                                <li className="learning-room-panel rounded-md p-2 text-[12px] leading-relaxed text-ink-200">{room.dividendQuestion}</li>
+                                <li className="learning-room-panel rounded-md p-2 text-[12px] leading-relaxed text-ink-200">
                                     {room.eliminationQuestion}
                                 </li>
                             </ul>
                         </div>
-                        <div className="rounded-lg bg-white/5 p-3">
+                        <div className="learning-room-panel rounded-lg p-3">
                             <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">Present</p>
                             <p className="mt-1 text-lg font-semibold text-white tnum">{room.joined}</p>
                             <p className="mt-0.5 text-[11.5px] text-ink-400">{room.enrolled}</p>

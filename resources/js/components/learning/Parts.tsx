@@ -19,7 +19,7 @@ export function Note({ children, tone }: { children: ReactNode; tone: string }) 
     const warning = tone === 'amber';
     return (
         <aside
-            className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-[13px] leading-relaxed ${warning ? 'border-amber-200 bg-amber-50/70 text-amber-900' : 'border-sky-200 bg-sky-50/70 text-sky-900'}`}
+            className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-[13px] leading-relaxed ${warning ? 'learning-note-warning border-amber-200 text-amber-900' : 'learning-note-info border-sky-200 text-sky-900'}`}
         >
             <Icon name={warning ? 'alert' : 'info'} className="mt-0.5 h-4 w-4 shrink-0" />
             <span>{children}</span>

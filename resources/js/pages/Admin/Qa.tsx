@@ -25,7 +25,7 @@ export default function Qa() {
     }
 
     function download() {
-        exportRecords('compliance-report', [qaSummary, ...qaChecks, ...qaFindings, ...queue]);
+        exportRecords('compliance-report', [{ ...qaSummary, lastRun }, ...qaChecks, ...qaFindings, ...queue]);
     }
 
     function openReview() {

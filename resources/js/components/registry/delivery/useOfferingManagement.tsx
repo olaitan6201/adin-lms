@@ -42,13 +42,7 @@ export function useOfferingManagement({
             subtitle: `${offering.term.replace('S1', 'First Semester')} · ${offering.mode}`,
             submit: 'Save offering',
             message: 'Offering saved',
-            body: (
-                <OfferingSettings
-                    offering={offering}
-                    {...{ staff, previousSessions, unpublish }}
-                    copyStructure={() => desk.notify('Structure copied: modules and resources only')}
-                />
-            ),
+            body: <OfferingSettings offering={offering} {...{ staff, previousSessions, unpublish }} />,
             save: (data) =>
                 updateOffering(offering.id, {
                     instructor: val(data, 'Lead instructor'),

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Offering } from '@/types/registry/delivery';
 import { Field } from '@/components/registry/Desk';
 import { Details, status } from '@/components/registry/Records';
@@ -7,15 +8,15 @@ export function OfferingSettings({
     offering,
     staff,
     previousSessions,
-    copyStructure,
     unpublish,
 }: {
     offering: Offering;
     staff: { role: string; name: string }[];
     previousSessions: string[];
-    copyStructure: () => void;
     unpublish: (record: Offering) => void;
 }) {
+    const [source, selectSource] = useState(previousSessions[0] ?? '');
+
     return (
         <>
             <Card title="Instructor allocation">
@@ -47,19 +48,25 @@ export function OfferingSettings({
                 </div>
             </Card>
             <Card title="Reusable structure" subtitle="Copy a previous session without grades or registrations">
-                <select className="select" aria-label="Previous session">
+                <select
+                    className="select"
+                    aria-label="Previous session"
+                    value={source}
+                    onChange={(event) => selectSource(event.target.value)}
+                >
                     {previousSessions.map((term) => (
-                        <option key={term}>
+                        <option key={term} value={term}>
                             {offering.code} · {term}
                         </option>
                     ))}
                 </select>
-                <Action size="sm" onClick={copyStructure}>
+                <Action size="sm" disabled>
                     Copy structure
                 </Action>
                 <p className="mt-2 text-xs">
-                    Copies weekly modules, resource links and assessment shells. Grades, submissions and
-                    registrations are never copied.
+                    {source
+                        ? `No reusable structure is available for ${offering.code} · ${source}.`
+                        : 'No previous session is available.'}
                 </p>
             </Card>
             <Card title="Publication">

@@ -72,7 +72,17 @@ export function DeliveryRegister({
             {tab === 0 && (
                 <>
                     <DeliveryPipeline {...{ stages, filter, setFilter, list, offerings }} />
-                    <OfferingList {...{ list, filter, offeringTotal, setTab, manage, unpublish, add }} />
+                    <OfferingList
+                        {...{
+                            list,
+                            filter,
+                            offeringTotal: offeringTotal + list.length - initialOfferings.length,
+                            setTab,
+                            manage,
+                            unpublish,
+                            add,
+                        }}
+                    />
                 </>
             )}
             {tab === 1 && <RosterIngestion {...{ offerings, rosterMetrics, roster, remove }} />}

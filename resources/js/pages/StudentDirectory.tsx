@@ -6,6 +6,7 @@ import { PortalField } from '../components/PortalForm';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Form, Head, Link } from '@inertiajs/react';
 import { DeskHeading } from '../components/academics/DeskHeading';
+import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Student = {
     id: string;
@@ -26,32 +27,34 @@ type Props = {
 
 export default function StudentDirectory({ students, q, previous, next, manage, link, receipt }: Props) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Student records" />
             <DeskHeading area="Registrar" title="Student records">
                 Find a student to inspect their academic history, including withdrawn registrations and released
                 results.
             </DeskHeading>
-            <Form action="/students" method="get" className="grid max-w-xl gap-3">
+            <RegistryPanel title="Student directory" subtitle="Registrar profiles and registration status">
+            <Form action="/students" method="get" className="flex flex-wrap items-end gap-3 border-b border-ink-100 pb-4">
                 <label className="grid gap-2 text-sm font-medium">
                     Find by name, matric number or upstream ID{' '}
                     <Input name="q" defaultValue={q} />
                 </label>
                 <Button>Search</Button>
             </Form>
-            <ul className="divide-y">
+            <RegistryTable title="Matching students" columns={['Student', 'Matric number', 'Status']}>
                 {students.map((s) => (
-                    <li key={s.id} className="py-3">
+                    <tr key={s.id}><td>
                         <Link className="text-primary underline underline-offset-4" href={`/students/${s.id}/history`}>
                             {s.source_name || s.external_student_id}
                         </Link>
-                        {' · '}
-                        {s.matric_number || 'Awaiting matric number'} · {s.status || 'Awaiting profile'}
-                    </li>
+                        </td><td className="font-mono">{s.matric_number || 'Awaiting matric number'}</td>
+                        <td><span className="badge bg-ink-50 text-ink-700">{s.status || 'Awaiting profile'}</span></td>
+                    </tr>
                 ))}
-            </ul>
+            </RegistryTable>
             {!students.length && <p>No matching student records.</p>}
             {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
+            </RegistryPanel>
             {receipt && <p role="status">{receipt}</p>}
             {link && (
                 <Collapsible>
@@ -77,8 +80,7 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                 </Collapsible>
             )}
             {manage && (
-                <section className="min-w-0 space-y-3 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
-                    <h2 className="text-xl font-semibold tracking-tight">Reconcile registrar feeds</h2>
+                <RegistryPanel title="Reconcile registrar feeds">
                     <p>
                         Use an authorised upstream export. Corrections to official registration belong with the
                         registrar.
@@ -112,7 +114,7 @@ export default function StudentDirectory({ students, q, previous, next, manage, 
                             </CollapsibleContent>
                         </Collapsible>
                     ))}
-                </section>
+                </RegistryPanel>
             )}
         </main>
     );

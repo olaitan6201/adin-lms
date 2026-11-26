@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
+import { RegistryPanel } from '@/components/academics/RegistryPanel';
 import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
 
 export type Infrastructure = {
@@ -31,6 +32,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
 
     return (
         <section className="space-y-5" aria-label="Infrastructure">
+            <div className="grid items-start gap-5 xl:grid-cols-[3fr_2fr]">
             <InfrastructureReadings data={data} />
             <Card><CardContent><Form id="monitor-settings" className="min-w-0"
                 action="/operations/infrastructure" method="post">
@@ -70,7 +72,8 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                     </fieldset>
                 )}
             </Form></CardContent></Card>
-            <h2 className="text-xl font-semibold">Backup and restore evidence</h2>
+            </div>
+            <RegistryPanel title="Backup and restore evidence">
             <div aria-label="Backup runner outcome">
                 <h3 className="font-semibold">Latest backup job</h3>
                 <p>{data.backup.state === 'snapshot' ? 'Encrypted snapshot checksums verified' :
@@ -111,6 +114,7 @@ export default function InfrastructurePanel({ data }: { data: Infrastructure }) 
                     ))}
                 </ol>
             )}
+            </RegistryPanel>
         </section>
     );
 }

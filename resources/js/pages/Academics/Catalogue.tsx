@@ -7,6 +7,7 @@ import { CatalogueCourses } from '../../components/academics/CatalogueCourses';
 import { OutcomeCoverage } from '../../components/academics/OutcomeCoverage';
 import { OutcomeEditor } from '../../components/academics/OutcomeEditor';
 import { DeskHeading } from '../../components/academics/DeskHeading';
+import { RegistryPanel } from '@/components/academics/RegistryPanel';
 
 export default function Catalogue({
     edit,
@@ -28,7 +29,7 @@ export default function Catalogue({
     const draft = edit && version?.status === 'draft';
 
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Curriculum catalogue" />
             <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
@@ -36,13 +37,13 @@ export default function Catalogue({
             <DeskHeading area="Academic registry" title="Curriculum catalogue">
                 Select a programme version to inspect course requirements, academic levels and outcome coverage.
             </DeskHeading>
+            <RegistryPanel title="Programme versions" subtitle="Select a curriculum revision">
             <nav aria-label="Curriculum versions">
-                <h2 className="text-xl font-semibold">Programme versions</h2>
                 {versions.length ? (
-                    <ul>
+                    <ul className="flex flex-wrap gap-2">
                         {versions.map((v) => (
                             <li key={v.id}>
-                                <Link className="text-primary underline underline-offset-4" href={`${base}/${v.id}`}>
+                                <Link className={v.id === version?.id ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'} aria-current={v.id === version?.id ? 'page' : undefined} href={`${base}/${v.id}`}>
                                     {v.name} · v{v.version} · {v.status}
                                 </Link>
                             </li>
@@ -71,18 +72,20 @@ export default function Catalogue({
                     </CollapsibleContent>
                 </Collapsible>
             )}
+            </RegistryPanel>
             {version?.id && (
                 <>
-                    <h2 className="text-xl font-semibold">
-                        {version.framework_revision} · v{version.version} ({version.status})
-                    </h2>
+                    <RegistryPanel title="Course catalogue" subtitle={`${version.framework_revision} · v${version.version} (${version.status})`}>
                     {version.approved_at && (
                         <p className="break-words">
                             Approved {new Date(version.approved_at).toLocaleString()} by {approverName}
                         </p>
                     )}
                     <CatalogueCourses {...{ entries, levels, prerequisites, draft, path }} />
+                    </RegistryPanel>
+                    <RegistryPanel title="Outcome mapping" subtitle="Course outcomes and programme coverage">
                     <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
+                    </RegistryPanel>
                     {draft && (
                         <>
                             <OutcomeEditor {...{ entries, courseOutcomes, programmeOutcomes, mappings, path }} />

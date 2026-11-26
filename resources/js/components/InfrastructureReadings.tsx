@@ -12,13 +12,13 @@ export function InfrastructureReadings({ data }: { data: Infrastructure }) {
     ] as const;
 
     return (
-        <section aria-labelledby="readings-heading" className="grid gap-3">
-            <h2 id="readings-heading" className="text-xl font-semibold">Storage and performance</h2>
+        <section aria-labelledby="readings-heading" className="card grid min-w-0 gap-3 p-5">
+            <h2 id="readings-heading" className="card-title">Storage and performance</h2>
             <div className="flex flex-wrap items-center gap-2">
                 <p>Sampled <time dateTime={data.measured}>{new Date(data.measured).toLocaleString()}</time>.</p>
                 <Button asChild variant="outline"><Link href="/operations">Refresh readings</Link></Button>
             </div>
-            <Table aria-labelledby="readings-heading">
+            <Table className="tbl" aria-labelledby="readings-heading">
                 <TableHeader><TableRow><TableHead>Measure</TableHead><TableHead>Reading</TableHead></TableRow></TableHeader>
                 <TableBody>
                     {readings.map(([name, value, warning]) => (

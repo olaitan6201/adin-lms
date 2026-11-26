@@ -1,5 +1,6 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Card, CardContent } from '@/components/ui/card';
+import { RegistryPanel } from '@/components/academics/RegistryPanel';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 import { Button } from '@/components/ui/button';
 import { Form, Head } from '@inertiajs/react';
 
@@ -10,14 +11,13 @@ type ConsentProps = {
 
 export default function OperationsConsent({ granted, notice }: ConsentProps) {
     return (
-        <main className="mx-auto max-w-2xl space-y-4 px-6 py-12">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Feedback consent" />
-            <h1 className="text-3xl font-semibold">Optional course feedback</h1>
-            <p>
+            <DeskHeading area="Data protection" title="Optional course feedback">
                 Notice {notice}: You may allow the institution to invite you to give course feedback. This is optional
                 and does not affect your registration, access or grades. You can withdraw here.
-            </p>
-            <Card><CardContent className="grid gap-3">
+            </DeskHeading>
+            <div className="max-w-2xl"><RegistryPanel title="Feedback consent">
             <p>Current choice: {granted ? 'Consent granted' : 'No active consent'}</p>
             <Form method="post" action="/operations/consent">
                 {({ processing, recentlySuccessful, errors }) => (
@@ -32,7 +32,7 @@ export default function OperationsConsent({ granted, notice }: ConsentProps) {
                     </>
                 )}
             </Form>
-            </CardContent></Card>
+            </RegistryPanel></div>
         </main>
     );
 }

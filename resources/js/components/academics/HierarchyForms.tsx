@@ -5,6 +5,7 @@ import { NativeSelect } from '@/components/ui/native-select';
 import RecordForm, { field } from './RecordForm';
 import type { Choice, Field } from './RecordForm';
 import { useState } from 'react';
+import { RegistryPanel } from './RegistryPanel';
 
 type Row = {
     id: string;
@@ -53,8 +54,7 @@ export function HierarchyForms({
     ];
 
     return (
-        <section>
-            <h2 className="text-xl font-semibold">Configure organisation</h2>
+        <RegistryPanel title="Configure organisation" subtitle="Maintain institutional units and calendar records">
             {forms.map(([label, path, fields]) => (
                 <Collapsible className="border-b py-2" key={path}>
                     <CollapsibleTrigger asChild>
@@ -92,6 +92,6 @@ export function HierarchyForms({
                     </CollapsibleContent>
                 </Collapsible>
             ))}
-        </section>
+        </RegistryPanel>
     );
 }

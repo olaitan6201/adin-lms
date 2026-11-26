@@ -1,4 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
+import { DeskHeading } from '@/components/academics/DeskHeading';
+import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Profile = Record<'matric_number' | 'source_name' | 'source_email' | 'status' | 'photo', string | null>;
 type Session = {
@@ -30,14 +32,12 @@ export default function StudentHistory({
     records: Entry[];
 }) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Academic history" />
             <Link className="font-medium text-primary underline underline-offset-4" href="/courses">
                 My courses
             </Link>
-            <header className="min-w-0 space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Student record</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Academic history</h1>
+            <DeskHeading area="Student record" title="Academic history">
                 {student.photo && (
                     <img
                         src={student.photo}
@@ -50,10 +50,9 @@ export default function StudentHistory({
                         .filter(Boolean)
                         .join(' · ') || 'Awaiting student profile.'}
                 </p>
-            </header>
+            </DeskHeading>
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-                <section className="min-w-0 space-y-3 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
-                    <h2 className="text-xl font-semibold tracking-tight">Academic sessions</h2>
+                <RegistryPanel title="Academic sessions">
                     {sessions.length ? (
                         <ul>
                             {sessions.map((s) => (
@@ -69,29 +68,26 @@ export default function StudentHistory({
                     ) : (
                         <p>No session records received.</p>
                     )}
-                </section>
-                <section>
-                    <h2 className="text-xl font-semibold tracking-tight">Offerings and released results</h2>
+                </RegistryPanel>
+                <RegistryPanel title="Offerings and released results">
                     {records.length ? (
-                        <ul className="divide-y">
+                        <RegistryTable title="Registrations" columns={['Offering', 'Status', 'Released result']}>
                             {records.map((r) => (
-                                <li key={r.id} className="py-3">
-                                    <p className="text-sm font-medium text-muted-foreground break-words">
-                                        {r.external_offering_id} · {r.status}
-                                    </p>
-                                    {r.title && <strong>{r.title}</strong>}
-                                    <p>
+                                <tr key={r.id}>
+                                    <td><span className="block font-mono text-xs">{r.external_offering_id}</span>{r.title && <strong>{r.title}</strong>}</td>
+                                    <td>{r.status}</td>
+                                    <td>
                                         {r.result
                                             ? `Released: ${r.result.total_percent}% (${r.result.grade})`
                                             : 'No released result'}
-                                    </p>
-                                </li>
+                                    </td>
+                                </tr>
                             ))}
-                        </ul>
+                        </RegistryTable>
                     ) : (
                         <p>No registrations received.</p>
                     )}
-                </section>
+                </RegistryPanel>
             </div>
         </main>
     );

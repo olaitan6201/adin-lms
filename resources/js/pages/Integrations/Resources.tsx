@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RegistryPanel } from '@/components/academics/RegistryPanel';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 import { Head, Link } from '@inertiajs/react';
 
 interface Props {
@@ -12,67 +13,41 @@ interface Props {
     tools: Props['links'];
 }
 
+function Partners({ links }: Pick<Props, 'links'>) {
+    return <ul className="grid gap-3">
+        {links.map(link => <li key={link.href} className="flex items-center justify-between gap-3 rounded-xl border border-ink-100 p-4">
+            <div>
+                <a href={link.href} rel="noreferrer" className="link text-[13.5px] font-semibold">{link.label}</a>
+                <p className="mt-1 font-mono text-xs text-ink-500">{link.host}</p>
+            </div>
+            <span aria-hidden="true" className="text-ink-500">↗</span>
+        </li>)}
+    </ul>;
+}
+
 export default function Resources({ course, back, links, tools }: Props) {
     return (
-        <main className="mx-auto w-full max-w-3xl space-y-5 px-5 py-10">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title={`Course partners · ${course}`} />
             <Link href={back} className="underline">
                 Course overview
             </Link>
-            <header>
-                <p className="text-sm text-muted-foreground">{course}</p>
-                <h1 className="text-3xl font-semibold">Course partners</h1>
-            </header>
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        <h2>Learning tools</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {tools.length ? (
-                        <ul>
-                            {tools.map((tool) => (
-                                <li key={tool.href}>
-                                    <a href={tool.href} rel="noreferrer" className="underline">
-                                        {tool.label}
-                                    </a>{' '}
-                                    · {tool.host}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No learning tools are available for your role in this course.</p>
-                    )}
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        <h2>Digital libraries</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
+            <DeskHeading area={course} title="Course partners">Learning tools and digital libraries available in this course.</DeskHeading>
+            <div className="grid items-start gap-5 lg:grid-cols-2">
+                <RegistryPanel title="Learning tools">
+                    {tools.length ? <Partners links={tools} /> : <p>No learning tools are available for your role in this course.</p>}
+                </RegistryPanel>
+                <RegistryPanel title="Digital libraries">
                     {links.length ? (
                         <>
                             <p>Choose a library to leave the course. The library may ask you to sign in separately.</p>
-                            <ul className="space-y-3">
-                                {links.map((link) => (
-                                    <li key={link.href}>
-                                        <a href={link.href} rel="noreferrer" className="underline">
-                                            {link.label}
-                                        </a>
-                                        {' · '}
-                                        {link.host}
-                                    </li>
-                                ))}
-                            </ul>
+                            <Partners links={links} />
                         </>
                     ) : (
                         <p>No digital libraries are available for your role in this course.</p>
                     )}
-                </CardContent>
-            </Card>
+                </RegistryPanel>
+            </div>
         </main>
     );
 }

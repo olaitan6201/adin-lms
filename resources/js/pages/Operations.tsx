@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import InfrastructurePanel, { type Infrastructure } from '../components/InfrastructurePanel';
 import BrandingPanel from '../components/BrandingPanel';
 import RetentionPolicy from '../components/RetentionPolicy';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 
 type Status = {
     activeSessions: number;
@@ -19,26 +20,22 @@ export default function Operations({
     infrastructure,
 }: Status) {
     return (
-        <main className="mx-auto grid w-full max-w-5xl gap-6 p-4 md:p-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Institution operations" />
-            <header className="space-y-2">
-                <p className="text-sm text-muted-foreground">System administration</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Institution operations</h1>
-                <nav aria-label="Operations sections" className="flex flex-wrap gap-x-5 gap-y-2">
+            <DeskHeading area="System administration" title="Institution operations">System health, monitoring settings and institutional data retention.</DeskHeading>
+                <nav aria-label="Operations sections" className="card flex flex-wrap gap-x-5 gap-y-2 px-5 py-3">
                     <a className="text-primary underline underline-offset-4" href="#monitor-settings">Monitoring settings</a>
                     <a className="text-primary underline underline-offset-4" href="#branding-heading">Institution identity</a>
                     <a className="text-primary underline underline-offset-4" href="#retention">Retention policy</a>
                 </nav>
-            </header>
-            <dl className="grid gap-4 border-y border-border py-4 sm:grid-cols-3">
-                <div><dt>Unexpired, unrevoked sessions</dt><dd className="text-xl font-semibold">{activeSessions}</dd></div>
-                <div><dt>Failed notification deliveries</dt><dd className="text-xl font-semibold">{failedDeliveries}</dd>
+            <dl className="grid gap-4 sm:grid-cols-3">
+                <div className="kpi"><dt className="kpi-label">Unexpired, unrevoked sessions</dt><dd className="kpi-value">{activeSessions}</dd></div>
+                <div className="kpi"><dt className="kpi-label">Failed notification deliveries</dt><dd className="kpi-value">{failedDeliveries}</dd>
                     {failedDeliveries > 0 && <dd><Link className="text-primary underline" href="/community/delivery-failures">Review failed deliveries</Link></dd>}</div>
-                <div><dt>Failed password or MFA checks in the last 24 hours</dt><dd className="text-xl font-semibold">{failedLogins}</dd></div>
+                <div className="kpi"><dt className="kpi-label">Failed password or MFA checks in the last 24 hours</dt><dd className="kpi-value">{failedLogins}</dd></div>
             </dl>
             <InfrastructurePanel data={infrastructure} />
-            <BrandingPanel />
-            <RetentionPolicy days={retentionDays} />
+            <div className="grid items-start gap-5 lg:grid-cols-2"><BrandingPanel /><RetentionPolicy days={retentionDays} /></div>
             <Link className="underline" href="/courses">
                 My courses
             </Link>

@@ -36,8 +36,8 @@ const label = (value: string) => value.replaceAll('_', ' ');
 export default function PrivacyCaseRegister({ cases }: { cases: CasePage }) {
     const [kind, setKind] = useState('subject_access');
     return (
-        <section aria-label="Case register" className="space-y-4">
-            <h2 className="text-xl font-semibold">Case register</h2>
+        <section aria-label="Case register" className="card min-w-0 space-y-4 p-5">
+            <h2 className="card-title">Case register</h2>
             <p>
                 The opening officer owns follow-up. Keep identities, correspondence, deadlines and documents in the
                 restricted case system. Enter only its opaque references here.

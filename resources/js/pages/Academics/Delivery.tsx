@@ -4,6 +4,8 @@ import type { DeliveryProps } from '../../components/academics/deliveryTypes';
 import { OfferingPreparation } from '../../components/academics/OfferingPreparation';
 import { Head, Link } from '@inertiajs/react';
 import RecordForm from '../../components/academics/RecordForm';
+import { RegistryFigures, RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 
 type Pending = {
     offering_id: string;
@@ -19,15 +21,18 @@ export default function Delivery({
     pendingPlans,
 }: DeliveryProps & { pendingPlans: Pending[] }) {
     return (
-        <main className="mx-auto max-w-3xl space-y-5 px-5 py-12">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Offering delivery" />
             <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
             </Link>
-            <h1 className="text-3xl font-semibold">Offering delivery</h1>
-            <p>Prepare an upstream section, assign its lecturer in the staff directory, then publish.</p>
-            <section className="space-y-2 rounded-lg border p-4" aria-label="Pending teaching plans">
-                <h2 className="font-semibold">Teaching plans awaiting review</h2>
+            <DeskHeading area="Course delivery" title="Offering delivery">Prepare an upstream section, assign its lecturer in the staff directory, then publish.</DeskHeading>
+            <RegistryPanel title="Delivery pipeline" subtitle="Offerings by publication state">
+            <RegistryFigures values={Object.fromEntries(['draft', 'published', 'unpublished', 'archived'].map(status => [
+                status[0].toUpperCase() + status.slice(1), offerings.filter(o => o.status === status).length,
+            ]))} />
+            </RegistryPanel>
+            <RegistryPanel title="Teaching plans awaiting review">
                 {pendingPlans.length ? (
                     <ul>
                         {pendingPlans.map((p) => (
@@ -41,8 +46,10 @@ export default function Delivery({
                 ) : (
                     <p>No teaching plans awaiting review.</p>
                 )}
-            </section>
+            </RegistryPanel>
+            <RegistryPanel title="Course offerings" subtitle="Preparation, publication and teaching plan history">
             {!offerings.length && <p>No roster offerings yet.</p>}
+            {offerings.length > 0 && <RegistryTable grouped title="Offering register" columns={['Course', 'Term', 'Mode', 'State', 'Actions']}>
             {offerings.map((o) => {
                 const path = `/academics/delivery/${o.id}`;
                 const prepare = ['draft', 'unpublished'].includes(o.status);
@@ -51,14 +58,21 @@ export default function Delivery({
                         key={o.id}
                         id={`offering-${o.id}`}
                         defaultOpen={new URLSearchParams(location.search).get('offering') === o.id}
-                        className="rounded border p-3"
-                    >
+                        asChild
+                    ><tbody><tr>
+                        <td><strong>{entries.find(e => e.id === o.curriculum_course_id)?.title ?? 'No approved course linked'}</strong>
+                            <div className="font-mono text-xs text-ink-500">{o.external_offering_id}</div></td>
+                        <td><span className="sm:hidden">Term: </span>{terms.find(t => t.id === o.semester_id)?.label ?? 'Not assigned'}</td>
+                        <td><span className="sm:hidden">Mode: </span>{o.delivery_mode ?? 'Not assigned'}</td>
+                        <td><span className={o.status === 'published' ? 'badge bg-brand-50 text-brand-700' : 'badge bg-ink-50 text-ink-600'}>{o.status}</span></td>
+                        <td>
                         <CollapsibleTrigger asChild>
-                            <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
-                                {o.external_offering_id} · {o.status}
+                            <Button type="button" variant="outline" aria-label={`Manage ${o.external_offering_id} · ${o.status}`}>
+                                Manage
                             </Button>
                         </CollapsibleTrigger>
-                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                        </td></tr>
+                        <CollapsibleContent asChild forceMount className="data-[state=closed]:hidden"><tr><td colSpan={5} className="space-y-3">
                             <p>
                                 {entries.find((e) => e.id === o.curriculum_course_id)?.title ?? 'No approved course linked'}{' '}
                                 · {o.section ?? 'No section'} · {o.delivery_mode ?? 'No delivery mode'}
@@ -90,10 +104,11 @@ export default function Delivery({
                                     </CollapsibleContent>
                                 </Collapsible>
                             )}
-                        </CollapsibleContent>
+                        </td></tr></CollapsibleContent></tbody>
                     </Collapsible>
                 );
-            })}
+            })}</RegistryTable>}
+            </RegistryPanel>
         </main>
     );
 }

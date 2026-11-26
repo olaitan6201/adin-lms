@@ -7,6 +7,7 @@ import { PortalField } from '../../components/PortalForm';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { DeskHeading } from '../../components/academics/DeskHeading';
+import { RegistryPanel } from '@/components/academics/RegistryPanel';
 
 type Grant = {
     id: string;
@@ -33,7 +34,7 @@ export default function Access({ account, editable, grants, roles }: Props) {
     const scope = roles.find((r) => r.code === role)?.scope;
     const path = `/accounts/${account.id}/access`;
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Account permissions" />
             <Link href="/accounts" className="text-primary underline underline-offset-4">
                 Account directory
@@ -41,12 +42,14 @@ export default function Access({ account, editable, grants, roles }: Props) {
             <DeskHeading area="Identity and access" title={`${account.full_name}: roles and permissions`}>
                 {account.email}
             </DeskHeading>
+            <div className="grid items-start gap-5 xl:grid-cols-[2fr_1fr]">
+            <RegistryPanel title="Assigned permissions" subtitle="Current roles and their scope">
             {!grants.length && <p>No roles assigned.</p>}
             <ul className="divide-y">
                 {grants.map((g) => (
                     <li key={g.id} className="py-3">
-                        <strong>{label(g.role)}</strong> · {g.scope}
-                        <p>{g.permissions.join(', ')}</p>
+                        <strong>{label(g.role)}</strong> <span className="badge bg-ink-50 text-ink-700">{g.scope}</span>
+                        <p className="my-2 text-sm text-ink-600">{g.permissions.join(', ')}</p>
                         {editable && (
                             <Form action={`${path}/${g.id}`} method="delete">
                                 {({ processing }) => (
@@ -59,7 +62,9 @@ export default function Access({ account, editable, grants, roles }: Props) {
                     </li>
                 ))}
             </ul>
+            </RegistryPanel>
             {editable && (
+                <RegistryPanel title="Grant access">
                 <Form action={path} method="post" className="grid gap-3">
                     {({ errors, processing }) => (
                         <FormFeedback errors={errors}>
@@ -91,7 +96,9 @@ export default function Access({ account, editable, grants, roles }: Props) {
                         </FormFeedback>
                     )}
                 </Form>
+                </RegistryPanel>
             )}
+            </div>
         </main>
     );
 }

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../../components/academics/RecordForm';
 import { DeskHeading } from '../../components/academics/DeskHeading';
+import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Account = {
     id: string;
@@ -21,11 +22,12 @@ type Props = {
 };
 export default function Accounts({ accounts, self, grant, q, previous, next }: Props) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Account administration" />
             <DeskHeading area="Identity and access" title="Account administration">
                 Find an institutional account to review access or change its LMS status.
             </DeskHeading>
+            <RegistryPanel title="Account directory" subtitle="Institutional identities and LMS access">
             <Collapsible>
                 <CollapsibleTrigger asChild>
                     <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
@@ -44,17 +46,19 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                     />
                 </CollapsibleContent>
             </Collapsible>
-            <Form action="/accounts" method="get" className="grid max-w-xl gap-3">
+            <Form action="/accounts" method="get" className="flex flex-wrap items-end gap-3 border-b border-ink-100 pb-4">
                 <label className="grid gap-2 text-sm font-medium">
                     Find by name or email <Input name="q" defaultValue={q} />
                 </label>
                 <Button>Search</Button>
             </Form>
             {!accounts.length && <p>No matching accounts.</p>}
-            <ul className="divide-y">
+            <RegistryTable title="Matching accounts" columns={['Account', 'Status', 'Access controls']}>
                 {accounts.map((a) => (
-                    <li key={a.id} className="space-y-2 py-3">
-                        <strong>{a.full_name}</strong> · {a.email} · {a.status}
+                    <tr key={a.id}>
+                        <td><strong>{a.full_name}</strong><div className="text-xs text-ink-500">{a.email}</div></td>
+                        <td><span className="badge bg-ink-50 text-ink-700">{a.status}</span></td>
+                        <td className="space-y-2">
                         {grant && (
                             <p>
                                 <Link className="text-primary underline underline-offset-4" href={`/accounts/${a.id}/access`}>
@@ -88,10 +92,12 @@ export default function Accounts({ accounts, self, grant, q, previous, next }: P
                                 </CollapsibleContent>
                             </Collapsible>
                         )}
-                    </li>
+                        </td>
+                    </tr>
                 ))}
-            </ul>
+            </RegistryTable>
             {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
+            </RegistryPanel>
         </main>
     );
 }

@@ -4,6 +4,8 @@ import { Head, Link } from '@inertiajs/react';
 import RecordForm, { field } from '../components/academics/RecordForm';
 
 import { ChangeAllocation, RegisterLecturer, type DepartmentOption } from '../components/staff/StaffForms';
+import { DeskHeading } from '@/components/academics/DeskHeading';
+import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Staff = {
     id: string;
@@ -22,24 +24,20 @@ type Props = {
 
 export default function StaffDirectory({ staff, departments, previous, next }: Props) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Lecturer directory" />
             <Link href="/courses" className="text-primary underline underline-offset-4">
                 My courses
             </Link>
-            <header className="min-w-0 space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Staff administration</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Lecturer directory</h1>
-                <p>Review teaching records, update departments and manage class allocations.</p>
-            </header>
+            <DeskHeading area="People and roles" title="Lecturer directory">Review teaching records, update departments and manage class allocations.</DeskHeading>
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-                <section>
-                    <h2 className="text-xl font-semibold tracking-tight">Registered staff</h2>
+                <RegistryPanel title="Registered staff" subtitle="Lecturers, departments and allocations">
                     {staff.length ? (
-                        <ul className="divide-y">
+                        <RegistryTable title="Registered staff records" columns={['Lecturer', 'Department', 'Actions']}>
                             {staff.map((s) => (
-                                <li key={s.staff_number} className="py-3">
-                                    <strong>{s.full_name}</strong> · {s.staff_number} · {s.department}
+                                <tr key={s.staff_number}>
+                                    <td><strong>{s.full_name}</strong><div className="font-mono text-xs text-ink-500">{s.staff_number}</div></td>
+                                    <td>{s.department}</td><td className="space-y-2">
                                     <p>
                                         <Link href={`/staff/${s.id}/activity`} className="text-primary underline underline-offset-4">
                                             View teaching activity
@@ -78,17 +76,17 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
                                             )}
                                         </CollapsibleContent>
                                     </Collapsible>
-                                </li>
+                                    </td>
+                                </tr>
                             ))}
-                        </ul>
+                        </RegistryTable>
                     ) : (
                         <p>No lecturer profiles yet.</p>
                     )}
                     {previous && <Link href={previous}>Previous page</Link>}{' '}
                     {next && <Link href={next}>Next page</Link>}
-                </section>
-                <aside className="min-w-0 space-y-4 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
-                    <h2 className="text-xl font-semibold tracking-tight">Staff actions</h2>
+                </RegistryPanel>
+                <RegistryPanel title="Staff actions">
                     <Collapsible>
                         <CollapsibleTrigger asChild>
                             <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
@@ -109,7 +107,7 @@ export default function StaffDirectory({ staff, departments, previous, next }: P
                             <ChangeAllocation />
                         </CollapsibleContent>
                     </Collapsible>
-                </aside>
+                </RegistryPanel>
             </div>
         </main>
     );

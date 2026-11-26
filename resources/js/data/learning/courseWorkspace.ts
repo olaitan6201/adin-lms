@@ -55,15 +55,6 @@ export const assignments = [
   { id: 'as-4', title: 'Group presentation: narrative voice', course: 'ENG210', due: '20 Nov 2026, 12:00', submissions: 78, total: 82, late: 2, marked: 0, state: 'open' },
   { id: 'as-5', title: 'Practical: titration and concentration', course: 'CHM401', due: '24 Nov 2026, 23:59', submissions: 36, total: 41, late: 1, marked: 29, state: 'open' }
 ];
-export const gradeRows = [
-  { student: 'Blessing Okonkwo', matric: 'AOU/2023/0412', ca: 16, participation: 10, mid: 17, practical: 9, final: 30, total: 82, grade: 'B', state: 'published' },
-  { student: 'Aisha Bello', matric: 'AOU/2023/0288', ca: 19, participation: 10, mid: 19, practical: 10, final: 35, total: 93, grade: 'A', state: 'published' },
-  { student: 'Oluwaseun Ajayi', matric: 'AOU/2023/0901', ca: 15, participation: 9, mid: 15, practical: 9, final: 27, total: 75, grade: 'B', state: 'approved' },
-  { student: 'Chinedu Okafor', matric: 'AOU/2024/1187', ca: 12, participation: 9, mid: 14, practical: 8, final: 23, total: 66, grade: 'C', state: 'moderation' },
-  { student: 'Emeka Uzoma', matric: 'AOU/2022/0067', ca: 9, participation: 9, mid: 12, practical: 7, final: 20, total: 57, grade: 'D', state: 'moderation' },
-  { student: 'Fatima Sanni', matric: 'AOU/2024/1322', ca: 3, participation: 9, mid: 9, practical: 6, final: 14, total: 41, grade: 'F', state: 'entered' }
-];
-
 export const liveClasses = [
   { id: 'lc-1', title: 'Tutorial: consolidation of accounts', course: 'ACC302', starts: 'Today, 16:00', duration: '60 min', mode: 'Conferencing link', attendees: 0, capacity: 68, state: 'scheduled' },
   { id: 'lc-2', title: 'Workshop: narrative voice in prose', course: 'ENG210', starts: 'Tomorrow, 09:00', duration: '90 min', mode: 'Conferencing link', attendees: 0, capacity: 82, state: 'scheduled' },

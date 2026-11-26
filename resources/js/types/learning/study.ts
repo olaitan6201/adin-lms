@@ -1,3 +1,5 @@
+import type { GradeRow } from '@/types/assessments/gradebook';
+
 export type Guardian = {
     student: {
         name: string;
@@ -36,18 +38,7 @@ export type TeachingAssignments = {
     state: string;
 }[];
 
-export type GradeRows = {
-    student: string;
-    matric: string;
-    ca: number;
-    participation: number;
-    mid: number;
-    practical: number;
-    final: number;
-    total: number;
-    grade: string;
-    state: string;
-}[];
+export type GradeRows = Pick<GradeRow, 'student' | 'ca' | 'mid' | 'total' | 'grade'>[];
 
 export type StudyModules = { id: string; week: string; title: string; state: string; duration: string; type: string }[];
 

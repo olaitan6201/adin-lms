@@ -33,15 +33,13 @@ export function AssignmentsPanel({ assignments }: { assignments: TeachingAssignm
     );
 }
 export function GradebookPanel({ gradeRows }: { gradeRows: GradeRows }) {
-    const rows = gradeRows
-        .slice(0, 5)
-        .map((row) => [
-            <span className="font-medium text-ink-800">{row.student}</span>,
-            <span className="text-[13px] tnum">{row.ca}</span>,
-            <span className="text-[13px] tnum">{row.mid}</span>,
-            <span className="text-[13px] font-semibold tnum">{row.total}</span>,
-            <Badge tone={row.grade === 'A' ? 'emerald' : row.grade === 'F' ? 'rose' : 'slate'}>{row.grade}</Badge>,
-        ]);
+    const rows = gradeRows.map((row) => [
+        <span className="font-medium text-ink-800">{row.student}</span>,
+        <span className="text-[13px] tnum">{row.ca}</span>,
+        <span className="text-[13px] tnum">{row.mid}</span>,
+        <span className="text-[13px] font-semibold tnum">{row.total}</span>,
+        <Badge tone={row.grade === 'A' ? 'emerald' : row.grade === 'F' ? 'rose' : 'slate'}>{row.grade}</Badge>,
+    ]);
 
     return (
         <Card

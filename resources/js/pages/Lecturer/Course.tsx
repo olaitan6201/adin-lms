@@ -4,8 +4,9 @@ import { workspaceUrl } from '@/lib/workspaceUrl';
 
 import { ContentPanel, ResourcesPanel } from '@/components/learning/TeachingPanels';
 import { AssignmentsPanel, GradebookPanel } from '@/components/learning/TeachingAssessment';
-import { courseModules, resources, assignments, gradeRows } from '@/data/learning/courseWorkspace';
+import { courseModules, resources, assignments } from '@/data/learning/courseWorkspace';
 
+import { gradeRows } from '@/data/assessments/gradebook';
 import { Tabs } from '@/components/ui/navigation/Tabs';
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
@@ -17,7 +18,7 @@ export default function Course() {
         content: <ContentPanel courseModules={courseModules} outline={chapterOutline} />,
         resources: <ResourcesPanel resources={resources} />,
         assignments: <AssignmentsPanel assignments={assignments} />,
-        gradebook: <GradebookPanel gradeRows={gradeRows} />,
+        gradebook: <GradebookPanel gradeRows={gradeRows.slice(0, 5)} />,
         attendance: (
             <div className="rounded-xl border border-ink-100 bg-white p-8 text-center">
                 <p className="text-sm font-semibold text-ink-800">Attendance for this course</p>

@@ -10,6 +10,7 @@ export function WorkspacePalette() {
     const [query, setQuery] = useState('');
     const input = useRef<HTMLInputElement>(null);
     const list = useRef<HTMLUListElement>(null);
+    const panel = useRef<HTMLDivElement>(null);
     const matches = entries.filter(({ label }) => label.toLowerCase().includes(query.trim().toLowerCase())).slice(0, 40);
     function toggle(value: boolean) {
         setOpen(value);
@@ -17,11 +18,17 @@ export function WorkspacePalette() {
     }
     useEffect(() => {
         function shortcut(event: KeyboardEvent) {
-            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-                event.preventDefault();
-                setOpen(previous => !previous);
-                setQuery('');
-            }
+            if (event.defaultPrevented || event.isComposing || !(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'k') return;
+            event.preventDefault();
+            if (event.repeat) return;
+
+            const modals = document.querySelectorAll(
+                'dialog:modal, [data-slot="sheet-content"][data-state="open"], [data-slot="dialog-content"][data-state="open"]',
+            );
+            if (Array.from(modals).some(modal => modal !== panel.current)) return;
+
+            setOpen(previous => !previous);
+            setQuery('');
         }
         window.addEventListener('keydown', shortcut);
         return () => window.removeEventListener('keydown', shortcut);
@@ -30,7 +37,7 @@ export function WorkspacePalette() {
         <DialogTrigger className="ws-search flex items-center gap-2 rounded-[8px] border border-transparent px-2.5 py-1.5 text-left text-[13px] text-ink-500 hover:bg-ink-100 md:h-9 md:w-56 md:border-ink-200 md:bg-white md:px-3 md:py-0 md:text-ink-400 md:hover:border-ink-300"
             aria-label="Search"><Icon name="search" className="size-5 shrink-0 md:size-4" /><span className="hidden flex-1 truncate md:block">Search</span>
             <kbd className="kbd max-md:hidden">Ctrl K</kbd></DialogTrigger>
-        <DialogContent className="ws-command-palette" showCloseButton={false} onOpenAutoFocus={event => {
+        <DialogContent ref={panel} className="ws-command-palette" showCloseButton={false} onOpenAutoFocus={event => {
             event.preventDefault();
             input.current?.focus();
         }} onKeyDown={event => {

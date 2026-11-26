@@ -43,10 +43,6 @@ const tutorialDetails = {
     checkin: 'QR check-in enabled',
 };
 
-export const schedule = {
-    label: '3 scheduled',
-};
-
 export const liveClasses = [
     {
         id: 'lc-1',

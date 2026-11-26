@@ -58,7 +58,17 @@ export type Archive = {
     attachmentMessage: string;
 };
 
-export type SessionDetails = { date: string; start: string; meetingLink: string; checkin: string };
+export type SessionDetails = { date: string; start: string; meetingLink: string; announcement?: string; checkin?: string };
+
+export type SessionDraft = {
+    title: string;
+    course: string;
+    date: string;
+    start: string;
+    duration: string;
+    meetingLink: string;
+    announcement: string;
+};
 
 export type ClassSession = {
     details?: SessionDetails;
@@ -69,6 +79,6 @@ export type ClassSession = {
     duration: string;
     mode: string;
     attendees: number;
-    capacity: number;
+    capacity?: number;
     state: string;
 };

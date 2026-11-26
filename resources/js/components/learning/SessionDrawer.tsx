@@ -1,5 +1,5 @@
-import type { ClassSession } from '@/types/learning/study';
-import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
+import type { ClassSession, SessionDraft } from '@/types/learning/study';
+import { SessionDefinition } from './SessionDefinition';
 import { useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
@@ -11,10 +11,10 @@ type Props = {
     session?: ClassSession;
     open: boolean;
     closeSession: () => void;
+    save: (draft: SessionDraft) => void;
 };
 
-export function SessionDrawer({ selection, session, open, closeSession }: Props) {
-    const { notify } = useWorkspaceOverlays();
+export function SessionDrawer({ selection, session, open, closeSession, save }: Props) {
     const scheduling = selection.kind === 'schedule';
     const editable = scheduling || Boolean(session?.details);
     const title = scheduling ? 'Schedule class' : (session?.title ?? 'Session unavailable');
@@ -56,49 +56,8 @@ export function SessionDrawer({ selection, session, open, closeSession }: Props)
             </div>
             <div key={scheduling ? 'schedule' : session?.id} className="flex-1 space-y-4 overflow-y-auto p-5" data-scroll>
                 {!editable && <p>No session definition is available for this class.</p>}
-                {editable && (
-                    <Card title="Session definition">
-                        <div className="space-y-3">
-                            <label className="block">
-                                <span className="label">Title</span>
-                                <input className="input" defaultValue={session?.title ?? ''} />
-                            </label>
-                            <div className="grid grid-cols-2 gap-3">
-                                <label className="block">
-                                    <span className="label">Date</span>
-                                    <input className="input" type="date" defaultValue={session?.details?.date ?? ''} />
-                                </label>
-                                <label className="block">
-                                    <span className="label">Start time</span>
-                                    <input className="input" type="time" defaultValue={session?.details?.start ?? ''} />
-                                </label>
-                            </div>
-                            <label className="block">
-                                <span className="label">Duration</span>
-                                <select
-                                    className="select"
-                                    defaultValue={session ? session.duration.replace(/ min$/, ' minutes') : '60 minutes'}
-                                >
-                                    <option>60 minutes</option>
-                                    <option>90 minutes</option>
-                                    <option>120 minutes</option>
-                                </select>
-                            </label>
-                            <label className="block">
-                                <span className="label">Meeting link</span>
-                                <input className="input" defaultValue={session?.details?.meetingLink ?? ''} readOnly={!scheduling} />
-                            </label>
-                            <label className="block">
-                                <span className="label">Announcement</span>
-                                <select className="select">
-                                    <option>Send to enrolled students and to guardians with consent</option>
-                                    <option>Enrolled students only</option>
-                                </select>
-                            </label>
-                        </div>
-                    </Card>
-                )}
-                {session?.details && (
+                {open && editable && <SessionDefinition session={session} save={save} />}
+                {session?.details?.checkin && (
                     <Card title="Attendance capture">
                         <div className="flex items-center gap-3 rounded-xl border border-ink-100 p-3.5">
                             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
@@ -117,8 +76,8 @@ export function SessionDrawer({ selection, session, open, closeSession }: Props)
                     Close
                 </button>
                 {editable && (
-                    <button type="button" className="btn btn-primary" onClick={() => notify('Class scheduled and announcement queued')}>
-                        Save and announce
+                    <button type="submit" form="classroom-definition" className="btn btn-primary">
+                        Save locally
                     </button>
                 )}
             </div>

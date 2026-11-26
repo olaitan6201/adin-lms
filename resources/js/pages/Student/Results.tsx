@@ -1,5 +1,10 @@
 import { standing } from '@/data/learning/results';
-import { studentResults as releasedResults } from '@/data/learning/courseWorkspace';
+import { useState } from 'react';
+import { studentResults } from '@/data/learning/courseWorkspace';
+import { studentSitting } from '@/data/assessments/examPaper';
+import { readSavedAttempt } from '@/hooks/assessments/useExamAttempt';
+import { ExamReceipt } from '@/components/assessments/exams/ExamReceipt';
+import { exportSheet } from '@/lib/csv';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
@@ -29,6 +34,15 @@ function SessionHistory({ history }: { history: typeof standing.history }) {
 }
 
 export default function Results() {
+    const [attempt] = useState(() => readSavedAttempt(studentSitting));
+    const releasedResults = studentResults.filter(result => result.state === 'released');
+    const columns = ['Code', 'Course', 'CA', 'Mid', 'Final', 'Total', 'Grade'];
+    function downloadSheet() {
+        exportSheet('sample-released-results', columns, releasedResults.map(result => [
+            result.course, result.title, result.ca, result.mid, result.final, result.total, result.grade,
+        ]));
+    }
+
     const rows = releasedResults.map((result) => [
         <span key="course" className="font-mono text-[12px] font-medium text-ink-700">
             {result.course}
@@ -48,7 +62,7 @@ export default function Results() {
         <span key="total" className="text-[13px] font-semibold tnum">
             {result.total}
         </span>,
-        <Badge key="grade" tone={result.grade === 'Pending' ? 'amber' : result.grade === 'A' ? 'emerald' : 'slate'}>
+        <Badge key="grade" tone={result.grade === 'A' ? 'emerald' : 'slate'}>
             {result.grade}
         </Badge>,
     ]);
@@ -60,7 +74,7 @@ export default function Results() {
                 title="Results"
                 description="Scores released to you by the examination officer, with the cumulative standing for the session."
                 actions={
-                    <Action icon="sheet" variant="outline">
+                    <Action icon="sheet" variant="outline" onClick={downloadSheet}>
                         Download result sheet
                     </Action>
                 }
@@ -78,14 +92,25 @@ export default function Results() {
                     subtitle="Continuous assessment, mid-term and final components"
                     actions={
                         <>
-                            <Badge tone="emerald">{standing.released}</Badge>
-                            <Badge tone="amber">{standing.pending}</Badge>
+                            <Badge tone="emerald">{releasedResults.length} released</Badge>
+                            <Badge tone="amber">{studentResults.length - releasedResults.length} pending</Badge>
                         </>
                     }
                 >
-                    <Table columns={['Code', 'Course', 'CA', 'Mid', 'Final', 'Total', 'Grade']} rows={rows} />
+                    <Table columns={columns} rows={rows} />
                 </Card>
 
+                {attempt && attempt.submitted !== null && (
+                    <ExamReceipt
+                        title={studentSitting.title}
+                        submitted={attempt.submitted}
+                        deadline={attempt.deadline}
+                        answered={Object.values(attempt.answers).filter(value => value.trim()).length}
+                        count={studentSitting.paper.length}
+                        stored
+                        onResults
+                    />
+                )}
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
                     <SessionHistory history={standing.history} />
                     <ResultPolicy policy={standing.policy} />

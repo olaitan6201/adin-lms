@@ -11,6 +11,7 @@ export function QuestionView({
     index,
     count,
     value,
+    stored,
     flagged,
     answered,
     answer,
@@ -22,6 +23,7 @@ export function QuestionView({
     index: number;
     count: number;
     value: string;
+    stored: boolean;
     flagged: boolean;
     answered: number;
     answer: (value: string) => void;
@@ -63,14 +65,21 @@ export function QuestionView({
                             </label>
                         ))
                     ) : (
-                        <textarea
-                            className={inputClass}
-                            aria-label={`Answer for question ${index + 1}`}
-                            rows={7}
-                            placeholder="Type your answer here"
-                            value={value}
-                            onChange={(e) => answer(e.target.value)}
-                        />
+                        <>
+                            <textarea
+                                className={inputClass}
+                                aria-label={`Answer for question ${index + 1}`}
+                                aria-describedby="written-answer-hint"
+                                rows={7}
+                                placeholder="Type your answer here"
+                                value={value}
+                                onChange={(e) => answer(e.target.value)}
+                            />
+                            <p id="written-answer-hint" className="text-sm text-ink-600">
+                                Plain text only; diagrams and formatting are unavailable.{' '}
+                                {stored ? 'Changes are saved in this browser session.' : 'Keep this page open; changes are in memory only.'}
+                            </p>
+                        </>
                     )}
                 </fieldset>
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-4">

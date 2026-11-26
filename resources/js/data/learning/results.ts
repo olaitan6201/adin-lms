@@ -21,8 +21,6 @@ export const standing = {
             hint: 'of 68 in programme',
         },
     ],
-    released: '3 released',
-    pending: '1 pending',
     history: [
         {
             session: '2024/2025',

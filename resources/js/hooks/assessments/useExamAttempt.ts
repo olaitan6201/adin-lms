@@ -7,6 +7,7 @@ type Attempt = {
     flags: string[];
     deadline: number;
     submitted: number | null;
+    warned?: boolean;
 };
 
 /** A saved receipt identifies the exact revision successfully written to storage. */
@@ -30,12 +31,14 @@ function createAttemptPersistence() {
                 saved = null;
             }
 
-            for (const listener of listeners) listener();
+            for (const listener of listeners) {
+                listener();
+            }
         },
     };
 }
 
-function readAttempt({ paper, storageKey: key, minutes }: Sitting): Attempt {
+export function readSavedAttempt({ paper, storageKey: key }: Sitting): Attempt | null {
     const ids = paper.map(q => q.id);
     try {
         const v = JSON.parse(sessionStorage.getItem(key) ?? 'null');
@@ -44,18 +47,28 @@ function readAttempt({ paper, storageKey: key, minutes }: Sitting): Attempt {
             && Object.entries(v.answers).every(([id, a]) => ids.includes(id) && typeof a === 'string')
             && Array.isArray(v.flags) && v.flags.every((id: unknown) => typeof id === 'string' && ids.includes(id))
             && (v.submitted === null || Number.isFinite(v.submitted))) {
-            return { ...v, submitted: v.submitted ?? (Date.now() >= v.deadline ? v.deadline : null) };
+            return v;
         }
     } catch {
         /* An unavailable store still permits an in-memory sitting. */
     }
 
-    return { index: 0, answers: {}, flags: [], deadline: Date.now() + minutes * 60_000, submitted: null };
+    return null;
+}
+
+function resumeAttempt(sitting: Sitting): Attempt {
+    const saved = readSavedAttempt(sitting);
+    if (saved) {
+        return { ...saved, submitted: saved.submitted ?? (Date.now() >= saved.deadline ? saved.deadline : null) };
+    }
+
+    return { index: 0, answers: {}, flags: [], deadline: Date.now() + sitting.minutes * 60_000, submitted: null };
 }
 
 export function useExamAttempt(sitting: Sitting) {
     const { paper, storageKey: key } = sitting;
-    const [attempt, setAttempt] = useState(() => readAttempt(sitting));
+    const [attempt, setAttempt] = useState(() => resumeAttempt(sitting));
+    const [showWarning, setShowWarning] = useState(false);
     const [now, setNow] = useState(Date.now);
     const [persistence] = useState(createAttemptPersistence);
     const saved = useSyncExternalStore(persistence.subscribe, persistence.snapshot, () => null);
@@ -66,12 +79,19 @@ export function useExamAttempt(sitting: Sitting) {
     }, [attempt, key, persistence]);
 
     useEffect(() => {
-        if (attempt.submitted !== null) return;
+        if (attempt.submitted !== null) {
+            return;
+        }
 
         function tick() {
             const time = Date.now();
             setNow(time);
-            if (time >= attempt.deadline) setAttempt(a => ({ ...a, submitted: a.submitted ?? a.deadline }));
+            if (time >= attempt.deadline) {
+                setAttempt(a => ({ ...a, submitted: a.submitted ?? a.deadline }));
+            } else if (!attempt.warned && attempt.deadline - time <= 300_000) {
+                setShowWarning(true);
+                setAttempt(a => ({ ...a, warned: true }));
+            }
         }
 
         const interval = window.setInterval(tick, 500);
@@ -80,7 +100,7 @@ export function useExamAttempt(sitting: Sitting) {
             window.clearInterval(interval);
             window.removeEventListener('focus', tick);
         };
-    }, [attempt.deadline, attempt.submitted]);
+    }, [attempt.deadline, attempt.submitted, attempt.warned]);
 
     function update(fn: (a: Attempt) => Attempt) {
         const time = Date.now();
@@ -91,15 +111,18 @@ export function useExamAttempt(sitting: Sitting) {
         update(a => {
             const answers = { ...a.answers };
             const id = paper[a.index].id;
-            if (value) answers[id] = value;
-            else delete answers[id];
+            if (value) {
+                answers[id] = value;
+            } else {
+                delete answers[id];
+            }
 
             return { ...a, answers };
         });
     }
 
     return {
-        attempt, stored, answer,
+        attempt, stored, answer, showWarning,
         remaining: Math.max(0, Math.ceil((attempt.deadline - now) / 1000)),
         jump: (index: number) => update(a => ({ ...a, index: Math.max(0, Math.min(index, paper.length - 1)) })),
         flag: () => update(a => {

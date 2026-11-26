@@ -10,6 +10,7 @@ export function ExamReceipt({
     answered,
     count,
     stored,
+    onResults = false,
 }: {
     title: string;
     submitted: number;
@@ -17,6 +18,7 @@ export function ExamReceipt({
     answered: number;
     count: number;
     stored: boolean;
+    onResults?: boolean;
 }) {
     return (
         <Card title="Examination submitted" subtitle="Local attempt receipt">
@@ -33,6 +35,9 @@ export function ExamReceipt({
                 ]}
             />
             <Action href={workspaceUrl('student/overview')}>Return to dashboard</Action>
+            {stored && !onResults && (
+                <Action href={workspaceUrl('student/results')}>View receipt in Results</Action>
+            )}
         </Card>
     );
 }

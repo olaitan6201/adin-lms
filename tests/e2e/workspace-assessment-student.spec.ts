@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('replacing a returned script keeps its grade only on the previous receipt', async ({ page }) => {
     await page.goto('/student/assignments');
@@ -27,6 +28,14 @@ test('replacing a returned script keeps its grade only on the previous receipt',
     await expect(dialog).toContainText('RCP-2026-11-08-0412-516');
     await expect(dialog).toContainText('Well handled.');
     await expect(dialog).not.toContainText('unmarked-revision.pdf');
+    const pending = page.waitForEvent('download');
+    await dialog.getByRole('button', { name: 'Download marked extract (.txt)' }).click();
+    const file = await pending;
+    expect(file.suggestedFilename()).toBe('RCP-2026-11-08-0412-516-marked.txt');
+    const artifact = await readFile((await file.path())!, 'utf8');
+    expect(artifact).toContain('0.10 mol/L');
+    expect(artifact).toContain('Marker annotation: Well handled.');
+    expect(artifact).not.toContain('unmarked-revision.pdf');
 });
 
 test('a replacement receipt stays with its assignment; closed work remains read-only', async ({ page }) => {
@@ -39,14 +48,25 @@ test('a replacement receipt stays with its assignment; closed work remains read-
     await picker.setInputFiles({ name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('notes') });
     await dialog.getByRole('button', { name: 'Submit work' }).click();
     await expect(dialog.getByRole('alert')).toContainText('Choose a PDF');
+    await picker.setInputFiles({ name: 'too-large.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(25 * 1024 * 1024 + 1) });
+    await dialog.getByRole('button', { name: 'Submit work' }).click();
+    await expect(dialog.getByRole('alert')).toContainText('no larger than 25 MB');
     await picker.setInputFiles({ name: 'revision.pdf', mimeType: 'application/pdf', buffer: Buffer.from('revision') });
     await dialog.getByRole('button', { name: 'Submit work' }).click();
     await expect(page.getByText(/Receipt RCP-.+ issued for revision.pdf/)).toBeVisible();
     await english.getByRole('button').click();
     await expect(dialog).toContainText('revision.pdf');
+    await dialog.getByText('Previous receipts (1)').click();
+    await expect(dialog.getByText(/narrative-voice.pdf.*RCP-2026-11-06-0412-298/)).toBeVisible();
     await page.keyboard.press('Escape');
     await page.getByRole('row').filter({ hasText: 'BSC205' }).getByRole('button').click();
     await expect(dialog).toContainText('mitosis-observation.pdf');
+    await expect(dialog.getByRole('button', { name: 'Submit work' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await page.getByRole('row').filter({ hasText: 'IFRS 15' }).getByRole('button').click();
+    await expect(dialog).toContainText('Not open yet.');
+    await expect(dialog).toContainText('RCP-2026-11-09-0412-573');
+    await expect(dialog.locator('input[type=file]')).toHaveCount(0);
     await expect(dialog.getByRole('button', { name: 'Submit work' })).toHaveCount(0);
 });
 
@@ -66,6 +86,9 @@ test('the attempt restores a flagged written answer and becomes read-only on exp
     await expect(page.getByText('Access window expired')).toBeVisible();
     await expect(page.getByText('0 of 7', { exact: true })).toBeVisible();
     await expect(answer).toHaveCount(0);
+    await page.getByRole('link', { name: 'View receipt in Results' }).click();
+    await expect(page.getByRole('heading', { name: 'Released scores' })).toBeVisible();
+    await expect(page.getByText('Access window expired')).toBeVisible();
 });
 
 test('unavailable storage blocks save and exit but keeps the current answer editable', async ({ page }) => {

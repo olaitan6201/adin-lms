@@ -23,7 +23,7 @@ export default function StudentExam(sitting: Sitting) {
 
 function ExamRunner(sitting: Sitting) {
     const { paper, title, eyebrow, facts } = sitting;
-    const { attempt, remaining, stored, jump, flag, answer, submit } = useExamAttempt(sitting);
+    const { attempt, remaining, stored, jump, flag, answer, submit, showWarning } = useExamAttempt(sitting);
     const [confirm, setConfirm] = useState(false);
     const q = paper[attempt.index];
     const flagged = attempt.flags.includes(q.id);
@@ -46,7 +46,7 @@ function ExamRunner(sitting: Sitting) {
                             <Action
                                 icon="save"
                                 size="sm"
-                                href={stored ? workspaceUrl('student/overview') : undefined}
+                                href={workspaceUrl('student/overview')}
                                 disabled={!stored}
                             >
                                 Save and exit
@@ -74,6 +74,9 @@ function ExamRunner(sitting: Sitting) {
                 />
             ) : (
                 <>
+                    <div role="alert">
+                        {showWarning && <Note amber>Five minutes or less remain. Review your answers before the paper closes.</Note>}
+                    </div>
                     <div className="grid gap-5 xl:grid-cols-12">
                         <div className="space-y-5 xl:col-span-4">
                             <AccessWindow remaining={remaining} stored={stored} facts={facts} />
@@ -91,6 +94,7 @@ function ExamRunner(sitting: Sitting) {
                                 index={attempt.index}
                                 count={paper.length}
                                 value={attempt.answers[q.id] ?? ''}
+                                stored={stored}
                                 flagged={flagged}
                                 answered={answered}
                                 answer={answer}

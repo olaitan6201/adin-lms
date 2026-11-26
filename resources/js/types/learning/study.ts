@@ -92,16 +92,18 @@ export type Room = {
     enrolled: string;
 };
 
-export type Archive = {
-    recordings: {
-        title: string;
-        course: string;
-        date: string;
-        length: string;
-        views: number;
-    }[];
-    attachmentMessage: string;
+export type Recording = {
+    id: string;
+    title: string;
+    course: string;
+    date: string;
+    length: string;
+    views: number;
+    transcript: string | null;
+    modules: { id: string; title: string }[];
 };
+
+export type Archive = { recordings: Recording[] };
 
 export type SessionDetails = {
     date: string;

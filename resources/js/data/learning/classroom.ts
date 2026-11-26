@@ -12,6 +12,12 @@ export const room = {
 export const archive = {
     recordings: [
         {
+            id: 'chm-titration',
+            transcript: null,
+            modules: [
+                { id: 'CHM401-1', title: 'Practical preparation' },
+                { id: 'CHM401-2', title: 'Titration' },
+            ],
             title: 'Practical briefing: titration',
             course: 'CHM401',
             date: '12 Nov 2026',
@@ -19,6 +25,12 @@ export const archive = {
             views: 38,
         },
         {
+            id: 'acc-journal',
+            transcript: '00:12 Lecturer: Start with the cash sale in the journal. Record a debit to cash and a credit to sales. At the end of the day, post each amount to the corresponding ledger account.',
+            modules: [
+                { id: 'ACC302-1', title: 'The accounting equation' },
+                { id: 'ACC302-2', title: 'Journals and ledgers' },
+            ],
             title: 'Tutorial: journal entries and ledgers',
             course: 'ACC302',
             date: '05 Nov 2026',
@@ -26,6 +38,12 @@ export const archive = {
             views: 61,
         },
         {
+            id: 'eng-narrator',
+            transcript: '00:18 Lecturer: The narrator can describe a scene without knowing what every character thinks. Underline a sentence where the narrator makes an inference, then rewrite it from the other character’s perspective.',
+            modules: [
+                { id: 'ENG210-1', title: 'Narrative perspective' },
+                { id: 'ENG210-2', title: 'Group presentation' },
+            ],
             title: 'Workshop: narrative voice',
             course: 'ENG210',
             date: '29 Oct 2026',
@@ -33,7 +51,6 @@ export const archive = {
             views: 74,
         },
     ],
-    attachmentMessage: 'Recording attached to Week 3',
 };
 
 const tutorialDetails = {

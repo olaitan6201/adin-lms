@@ -24,7 +24,10 @@ export function AccessField({
     );
 }
 
-export function AccessNote({ warning = false, children }: { warning?: boolean; children: ReactNode }) {
+export function AccessNote({ warning = false, children }: {
+    warning?: boolean;
+    children: ReactNode;
+}) {
     const NoteIcon = warning ? AlertIcon : InfoIcon;
     return (
         <div
@@ -42,6 +45,7 @@ export function useAccessNotice() {
     const [notice, setNotice] = useState<{ text: string } | null>(null);
     useEffect(() => {
         if (!notice) return;
+
         const timer = window.setTimeout(() => setNotice(null), 3800);
         return () => window.clearTimeout(timer);
     }, [notice]);

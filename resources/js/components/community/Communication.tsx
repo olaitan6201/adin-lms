@@ -14,7 +14,10 @@ import { type TeachingRole } from '@/types/identity/roles';
 
 type Section = 'forums' | 'groups' | 'messages' | 'announcements';
 
-export function Communication({ role, data }: { data: CommunicationData; role: TeachingRole }) {
+export function Communication({ role, data }: {
+    data: CommunicationData;
+    role: TeachingRole;
+}) {
     const student = role === 'student';
     const [tab, setTab] = useState<Section>('forums');
     const [compose, setCompose] = useState(false);

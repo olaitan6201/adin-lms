@@ -4,7 +4,10 @@ import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Thread } from '@/types/community/communication';
 
-type Props = { topics: Thread[]; openTopic: (id: string) => void };
+type Props = {
+    topics: Thread[];
+    openTopic: (id: string) => void;
+};
 export function RecentThreads({ topics, openTopic }: Props) {
     return (
         <Card

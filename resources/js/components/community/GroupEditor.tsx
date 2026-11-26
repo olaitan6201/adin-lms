@@ -24,6 +24,7 @@ export function GroupEditor({
             setCourseError('Select an available course.');
             return;
         }
+
         const name = String(d.get('name')).trim();
         if (groups.some((g) => g.name === name)) {
             const input = e.currentTarget.elements.namedItem('name') as HTMLInputElement;
@@ -31,6 +32,7 @@ export function GroupEditor({
             input.reportValidity();
             return;
         }
+
         create({
             id: crypto.randomUUID(),
             name,

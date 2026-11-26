@@ -6,7 +6,10 @@ import { Action } from '@/components/ui/controls/Action';
 import { Table } from '@/components/ui/data-display/Table';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export function ContentPanel({ courseModules, outline }: { courseModules: TeachingModules; outline: string[] }) {
+export function ContentPanel({ courseModules, outline }: {
+    courseModules: TeachingModules;
+    outline: string[];
+}) {
     const { notify } = useWorkspaceOverlays();
     const rows = courseModules.map((module) => [
         <span key="week" className="font-mono text-[11.5px] font-medium text-ink-500">
@@ -77,6 +80,7 @@ export function ContentPanel({ courseModules, outline }: { courseModules: Teachi
         </>
     );
 }
+
 export function ResourcesPanel({ resources }: { resources: TeachingResources }) {
     const { notify } = useWorkspaceOverlays();
     const rows = resources.map((resource) => [

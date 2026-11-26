@@ -3,7 +3,11 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import type { Group, GroupPost } from '@/types/community/communication';
 
-type Props = { group: Group; items: GroupPost[]; postToGroup: (event: FormEvent<HTMLFormElement>) => void };
+type Props = {
+    group: Group;
+    items: GroupPost[];
+    postToGroup: (event: FormEvent<HTMLFormElement>) => void;
+};
 export function GroupDiscussion({ group, items, postToGroup }: Props) {
     return (
         <Card

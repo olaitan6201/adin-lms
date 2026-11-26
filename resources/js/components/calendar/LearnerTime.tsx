@@ -9,7 +9,10 @@ const fields: Intl.DateTimeFormatOptions = {
 const minutes = new Intl.DateTimeFormat(undefined, fields);
 const seconds = new Intl.DateTimeFormat(undefined, { ...fields, second: '2-digit' });
 
-export function LearnerTime({ instant, className }: { instant: string; className?: string }) {
+export function LearnerTime({ instant, className }: {
+    instant: string;
+    className?: string;
+}) {
     const date = new Date(instant);
     const formatter = date.getSeconds() === 0 ? minutes : seconds;
     return (

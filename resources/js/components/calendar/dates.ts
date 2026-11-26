@@ -1,5 +1,16 @@
-export type AgendaDate = { title: string; context: string; at: string; kind: string; href?: string };
-export type CalendarTerm = { label: string; position: number; starts_on: string; ends_on: string };
+export type AgendaDate = {
+    title: string;
+    context: string;
+    at: string;
+    kind: string;
+    href?: string;
+};
+export type CalendarTerm = {
+    label: string;
+    position: number;
+    starts_on: string;
+    ends_on: string;
+};
 
 export function localDate(value: string) {
     return new Date(value.length === 10 ? `${value}T00:00:00` : value);
@@ -7,8 +18,11 @@ export function localDate(value: string) {
 
 export function eventGroup(event: AgendaDate) {
     if (event.kind === 'Semester') return 'Semester';
+
     if (event.kind === 'Scheduled class') return 'Teaching';
+
     if (event.kind.toLowerCase().includes('exam')) return 'Examinations';
+
     return 'Deadlines';
 }
 

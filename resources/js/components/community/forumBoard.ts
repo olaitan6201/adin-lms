@@ -1,9 +1,23 @@
 import type { Forum, Thread } from '@/types/community/communication';
 
-export type ForumBoard = { forums: Forum[]; topics: Thread[] };
+export type ForumBoard = {
+    forums: Forum[];
+    topics: Thread[];
+};
 export type TopicChange =
-    | { kind: 'reply'; topicId: string; reply: string }
-    | { kind: 'moderate'; topicId: string; reply: string; destination: string; pinned: boolean; allowReplies: boolean };
+    | {
+        kind: 'reply';
+        topicId: string;
+        reply: string;
+    }
+    | {
+        kind: 'moderate';
+        topicId: string;
+        reply: string;
+        destination: string;
+        pinned: boolean;
+        allowReplies: boolean;
+    };
 
 export function applyTopicChange(board: ForumBoard, change: TopicChange): ForumBoard {
     const topic = board.topics.find(item => item.id === change.topicId);
@@ -34,6 +48,7 @@ export function applyTopicChange(board: ForumBoard, change: TopicChange): ForumB
                 last: 'Updated just now',
             };
         }
+
         return moved && forum.id === topic.forum ? { ...forum, threads: forum.threads - 1 } : forum;
     });
     return { forums, topics: board.topics.map(item => item.id === topic.id ? updated : item) };

@@ -1,7 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { localDate, eventGroup, tones, type AgendaDate } from './dates';
 
-function CalendarDay({ day, month, today, events }: { day: Date; month: Date; today: Date; events: AgendaDate[] }) {
+function CalendarDay({ day, month, today, events }: {
+    day: Date;
+    month: Date;
+    today: Date;
+    events: AgendaDate[];
+}) {
     const inMonth = day.getMonth() === month.getMonth();
     const current = day.toDateString() === today.toDateString();
     const items = inMonth ? events.filter((item) => localDate(item.at).toDateString() === day.toDateString()) : [];
@@ -36,7 +41,11 @@ function CalendarDay({ day, month, today, events }: { day: Date; month: Date; to
     );
 }
 
-export function MonthGrid({ month, events, today }: { month: Date; events: AgendaDate[]; today: Date }) {
+export function MonthGrid({ month, events, today }: {
+    month: Date;
+    events: AgendaDate[];
+    today: Date;
+}) {
     const first = new Date(month.getFullYear(), month.getMonth(), 1);
     const days = Array.from(
         { length: 42 },

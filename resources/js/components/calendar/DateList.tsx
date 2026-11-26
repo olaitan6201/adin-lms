@@ -2,8 +2,12 @@ import { Link } from '@inertiajs/react';
 import { LearnerTime } from '@/components/calendar/LearnerTime';
 import { localDate, type AgendaDate } from './dates';
 
-export function DateList({ events, empty }: { events: AgendaDate[]; empty: string }) {
+export function DateList({ events, empty }: {
+    events: AgendaDate[];
+    empty: string;
+}) {
     if (!events.length) return <p className="text-sm text-ink-600">{empty}</p>;
+
     return (
         <ul className="divide-y divide-ink-100">
             {events.map((event, index) => {

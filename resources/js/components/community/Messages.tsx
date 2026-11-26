@@ -19,8 +19,10 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
     function submitReply(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!thread) return;
+
         const body = String(new FormData(event.currentTarget).get('body')).trim();
         if (!body) return;
+
         reply(thread.id, body);
         event.currentTarget.reset();
     }

@@ -10,7 +10,10 @@ import { PreferenceFieldset } from './PreferenceFieldset';
 import { Note } from '@/components/ui/feedback/Note';
 import { type WorkspaceRole } from '@/types/identity/roles';
 
-export function Notifications({ role, data }: { role: WorkspaceRole; data: NotificationPreferences }) {
+export function Notifications({ role, data }: {
+    role: WorkspaceRole;
+    data: NotificationPreferences;
+}) {
     const { categories, devices, switches, quietHours, escalation } = data;
     const { settings, saved, status, toggle, save, setStatus } = useNotificationPreferences(role);
     const saveButton = (

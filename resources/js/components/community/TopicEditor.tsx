@@ -5,7 +5,13 @@ import { Card } from '@/components/ui/layout/Card';
 import type { Forum, Thread } from '@/types/community/communication';
 import type { TopicChange } from './forumBoard';
 
-type Props = { topic: Thread; forums: Forum[]; student: boolean; close: () => void; save: (change: TopicChange) => void };
+type Props = {
+    topic: Thread;
+    forums: Forum[];
+    student: boolean;
+    close: () => void;
+    save: (change: TopicChange) => void;
+};
 
 export function TopicEditor({ topic, forums, student, close, save }: Props) {
     function saveTopic(event: FormEvent<HTMLFormElement>) {
@@ -14,8 +20,10 @@ export function TopicEditor({ topic, forums, student, close, save }: Props) {
         const reply = String(fields.get('reply') ?? '').trim();
         if (student) {
             if (reply && topic.allowReplies) save({ kind: 'reply', topicId: topic.id, reply });
+
             return;
         }
+
         save({
             kind: 'moderate',
             topicId: topic.id,
@@ -25,6 +33,7 @@ export function TopicEditor({ topic, forums, student, close, save }: Props) {
             allowReplies: fields.has('allow'),
         });
     }
+
     return (
         <Drawer
             title={topic.title}

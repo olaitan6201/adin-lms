@@ -19,7 +19,10 @@ export default function Classroom({
 }) {
     const [sessions, setSessions] = useState(liveClasses);
     const { notify } = useWorkspaceOverlays();
-    const [panel, setPanel] = useState<{ selection: ClassroomSelection; open: boolean }>({
+    const [panel, setPanel] = useState<{
+        selection: ClassroomSelection;
+        open: boolean;
+    }>({
         selection: { kind: 'schedule' },
         open: false,
     });
@@ -39,6 +42,7 @@ export default function Classroom({
         const fields = { title, course, duration, starts, details };
         if (selection.kind === 'details') {
             if (!session?.details) return;
+
             setSessions((rows) => rows.map((row) => (row.id === selection.sessionId ? { ...row, ...fields } : row)));
         } else {
             const created = {
@@ -50,6 +54,7 @@ export default function Classroom({
             };
             setSessions((rows) => [...rows, created]);
         }
+
         closeSession();
         notify('Class saved locally. No announcement was sent.');
     }

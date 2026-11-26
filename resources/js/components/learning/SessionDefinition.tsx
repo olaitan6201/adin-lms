@@ -4,7 +4,10 @@ import type { ClassSession, SessionDraft } from '@/types/learning/study';
 
 const announcementOptions = ['Send to enrolled students and to guardians with consent', 'Enrolled students only'];
 
-export function SessionDefinition({ session, save }: { session?: ClassSession; save: (draft: SessionDraft) => void }) {
+export function SessionDefinition({ session, save }: {
+    session?: ClassSession;
+    save: (draft: SessionDraft) => void;
+}) {
     const [draft, setDraft] = useState<SessionDraft>(() => ({
         title: session?.title ?? '',
         course: session?.course ?? '',

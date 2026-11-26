@@ -4,7 +4,11 @@ import type { Conversation } from '@/types/community/communication';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 
-type Props = { recipients: Conversation[]; close: () => void; send: ReturnType<typeof useConversations>['send'] };
+type Props = {
+    recipients: Conversation[];
+    close: () => void;
+    send: ReturnType<typeof useConversations>['send'];
+};
 export function MessageComposer({ recipients, close, send }: Props) {
     const available = recipients.filter((recipient) => recipient.name?.trim());
 
@@ -14,6 +18,7 @@ export function MessageComposer({ recipients, close, send }: Props) {
         const recipient = available.find((option) => option.id === fields.get('recipient'));
         const body = String(fields.get('body') ?? '').trim();
         if (!recipient || !body) return;
+
         send(recipient.name, String(fields.get('subject')), body);
         close();
     }

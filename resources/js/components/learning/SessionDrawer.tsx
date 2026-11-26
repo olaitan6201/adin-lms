@@ -4,7 +4,10 @@ import { useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export type ClassroomSelection = { kind: 'details'; sessionId: string } | { kind: 'schedule' };
+export type ClassroomSelection = {
+    kind: 'details';
+    sessionId: string;
+} | { kind: 'schedule' };
 
 type Props = {
     selection: ClassroomSelection;

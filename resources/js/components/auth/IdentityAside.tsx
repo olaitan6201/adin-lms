@@ -21,8 +21,14 @@ const recover = [
     [ShieldCheck, 'Keep your account private', 'Never share your password or reset link with another person.'],
 ] as const;
 
+type IdentityBranding = {
+    institution: string;
+    logoWhite: string;
+    logoFull: string;
+};
+
 export function IdentityMark({ compact = false }: { compact?: boolean }) {
-    const { branding } = usePage<{ branding: { institution: string; logoWhite: string; logoFull: string } }>().props;
+    const { branding } = usePage<{ branding: IdentityBranding }>().props;
     return (
         <Link href="/" aria-label={`${branding.institution} home`} className="inline-flex items-center gap-3">
             <img alt="" src={branding.logoWhite || branding.logoFull} className="h-10 w-12 shrink-0 object-contain" />

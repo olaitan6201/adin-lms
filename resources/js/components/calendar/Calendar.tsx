@@ -14,7 +14,10 @@ import { WorkspaceMonthGrid } from './WorkspaceMonthGrid';
 
 import { CalendarAgenda } from './CalendarAgenda';
 
-export function Calendar({ role, data }: { data: ScheduleData; role: TeachingRole }) {
+export function Calendar({ role, data }: {
+    data: ScheduleData;
+    role: TeachingRole;
+}) {
     const { today, term, events: calendarEvents, kinds: calendarKinds, milestones } = data;
     const [offset, setOffset] = useState(0);
     const [filter, setFilter] = useState('All');

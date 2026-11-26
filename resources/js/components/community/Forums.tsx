@@ -12,9 +12,16 @@ import { applyTopicChange, type ForumBoard, type TopicChange } from './forumBoar
 import { TopicEditor } from './TopicEditor';
 import { availableCourses } from './communityCourses';
 
-type Selection = { kind: 'topic' | 'forum'; id: string } | { kind: 'new' } | null;
+type Selection = {
+    kind: 'topic' | 'forum';
+    id: string;
+} | { kind: 'new' } | null;
 
-export function Forums({ student, forums, threads }: { forums: Forum[]; threads: Thread[]; student: boolean }) {
+export function Forums({ student, forums, threads }: {
+    forums: Forum[];
+    threads: Thread[];
+    student: boolean;
+}) {
     const [{ forums: list, topics }, setBoard] = useState<ForumBoard>({ forums, topics: threads });
     const [selected, setSelected] = useState<Selection>(null);
     const courses = availableCourses(forums);

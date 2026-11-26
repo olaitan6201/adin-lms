@@ -3,7 +3,11 @@ import { Icon } from '@/components/icons/Icon';
 
 export { Icon as StudyIcon };
 
-export function StudyMetric({ label, value, hint }: { label: string; value: string; hint: string }) {
+export function StudyMetric({ label, value, hint }: {
+    label: string;
+    value: string;
+    hint: string;
+}) {
     return (
         <article className="kpi">
             <div>
@@ -15,7 +19,10 @@ export function StudyMetric({ label, value, hint }: { label: string; value: stri
     );
 }
 
-export function Note({ children, tone }: { children: ReactNode; tone: string }) {
+export function Note({ children, tone }: {
+    children: ReactNode;
+    tone: string;
+}) {
     const warning = tone === 'amber';
     return (
         <aside
@@ -27,7 +34,12 @@ export function Note({ children, tone }: { children: ReactNode; tone: string }) 
     );
 }
 
-type MeterProps = { value: number; label?: string; showValue?: boolean; tone?: string };
+type MeterProps = {
+    value: number;
+    label?: string;
+    showValue?: boolean;
+    tone?: string;
+};
 
 export function Meter({ value, label, showValue, tone }: MeterProps) {
     const color = tone === 'sky' ? 'bg-sky-500' : tone === 'amber' ? 'bg-amber-500' : 'bg-brand-500';
@@ -53,7 +65,13 @@ export function Meter({ value, label, showValue, tone }: MeterProps) {
     );
 }
 
-export function Timeline({ items }: { items: { title: string; meta: string; body: string }[] }) {
+type TimelineItem = {
+    title: string;
+    meta: string;
+    body: string;
+};
+
+export function Timeline({ items }: { items: TimelineItem[] }) {
     return (
         <ol className="relative space-y-5 border-l border-ink-100 pl-5">
             {items.map(({ title, meta, body }) => (

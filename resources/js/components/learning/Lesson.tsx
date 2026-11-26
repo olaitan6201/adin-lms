@@ -6,7 +6,11 @@ import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export function Lesson({ manuscript, chapter, practice }: { manuscript: Manuscript; chapter: Chapter; practice: Practice }) {
+export function Lesson({ manuscript, chapter, practice }: {
+    manuscript: Manuscript;
+    chapter: Chapter;
+    practice: Practice;
+}) {
     const { notify } = useWorkspaceOverlays();
     return (
         <div className="space-y-5">

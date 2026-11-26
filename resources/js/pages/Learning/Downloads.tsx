@@ -4,10 +4,18 @@ import { DeskHeading } from '@/components/academics/DeskHeading';
 import { Button } from '@/components/ui/button';
 import { InsightPanel } from '@/components/overview/InsightPanel';
 
-type Material = { id: string; title: string; course: string; filename: string; bytes: number; download: string };
+type Material = {
+    id: string;
+    title: string;
+    course: string;
+    filename: string;
+    bytes: number;
+    download: string;
+};
 
 function fileSize(bytes: number) {
     if (bytes < 1000) return `${bytes} B`;
+
     return bytes < 1_000_000 ? `${(bytes / 1000).toFixed(1)} kB` : `${(bytes / 1_000_000).toFixed(1)} MB`;
 }
 

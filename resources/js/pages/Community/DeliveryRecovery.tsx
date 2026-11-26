@@ -5,10 +5,21 @@ import { useState } from 'react';
 import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { CommunityPage } from '../../components/community/Elements';
 
-type Failure = { id: string; attempt_count: number; last_error_code: string };
-type Page = { data: Failure[]; next_page_url: string | null; prev_page_url: string | null };
+type Failure = {
+    id: string;
+    attempt_count: number;
+    last_error_code: string;
+};
+type Page = {
+    data: Failure[];
+    next_page_url: string | null;
+    prev_page_url: string | null;
+};
 
-function DeliveryRow({ row, onRecovered }: { row: Failure; onRecovered: (id: string) => void }) {
+function DeliveryRow({ row, onRecovered }: {
+    row: Failure;
+    onRecovered: (id: string) => void;
+}) {
     const [error, setError] = useState('');
     const reference = row.id.slice(-8);
     const fail = () => {

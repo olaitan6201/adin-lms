@@ -8,7 +8,10 @@ const stateIcon: Record<string, string> = {
     available: 'document',
     locked: 'lock',
 };
-export function LessonMenu({ studentModules, summary }: { summary: string; studentModules: StudyModules }) {
+export function LessonMenu({ studentModules, summary }: {
+    summary: string;
+    studentModules: StudyModules;
+}) {
     const { notify } = useWorkspaceOverlays();
     const items = studentModules.map((module) => (
         <li key={module.title}>

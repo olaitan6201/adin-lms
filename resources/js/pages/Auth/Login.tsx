@@ -10,7 +10,10 @@ interface LoginProps {
     institutionSignIn: string | null;
 }
 
-type Credentials = { email: string; password: string };
+type Credentials = {
+    email: string;
+    password: string;
+};
 
 export default function Login({ passwordReset, institutionSignIn }: LoginProps) {
     const form = useRef<ComponentRef<typeof Form<Credentials>>>(null);

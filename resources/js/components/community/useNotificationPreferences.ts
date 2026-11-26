@@ -23,6 +23,7 @@ export function useNotificationPreferences(role: WorkspaceRole) {
         setSaved(false);
         setStatus('');
     }
+
     function save() {
         try {
             sessionStorage.setItem(key, JSON.stringify(settings));
@@ -32,5 +33,6 @@ export function useNotificationPreferences(role: WorkspaceRole) {
             setStatus('Browser storage is unavailable. Your changes are still on this page.');
         }
     }
+
     return { settings, saved, status, toggle, save, setStatus };
 }

@@ -4,7 +4,11 @@ import { SequenceEditor } from './SequenceEditor';
 
 const categories = { Lesson: 'Lessons', Class: 'Classes', Assignment: 'Assignments', Discussion: 'Discussions' };
 
-export function TeachingOutline({ base, draft, activities }: { base: string; draft: boolean; activities: Activity[] }) {
+export function TeachingOutline({ base, draft, activities }: {
+    base: string;
+    draft: boolean;
+    activities: Activity[];
+}) {
     return (
         <>
             <section className="course-panel course-pad">

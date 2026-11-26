@@ -4,7 +4,10 @@ import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { useId } from 'react';
 import type { Field as FieldSpec } from './RecordForm';
 
-export function RecordField({ field, error }: { field: FieldSpec; error?: string }) {
+export function RecordField({ field, error }: {
+    field: FieldSpec;
+    error?: string;
+}) {
     const id = useId();
     const props = {
         id,

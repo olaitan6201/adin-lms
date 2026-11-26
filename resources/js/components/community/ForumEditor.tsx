@@ -4,7 +4,11 @@ import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 import { selectedCourse } from './communityCourses';
 
-type Props = { courses: string[]; close: () => void; save: (forum: Forum) => void };
+type Props = {
+    courses: string[];
+    close: () => void;
+    save: (forum: Forum) => void;
+};
 export function ForumEditor({ courses, close, save }: Props) {
     const [courseError, setCourseError] = useState('');
     function createForum(event: FormEvent<HTMLFormElement>) {
@@ -15,6 +19,7 @@ export function ForumEditor({ courses, close, save }: Props) {
             setCourseError('Select an available course.');
             return;
         }
+
         const created: Forum = {
             id: crypto.randomUUID(),
             title: String(fields.get('title')).trim(),
@@ -26,6 +31,7 @@ export function ForumEditor({ courses, close, save }: Props) {
         };
         save(created);
     }
+
     return (
         <Drawer title="New forum" close={close}>
             <form className="space-y-4" onSubmit={createForum}>

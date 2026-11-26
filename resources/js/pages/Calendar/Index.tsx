@@ -9,7 +9,10 @@ import { DateList } from '@/components/calendar/DateList';
 import { useLocalToday } from '@/components/calendar/useLocalToday';
 import { eventGroup, localDate, termDates, type AgendaDate, type CalendarTerm } from '@/components/calendar/dates';
 
-export default function Calendar({ events, terms }: { events: AgendaDate[]; terms: CalendarTerm[] }) {
+export default function Calendar({ events, terms }: {
+    events: AgendaDate[];
+    terms: CalendarTerm[];
+}) {
     const today = useLocalToday();
     const [offset, setOffset] = useState(0);
     const [filter, setFilter] = useState('All');

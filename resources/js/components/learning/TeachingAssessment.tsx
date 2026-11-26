@@ -44,6 +44,7 @@ export function AssignmentsPanel({ assignments }: { assignments: TeachingAssignm
         </Card>
     );
 }
+
 export function GradebookPanel({ gradeRows }: { gradeRows: GradeRows }) {
     const rows = gradeRows.map((row) => [
         <span key="student" className="font-medium text-ink-800">

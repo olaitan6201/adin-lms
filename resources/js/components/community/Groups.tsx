@@ -26,8 +26,10 @@ export function Groups({
     function postToGroup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!group) return;
+
         const body = String(new FormData(e.currentTarget).get('post')).trim();
         if (!body) return;
+
         const post: GroupPost = {
             id: crypto.randomUUID(),
             group: group.name,

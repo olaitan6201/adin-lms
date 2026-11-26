@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Published result sheet</title>
-    <style>{!! file_get_contents(resource_path('static-renderers/document.css')) !!}</style>
+    <style>{!! file_get_contents(resource_path('css/static/document.css')) !!}</style>
 </head>
 <body class="font-document text-result text-ink">
     <h1>Published result sheet</h1>

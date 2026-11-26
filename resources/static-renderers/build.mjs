@@ -7,7 +7,7 @@ const root = new URL('../../', import.meta.url);
 const text = (file) => readFile(new URL(file, root), 'utf8');
 const theme = await readFile(fileURLToPath(import.meta.resolve('tailwindcss/theme.css')), 'utf8');
 const preflight = await readFile(fileURLToPath(import.meta.resolve('tailwindcss/preflight.css')), 'utf8');
-const tokens = await text('resources/static-renderers/theme.css');
+const tokens = await text('resources/css/static/theme.css');
 
 async function sheet(files, reset = true) {
     const candidates = new Set();
@@ -34,7 +34,7 @@ await emit('public/scorm-desk.css', await sheet(['layout', 'launch', 'index'].ma
 await emit('resources/scorm-static/reader.css', await sheet(['exercise', 'player'].map(
     (page) => `resources/scorm-static/${page}.html`,
 )));
-await emit('resources/static-renderers/document.css', await sheet([
+await emit('resources/css/static/document.css', await sheet([
     'resources/views/assessment/result-sheet.blade.php', 'resources/views/insights/pdf.blade.php',
 ], false));
 

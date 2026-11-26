@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Academic report</title>
-    <style>{!! file_get_contents(resource_path('static-renderers/document.css')) !!}</style>
+    <style>{!! file_get_contents(resource_path('css/static/document.css')) !!}</style>
 </head>
 <body class="font-document text-report text-ink">
     <h1>Academic report</h1>

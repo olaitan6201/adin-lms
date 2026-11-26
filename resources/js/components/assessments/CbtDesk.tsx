@@ -7,7 +7,6 @@ import { Table } from '@/components/ui/data-display/Table';
 import type { Bank, BankDraft, Question, Exam, SittingDraft, BlueprintData, LogEntry } from '@/types/assessments/cbt';
 import { Note, RecordName, Sections, Status, exportSheet } from './Controls';
 import { BankPanel, NewBankPanel, SecurityPanel, guards } from './CbtPanels';
-
 import { Blueprint } from './SittingBlueprint';
 
 export default function CbtDesk({
@@ -33,6 +32,7 @@ export default function CbtDesk({
     const [exam, setExam] = useState<Exam | 'new'>();
     const [selected, setSelected] = useState(guards.slice(0, 4));
     const bank = banks.find((b) => b.id === bankId);
+
     function createBank(draft: BankDraft) {
         const created = { ...draft, id: crypto.randomUUID(), questions: 0, updated: new Date().toLocaleDateString() };
         setCatalogue((current) => ({ ...current, banks: [...current.banks, created] }));
@@ -63,6 +63,14 @@ export default function CbtDesk({
         setExam(undefined);
     }
 
+    function exportExaminations() {
+        exportSheet(
+            'examination-report',
+            ['Examination', 'Date', 'Candidates', 'Release'],
+            sittings.map(exam => [exam.title, exam.date, exam.candidates, exam.release]),
+        );
+    }
+
     const schedule = (
         <Action variant="primary" icon="plus" onClick={() => setExam('new')}>
             Schedule examination
@@ -76,16 +84,7 @@ export default function CbtDesk({
                 description="Build banks, schedule sittings, run them under controlled access, and hold results until an officer releases them."
                 actions={
                     <>
-                        <Action
-                            icon="chart"
-                            onClick={() =>
-                                exportSheet(
-                                    'examination-report',
-                                    ['Examination', 'Date', 'Candidates', 'Release'],
-                                    sittings.map((e) => [e.title, e.date, e.candidates, e.release]),
-                                )
-                            }
-                        >
+                        <Action icon="chart" onClick={exportExaminations}>
                             Examination report
                         </Action>
                         {schedule}

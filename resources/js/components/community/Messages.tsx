@@ -2,19 +2,14 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
-import { messages } from '@/data/community/engagement';
+import type { Conversation } from '@/types/community/communication';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 
-const initial = messages.map((m,i) => ({ ...m, conversation: i === 0 ? [
-    { mine: false, body: 'Some of you asked whether the deadline can move to Friday because of the mid-term on the 18th. I have extended the submission window to Friday 20 November 23:59 for everyone, not only for those who asked.' },
-    { mine: true, body: 'Thank you. Will the mark split stay the same, or will the rubric change for the extended window?' },
-] : [{ mine: false, body: m.preview }] }));
-
-export function Messages({ composing, close, read }: { composing: boolean; close: () => void; read: (count: number) => void }) {
-    const [list, setList] = useState(initial);
-    const [selected, setSelected] = useState(initial[0].id);
-    const thread = list.find(m => m.id === selected)!;
+export function Messages({ composing, close, read, messages }: { messages: Conversation[]; composing: boolean; close: () => void; read: (count: number) => void }) {
+    const [list, setList] = useState(messages);
+    const [selected, setSelected] = useState(messages[0]?.id);
+    const thread = list.find(m => m.id === selected);
     return <Card title="Messages" subtitle="Lecturer, student and private conversations" bodyClassName="p-0">
         <div className="grid divide-y lg:grid-cols-[320px_1fr] lg:divide-x lg:divide-y-0"><ul className="divide-y">{list.map(m =>
             <li key={m.id}><button className={`flex w-full items-start gap-3 border-l-2 px-4 py-3 text-left ${selected === m.id ? 'border-brand-500 bg-ink-50' : 'border-transparent hover:bg-ink-50'}`}
@@ -27,7 +22,7 @@ export function Messages({ composing, close, read }: { composing: boolean; close
                 <span className="min-w-0 flex-1"><span className="flex justify-between gap-2 text-sm"><strong>{m.name}</strong><small>{m.time}</small></span>
                     <span className="block truncate text-sm">{m.subject}</span><small className="block truncate text-ink-500">{m.preview}</small></span>{m.unread > 0 && <Badge>{m.unread}</Badge>}
             </button></li>)}</ul>
-            <section className="min-w-0 space-y-4 p-5"><h2 className="text-sm font-semibold">{thread.name}<small className="block font-normal text-ink-500">{thread.subject}</small></h2>
+            {thread ? <section className="min-w-0 space-y-4 p-5"><h2 className="text-sm font-semibold">{thread.name}<small className="block font-normal text-ink-500">{thread.subject}</small></h2>
                 {thread.conversation.map((post,i) => <p key={i} className={`rounded-xl border p-3.5 text-sm ${post.mine ? 'ml-8 border-brand-200 bg-brand-50' : 'bg-ink-50'}`}>{post.body}</p>)}
                 <form key={thread.id} className="flex gap-2" onSubmit={e => {
                     e.preventDefault();
@@ -39,7 +34,7 @@ export function Messages({ composing, close, read }: { composing: boolean; close
                     <input className="input min-w-0 flex-1" required pattern=".*\S.*" aria-label="Write a message" placeholder="Write a message" name="body"/>
                     <button className="btn btn-primary" aria-label="Send message"><Send size={16}/></button>
                 </form>
-            </section>
+            </section> : <p className="p-5 text-sm">No conversations yet.</p>}
         </div>
         {composing && <Drawer title="New message" close={close}><form className="space-y-4" onSubmit={e => {
             e.preventDefault();

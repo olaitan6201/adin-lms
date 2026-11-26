@@ -1,8 +1,7 @@
-import { enrolmentTrend, engagementMix, completionByFaculty } from '@/data/reports/analytics';
-import { heatmap } from '@/data/reports/scopeReports';
+import type { Breakdown, ReportSeries, ReportTableData } from '@/types/reports/analytics';
 export { HorizontalBars as Bars } from '@/components/overview/Charts';
 
-export function Trend({ data, label, height = 240 }: { data: typeof enrolmentTrend; label: string; height?: number }) {
+export function Trend({ data, label, height = 240 }: { data: ReportSeries; label: string; height?: number }) {
     const max = Math.max(...data.series.flatMap(s => s.values));
     const x = (i: number) => 34 + 714 * i / (data.labels.length - 1);
     const y = (value: number) => 16 + (height - 42) * (1 - value / max);
@@ -21,18 +20,18 @@ export function Trend({ data, label, height = 240 }: { data: typeof enrolmentTre
     </svg>;
 }
 
-export function Mix() {
+export function Mix({ items: engagementMix }: { items: Breakdown }) {
     const total = engagementMix.reduce((sum,d) => sum+d.value,0);
     return <div className="flex items-center gap-6"><div className="relative size-[150px] shrink-0"><svg viewBox="0 0 150 150" className="size-full -rotate-90" role="img" aria-label="Engagement breakdown">
         {engagementMix.map((d,i) => <circle key={d.label} cx="75" cy="75" r="65" fill="none" stroke={d.color} strokeWidth="20" pathLength={total}
             strokeDasharray={`${d.value} ${total-d.value}`} strokeDashoffset={-engagementMix.slice(0,i).reduce((n,s) => n+s.value,0)}><title>{d.label}: {d.value}</title></circle>)}
-    </svg><span className="absolute inset-0 flex flex-col items-center justify-center"><strong className="text-xl font-semibold">6.9k</strong><small className="text-[10px] font-medium tracking-wide text-ink-400 uppercase">Actions</small></span></div>
+    </svg><span className="absolute inset-0 flex flex-col items-center justify-center"><strong className="text-xl font-semibold">{(total / 1000).toFixed(1)}k</strong><small className="text-[10px] font-medium tracking-wide text-ink-400 uppercase">Actions</small></span></div>
         <ul className="min-w-0 flex-1 space-y-2">{engagementMix.map(d => <li key={d.label} className="flex items-center gap-2 text-[13px]">
             <span className="size-2.5 shrink-0 rounded-sm" style={{ background: d.color }}/><span className="min-w-0 flex-1 truncate text-ink-600" title={d.label}>{d.label}</span><strong className="font-semibold tnum">{d.value}</strong></li>)}</ul>
     </div>;
 }
 
-export function Columns() {
+export function Columns({ items: completionByFaculty }: { items: Breakdown }) {
     const max = Math.max(...completionByFaculty.map(d => d.value));
     const slot = 482 / completionByFaculty.length;
     return <svg viewBox="0 0 520 200" className="h-auto w-full" role="img" aria-label="Completion by faculty">
@@ -46,7 +45,7 @@ export function Columns() {
     </svg>;
 }
 
-export function DepartmentHeatmap() {
+export function DepartmentHeatmap({ heatmap }: { heatmap: ReportTableData }) {
     const max = Math.max(...heatmap.rows.flatMap(row => row.slice(1).map(Number)));
     return <table aria-label={heatmap.title} className="w-full table-fixed border-separate border-spacing-x-1 border-spacing-y-2 text-center">
         <thead><tr>{heatmap.columns.map((name,i) => <th scope="col" key={name} className={i ? 'pb-2 text-[10px] font-semibold tracking-wide text-ink-400 uppercase' : 'w-28'}>

@@ -3,15 +3,13 @@ import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
-import { forums, threads } from '@/data/community/engagement';
+import type { Forum, Thread } from '@/types/community/communication';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 
-const initialThreads = threads.map((t, i) => ({ ...t, forum: forums[i].id, pinned: false, allowReplies: true, responses: [] as string[] }));
-
-export function Forums({ student }: { student: boolean }) {
+export function Forums({ student, forums, threads }: { forums: Forum[]; threads: Thread[]; student: boolean }) {
     const [list, setList] = useState(forums);
-    const [topics, setTopics] = useState(initialThreads);
+    const [topics, setTopics] = useState(threads);
     const [selected, setSelected] = useState('');
     const topic = topics.find(t => t.id === selected);
     const forum = list.find(f => f.id === selected);
@@ -63,7 +61,7 @@ export function Forums({ student }: { student: boolean }) {
                     <Field label="Move thread"><select className="select" name="forum" defaultValue={topic.forum}>{list.map(f => <option key={f.id} value={f.id}>{f.title}</option>)}</select></Field>
                 </div></Card>}
                 {topic.responses.map((r,i) => <p key={i} className="rounded-lg bg-brand-50 p-3"><strong>You</strong><br/>{r}</p>)}
-                {(!student || topic.allowReplies) ? <><Field label="Reply"><textarea aria-label="Reply" className="input min-h-24" name="reply" required={student} placeholder="Write a reply" defaultValue={!student && topic.id === threads[0].id ? "Historical cost is a measurement convention, not a claim about value. The gain raises the carrying amount only if the standard permits revaluation, and that treatment is separate from the depreciation charge." : undefined}/></Field>
+                {(!student || topic.allowReplies) ? <><Field label="Reply"><textarea aria-label="Reply" className="input min-h-24" name="reply" required={student} placeholder="Write a reply" defaultValue={student ? undefined : topic.suggestedReply}/></Field>
                     <div className="flex justify-end gap-2"><button type="button" className="btn btn-outline" onClick={close}>Close</button><button className="btn btn-primary">Post reply</button></div></> : <p>This thread is closed to replies.</p>}
             </form>
         </Drawer>}

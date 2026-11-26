@@ -22,7 +22,7 @@ export function SegmentedRing({ size, strokeWidth, label, segments }: RingProps)
                         <circle key={segment.label} cx={center} cy={center} r={radius} stroke={segment.color}
                             transform={`rotate(-90 ${center} ${center})`} pathLength={total}
                             strokeDasharray={`${segment.value} ${total - segment.value}`} strokeDashoffset={-start}>
-                            <title>{segment.label}: {segment.value}</title>
+                            <title>{`${segment.label}: ${segment.value}`}</title>
                         </circle>
                     );
                 })}

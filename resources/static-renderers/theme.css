@@ -1,8 +1,10 @@
 @theme inline {
-    --color-forest: #005d22;
-    --color-gold: #d6b469;
-    --color-ink: #1a1a18;
-    --color-rule: #cccccc;
+    --color-forest: #047857;
+    --color-rail: #0F1A2A;
+    --color-brand: #10B981;
+    --color-canvas: #F5F7F9;
+    --color-ink: #17263A;
+    --color-rule: #D5DDE6;
     --font-document: "DejaVu Sans", sans-serif;
     --text-report: 9pt;
     --text-result: 11pt;

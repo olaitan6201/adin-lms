@@ -5,7 +5,6 @@
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
-  --color-neutral-50: oklch(98.5% 0 none);
   --color-neutral-500: oklch(55.6% 0 none);
   --color-neutral-600: oklch(43.9% 0 none);
   --color-white: #fff;
@@ -209,20 +208,20 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   border-left-style: var(--tw-border-style);
   border-left-width: 4px;
 }
-.border-forest {
-  border-color: #005d22;
+.border-brand {
+  border-color: #10B981;
 }
-.border-gold {
-  border-color: #d6b469;
+.border-forest {
+  border-color: #047857;
 }
 .border-neutral-500 {
   border-color: var(--color-neutral-500);
 }
-.bg-forest {
-  background-color: #005d22;
+.bg-canvas {
+  background-color: #F5F7F9;
 }
-.bg-neutral-50 {
-  background-color: var(--color-neutral-50);
+.bg-forest {
+  background-color: #047857;
 }
 .p-2 {
   padding: calc(var(--spacing) * 2);
@@ -261,10 +260,10 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
   white-space: pre-wrap;
 }
 .text-forest {
-  color: #005d22;
+  color: #047857;
 }
 .text-ink {
-  color: #1a1a18;
+  color: #17263A;
 }
 .text-neutral-600 {
   color: var(--color-neutral-600);

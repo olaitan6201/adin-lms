@@ -6,14 +6,14 @@
 
 @section('content')
     <main id="content" class="mx-auto max-w-6xl px-4 sm:px-8 py-8" tabindex="-1">
-        <header class="mb-6 space-y-2 border-b border-neutral-200 pb-5">
-            <p class="text-sm font-semibold text-neutral-600">Course materials</p>
-            <h1 class="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">SCORM readings</h1>
-            <p>{{ $staff ? 'Manage the reading exercises for this offering.' : 'Open a reading to begin or return to your saved note.' }}</p>
+        <header class="mb-6">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-forest">Course materials</p>
+            <h1 class="mt-1 text-[22px] font-semibold tracking-[-0.02em] sm:text-[26px]">SCORM readings</h1>
+            <p class="mt-1.5 text-[13.5px] leading-relaxed">{{ $staff ? 'Manage the reading exercises for this offering.' : 'Open a reading to begin or return to your saved note.' }}</p>
         </header>
-        <div class="grid items-start gap-8 md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
-            <section class="min-w-0" aria-labelledby="collection">
-                <h2 class="mb-3 text-xl font-semibold" id="collection">Reading list</h2>
+        <div class="grid items-start gap-5 md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
+            <section class="min-w-0 rounded-2xl border border-rule bg-white p-5 shadow-sm" aria-labelledby="collection">
+                <h2 class="mb-3 text-[15px] font-semibold" id="collection">Reading list</h2>
                 @forelse ($packages as $package)
                     <article class="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-200 py-4">
                         <h3 class="font-semibold">{{ $package->title }}</h3>
@@ -39,9 +39,9 @@
                 @endif
             </section>
             @if ($staff)
-                <section class="min-w-0 rounded-lg border border-neutral-200 p-5" aria-labelledby="import-title">
-                    <p class="text-sm font-semibold text-neutral-600">Lecturer workspace</p>
-                    <h2 class="mb-3 text-xl font-semibold" id="import-title">Add a reading</h2>
+                <section class="min-w-0 rounded-2xl border border-rule bg-white p-5 shadow-sm" aria-labelledby="import-title">
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.12em] text-forest">Lecturer workspace</p>
+                    <h2 class="mb-3 text-[15px] font-semibold" id="import-title">Add a reading</h2>
                     <p>Registered learners can open it once the offering is published.</p>
                     <form action="{{ route('scorm.store', $offering) }}" method="post" enctype="multipart/form-data">
                         @csrf

@@ -38,53 +38,66 @@ export default function Catalogue({
                 Select a programme version to inspect course requirements, academic levels and outcome coverage.
             </DeskHeading>
             <RegistryPanel title="Programme versions" subtitle="Select a curriculum revision">
-            <nav aria-label="Curriculum versions">
-                {versions.length ? (
-                    <ul className="flex flex-wrap gap-2">
-                        {versions.map((v) => (
-                            <li key={v.id}>
-                                <Link className={v.id === version?.id ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'} aria-current={v.id === version?.id ? 'page' : undefined} href={`${base}/${v.id}`}>
-                                    {v.name} · v{v.version} · {v.status}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No versions yet.</p>
+                <nav aria-label="Curriculum versions">
+                    {versions.length ? (
+                        <ul className="flex flex-wrap gap-2">
+                            {versions.map((v) => (
+                                <li key={v.id}>
+                                    <Link
+                                        className={
+                                            v.id === version?.id ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'
+                                        }
+                                        aria-current={v.id === version?.id ? 'page' : undefined}
+                                        href={`${base}/${v.id}`}
+                                    >
+                                        {v.name} · v{v.version} · {v.status}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No versions yet.</p>
+                    )}
+                </nav>
+                {edit && (
+                    <Collapsible>
+                        <CollapsibleTrigger asChild>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="h-auto min-h-9 max-w-full whitespace-normal text-start"
+                            >
+                                Start a curriculum
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
+                            <RecordForm
+                                title="Create draft"
+                                action={base}
+                                fields={[
+                                    field('programme_id', 'Programme', programmes),
+                                    field('framework_revision', 'CCMAS framework revision'),
+                                ]}
+                            />
+                        </CollapsibleContent>
+                    </Collapsible>
                 )}
-            </nav>
-            {edit && (
-                <Collapsible>
-                    <CollapsibleTrigger asChild>
-                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
-                            Start a curriculum
-                        </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
-                        <RecordForm
-                            title="Create draft"
-                            action={base}
-                            fields={[
-                                field('programme_id', 'Programme', programmes),
-                                field('framework_revision', 'CCMAS framework revision'),
-                            ]}
-                        />
-                    </CollapsibleContent>
-                </Collapsible>
-            )}
             </RegistryPanel>
             {version?.id && (
                 <>
-                    <RegistryPanel title="Course catalogue" subtitle={`${version.framework_revision} · v${version.version} (${version.status})`}>
-                    {version.approved_at && (
-                        <p className="break-words">
-                            Approved {new Date(version.approved_at).toLocaleString()} by {approverName}
-                        </p>
-                    )}
-                    <CatalogueCourses {...{ entries, levels, prerequisites, draft, path }} />
+                    <RegistryPanel
+                        title="Course catalogue"
+                        subtitle={`${version.framework_revision} · v${version.version} (${version.status})`}
+                    >
+                        {version.approved_at && (
+                            <p className="break-words">
+                                Approved {new Date(version.approved_at).toLocaleString()} by {approverName}
+                            </p>
+                        )}
+                        <CatalogueCourses {...{ entries, levels, prerequisites, draft, path }} />
                     </RegistryPanel>
                     <RegistryPanel title="Outcome mapping" subtitle="Course outcomes and programme coverage">
-                    <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
+                        <OutcomeCoverage {...{ entries, courseOutcomes, programmeOutcomes, mappings }} />
                     </RegistryPanel>
                     {draft && (
                         <>

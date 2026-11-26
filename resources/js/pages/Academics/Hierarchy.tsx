@@ -43,65 +43,73 @@ export default function Hierarchy({ manage, faculties, departments, programmes, 
                 Browse faculties, departments and programmes alongside the institutional calendar.
             </DeskHeading>
             <div className="grid items-start gap-5 xl:grid-cols-[2fr_1fr]">
-            <RegistryPanel title="Faculties and programmes" subtitle="Faculty, department and programme assignment">
-            {!faculties.length && <p>No faculties in scope.</p>}
-            {faculties.map((f) => (
-                <section key={f.id} className="space-y-3 rounded-xl border border-ink-100 p-4">
-                    <h3 className="flex items-center gap-3 text-sm font-semibold">
-                        <span className="rounded-lg bg-ink-900 px-2 py-3 text-xs text-white">{f.code}</span>{f.name}
-                    </h3>
-                    {departments
-                        .filter((d) => d.faculty_id === f.id)
-                        .map((d) => (
-                            <Collapsible className="rounded-lg border border-ink-100 bg-ink-50 p-3" key={d.id}>
-                                <CollapsibleTrigger asChild>
-                                    <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
-                                        {d.name}
-                                    </Button>
-                                </CollapsibleTrigger>
-                                <CollapsibleContent forceMount className="space-y-3 pt-3 data-[state=closed]:hidden">
-                                    <ul>
-                                        {programmes
-                                            .filter((p) => p.department_id === d.id)
-                                            .map((p) => (
-                                                <li key={p.id}>
-                                                    {p.code} · {p.name}
-                                                </li>
-                                            ))}
-                                    </ul>
-                                    {manage && (
-                                        <RecordForm
-                                            title="Delete department"
-                                            action={`/academics/departments/${d.id}`}
-                                            method="delete"
-                                        />
-                                    )}
-                                </CollapsibleContent>
-                            </Collapsible>
-                        ))}
-                </section>
-            ))}
-            </RegistryPanel>
-            <RegistryPanel title="Calendar and levels" subtitle="Session windows and semester dates">
-            <p>Levels: {levels.map((l) => l.label).join(', ') || 'None configured'}</p>
-            {!sessions.length && <p>No sessions configured.</p>}
-            {sessions.map((s) => (
-                <section key={s.id} className="border-t border-ink-100 pt-3 text-sm">
-                    <h3 className="font-semibold">
-                        {s.label} · {s.starts_on} – {s.ends_on}
-                    </h3>
-                    <ul>
-                        {semesters
-                            .filter((t) => t.session_id === s.id)
-                            .map((t) => (
-                                <li key={t.id}>
-                                    Semester {t.position}: {t.starts_on} – {t.ends_on}
-                                </li>
-                            ))}
-                    </ul>
-                </section>
-            ))}
-            </RegistryPanel>
+                <RegistryPanel title="Faculties and programmes" subtitle="Faculty, department and programme assignment">
+                    {!faculties.length && <p>No faculties in scope.</p>}
+                    {faculties.map((f) => (
+                        <section key={f.id} className="space-y-3 rounded-xl border border-ink-100 p-4">
+                            <h3 className="flex items-center gap-3 text-sm font-semibold">
+                                <span className="rounded-lg bg-ink-900 px-2 py-3 text-xs text-white">{f.code}</span>
+                                {f.name}
+                            </h3>
+                            {departments
+                                .filter((d) => d.faculty_id === f.id)
+                                .map((d) => (
+                                    <Collapsible className="rounded-lg border border-ink-100 bg-ink-50 p-3" key={d.id}>
+                                        <CollapsibleTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="h-auto min-h-9 max-w-full whitespace-normal text-start"
+                                            >
+                                                {d.name}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent
+                                            forceMount
+                                            className="space-y-3 pt-3 data-[state=closed]:hidden"
+                                        >
+                                            <ul>
+                                                {programmes
+                                                    .filter((p) => p.department_id === d.id)
+                                                    .map((p) => (
+                                                        <li key={p.id}>
+                                                            {p.code} · {p.name}
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                            {manage && (
+                                                <RecordForm
+                                                    title="Delete department"
+                                                    action={`/academics/departments/${d.id}`}
+                                                    method="delete"
+                                                />
+                                            )}
+                                        </CollapsibleContent>
+                                    </Collapsible>
+                                ))}
+                        </section>
+                    ))}
+                </RegistryPanel>
+                <RegistryPanel title="Calendar and levels" subtitle="Session windows and semester dates">
+                    <p>Levels: {levels.map((l) => l.label).join(', ') || 'None configured'}</p>
+                    {!sessions.length && <p>No sessions configured.</p>}
+                    {sessions.map((s) => (
+                        <section key={s.id} className="border-t border-ink-100 pt-3 text-sm">
+                            <h3 className="font-semibold">
+                                {s.label} · {s.starts_on} – {s.ends_on}
+                            </h3>
+                            <ul>
+                                {semesters
+                                    .filter((t) => t.session_id === s.id)
+                                    .map((t) => (
+                                        <li key={t.id}>
+                                            Semester {t.position}: {t.starts_on} – {t.ends_on}
+                                        </li>
+                                    ))}
+                            </ul>
+                        </section>
+                    ))}
+                </RegistryPanel>
             </div>
             {manage && (
                 <HierarchyForms

@@ -22,13 +22,17 @@ export function RecordField({ field, error }: { field: FieldSpec; error?: string
                 <NativeSelect {...props} defaultValue={field.initial ?? ''}>
                     <NativeSelectOption value="">Select an option</NativeSelectOption>
                     {field.options.map((option) => (
-                        <NativeSelectOption key={option.id} value={option.id}>{option.name}</NativeSelectOption>
+                        <NativeSelectOption key={option.id} value={option.id}>
+                            {option.name}
+                        </NativeSelectOption>
                     ))}
                 </NativeSelect>
             ) : (
                 <Input {...props} type={field.type ?? 'text'} />
             )}
-            <FieldError id={`${id}-error`} role={undefined}>{error}</FieldError>
+            <FieldError id={`${id}-error`} role={undefined}>
+                {error}
+            </FieldError>
         </Field>
     );
 }

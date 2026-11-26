@@ -58,7 +58,11 @@ export function HierarchyForms({
             {forms.map(([label, path, fields]) => (
                 <Collapsible className="border-b py-2" key={path}>
                     <CollapsibleTrigger asChild>
-                        <Button type="button" variant="outline" className="h-auto min-h-9 max-w-full whitespace-normal text-start">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-auto min-h-9 max-w-full whitespace-normal text-start"
+                        >
                             Maintain {label}
                         </Button>
                     </CollapsibleTrigger>

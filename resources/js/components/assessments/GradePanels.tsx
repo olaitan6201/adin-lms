@@ -40,8 +40,8 @@ export function Weights({
 
     return (
         <Card
-            title="Assessment weights and grading policy"
-            subtitle="Configured by an authorised officer. Continuous assessment is split into assignments and quizzes (20) and participation (10)."
+            title="Assessment weights and grade boundaries"
+            subtitle="Continuous assessment is split into assignments and quizzes (20) and participation (10)."
             actions={
                 <>
                     <Badge tone={total === 100 ? 'emerald' : 'rose'}>Total {total}%</Badge>
@@ -74,7 +74,7 @@ export function Weights({
             </div>
             <p role="status">{message}</p>
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
-                <Card title="Grade boundaries">
+                <Card title="Boundaries for score edits" subtitle="These sample boundaries calculate the grade when a score changes. The original grading policy is not specified for the sample records.">
                     <Details
                         items={boundaries.map(([grade, low], i) => [
                             grade,

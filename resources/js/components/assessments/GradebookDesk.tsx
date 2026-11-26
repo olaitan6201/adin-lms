@@ -9,7 +9,7 @@ import { Note } from '@/components/ui/feedback/Note';
 import { exportSheet } from '@/lib/csv';
 import { ScoreField } from './gradebook/ScoreField';
 import { SecondMarkerForm } from './gradebook/SecondMarkerForm';
-import { useGradebook, type MarkerDecision } from './gradebook/useGradebook';
+import { gradeForTotal, useGradebook, type MarkerDecision } from './gradebook/useGradebook';
 import type { GradeRow, ScoreChange, GradePolicy, Metric } from '@/types/assessments/gradebook';
 import { Moderation, stages, Weights } from './GradePanels';
 
@@ -31,6 +31,8 @@ export default function GradebookDesk({ lecturer = false, gradeRows, scoreHistor
     const [search, find] = useState('');
     const [dialog, setDialog] = useState('');
     const approved = rows.filter(r => r.state === 'approved');
+    const releaseDifferences = approved.map(row => ({ row, preview: gradeForTotal(row.total, policy.boundaries) }))
+        .filter(({ row, preview }) => row.grade !== preview);
     const visible = rows.filter(r => (!state || r.state === state) && `${r.student} ${r.matric}`.toLowerCase().includes(search.toLowerCase()));
     function confirmPublication() {
         publishApproved();
@@ -50,7 +52,7 @@ export default function GradebookDesk({ lecturer = false, gradeRows, scoreHistor
 
     function download() {
         exportSheet(`${course}-results`,
-            ['Student', 'Matric', ...metrics.map(([, label]) => label), 'Total', 'Grade', 'State'],
+            ['Student', 'Matric', ...metrics.map(([, label]) => label), 'Total', 'Recorded grade', 'State'],
             visible.map(r => [r.student, r.matric, ...metrics.map(([key]) => r[key]), r.total, r.grade, r.state]),
         );
     }
@@ -84,7 +86,8 @@ export default function GradebookDesk({ lecturer = false, gradeRows, scoreHistor
                         {tool === 'search' && <input autoFocus className="input" aria-label="Find student" placeholder="Find student" value={search} onChange={e => find(e.target.value)} />}
                         <small className="ml-auto text-xs text-ink-400">Changes are saved automatically and recorded in the score history</small>
                     </div>
-                    <Table columns={['Student', ...metrics.map(([, label]) => label), 'Total', 'Grade', 'State']} rowKeys={visible.map(r => r.matric)} rows={visible.map(r => [
+                    <p className="mb-3 text-sm">The sheet shows recorded grades. Changing a score recalculates that row’s grade using the boundaries under Weights and rubric.</p>
+                    <Table columns={['Student', ...metrics.map(([, label]) => label), 'Total', 'Recorded grade', 'State']} rowKeys={visible.map(r => r.matric)} rows={visible.map(r => [
                         <RecordName name={r.student} meta={r.matric} />,
                         ...metrics.map(metric => <ScoreField key={metric[0]} row={r} metric={metric} adjust={adjustScore} />),
                         <span className="tnum text-[13px] font-semibold text-ink-900">{r.total}</span>,
@@ -101,7 +104,12 @@ export default function GradebookDesk({ lecturer = false, gradeRows, scoreHistor
             <Note amber>Published results are immutable in place. Any correction is applied as an approved version with its own reason and audit trail.</Note>
             {dialog === 'publish' && <Drawer title="Publish results" close={() => setDialog('')}>
                 {lecturer ? <Note>Publication is reserved for the authorised examination officer.</Note> : <>
-                    <p>{approved.length} approved result(s) ready to publish. Other results remain unchanged.</p>
+                    <p>{approved.length} approved result(s) ready to publish. Publication keeps the recorded grade; it does not recalculate it.</p>
+                    {releaseDifferences.length > 0 && <ul className="list-disc pl-5">
+                        {releaseDifferences.map(({ row, preview }) => <li key={row.matric}>
+                            {row.student} ({row.matric}): {row.total} total. Recorded grade: {row.grade}. Boundary preview: {preview}.
+                        </li>)}
+                    </ul>}
                     <Action variant="primary" disabled={!approved.length} onClick={confirmPublication}>Confirm publication</Action>
                 </>}
             </Drawer>}

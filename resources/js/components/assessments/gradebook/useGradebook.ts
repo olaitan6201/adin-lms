@@ -5,6 +5,10 @@ type Book = { rows: GradeRow[]; history: ScoreChange[] };
 type Revision = { rows: GradeRow[]; change: string; reason: string };
 export type MarkerDecision = 'Approve' | 'Send for moderation';
 
+export function gradeForTotal(total: number, boundaries: GradePolicy['boundaries']) {
+    return boundaries.find(([, minimum]) => total >= minimum)?.[0] ?? 'F';
+}
+
 export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boolean) {
     const [book, setBook] = useState(initial);
 
@@ -26,7 +30,7 @@ export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boole
             if (!row || row.state === 'published' || value === row[key]) return;
             if (!Number.isInteger(value) || value < 0 || value > maximum) return;
             const total = row.total - row[key] + value;
-            const grade = policy.boundaries.find(([, min]) => total >= min)?.[0] ?? 'F';
+            const grade = gradeForTotal(total, policy.boundaries);
             return {
                 rows: rows.map(result => result === row ? { ...row, [key]: value, total, grade, state: 'moderation' } : result),
                 change: `${matric}: ${key} ${row[key]} to ${value}`,

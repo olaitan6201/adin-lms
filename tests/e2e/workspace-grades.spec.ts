@@ -26,6 +26,14 @@ test('score edits validate, regrade and enter moderation with one history entry'
     await page.goto('/admin/gradebook');
     const row = page.getByRole('row').filter({ hasText: 'AOU/2023/0901' });
     const score = row.getByRole('spinbutton').first();
+    await expect(page.getByRole('columnheader', { name: 'Recorded grade' })).toBeVisible();
+    await expect(row.getByRole('cell', { name: '75', exact: true })).toBeVisible();
+    await expect(row.getByRole('cell', { name: 'B', exact: true })).toBeVisible();
+    await expect(row).toContainText('Approved');
+    await page.getByRole('button', { name: 'Weights and rubric' }).click();
+    await expect(page.getByRole('heading', { name: 'Boundaries for score edits' })).toBeVisible();
+    await expect(page.locator('dt').filter({ hasText: /^A$/ }).locator('+ dd')).toContainText('70 – 100');
+    await page.getByRole('button', { name: 'Score sheet', exact: true }).click();
     await score.fill('21');
     await score.press('Tab');
     await expect(score).toHaveValue('15');
@@ -54,9 +62,11 @@ test('only the officer can confirm release and only approved rows are released',
     await expect(page.getByRole('option', { name: 'Approve', exact: true })).toHaveCount(0);
     await page.goto('/admin/gradebook');
     await page.getByRole('button', { name: 'Publish results' }).first().click();
+    await expect(page.getByRole('dialog')).toContainText('75 total. Recorded grade: B. Boundary preview: A.');
     await page.getByRole('button', { name: 'Confirm publication' }).click();
     await expect(page.getByRole('row').filter({ hasText: 'Published' })).toHaveCount(3);
     await expect(page.getByRole('row').filter({ hasText: 'AOU/2023/0901' })).toContainText('Published');
+    await expect(page.getByRole('row').filter({ hasText: 'AOU/2023/0901' }).getByRole('cell', { name: 'B', exact: true })).toBeVisible();
     await expect(page.getByRole('row').filter({ hasText: 'In moderation' })).toHaveCount(2);
     await expect(page.getByRole('row').filter({ hasText: 'Entered' })).toHaveCount(1);
 });

@@ -11,7 +11,7 @@ export const assignments: Assignment[] = [
 ];
 
 export const submissions: Submission[] = [
-  { id: 'sub-1', file: 'okonkwo_blessing_set3.pdf', feedback: 'Strong journal entries throughout. In question 3 the debit side of the asset purchase is correct but the corresponding credit to trade payables is missing, which is why the trial balance does not balance. Review the posting rule in Week 3 section 2 before the mid-term.', size: '1.4 MB', student: 'Blessing Okonkwo', matric: 'AOU/2023/0412', assignmentId: 'as-1', submitted: '12 Nov, 21:04', status: 'awaiting marking', late: false, score: null },
+  { id: 'sub-1', marks: [8, 5, 3], file: 'okonkwo_blessing_set3.pdf', feedback: 'Strong journal entries throughout. In question 3 the debit side of the asset purchase is correct but the corresponding credit to trade payables is missing, which is why the trial balance does not balance. Review the posting rule in Week 3 section 2 before the mid-term.', size: '1.4 MB', student: 'Blessing Okonkwo', matric: 'AOU/2023/0412', assignmentId: 'as-1', submitted: '12 Nov, 21:04', status: 'awaiting marking', late: false, score: null },
   { id: 'sub-2', student: 'Chinedu Okafor', matric: 'AOU/2024/1187', assignmentId: 'as-1', submitted: '14 Nov, 02:41', status: 'submitted late', late: true, score: null },
   { id: 'sub-3', student: 'Aisha Bello', matric: 'AOU/2023/0288', assignmentId: 'as-1', submitted: '11 Nov, 09:18', status: 'marked', late: false, score: 74 },
   { id: 'sub-4', student: 'Emeka Uzoma', matric: 'AOU/2022/0067', assignmentId: 'as-1', submitted: '13 Nov, 17:52', status: 'feedback returned', late: false, score: 58 },
@@ -20,5 +20,5 @@ export const submissions: Submission[] = [
 
 export const assignmentDesk = {
     assignments, submissions, ruleFields, timing, awaiting: 34, opens: '2026-11-07', enrolment: 68,
-    guide: { scriptPreview: 'Sample script · Journal entries, ledger postings and trial balance.', rubric: ['Correct journal entry', 'Correct ledger posting', 'Trial balance extracted and balanced'], maximum: [10, 6, 4], awarded: [8, 5, 3] },
+    guide: { scriptPreview: 'Sample script · Journal entries, ledger postings and trial balance.', rubric: ['Correct journal entry', 'Correct ledger posting', 'Trial balance extracted and balanced'], maximum: [10, 6, 4] },
 };

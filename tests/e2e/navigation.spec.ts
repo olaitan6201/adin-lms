@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('a guest can reach sign-in by keyboard at either navigation width', async ({ page }, info) => {
-    await page.goto('/');
+    await page.goto('/portal');
     await page.getByRole('link', { name: /sign in to the portal/i }).waitFor();
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();

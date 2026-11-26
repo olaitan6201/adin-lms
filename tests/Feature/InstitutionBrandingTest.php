@@ -26,7 +26,7 @@ class InstitutionBrandingTest extends TestCase
 
     public function test_operator_changes_identity_and_learner_reads_only_the_public_brand(): void
     {
-        $this->get('/')->assertInertia(fn (Page $page) => $page->where('branding.institution', 'Configured College')
+        $this->get('/portal')->assertInertia(fn (Page $page) => $page->where('branding.institution', 'Configured College')
             ->where('branding.logoFull', asset(config('branding.logo_full'))));
         $actor = $this->signIn(RoleCode::IctAdmin);
         $image = UploadedFile::fake()->image('office-private-name.jpg', 75, 50);
@@ -48,7 +48,7 @@ class InstitutionBrandingTest extends TestCase
         $this->get($url)->assertOk();
         $this->post('/operations/branding', ['institution' => '', 'restore_logo' => '1'])->assertRedirectToRoute('operations.index');
         $this->get($url)->assertNotFound();
-        $this->get('/')->assertInertia(fn (Page $page) => $page->where('branding.institution', 'Configured College')
+        $this->get('/portal')->assertInertia(fn (Page $page) => $page->where('branding.institution', 'Configured College')
             ->where('branding.logoWhite', asset(config('branding.logo_white'))));
     }
 

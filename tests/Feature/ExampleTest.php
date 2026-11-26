@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -14,6 +13,6 @@ class ExampleTest extends TestCase
     {
         $response = $this->withoutVite()->get('/');
 
-        $response->assertOk()->assertInertia(fn (AssertableInertia $page) => $page->component('Home'));
+        $response->assertRedirectToRoute('workspace.admin.overview');
     }
 }

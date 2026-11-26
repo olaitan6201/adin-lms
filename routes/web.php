@@ -4,7 +4,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentHistoryController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Home')->name('home');
+Route::redirect('/', '/admin/overview')->name('home');
+Route::inertia('/portal', 'Home')->name('portal.home');
 foreach (glob(__DIR__.'/web/*.php') as $moduleRoutes) {
     require $moduleRoutes;
 }

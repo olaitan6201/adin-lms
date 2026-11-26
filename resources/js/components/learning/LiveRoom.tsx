@@ -6,7 +6,10 @@ import { StudyIcon } from '@/components/learning/Parts';
 
 export function LiveRoom({ room }: { room: Room }) {
     return (
-        <Card title="Live room preview" subtitle="Screen sharing with live question and answer, plus attendance and participation capture">
+        <Card
+            title="Live room preview"
+            subtitle="Screen sharing with live question and answer, plus attendance and participation capture"
+        >
             <div className="overflow-hidden rounded-xl border border-ink-200 bg-ink-900">
                 <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-2.5">
                     <div className="flex items-center gap-2">
@@ -31,7 +34,9 @@ export function LiveRoom({ room }: { room: Room }) {
                         <div className="learning-room-panel rounded-lg p-3">
                             <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">Questions</p>
                             <ul className="mt-2 space-y-2">
-                                <li className="learning-room-panel rounded-md p-2 text-[12px] leading-relaxed text-ink-200">{room.dividendQuestion}</li>
+                                <li className="learning-room-panel rounded-md p-2 text-[12px] leading-relaxed text-ink-200">
+                                    {room.dividendQuestion}
+                                </li>
                                 <li className="learning-room-panel rounded-md p-2 text-[12px] leading-relaxed text-ink-200">
                                     {room.eliminationQuestion}
                                 </li>
@@ -45,23 +50,37 @@ export function LiveRoom({ room }: { room: Room }) {
                     </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 border-t border-white/10 px-4 py-2.5">
-                    <button type="button" className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15">
+                    <button
+                        type="button"
+                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                    >
                         <StudyIcon name="mic" className="w-4 h-4" />
                         <span>Mute</span>
                     </button>
-                    <button type="button" className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15">
+                    <button
+                        type="button"
+                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                    >
                         <StudyIcon name="monitor" className="w-4 h-4" />
                         <span>Share screen</span>
                     </button>
-                    <button type="button" className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15">
+                    <button
+                        type="button"
+                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                    >
                         <StudyIcon name="chat" className="w-4 h-4" />
                         <span>Questions</span>
                     </button>
-                    <button type="button" className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15">
+                    <button
+                        type="button"
+                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                    >
                         <StudyIcon name="camera" className="w-4 h-4" />
                         <span>Record</span>
                     </button>
-                    <span className="ml-auto text-[11.5px] text-ink-400">Attendance and participation are captured automatically</span>
+                    <span className="ml-auto text-[11.5px] text-ink-400">
+                        Attendance and participation are captured automatically
+                    </span>
                 </div>
             </div>
         </Card>
@@ -72,7 +91,7 @@ export function Recordings({ archive }: { archive: Archive }) {
     const recordings = archive.recordings;
 
     const rows = recordings.map((recording) => [
-        <div className="flex items-center gap-2.5">
+        <div key="recording" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500">
                 <StudyIcon name="video" className="w-4 h-4" />
             </span>
@@ -83,9 +102,13 @@ export function Recordings({ archive }: { archive: Archive }) {
                 </p>
             </div>
         </div>,
-        <span className="font-mono text-[12px] text-ink-600">{recording.length}</span>,
-        <span className="text-[13px] tnum">{recording.views}</span>,
-        <div className="flex justify-end gap-1.5">
+        <span key="length" className="font-mono text-[12px] text-ink-600">
+            {recording.length}
+        </span>,
+        <span key="views" className="text-[13px] tnum">
+            {recording.views}
+        </span>,
+        <div key="actions" className="flex justify-end gap-1.5">
             <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Transcript opened')}>
                 Transcript
             </button>

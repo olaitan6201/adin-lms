@@ -9,10 +9,16 @@ import { StudyIcon } from '@/components/learning/Parts';
 export function ContentPanel({ courseModules, outline }: { courseModules: TeachingModules; outline: string[] }) {
     const { notify } = useWorkspaceOverlays();
     const rows = courseModules.map((module) => [
-        <span className="font-mono text-[11.5px] font-medium text-ink-500">{module.week}</span>,
-        <span className="font-medium text-ink-800">{module.title}</span>,
-        <span className="text-[13px] tnum">{module.items}</span>,
-        <div className="w-28">
+        <span key="week" className="font-mono text-[11.5px] font-medium text-ink-500">
+            {module.week}
+        </span>,
+        <span key="module" className="font-medium text-ink-800">
+            {module.title}
+        </span>,
+        <span key="items" className="text-[13px] tnum">
+            {module.items}
+        </span>,
+        <div key="progress" className="w-28">
             <div className="flex items-center gap-2">
                 <div className="prog-track">
                     <div className="prog-fill" style={{ width: `${module.completion}%` }} />
@@ -20,8 +26,10 @@ export function ContentPanel({ courseModules, outline }: { courseModules: Teachi
                 <span className="text-[11px] font-medium text-ink-600 tnum">{module.completion}%</span>
             </div>
         </div>,
-        <Badge tone={module.state === 'published' ? 'emerald' : 'amber'}>{module.state === 'published' ? 'Published' : 'Draft'}</Badge>,
-        <div className="flex justify-end gap-1.5">
+        <Badge key="state" tone={module.state === 'published' ? 'emerald' : 'amber'}>
+            {module.state === 'published' ? 'Published' : 'Draft'}
+        </Badge>,
+        <div key="actions" className="flex justify-end gap-1.5">
             <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Module editor opened')}>
                 Edit
             </button>
@@ -45,12 +53,19 @@ export function ContentPanel({ courseModules, outline }: { courseModules: Teachi
                     </>
                 }
             >
-                <Table columns={['Week', 'Module', 'Items', 'Progress', 'State', '']} rows={rows} />
+                <Table
+                    columns={['Week', 'Module', 'Items', 'Progress', 'State', '']}
+                    rows={rows}
+                    rowKeys={courseModules.map((module) => module.id)}
+                />
             </Card>
             <Card title="Chapter manuscript structure" subtitle="What a complete chapter carries">
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {outline.map((item) => (
-                        <div key={item} className="flex items-center gap-2 rounded-lg border border-ink-100 px-3 py-2.5">
+                        <div
+                            key={item}
+                            className="flex items-center gap-2 rounded-lg border border-ink-100 px-3 py-2.5"
+                        >
                             <span className="text-brand-600">
                                 <StudyIcon name="check" className="w-3.5 h-3.5" />
                             </span>
@@ -65,7 +80,7 @@ export function ContentPanel({ courseModules, outline }: { courseModules: Teachi
 export function ResourcesPanel({ resources }: { resources: TeachingResources }) {
     const { notify } = useWorkspaceOverlays();
     const rows = resources.map((resource) => [
-        <div className="flex items-center gap-2.5">
+        <div key="resource" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500">
                 <StudyIcon name={resource.icon} className="w-4 h-4" />
             </span>
@@ -76,10 +91,16 @@ export function ResourcesPanel({ resources }: { resources: TeachingResources }) 
                 </p>
             </div>
         </div>,
-        <Badge tone="slate">{resource.version}</Badge>,
-        <Badge tone={resource.access === 'Open' ? 'emerald' : 'amber'}>{resource.access}</Badge>,
-        <span className="text-[12.5px] text-ink-500">{resource.updated}</span>,
-        <div className="flex justify-end gap-1.5">
+        <Badge key="version" tone="slate">
+            {resource.version}
+        </Badge>,
+        <Badge key="access" tone={resource.access === 'Open' ? 'emerald' : 'amber'}>
+            {resource.access}
+        </Badge>,
+        <span key="updated" className="text-[12.5px] text-ink-500">
+            {resource.updated}
+        </span>,
+        <div key="actions" className="flex justify-end gap-1.5">
             <button type="button" className="btn btn-outline btn-sm" onClick={() => notify('Resource options opened')}>
                 Manage
             </button>

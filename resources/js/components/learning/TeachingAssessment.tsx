@@ -8,18 +8,22 @@ import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export function AssignmentsPanel({ assignments }: { assignments: TeachingAssignments }) {
-    const rows = assignments.slice(0, 3).map((assignment) => [
-        <div className="min-w-0">
+    const visible = assignments.slice(0, 3);
+    const rows = visible.map((assignment) => [
+        <div key="assignment" className="min-w-0">
             <p className="truncate font-medium text-ink-800">{assignment.title}</p>
             <p className="truncate text-[11px] text-ink-400">Due {assignment.due}</p>
         </div>,
-        <span className="text-[13px] tnum">
+        <span key="submissions" className="text-[13px] tnum">
             {assignment.submissions} / {assignment.total}
         </span>,
-        <Badge tone={assignment.state === 'open' ? 'emerald' : assignment.state === 'scheduled' ? 'sky' : 'slate'}>
+        <Badge
+            key="state"
+            tone={assignment.state === 'open' ? 'emerald' : assignment.state === 'scheduled' ? 'sky' : 'slate'}
+        >
             {assignment.state === 'open' ? 'Open' : assignment.state === 'scheduled' ? 'Scheduled' : 'Closed'}
         </Badge>,
-        <div className="flex justify-end gap-1.5">
+        <div key="actions" className="flex justify-end gap-1.5">
             <Action href={workspaceUrl('lecturer/assignments')} variant="outline" size="sm">
                 Open
             </Action>
@@ -27,18 +31,36 @@ export function AssignmentsPanel({ assignments }: { assignments: TeachingAssignm
     ]);
 
     return (
-        <Card className="[&_th:last-child]:w-[90px]" title="Assignments in this course" subtitle="Instructions, rules and marking progress">
-            <Table columns={['Assignment', 'Submitted', 'State', '']} rows={rows} />
+        <Card
+            className="[&_th:last-child]:w-[90px]"
+            title="Assignments in this course"
+            subtitle="Instructions, rules and marking progress"
+        >
+            <Table
+                columns={['Assignment', 'Submitted', 'State', '']}
+                rows={rows}
+                rowKeys={visible.map((item) => item.id)}
+            />
         </Card>
     );
 }
 export function GradebookPanel({ gradeRows }: { gradeRows: GradeRows }) {
     const rows = gradeRows.map((row) => [
-        <span className="font-medium text-ink-800">{row.student}</span>,
-        <span className="text-[13px] tnum">{row.ca}</span>,
-        <span className="text-[13px] tnum">{row.mid}</span>,
-        <span className="text-[13px] font-semibold tnum">{row.total}</span>,
-        <Badge tone={row.grade === 'A' ? 'emerald' : row.grade === 'F' ? 'rose' : 'slate'}>{row.grade}</Badge>,
+        <span key="student" className="font-medium text-ink-800">
+            {row.student}
+        </span>,
+        <span key="ca" className="text-[13px] tnum">
+            {row.ca}
+        </span>,
+        <span key="mid" className="text-[13px] tnum">
+            {row.mid}
+        </span>,
+        <span key="total" className="text-[13px] font-semibold tnum">
+            {row.total}
+        </span>,
+        <Badge key="grade" tone={row.grade === 'A' ? 'emerald' : row.grade === 'F' ? 'rose' : 'slate'}>
+            {row.grade}
+        </Badge>,
     ]);
 
     return (

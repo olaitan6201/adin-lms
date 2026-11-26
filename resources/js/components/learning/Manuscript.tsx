@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from 'react';
+import { manuscriptBlocks, resourceId } from './manuscriptBlocks';
 
 function inline(text: string) {
     return text.split(/(\[[^\]\n]+\]\([^\s)]+\))/g).map((part, index) => {
@@ -20,17 +21,14 @@ type ManuscriptProps = {
 };
 
 export function Manuscript({ text, resource }: ManuscriptProps) {
-    const blocks = (text || '')
-        .replace(/\r\n/g, '\n')
-        .trim()
-        .split(/\n\s*\n/);
+    const blocks = manuscriptBlocks(text);
     return (
         <div className="space-y-4 leading-relaxed">
             {blocks.map((block, i) => {
                 const lines = block.split('\n');
-                const media = /^\{\{resource:([a-f0-9-]{36})\}\}$/.exec(block);
+                const media = resourceId(block);
                 if (media)
-                    return <Fragment key={i}>{resource ? resource(media[1]) : 'Linked learning resource'}</Fragment>;
+                    return <Fragment key={i}>{resource ? resource(media) : 'Linked learning resource'}</Fragment>;
 
                 if (block.startsWith('## '))
                     return (

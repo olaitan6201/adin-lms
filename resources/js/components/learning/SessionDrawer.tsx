@@ -38,7 +38,8 @@ export function SessionDrawer({ selection, session, open, closeSession, save }: 
             className="learning-session"
             onCancel={closeSession}
             onClick={(event) => {
-                if (event.target === panel.current && event.clientX < panel.current.getBoundingClientRect().left) closeSession();
+                if (event.target === panel.current && event.clientX < panel.current.getBoundingClientRect().left)
+                    closeSession();
             }}
         >
             <div className="flex items-start justify-between gap-3 border-b border-ink-100 px-5 py-4">
@@ -54,7 +55,11 @@ export function SessionDrawer({ selection, session, open, closeSession, save }: 
                     <StudyIcon name="close" className="h-4 w-4" />
                 </button>
             </div>
-            <div key={scheduling ? 'schedule' : session?.id} className="flex-1 space-y-4 overflow-y-auto p-5" data-scroll>
+            <div
+                key={scheduling ? 'schedule' : session?.id}
+                className="flex-1 space-y-4 overflow-y-auto p-5"
+                data-scroll
+            >
                 {!editable && <p>No session definition is available for this class.</p>}
                 {open && editable && <SessionDefinition session={session} save={save} />}
                 {session?.details?.checkin && (
@@ -65,7 +70,9 @@ export function SessionDrawer({ selection, session, open, closeSession, save }: 
                             </span>
                             <div>
                                 <p className="text-[13px] font-semibold text-ink-800">{session.details.checkin}</p>
-                                <p className="mt-0.5 text-xs text-ink-500">Manual register remains available as a fallback</p>
+                                <p className="mt-0.5 text-xs text-ink-500">
+                                    Manual register remains available as a fallback
+                                </p>
                             </div>
                         </div>
                     </Card>

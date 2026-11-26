@@ -15,7 +15,9 @@ export function CourseTools({ id, visible, teaching, tools, readings }: Props) {
             <span aria-current="page">Overview</span>
             {visible && (
                 <>
-                    <Link href={`${base}/learning`}>{teaching ? 'Author or preview lessons' : 'Lessons and materials'}</Link>
+                    <Link href={`${base}/learning`}>
+                        {teaching ? 'Author or preview lessons' : 'Lessons and materials'}
+                    </Link>
                     <Link href={`${base}/assessments`}>Assessments</Link>
                     <Link href={`${base}/learning/classes`}>Classroom and attendance</Link>
                     <Link href={tools}>Library and learning tools</Link>

@@ -26,9 +26,14 @@ export function NextCourseActivity({ activities }: { activities: Activity[] }) {
                         <p>
                             {completed} of {lessons.length} listed lessons complete
                         </p>
-                        <Progress aria-label="Listed lessons completed" value={100 * completed / lessons.length}
-                            aria-valuenow={completed} aria-valuemin={0} aria-valuemax={lessons.length}
-                            aria-valuetext={`${completed} of ${lessons.length} listed lessons complete`} />
+                        <Progress
+                            aria-label="Listed lessons completed"
+                            value={(100 * completed) / lessons.length}
+                            aria-valuenow={completed}
+                            aria-valuemin={0}
+                            aria-valuemax={lessons.length}
+                            aria-valuetext={`${completed} of ${lessons.length} listed lessons complete`}
+                        />
                     </>
                 )}
                 {next && (

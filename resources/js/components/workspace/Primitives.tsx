@@ -1,4 +1,5 @@
 import type { AriaAttributes, MouseEventHandler, ReactNode } from 'react';
+import { Link } from '@inertiajs/react';
 import { Icon } from './Icon';
 
 const tones = new Map([
@@ -19,7 +20,7 @@ type ActionProps = AriaAttributes & {
     variant?: string;
     size?: string;
     href?: string;
-    onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
+    onClick?: MouseEventHandler<Element>;
     disabled?: boolean;
 };
 
@@ -33,7 +34,7 @@ export function Action({ children, icon, variant = 'outline', size, href, onClic
     const content = <>{icon && <Icon name={icon} className="h-4 w-4" />}<span>{children}</span></>;
 
     return href && !disabled
-        ? <a {...attributes} href={href} onClick={onClick} className={className}>{content}</a>
+        ? <Link {...attributes} href={href} onClick={onClick} className={className}>{content}</Link>
         : <button {...attributes} type="button" disabled={disabled} onClick={onClick} className={className}>{content}</button>;
 }
 

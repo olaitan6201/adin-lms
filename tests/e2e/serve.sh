@@ -14,5 +14,5 @@ touch "$DB_DATABASE"
 php artisan migrate --seed --force
 php tests/e2e/enroll-test-staff.php
 mkdir "$run/public"
-cp -r public/build public/brand public/portal* public/favicon.ico "$run/public/"
+cp -r public/build public/brand public/portal* public/workspace.webmanifest public/apple-touch-icon.png public/favicon.ico "$run/public/"
 exec php -S "127.0.0.1:${PORTAL_TEST_PORT:-19173}" -t "$run/public" tests/e2e/router.php

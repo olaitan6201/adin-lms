@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="{{ match (config('branding.palette')) { 'navy' => '#19385b', 'teal' => '#134e4a', default => '#10B981' } }}">
-    <link rel="manifest" href="/portal.webmanifest">
+    <link rel="manifest" href="{{ request()->routeIs('workspace.*') ? '/workspace.webmanifest' : '/portal.webmanifest' }}">
     <link rel="icon" href="/brand/adin/crest.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     @viteReactRefresh

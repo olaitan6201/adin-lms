@@ -1,0 +1,26 @@
+{
+    "id": "/admin/overview",
+    "name": "AdinOpen LMS",
+    "short_name": "AdinOpen",
+    "description": "Institutional learning management system for Adin Open University: course delivery, computer based testing, gradebook, attendance and reporting.",
+    "start_url": "/admin/overview",
+    "scope": "/",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui", "browser"],
+    "orientation": "any",
+    "background_color": "#0F1A2A",
+    "theme_color": "#10B981",
+    "lang": "en",
+    "dir": "ltr",
+    "categories": ["education", "productivity"],
+    "icons": [
+        { "src": "/portal-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/portal-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/portal-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ],
+    "shortcuts": [
+        { "name": "Student dashboard", "short_name": "Dashboard", "url": "/student/overview" },
+        { "name": "Gradebook", "short_name": "Gradebook", "url": "/admin/gradebook" },
+        { "name": "CBT examinations", "short_name": "CBT", "url": "/admin/cbt" }
+    ]
+}

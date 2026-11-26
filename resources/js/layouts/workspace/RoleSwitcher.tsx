@@ -9,13 +9,16 @@ export function RoleSwitcher({ role, compact = false, onNavigate }: {
 }) {
     const { person, label, short } = roles[role];
     return <Popover.Root>
-        <Popover.Trigger className={compact ? 'portal-identity' : 'portal-account ws-role-switch'}
+        <Popover.Trigger className={compact ? 'ml-1 flex items-center gap-2 rounded-lg px-1.5 py-1 hover:bg-ink-100' : 'portal-account ws-role-switch'}
             aria-label={`Switch fixture role: ${label}, ${person}`}>
-            <span className={compact ? 'portal-avatar' : 'portal-monogram'}>
+            <span className={compact ? 'grid size-8 place-items-center rounded-full bg-brand-100 text-[11px] font-semibold text-brand-800' : 'portal-monogram'}>
                 {compact ? person.split(' ').slice(-2).map(part => part[0]).join('') : short}
             </span>
-            <span className="portal-account-copy"><strong>{person}</strong><small>{label}</small></span>
-            {!compact && <Icon name="chevronDown" className="size-4 shrink-0" />}
+            <span className={compact ? 'hidden text-left leading-tight lg:block' : 'portal-account-copy'}>
+                <strong className={compact ? 'block text-[12.5px] font-medium text-ink-800' : undefined}>{person}</strong>
+                <small className={compact ? 'block text-[11px] text-ink-400' : undefined}>{label}</small>
+            </span>
+            {!compact && <Icon name="chevronDown" className="size-4 shrink-0 text-ink-400" />}
         </Popover.Trigger>
         <Popover.Portal>
             <Popover.Content align={compact ? 'end' : 'start'} sideOffset={4} collisionPadding={8} aria-label="Fixture roles"

@@ -1,20 +1,16 @@
-.workspace-shell .rail { color: var(--color-ink-300); }
-.workspace-shell .rail-section, .portal-mobile-rail .rail-section { color: var(--color-ink-400); }
+.workspace-shell .rail, .ws-mobile-rail { color: var(--color-ink-800); }
+:is(.workspace-shell,.ws-mobile-rail) .rail-link { border-radius: .5rem; }
+:is(.workspace-shell,.ws-mobile-rail) .portal-brand small { line-height: 1.25; }
+:is(.workspace-shell,.ws-mobile-rail) :is(.portal-brand small,.portal-account-copy small,.portal-rail-footer) { color: var(--color-ink-400); }
+:is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer > div { color: var(--color-ink-200); font-weight: 500; }
+:is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer small { color: var(--color-ink-500); font-weight: 400; }
 [data-slot=sheet-overlay]:has(+ .portal-mobile-rail), [data-slot=sheet-overlay]:has(+ .ws-detail-drawer) { backdrop-filter: blur(2px); }
+[data-slot=sheet-overlay]:has(+ .ws-mobile-rail) { background-color: rgb(10 17 28 / 50%); }
 .ws-role-switch { text-align: left; flex-shrink: 0; }
-.workspace-shell .portal-topbar { flex-shrink: 0; }
-.workspace-shell .portal-identity { border: 0; padding: .25rem .375rem; }
 .ws-detail-drawer[data-slot=sheet-content] { width: min(100vw, 560px); max-width: none; gap: 0; background: white; }
 .ws-confirm[data-slot=dialog-content] { width: min(28rem, calc(100vw - 2rem)); max-width: none; gap: 0; padding: 1.25rem; border-radius: 1rem; background: white; }
-@media (min-width: 640px) {
-    .workspace-shell .portal-identity { border-left: 1px solid var(--color-ink-100); border-radius: 0 .5rem .5rem 0; padding-left: .75rem; }
-}
 @media (max-width: 639px) {
     .ws-confirm[data-slot=dialog-content] { top: auto; bottom: 1rem; translate: -50% 0; }
-}
-@media (max-width: 399px) {
-    .workspace-shell .portal-topbar { gap: .25rem; padding-inline: .5rem; }
-    .workspace-shell .portal-tools { gap: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
     .workspace-shell *, .ws-detail-drawer, .ws-confirm { animation-duration: .01ms !important; transition-duration: .01ms !important; }

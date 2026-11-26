@@ -17,8 +17,8 @@ const notices = [
 
 export function Notifications({ notify }: { notify: (message: string) => void }) {
     return <Popover.Root>
-        <Popover.Trigger className="portal-icon relative" aria-label="Notifications"><Icon name="bell" className="size-5" />
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-rose-500 ring-2 ring-white" />
+        <Popover.Trigger className="btn btn-ghost btn-sm relative" aria-label="Notifications"><Icon name="bell" className="size-5" />
+            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[#f43f5e] ring-2 ring-white" />
         </Popover.Trigger>
         <Popover.Portal><Popover.Content align="end" sideOffset={8} collisionPadding={8} aria-label="Notifications"
             className="z-50 w-[min(92vw,360px)] overflow-hidden rounded-xl border border-ink-100 bg-white shadow-lift">
@@ -52,7 +52,7 @@ export function AccessibilityOptions({ role }: { role: RoleKey }) {
         return () => { delete document.documentElement.dataset.fontScale; };
     }, [scale]);
     return <Popover.Root>
-        <Popover.Trigger className="portal-icon" aria-label="Accessibility options"><Icon name="sliders" className="size-5" /></Popover.Trigger>
+        <Popover.Trigger className="btn btn-ghost btn-sm" aria-label="Accessibility options"><Icon name="sliders" className="size-5" /></Popover.Trigger>
         <Popover.Portal><Popover.Content align="end" sideOffset={8} collisionPadding={8} className="portal-access w-64" aria-label="Accessibility options">
             <strong>Text size</strong>
             <div>{['md', 'lg', 'xl'].map((size, i) => <button type="button" key={size} className="flex-1" onClick={() => setScale(size)}

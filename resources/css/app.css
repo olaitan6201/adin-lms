@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import './portal-theme.css';
+@import './portal-components.css';
+@import './portal-controls.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -41,27 +44,27 @@
 }
 
 :root {
-    --radius: 0.625rem;
+    --radius: 0.75rem;
     --background: #fff;
-    --foreground: #1a1a18;
+    --foreground: var(--color-ink-800);
     --card: var(--background);
     --card-foreground: var(--foreground);
     --popover: var(--background);
     --popover-foreground: var(--foreground);
-    --primary: #005d22;
+    --primary: var(--color-brand-600);
     --primary-foreground: #fff;
-    --secondary: #f4f4f1;
+    --secondary: var(--color-ink-50);
     --secondary-foreground: var(--foreground);
-    --muted: #f6f6f4;
-    --muted-foreground: #505950;
-    --accent: #f2e6cc;
+    --muted: var(--color-ink-50);
+    --muted-foreground: var(--color-ink-500);
+    --accent: var(--color-brand-50);
     --accent-foreground: var(--foreground);
     --destructive: #a32220;
-    --border: #d3d6cc;
-    --input: #687167;
+    --border: var(--color-ink-100);
+    --input: var(--color-ink-200);
     --ring: var(--primary);
-    --sidebar: #fbfaf7;
-    --sidebar-foreground: var(--foreground);
+    --sidebar: var(--color-ink-900);
+    --sidebar-foreground: var(--color-ink-300);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
     --sidebar-accent: var(--accent);
@@ -76,7 +79,7 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-canvas text-foreground;
     }
 }
 

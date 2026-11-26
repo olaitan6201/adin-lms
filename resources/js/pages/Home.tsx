@@ -1,29 +1,40 @@
 import { Button } from '@/components/ui/button';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 
 export default function Home() {
     const { signedIn, branding } = usePage<{ signedIn: boolean; branding: { institution: string; logoFull: string } }>().props;
     return (
-        <main className="mx-auto grid w-full max-w-xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        <div>
             <Head title="Learning portal" />
-            <div className="space-y-2">
-                <img className="mb-6 h-12 w-auto" src={branding.logoFull} alt={branding.institution} />
-                <p className="text-sm font-medium text-muted-foreground">Academic workspace</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Learning portal</h1>
-                <p>Open your course materials, attend scheduled classes and return to your assessments.</p>
-                <Button asChild className="mt-5">
+            <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-700">Academic workspace</p>
+                    <h1 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-ink-900 sm:text-[26px]">Learning portal</h1>
+                    <p className="card-subtitle mt-1.5">Open your course materials, attend scheduled classes and return to your assessments.</p>
+                </div>
+                <Button asChild className="btn btn-primary">
                     <Link href={signedIn ? '/dashboard' : '/login'}>
                         {signedIn ? 'Open dashboard' : 'Sign in to the portal'}
+                        <ArrowRight aria-hidden="true" />
                     </Link>
                 </Button>
-            </div>
-            <aside className="min-w-0 space-y-3 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
-                <h2 className="text-xl font-semibold tracking-tight">Course registration</h2>
-                <p>
+            </header>
+            <section className="card max-w-3xl">
+                <div className="card-head">
+                    <div className="flex items-center gap-2">
+                        <BookOpen aria-hidden="true" className="size-4 text-brand-700" />
+                        <h2 className="card-title">Course registration</h2>
+                    </div>
+                </div>
+                <div className="card-pad">
+                    <img className="mb-4 h-10 max-w-full object-contain" src={branding.logoFull} alt={branding.institution} />
+                    <p className="text-[13.5px] leading-relaxed text-ink-600">
                     Registration is managed through the institution’s registration platform. Your registered courses
                     appear here after the roster is updated.
-                </p>
-            </aside>
-        </main>
+                    </p>
+                </div>
+            </section>
+        </div>
     );
 }

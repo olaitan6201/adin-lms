@@ -1,0 +1,39 @@
+/* Presentation bridge for the application's accessible registry primitives. */
+@layer utilities {
+    [data-slot="card"] {
+        @apply min-w-0 gap-0 rounded-2xl border-ink-100 bg-white py-0 shadow-soft;
+    }
+    [data-slot="card-header"] {
+        @apply gap-0.5 border-b border-ink-100 px-5 py-4;
+    }
+    [data-slot="card-title"] {
+        @apply text-[15px] font-semibold tracking-[-0.01em] text-ink-900;
+    }
+    [data-slot="card-description"] {
+        @apply text-[13px] leading-relaxed text-ink-500;
+    }
+    [data-slot="card-content"], [data-slot="card-footer"] {
+        @apply p-5;
+    }
+    [data-slot="input"], [data-slot="native-select"], [data-slot="textarea"] {
+        @apply rounded-lg border-ink-200 bg-white text-ink-800 shadow-none;
+    }
+    [data-slot="input"]:focus-visible, [data-slot="textarea"]:focus-visible {
+        @apply border-brand-500 ring-2 ring-brand-500/20;
+    }
+    [data-slot][aria-invalid="true"] {
+        @apply border-rose-600;
+    }
+    [data-slot="table-head"] {
+        @apply px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-500;
+    }
+    [data-slot="table-cell"] {
+        @apply px-4 py-3 text-ink-700;
+    }
+    [data-slot="button"][data-variant="outline"] {
+        @apply rounded-lg border-ink-200 bg-white text-ink-700 shadow-none hover:border-ink-300 hover:bg-ink-50;
+    }
+    [data-slot="button"][data-variant="default"] {
+        @apply rounded-lg shadow-sm;
+    }
+}

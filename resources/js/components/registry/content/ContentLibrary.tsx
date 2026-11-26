@@ -12,6 +12,7 @@ import type { ContentLibraryInputs } from '@/types/registry/content';
 
 export function ContentLibrary({
     contentSummary,
+    manuscriptV1,
     initialResources,
     initialModules,
     groups,
@@ -53,6 +54,7 @@ export function ContentLibrary({
                     {selected && (
                         <ResourcePanel
                             file={selected}
+                            manuscriptV1={selected.id === attachedResourceId ? manuscriptV1 : undefined}
                             attachedWeek={selected.id === attachedResourceId ? contentSummary.attachedWeek : undefined}
                             {...{ versionHistory, resourceAuthor, restore, saveAccess, close }}
                         />

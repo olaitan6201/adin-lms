@@ -6,6 +6,7 @@ import type { LibraryResource } from '@/types/registry/content';
 
 export function ResourcePanel({
     file,
+    manuscriptV1,
     attachedWeek,
     versionHistory,
     resourceAuthor,
@@ -14,6 +15,7 @@ export function ResourcePanel({
     close,
 }: {
     file: LibraryResource;
+    manuscriptV1?: string;
     attachedWeek: string | undefined;
     versionHistory: {
         date: string;
@@ -34,7 +36,7 @@ export function ResourcePanel({
                 save: saveAccess,
                 body: (
                     <>
-                        <ResourceHistory {...{ file, versionHistory, resourceAuthor, restore }} />
+                        <ResourceHistory {...{ file, manuscriptV1, versionHistory, resourceAuthor, restore }} />
                         <Card title="Access and downloads">
                             <div className="space-y-3">
                                 <Field label="Visible from" type="date" value={file.from} />

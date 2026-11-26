@@ -6,11 +6,13 @@ import type { LibraryResource } from '@/types/registry/content';
 
 export function ResourceHistory({
     file,
+    manuscriptV1,
     versionHistory,
     resourceAuthor,
     restore,
 }: {
     file: LibraryResource;
+    manuscriptV1?: string;
     versionHistory: {
         date: string;
         size: string;
@@ -44,14 +46,20 @@ export function ResourceHistory({
                                 <Action size="sm" onClick={() => restore(version)}>
                                     Restore
                                 </Action>
+                            ) : manuscriptV1 ? (
+                                <a
+                                    className="btn btn-outline btn-sm"
+                                    href={manuscriptV1}
+                                    download="acc302-week3-v1.pdf"
+                                >
+                                    Download sample manuscript
+                                </a>
                             ) : (
                                 <Action
                                     size="sm"
-                                    onClick={() =>
-                                        exportRecords(`resource-v${version}`, [{ name: file.name, version }])
-                                    }
+                                    onClick={() => exportRecords(`resource-v${version}`, [{ name: file.name, version }])}
                                 >
-                                    Download
+                                    Download metadata
                                 </Action>
                             )}
                         </li>

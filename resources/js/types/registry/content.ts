@@ -42,6 +42,7 @@ export type ContentSummary = {
 };
 
 export type ContentLibraryInputs = {
+    manuscriptV1: string;
     contentSummary: ContentSummary;
     initialResources: LibraryResource[];
     initialModules: LibraryModule[];

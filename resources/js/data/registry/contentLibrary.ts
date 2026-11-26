@@ -1,5 +1,6 @@
 import type { UploadGroup } from '@/types/registry/content';
 import { courseModules, resources } from './academics';
+export { default as manuscriptV1 } from './acc302-week3-v1.pdf?inline';
 
 export const groups: UploadGroup[] = [
     {

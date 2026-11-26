@@ -1,0 +1,104 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document (opensource)
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (Adin LMS sample library) /CreationDate (D:20000101000000+00'00') /Creator (anonymous) /Keywords () /ModDate (D:20000101000000+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (unspecified) /Title (Week 3 manuscript: Journals and ledgers \(fixture v1\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Length 1628
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 780 Tm (ACC302  /  WEEK 3  /  SAMPLE MANUSCRIPT  /  VERSION 1) Tj T* ET
+BT /F2 22 Tf 26.4 TL ET
+BT 1 0 0 1 54 756 Tm (From journal entry to trial balance) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 724 Tm (A journal records each transaction in date order. A ledger groups those) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 700 Tm (entries by account so that you can calculate a balance for each account.) Tj T* ET
+BT /F2 16 Tf 19.2 TL ET
+BT 1 0 0 1 54 676 Tm (Worked example: a sale on credit) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 644 Tm (Suppose a business supplies services for 500 on credit. No cash changes) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 620 Tm (hands. Debit Accounts Receivable 500 and credit Service Revenue 500.) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 596 Tm (Post the debit to the customer ledger and the credit to the revenue ledger.) Tj T* ET
+BT /F2 16 Tf 19.2 TL ET
+BT 1 0 0 1 54 572 Tm (Check the posting) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 540 Tm (With no opening balances, the trial balance shows a debit of 500 and a) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 516 Tm (credit of 500. Equal totals check arithmetic, not account classification.) Tj T* ET
+BT /F2 16 Tf 19.2 TL ET
+BT 1 0 0 1 54 492 Tm (Practice) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 460 Tm (The customer pays 200. Which two accounts change? Post the receipt and) Tj T* ET
+BT /F1 12 Tf 14.4 TL ET
+BT 1 0 0 1 54 436 Tm (prepare a trial balance. Explain why the revenue balance does not change.) Tj T* ET
+ 
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000524 00000 n 
+0000000592 00000 n 
+0000000913 00000 n 
+0000000972 00000 n 
+trailer
+<<
+/ID 
+[<62f47c2e31e24dd3c82830f21195dc5c><62f47c2e31e24dd3c82830f21195dc5c>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
+startxref
+2651
+%%EOF

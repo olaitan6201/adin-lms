@@ -1,5 +1,6 @@
 import {
     contentSummary,
+    manuscriptV1,
     initialResources,
     initialModules,
     groups,
@@ -15,6 +16,7 @@ export default function Content() {
         <ContentLibrary
             {...{
                 contentSummary,
+                manuscriptV1,
                 initialResources,
                 initialModules,
                 groups,

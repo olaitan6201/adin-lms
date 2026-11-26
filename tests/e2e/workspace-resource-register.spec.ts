@@ -1,6 +1,19 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
+test('admin manuscript history downloads the authored v1 PDF', async ({ page }) => {
+    await page.goto('/admin/content');
+    const row = page.getByRole('row').filter({ hasText: 'Week 3 manuscript: journals and ledgers' });
+    await row.getByRole('button', { name: 'Versions' }).click();
+    const event = page.waitForEvent('download');
+    await page.getByRole('link', { name: 'Download sample manuscript' }).click();
+    const download = await event;
+    expect(download.suggestedFilename()).toBe('acc302-week3-v1.pdf');
+    const bytes = await readFile((await download.path())!);
+    expect(bytes).toEqual(await readFile('resources/js/data/registry/acc302-week3-v1.pdf'));
+    expect(bytes.toString('latin1')).toContain('Worked example: a sale on credit');
+});
+
 test('restoring a version commits immediately but access changes wait for Save', async ({ page }) => {
     await page.goto('/admin/content');
     const resource = page.getByRole('row').filter({ hasText: 'Trial balance template' });

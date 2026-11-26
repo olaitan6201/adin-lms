@@ -1,0 +1,71 @@
+import { workspaceUrl } from '@/lib/workspaceUrl';
+import { Link } from '@inertiajs/react';
+import { Icon } from '@/components/icons/Icon';
+import { Popover } from 'radix-ui';
+import { useEffect, useState } from 'react';
+import type { RoleKey } from './navigation';
+
+export function AccessibilityOptions({ role }: { role: RoleKey }) {
+    const [scale, setScale] = useState(() => {
+        try {
+            return localStorage.getItem('workspace-text-size') || 'md';
+        } catch {
+            return 'md';
+        }
+    });
+    useEffect(() => {
+        document.documentElement.dataset.fontScale = scale;
+        try {
+            localStorage.setItem('workspace-text-size', scale);
+        } catch {
+            /* Storage is optional. */
+        }
+
+        return () => {
+            delete document.documentElement.dataset.fontScale;
+        };
+    }, [scale]);
+    return (
+        <Popover.Root>
+            <Popover.Trigger className="btn btn-ghost btn-sm" aria-label="Accessibility options">
+                <Icon name="sliders" className="size-5" />
+            </Popover.Trigger>
+            <Popover.Portal>
+                <Popover.Content
+                    align="end"
+                    sideOffset={8}
+                    collisionPadding={8}
+                    className="portal-access w-64"
+                    aria-label="Accessibility options"
+                >
+                    <strong>Text size</strong>
+                    <div>
+                        {['md', 'lg', 'xl'].map((size, i) => (
+                            <button
+                                type="button"
+                                key={size}
+                                className="flex-1"
+                                onClick={() => setScale(size)}
+                                aria-pressed={scale === size}
+                            >
+                                {['Default', 'Large', 'Larger'][i]}
+                            </button>
+                        ))}
+                    </div>
+                    <p className="mt-3 text-[11px] leading-relaxed text-ink-500">
+                        Keyboard: Ctrl K opens search, Escape closes panels, focus rings stay visible for keyboard
+                        users.
+                    </p>
+                    <Popover.Close asChild>
+                        <Link
+                            href={workspaceUrl(`${role}/settings/notifications`)}
+                            className="mt-2 block rounded-lg border border-ink-200 px-2 py-1.5 text-center text-[11px] font-medium hover:bg-ink-50"
+                        >
+                            <Icon name="bell" className="mr-1 inline size-3.5" /> Notification settings
+                        </Link>
+                    </Popover.Close>
+                </Popover.Content>
+            </Popover.Portal>
+        </Popover.Root>
+    );
+}

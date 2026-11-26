@@ -13,7 +13,9 @@ if (typeof window !== 'undefined') {
         event.preventDefault();
         offer = event as InstallPrompt;
     });
-    window.addEventListener('appinstalled', () => { offer = null; });
+    window.addEventListener('appinstalled', () => {
+        offer = null;
+    });
 }
 
 export function InstallPortal() {
@@ -24,6 +26,7 @@ export function InstallPortal() {
             setMessage('You are using the installed portal.');
             return;
         }
+
         const pending = offer;
         offer = null;
         if (pending) {
@@ -36,12 +39,19 @@ export function InstallPortal() {
                 // Some browsers invalidate the offer before a user opens the rail.
             }
         }
+
         setMessage('Open your browser menu and choose Install app or Add to Home Screen, if available.');
     }
-    return <>
-        <button type="button" onClick={() => void install()} aria-describedby={message ? id : undefined}>
-            <Download size={16} aria-hidden="true" />Install as an app
-        </button>
-        <p id={id} role="status" className="text-xs empty:hidden">{message}</p>
-    </>;
+
+    return (
+        <>
+            <button type="button" onClick={() => void install()} aria-describedby={message ? id : undefined}>
+                <Download size={16} aria-hidden="true" />
+                Install as an app
+            </button>
+            <p id={id} role="status" className="text-xs empty:hidden">
+                {message}
+            </p>
+        </>
+    );
 }

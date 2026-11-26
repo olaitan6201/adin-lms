@@ -4,7 +4,9 @@ import { WorkspaceShellContext } from '@/layouts/workspace/shellModel';
 import { shell } from '@/data/navigation/shell';
 
 export default function RoleShell({ children }: { children: ReactNode }) {
-    return <WorkspaceShellContext.Provider value={shell}>
-        <WorkspaceLayout>{children}</WorkspaceLayout>
-    </WorkspaceShellContext.Provider>;
+    return (
+        <WorkspaceShellContext.Provider value={shell}>
+            <WorkspaceLayout>{children}</WorkspaceLayout>
+        </WorkspaceShellContext.Provider>
+    );
 }

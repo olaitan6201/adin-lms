@@ -6,5 +6,6 @@ export const WorkspaceShellContext = createContext<WorkspaceShellModel | null>(n
 export function useWorkspaceShell() {
     const shell = useContext(WorkspaceShellContext);
     if (!shell) throw new Error('Workspace chrome requires an injected WorkspaceShellModel.');
+
     return shell;
 }

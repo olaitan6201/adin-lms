@@ -27,7 +27,11 @@ export function ConnectionStatus() {
 
     return (
         <div role="status">
-            {notices[connection] && <Alert role="presentation"><AlertDescription>{notices[connection]}</AlertDescription></Alert>}
+            {notices[connection] && (
+                <Alert role="presentation">
+                    <AlertDescription>{notices[connection]}</AlertDescription>
+                </Alert>
+            )}
         </div>
     );
 }

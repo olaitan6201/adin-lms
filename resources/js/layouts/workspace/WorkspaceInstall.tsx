@@ -2,17 +2,24 @@ import { Icon } from '@/components/icons/Icon';
 import { useSyncExternalStore } from 'react';
 import { useWorkspaceOverlays } from './WorkspaceOverlays';
 
-type InstallOffer = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
+type InstallOffer = Event & {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: string }>
+};
 let pending: InstallOffer | null = null;
 const listeners = new Set<() => void>();
 function update(offer: InstallOffer | null) {
     pending = offer;
     listeners.forEach(listener => listener());
 }
+
 function subscribe(listener: () => void) {
     listeners.add(listener);
-    return () => { listeners.delete(listener); };
+    return () => {
+        listeners.delete(listener);
+    };
 }
+
 if (typeof window !== 'undefined') {
     window.addEventListener('beforeinstallprompt', event => {
         event.preventDefault();
@@ -22,7 +29,11 @@ if (typeof window !== 'undefined') {
 }
 
 export function WorkspaceInstall() {
-    const offer = useSyncExternalStore(subscribe, () => pending, () => null);
+    const offer = useSyncExternalStore(
+        subscribe,
+        () => pending,
+        () => null,
+    );
     const { notify } = useWorkspaceOverlays();
     async function install() {
         if (offer) {
@@ -32,10 +43,18 @@ export function WorkspaceInstall() {
                 const { outcome } = await offer.userChoice;
                 notify(outcome === 'accepted' ? 'Installation requested.' : 'Installation cancelled.');
                 return;
-            } catch { /* An install prompt can expire. */ }
+            } catch {
+                /* An install prompt can expire. */
+            }
         }
+
         notify('Open your browser menu and choose Install app or Add to Home Screen, if available.');
     }
-    return <button type="button" onClick={() => void install()}><Icon name="download" className="size-4" />
-        {offer ? 'Install as an app' : 'Install this prototype as an app'}</button>;
+
+    return (
+        <button type="button" onClick={() => void install()}>
+            <Icon name="download" className="size-4" />
+            {offer ? 'Install as an app' : 'Install this prototype as an app'}
+        </button>
+    );
 }

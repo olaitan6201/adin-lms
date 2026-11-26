@@ -1,48 +1,15 @@
-import type { InstitutionData, ReportsData, ReportScopeId, ReportTableData } from '@/types/reports/analytics';
+import type { ReportsData, ReportScopeId, ReportTableData } from '@/types/reports/analytics';
 import { useState, type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
-import { Bars, Columns, DepartmentHeatmap, Mix, Trend } from './ReportCharts';
+import { Bars, DepartmentHeatmap } from './ReportCharts';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
 import { appendExportAudit, deliverReport, type ExportFormat } from './reportExport';
-
-function Institution({ enrolmentTrend, examPerformance, engagementMix, participation, completionByFaculty }: InstitutionData) {
-    return (
-        <div className="space-y-5">
-            <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-12">
-                <Card
-                    className="xl:col-span-8"
-                    title="Enrolment and delivery over the session"
-                    subtitle="Registered students against active course offerings"
-                >
-                    <Trend data={enrolmentTrend} label="Enrolment trend" />
-                </Card>
-                <Card className="xl:col-span-4" title="Engagement mix" subtitle="Counted learning actions this semester">
-                    <Mix items={engagementMix} />
-                </Card>
-            </div>
-            <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-12">
-                <Card
-                    className="xl:col-span-7"
-                    title="Examination performance by course"
-                    subtitle="Mean score against the pass threshold"
-                >
-                    <Trend data={examPerformance} height={220} label="Examination performance" />
-                </Card>
-                <Card className="xl:col-span-5" title="Departmental participation" subtitle="Share of published material completed">
-                    <Bars items={participation} />
-                </Card>
-            </div>
-            <Card title="Completion by faculty" subtitle="Published course material completed by enrolled students">
-                <Columns items={completionByFaculty} />
-            </Card>
-        </div>
-    );
-}
+import { Institution } from './Institution';
 
 function DataTable({ data }: { data: ReportTableData }) {
     return (
@@ -89,9 +56,11 @@ export function Reports({ data }: { data: ReportsData }) {
             setError('The export could not be recorded. Allow browser storage and try again.');
             return;
         }
+
         setError('');
         deliverReport(selected, format);
     }
+
     return (
         <div className="engagement-workspace space-y-5">
             <PageHeader
@@ -113,8 +82,8 @@ export function Reports({ data }: { data: ReportsData }) {
             {error && <p role="alert">{error}</p>}
             <Sections items={items} active={selected.id} change={setSelectedId} />
             <Note>
-                Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written to the audit
-                log.
+                Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written
+                to the audit log.
             </Note>
         </div>
     );

@@ -7,16 +7,35 @@ import { teaching } from '@/data/overview/dashboardDetails';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Overview() {
-    return <>
-        <PageHeader eyebrow="Teaching" title={teaching.title}
-            description={teaching.description}
-            actions={<><Action icon="upload" variant="outline" href={workspaceUrl('lecturer/course')}>Upload material</Action>
-                <Action icon="plus" variant="primary" href={workspaceUrl('lecturer/assignments')}>Create assignment</Action></>}/>
-        <div className="role-overview space-y-5">
-            <Tiles items={tiles}/>
-            <Columns left={<Courses offerings={offerings}/>} right={<ComingUp events={schedule}/>}/>
-            <Columns left={<Marking submissions={submissions}/>} right={<Performance scores={teaching.scores} performance={teaching.performance}/>}/>
-            <Note>Marks, feedback and published content are visible to the students you are allocated to. Every change is recorded in the score history.</Note>
-        </div>
-    </>;
+    return (
+        <>
+            <PageHeader
+                eyebrow="Teaching"
+                title={teaching.title}
+                description={teaching.description}
+                actions={
+                    <>
+                        <Action icon="upload" variant="outline" href={workspaceUrl('lecturer/course')}>
+                            Upload material
+                        </Action>
+                        <Action icon="plus" variant="primary" href={workspaceUrl('lecturer/assignments')}>
+                            Create assignment
+                        </Action>
+                    </>
+                }
+            />
+            <div className="role-overview space-y-5">
+                <Tiles items={tiles} />
+                <Columns left={<Courses offerings={offerings} />} right={<ComingUp events={schedule} />} />
+                <Columns
+                    left={<Marking submissions={submissions} />}
+                    right={<Performance scores={teaching.scores} performance={teaching.performance} />}
+                />
+                <Note>
+                    Marks, feedback and published content are visible to the students you are allocated to. Every change
+                    is recorded in the score history.
+                </Note>
+            </div>
+        </>
+    );
 }

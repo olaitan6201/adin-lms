@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { type Desk, Field } from '@/components/registry/Desk';
-import { Note } from '@/components/ui/feedback/Note';
-import { Details, cap, val } from '@/components/registry/Records';
-import { Card } from '@/components/ui/layout/Card';
+import { type Desk } from '@/components/registry/Desk';
+import { val } from '@/components/registry/Records';
 import { Avatar } from './Person';
 import type { StudentRecord, DirectorySummary } from '@/types/registry/people';
+import { StudentProfileFields } from './StudentProfileFields';
 
 export function useStudentDirectory({
     studentDirectory,
@@ -27,33 +26,11 @@ export function useStudentDirectory({
             submit: 'Save changes',
             message: 'Student profile saved',
             body: (
-                <>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        <Field label="Programme" value={student.programme} required />
-                        <Field
-                            label="Level"
-                            value={student.level}
-                            options={Array.from(new Set([String(student.level), '300', '200', '100']))}
-                        />
-                        <Field label="Email" value={student.email} type="email" />
-                        <Field
-                            label="Status"
-                            value={cap(student.status)}
-                            options={Array.from(new Set(['Active', 'At risk', 'Suspended', cap(student.status)]))}
-                        />
-                    </div>
-                    <Card title="Learning history" subtitle="Enrolment and performance retained across sessions">
-                        {student.id === directorySummary.historyStudentId ? (
-                            <Details entries={learningHistory} />
-                        ) : (
-                            'No history shown.'
-                        )}
-                    </Card>
-                    <Note>
-                        Guardian access is off for this student. A guardian view can be enabled only with recorded
-                        consent.
-                    </Note>
-                </>
+                <StudentProfileFields
+                    student={student}
+                    directorySummary={directorySummary}
+                    learningHistory={learningHistory}
+                />
             ),
             save: (data) =>
                 setStudents((all) =>
@@ -71,5 +48,6 @@ export function useStudentDirectory({
                 ),
         });
     }
+
     return { students, editStudent };
 }

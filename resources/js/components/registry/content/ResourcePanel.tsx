@@ -15,7 +15,10 @@ export function ResourcePanel({
 }: {
     file: LibraryResource;
     attachedWeek: string | undefined;
-    versionHistory: { date: string; size: string }[];
+    versionHistory: {
+        date: string;
+        size: string;
+    }[];
     resourceAuthor: string;
     restore: (version: number) => void;
     saveAccess: (data: FormData) => void;
@@ -41,8 +44,8 @@ export function ResourcePanel({
                                     download on mobile and desktop
                                 </label>
                                 <label className="block text-sm">
-                                    <input type="checkbox" name="source" defaultChecked={file.source} /> Allow
-                                    download of the source file, not only the reader view
+                                    <input type="checkbox" name="source" defaultChecked={file.source} /> Allow download
+                                    of the source file, not only the reader view
                                 </label>
                             </div>
                         </Card>

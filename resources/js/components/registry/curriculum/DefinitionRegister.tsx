@@ -24,16 +24,24 @@ export function DefinitionRegister({
             }
             columns={['Code', 'Title', 'Units', 'Level', 'Type', 'Prerequisite', 'State', '']}
             rows={courses.map((course) => [
-                <code className="text-xs font-medium text-ink-700">{course.code}</code>,
-                <span className="font-medium text-ink-800">{course.title}</span>,
-                <span className="text-[13px]">{course.units}</span>,
-                <span className="text-[13px] text-ink-500">
+                <code key="code" className="text-xs font-medium text-ink-700">
+                    {course.code}
+                </code>,
+                <span key="title" className="font-medium text-ink-800">
+                    {course.title}
+                </span>,
+                <span key="units" className="text-[13px]">
+                    {course.units}
+                </span>,
+                <span key="semester" className="text-[13px] text-ink-500">
                     L{course.level} S{course.semester}
                 </span>,
                 status(course.type, course.type === 'Compulsory' ? 'emerald' : 'slate'),
-                <span className="text-[13px] text-ink-500">{course.prereq}</span>,
+                <span key="prerequisites" className="text-[13px] text-ink-500">
+                    {course.prereq}
+                </span>,
                 status(course.state, course.state === 'published' ? 'sky' : undefined),
-                <Action size="sm" onClick={() => courseForm(course)}>
+                <Action key="edit" size="sm" onClick={() => courseForm(course)}>
                     Open
                 </Action>,
             ])}

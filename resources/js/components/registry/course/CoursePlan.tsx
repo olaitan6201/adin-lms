@@ -8,8 +8,19 @@ export function CoursePlan({
     gradeWeights,
     overview,
 }: {
-    courseModules: { week: string; title: string; items: number; state: string; completion: number }[];
-    gradeWeights: { item: string; source: string; weight: number; policy: string }[];
+    courseModules: {
+        week: string;
+        title: string;
+        items: number;
+        state: string;
+        completion: number;
+    }[];
+    gradeWeights: {
+        item: string;
+        source: string;
+        weight: number;
+        policy: string;
+    }[];
     overview: Overview;
 }) {
     return (
@@ -25,9 +36,15 @@ export function CoursePlan({
                 }
                 columns={['Ref', 'Course learning outcome', 'Programme outcomes']}
                 rows={overview.outcomes.map((o) => [
-                    <code className="font-mono text-[11.5px] text-ink-500">{o.code}</code>,
-                    <span className="text-[13px] text-ink-700">{o.text}</span>,
-                    <code className="font-mono text-[11.5px] text-brand-700">{o.mapped}</code>,
+                    <code key="code" className="font-mono text-[11.5px] text-ink-500">
+                        {o.code}
+                    </code>,
+                    <span key="outcome" className="text-[13px] text-ink-700">
+                        {o.text}
+                    </span>,
+                    <code key="mapping" className="font-mono text-[11.5px] text-brand-700">
+                        {o.mapped}
+                    </code>,
                 ])}
             />
             <Records
@@ -40,10 +57,16 @@ export function CoursePlan({
                 }
                 columns={['Week', 'Topic', 'Items', 'Completion', 'State']}
                 rows={courseModules.map((m) => [
-                    <span className="text-[12.5px] font-medium text-ink-700">{m.week}</span>,
-                    <span className="text-[13px] text-ink-800">{m.title}</span>,
-                    <span className="text-[12.5px] text-ink-500">{m.items} items</span>,
-                    <Progress stacked n={m.completion} />,
+                    <span key="week" className="text-[12.5px] font-medium text-ink-700">
+                        {m.week}
+                    </span>,
+                    <span key="module" className="text-[13px] text-ink-800">
+                        {m.title}
+                    </span>,
+                    <span key="items" className="text-[12.5px] text-ink-500">
+                        {m.items} items
+                    </span>,
+                    <Progress key="completion" stacked n={m.completion} />,
                     status(cap(m.state), m.state === 'draft' ? 'slate' : 'emerald'),
                 ])}
             />
@@ -53,10 +76,18 @@ export function CoursePlan({
                 actions={status(`Total ${gradeWeights.reduce((total, w) => total + w.weight, 0)}%`, 'emerald')}
                 columns={['Component', 'Source', 'Weight', 'Policy']}
                 rows={gradeWeights.map((w) => [
-                    <span className="text-[13px] font-medium text-ink-800">{w.item}</span>,
-                    <span className="text-[13px] text-ink-600">{w.source}</span>,
-                    <span className="tnum text-[13px] font-semibold text-ink-900">{w.weight}%</span>,
-                    <span className="text-[12.5px] text-ink-500">{w.policy}</span>,
+                    <span key="item" className="text-[13px] font-medium text-ink-800">
+                        {w.item}
+                    </span>,
+                    <span key="source" className="text-[13px] text-ink-600">
+                        {w.source}
+                    </span>,
+                    <span key="weight" className="tnum text-[13px] font-semibold text-ink-900">
+                        {w.weight}%
+                    </span>,
+                    <span key="policy" className="text-[12.5px] text-ink-500">
+                        {w.policy}
+                    </span>,
                 ])}
             />
         </>

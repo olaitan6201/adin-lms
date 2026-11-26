@@ -54,13 +54,11 @@ export function ReportFilters({ path, filters, options, family }: Props) {
                     return (
                         <label key={name} className="grid min-w-0 gap-1 font-medium [&>div]:w-full [&>div]:min-w-0">
                             {label}
-                            <NativeSelect
-                                className="w-full min-w-0"
-                                name={name}
-                                defaultValue={selected ?? ''}
-                            >
+                            <NativeSelect className="w-full min-w-0" name={name} defaultValue={selected ?? ''}>
                                 <NativeSelectOption value="">{empty}</NativeSelectOption>
-                                {missing && <NativeSelectOption value={selected}>No matching records</NativeSelectOption>}
+                                {missing && (
+                                    <NativeSelectOption value={selected}>No matching records</NativeSelectOption>
+                                )}
                                 {choices.map((choice) => (
                                     <NativeSelectOption value={choice.id} key={choice.id}>
                                         {choice.label}

@@ -1,7 +1,11 @@
 import type { ReportSheet } from '@/types/reports/analytics';
 
 function escapeXml(value: string | number) {
-    return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
 }
 
 function cell(value: string | number) {

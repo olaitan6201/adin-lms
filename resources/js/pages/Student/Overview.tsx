@@ -28,7 +28,9 @@ export default function Overview() {
             <div className="role-overview space-y-5">
                 <Tiles items={tiles} />
                 <Columns
-                    left={<ContinueLearning lesson={study.lesson} save={() => notify('Material saved for offline use')} />}
+                    left={
+                        <ContinueLearning lesson={study.lesson} save={() => notify('Material saved for offline use')} />
+                    }
                     right={<ComingUp student events={schedule} />}
                 />
                 <Columns
@@ -46,8 +48,8 @@ export default function Overview() {
                     right={<Notices notifications={notifications} />}
                 />
                 <Note>
-                    Only released results are visible to you. Scores under moderation or awaiting approval stay hidden until
-                    the examination officer publishes them.
+                    Only released results are visible to you. Scores under moderation or awaiting approval stay hidden
+                    until the examination officer publishes them.
                 </Note>
             </div>
             {feedback}

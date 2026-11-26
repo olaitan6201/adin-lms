@@ -53,9 +53,7 @@ export function ContentLibrary({
                     {selected && (
                         <ResourcePanel
                             file={selected}
-                            attachedWeek={
-                                selected.id === attachedResourceId ? contentSummary.attachedWeek : undefined
-                            }
+                            attachedWeek={selected.id === attachedResourceId ? contentSummary.attachedWeek : undefined}
                             {...{ versionHistory, resourceAuthor, restore, saveAccess, close }}
                         />
                     )}
@@ -75,14 +73,12 @@ export function ContentLibrary({
                 onChange={pickFiles}
             />
             <WeeklyModules {...{ initialModules, contentSummary, contents, desk }} visible={tab === 0} />
-            {tab !== 2 && (
-                <ResourceRegister files={files} browse={browse} upload={upload} onSelect={selectResource} />
-            )}
+            {tab !== 2 && <ResourceRegister files={files} browse={browse} upload={upload} onSelect={selectResource} />}
             {tab === 2 && <Checklist items={items} />}
             {tab !== 0 && <ContentPolicy desk={desk} groups={groups} selection={selection} save={save} />}
             <Note>
-                Resource access can be scheduled by week and restricted by delivery mode. Replacing a file keeps
-                the previous version available for audit and for students who downloaded it.
+                Resource access can be scheduled by week and restricted by delivery mode. Replacing a file keeps the
+                previous version available for audit and for students who downloaded it.
             </Note>
         </Register>
     );

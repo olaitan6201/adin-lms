@@ -27,7 +27,7 @@ export function ResourceRegister({ files, browse, upload, onSelect }: Props) {
             }
             columns={['Resource', 'Version', 'Updated', 'Access', '']}
             rows={files.map((file) => [
-                <div className="flex items-center gap-2.5">
+                <div key="resource" className="flex items-center gap-2.5">
                     <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-ink-50 text-ink-500">
                         <Icon name={file.icon} className="size-4" />
                     </span>
@@ -39,9 +39,11 @@ export function ResourceRegister({ files, browse, upload, onSelect }: Props) {
                     </div>
                 </div>,
                 status(file.version, file.version === 'v1' ? 'slate' : 'sky'),
-                <span className="text-[13px] text-ink-500">{file.updated}</span>,
+                <span key="updated" className="text-[13px] text-ink-500">
+                    {file.updated}
+                </span>,
                 status(file.access, file.access === 'Open' ? 'emerald' : 'amber'),
-                <Action size="sm" onClick={() => onSelect(file.id)}>
+                <Action key="details" size="sm" onClick={() => onSelect(file.id)}>
                     Versions
                 </Action>,
             ])}
@@ -56,6 +58,7 @@ function ResourceDropZone({ browse, upload }: Pick<Props, 'browse' | 'upload'>) 
         event.preventDefault();
         upload(event.dataTransfer.files);
     }
+
     return (
         <button
             type="button"
@@ -68,9 +71,7 @@ function ResourceDropZone({ browse, upload }: Pick<Props, 'browse' | 'upload'>) 
                 <Icon name="upload" className="size-5" />
             </span>
             <span className="text-sm font-medium text-ink-700">Drop files to upload</span>
-            <span className="text-xs text-ink-400">
-                File types permitted by the upload allow-list, up to 200 MB
-            </span>
+            <span className="text-xs text-ink-400">File types permitted by the upload allow-list, up to 200 MB</span>
         </button>
     );
 }

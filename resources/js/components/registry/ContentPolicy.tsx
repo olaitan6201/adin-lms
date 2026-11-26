@@ -53,17 +53,14 @@ export function ContentPolicy({
                     extensions ? labels(id) || 'None' : description,
                     status(
                         validation,
-                        validation === 'Media probed'
-                            ? 'sky'
-                            : validation === 'Type checked'
-                              ? 'slate'
-                              : 'emerald',
+                        validation === 'Media probed' ? 'sky' : validation === 'Type checked' ? 'slate' : 'emerald',
                     ),
                 ])}
             />
         </div>
     );
 }
+
 export function Checklist({ items }: { items: string[][] }) {
     return (
         <Card

@@ -63,9 +63,7 @@ export function PeopleDirectory({
                 active={tab}
                 select={setTab}
             >
-                {tab === 0 && (
-                    <StaffRegister {...{ visible, editStaff, query, search, filter, setFilter, desk }} />
-                )}
+                {tab === 0 && <StaffRegister {...{ visible, editStaff, query, search, filter, setFilter, desk }} />}
                 {tab === 1 && (
                     <StudentRegister {...{ students, editStudent, directorySummary, studentMetrics, desk }} />
                 )}

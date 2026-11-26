@@ -17,7 +17,12 @@ export function CourseDeliveryRecord({
             <div className="grid gap-4 lg:grid-cols-2 [&_dt]:text-ink-500">
                 <Details
                     entries={[
-                        ['Course code', <span className="font-mono text-[12.5px]">{definition.code}</span>],
+                        [
+                            'Course code',
+                            <span key="code" className="font-mono text-[12.5px]">
+                                {definition.code}
+                            </span>,
+                        ],
                         ['Unit value', `${definition.units} units`],
                         ['Level', definition.level],
                         ['Semester', selectedCourse.semester],

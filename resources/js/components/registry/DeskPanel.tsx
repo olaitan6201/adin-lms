@@ -11,12 +11,35 @@ export type Panel = {
     cancel?: string;
     portrait?: ReactNode;
 } & (
-    | { submit: string; save: (data: FormData) => void | string; message?: string; previewNotice?: never }
-    | { submit: string; previewNotice: string; save?: never; message?: never }
-    | { submit?: never; save?: never; message?: never; previewNotice?: never }
+    | {
+          submit: string;
+          save: (data: FormData) => void | string;
+          message?: string;
+          previewNotice?: never;
+      }
+    | {
+          submit: string;
+          previewNotice: string;
+          save?: never;
+          message?: never;
+      }
+    | {
+          submit?: never;
+          save?: never;
+          message?: never;
+          previewNotice?: never;
+      }
 );
 
-export function PanelForm({ panel, close, notify }: { panel: Panel; close: () => void; notify?: (notice: string) => void }) {
+export function PanelForm({
+    panel,
+    close,
+    notify,
+}: {
+    panel: Panel;
+    close: () => void;
+    notify?: (notice: string) => void;
+}) {
     const [error, setError] = useState('');
     const className = panel.confirm
         ? 'm-auto w-[min(92vw,460px)] rounded-xl p-0 shadow-xl backdrop:bg-ink-950/45'
@@ -25,16 +48,19 @@ export function PanelForm({ panel, close, notify }: { panel: Panel; close: () =>
     function submit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!panel.submit) return;
+
         if (panel.save) {
             const rejection = panel.save(new FormData(event.currentTarget));
             if (typeof rejection === 'string') {
                 setError(rejection);
                 return;
             }
+
             notify?.(panel.message ?? `${panel.title} saved`);
         } else if (panel.previewNotice) {
             notify?.(panel.previewNotice);
         }
+
         close();
     }
 
@@ -45,7 +71,9 @@ export function PanelForm({ panel, close, notify }: { panel: Panel; close: () =>
                     <div className="flex items-center gap-3">
                         {panel.portrait}
                         <div>
-                            <h2 id="registry-panel-title" className="text-[15px] font-semibold text-ink-900">{panel.title}</h2>
+                            <h2 id="registry-panel-title" className="text-[15px] font-semibold text-ink-900">
+                                {panel.title}
+                            </h2>
                             <p className="mt-0.5 text-[13px] text-ink-500">{panel.subtitle}</p>
                         </div>
                     </div>
@@ -54,10 +82,20 @@ export function PanelForm({ panel, close, notify }: { panel: Panel; close: () =>
                     </button>
                 </div>
                 <div className="flex-1 space-y-4 overflow-auto p-5">{panel.body}</div>
-                {error && <p role="alert" className="px-4 text-sm">{error}</p>}
+                {error && (
+                    <p role="alert" className="px-4 text-sm">
+                        {error}
+                    </p>
+                )}
                 <div className="flex justify-end gap-2 border-t border-ink-100 p-4">
-                    <Action onClick={close} variant="outline">{panel.cancel ?? (panel.confirm ? 'Cancel' : 'Close')}</Action>
-                    {panel.submit && <button className="btn btn-primary" type="submit">{panel.submit}</button>}
+                    <Action onClick={close} variant="outline">
+                        {panel.cancel ?? (panel.confirm ? 'Cancel' : 'Close')}
+                    </Action>
+                    {panel.submit && (
+                        <button className="btn btn-primary" type="submit">
+                            {panel.submit}
+                        </button>
+                    )}
                 </div>
             </form>
         </MountedDialog>
@@ -65,7 +103,10 @@ export function PanelForm({ panel, close, notify }: { panel: Panel; close: () =>
 }
 
 export function useDesk() {
-    const [selection, open] = useState<{ key: number; panel: Panel } | null>(null);
+    const [selection, open] = useState<{
+        key: number;
+        panel: Panel;
+    } | null>(null);
     const nextKey = useRef(0);
     const [notice, notify] = useState('');
 
@@ -76,12 +117,19 @@ export function useDesk() {
     const overlay = (
         <>
             {notice && (
-                <div role="status" className="fixed bottom-5 right-5 z-40 rounded-lg bg-slate-900 px-4 py-3 text-sm text-white">
+                <div
+                    role="status"
+                    className="fixed bottom-5 right-5 z-40 rounded-lg bg-slate-900 px-4 py-3 text-sm text-white"
+                >
                     {notice}{' '}
-                    <button aria-label="Dismiss notification" onClick={() => notify('')}>×</button>
+                    <button aria-label="Dismiss notification" onClick={() => notify('')}>
+                        ×
+                    </button>
                 </div>
             )}
-            {selection && <PanelForm key={selection.key} panel={selection.panel} notify={notify} close={() => open(null)} />}
+            {selection && (
+                <PanelForm key={selection.key} panel={selection.panel} notify={notify} close={() => open(null)} />
+            )}
         </>
     );
 

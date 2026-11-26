@@ -46,13 +46,17 @@ export function StaffRegister({
             }
             columns={['Person', 'Role', 'Unit', 'MFA', 'Last active', 'Status', '']}
             rows={visible.map((member) => [
-                <Person name={member.name} id={member.id.toUpperCase()} />,
+                <Person key="staff" name={member.name} id={member.id.toUpperCase()} />,
                 status(member.role, member.role === 'Super Admin' ? 'emerald' : 'slate'),
-                <span className="text-[13px] text-ink-600">{member.unit}</span>,
+                <span key="unit" className="text-[13px] text-ink-600">
+                    {member.unit}
+                </span>,
                 status(member.mfa ? 'Enrolled' : 'Not enrolled', member.mfa ? 'emerald' : 'amber'),
-                <span className="text-[13px] text-ink-500">{member.lastActive}</span>,
+                <span key="activity" className="text-[13px] text-ink-500">
+                    {member.lastActive}
+                </span>,
                 status(cap(member.status)),
-                <Action size="sm" onClick={() => editStaff(member)}>
+                <Action key="details" size="sm" onClick={() => editStaff(member)}>
                     Details
                 </Action>,
             ])}

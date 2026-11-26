@@ -33,6 +33,7 @@ export function useStaffDirectory({
             );
             return;
         }
+
         const person = {
             ...changes,
             name: val(data, 'Name'),
@@ -43,6 +44,7 @@ export function useStaffDirectory({
         };
         setStaff((records) => [...records, { ...person, id: `u-${records.length + 1}` }]);
     }
+
     function editStaff(member?: StaffRecord) {
         desk.show({
             title: member?.name ?? 'Add person',
@@ -54,5 +56,6 @@ export function useStaffDirectory({
             save: (data) => saveStaff(data, member),
         });
     }
+
     return { staff, visible, query, search, filter, setFilter, editStaff };
 }

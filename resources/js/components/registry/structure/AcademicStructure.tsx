@@ -79,11 +79,7 @@ export function AcademicStructure({
                             </>
                         }
                     >
-                        <FacultyHierarchy
-                            faculties={faculties}
-                            programmes={programmes}
-                            onOversight={showOversight}
-                        />
+                        <FacultyHierarchy faculties={faculties} programmes={programmes} onOversight={showOversight} />
                     </Card>
                 </div>
                 <div className="xl:col-span-4">
@@ -93,8 +89,8 @@ export function AcademicStructure({
             <ProgrammeRegister {...{ programmes, addProgramme }} />
             <AcademicSessions {...{ academicSessions, windows, desk }} />
             <Note>
-                Oversight scopes are inherited: a dean sees every department in the faculty, a head of department
-                sees only their own department. Scope changes take effect on the next login.
+                Oversight scopes are inherited: a dean sees every department in the faculty, a head of department sees
+                only their own department. Scope changes take effect on the next login.
             </Note>
         </Register>
     );

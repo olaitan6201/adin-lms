@@ -11,7 +11,10 @@ export function ResourceHistory({
     restore,
 }: {
     file: LibraryResource;
-    versionHistory: { date: string; size: string }[];
+    versionHistory: {
+        date: string;
+        size: string;
+    }[];
     resourceAuthor: string;
     restore: (version: number) => void;
 }) {

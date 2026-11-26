@@ -26,27 +26,31 @@ export function useAcademicUnits({
                 )
             )
                 return 'A faculty with that name or code already exists.';
+
             const faculty = { ...unit, head: val(data, 'Head'), departments: [] };
             setFaculties((records) => [...records, faculty]);
             return;
         }
+
         const parent = val(data, 'Parent faculty');
         if (!faculties.some((f) => f.name === parent)) return 'Select an existing faculty.';
+
         if (faculties.some((f) => f.departments.some((d) => d.code.toLowerCase() === unit.code.toLowerCase())))
             return 'Department codes must be unique.';
+
         const department = { ...unit, programmes: 0, lecturers: 0, students: 0 };
         setFaculties((records) =>
             records.map((faculty) =>
-                faculty.name === parent
-                    ? { ...faculty, departments: [...faculty.departments, department] }
-                    : faculty,
+                faculty.name === parent ? { ...faculty, departments: [...faculty.departments, department] } : faculty,
             ),
         );
     }
+
     function saveProgramme(data: FormData) {
         const department = val(data, 'Department');
         const faculty = faculties.find((unit) => unit.departments.some((child) => child.code === department));
         if (!faculty) return 'Select an existing department.';
+
         const programme = {
             id: crypto.randomUUID(),
             code: val(data, 'Code'),
@@ -70,6 +74,7 @@ export function useAcademicUnits({
         );
         setProgrammes((records) => [...records, programme]);
     }
+
     function addUnit() {
         desk.show({
             title: 'Add faculty or department',
@@ -95,10 +100,7 @@ export function useAcademicUnits({
                 <>
                     <Field label="Programme" required />
                     <Field label="Code" required />
-                    <Field
-                        label="Department"
-                        options={faculties.flatMap((f) => f.departments.map((d) => d.code))}
-                    />
+                    <Field label="Department" options={faculties.flatMap((f) => f.departments.map((d) => d.code))} />
                     <Field label="Level" options={['100', '200', '300', '400', '500']} />
                     <Field label="Units" type="number" required />
                 </>
@@ -106,5 +108,6 @@ export function useAcademicUnits({
             save: saveProgramme,
         });
     }
+
     return { faculties, programmes, addUnit, addProgramme };
 }

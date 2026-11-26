@@ -12,7 +12,11 @@ export function DeliveryPipeline({
     filter: string;
     setFilter: (filter: string) => void;
     list: Offering[];
-    offerings: { code: string; students: number; state: string }[];
+    offerings: {
+        code: string;
+        students: number;
+        state: string;
+    }[];
 }) {
     return (
         <Card title="Delivery pipeline" subtitle="Where offerings sit in the approval to publication flow">

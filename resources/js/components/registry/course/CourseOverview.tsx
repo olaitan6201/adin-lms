@@ -3,15 +3,13 @@ import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import type { Overview } from '@/types/registry/course';
 
-export function CourseOverview({
-    overview,
-    draft,
-    edit,
-}: {
+type CourseOverviewProps = {
     overview: Overview;
     draft: boolean;
     edit: () => void;
-}) {
+};
+
+export function CourseOverview({ overview, draft, edit }: CourseOverviewProps) {
     return (
         <Card
             title="Course overview"
@@ -31,9 +29,7 @@ export function CourseOverview({
                     ['Course outline', overview.outline],
                 ].map(([label, value]) => (
                     <section key={label}>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-400">
-                            {label}
-                        </p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-400">{label}</p>
                         <p className="mt-1.5 max-w-3xl text-[13.5px] leading-relaxed text-ink-700">{value}</p>
                     </section>
                 ))}

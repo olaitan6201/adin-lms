@@ -39,20 +39,19 @@ export function RolePermissions({
                 columns={['Permission', ...roleColumns.map(([, label]) => label)]}
                 rows={permissionMatrix.map(({ permission, ...rights }) => [
                     permission,
-                    ...roleColumns
-                        .map(([key]) => rights[key])
-                        .map((v) =>
-                            typeof v === 'boolean' ? (
-                                <span aria-label={v ? 'Full access' : 'No access'}>
-                                    <Icon
-                                        name={v ? 'check' : 'close'}
-                                        className={v ? 'size-4 text-brand-600' : 'size-3.5 text-ink-300'}
-                                    />
-                                </span>
-                            ) : (
-                                v
-                            ),
-                        ),
+                    ...roleColumns.map(([key]) => {
+                        const v = rights[key];
+                        return typeof v === 'boolean' ? (
+                            <span key={key} aria-label={v ? 'Full access' : 'No access'}>
+                                <Icon
+                                    name={v ? 'check' : 'close'}
+                                    className={v ? 'size-4 text-brand-600' : 'size-3.5 text-ink-300'}
+                                />
+                            </span>
+                        ) : (
+                            v
+                        );
+                    }),
                 ])}
             />
         </>

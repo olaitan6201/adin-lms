@@ -8,7 +8,11 @@ export function RosterIngestion({
     roster,
     remove,
 }: {
-    offerings: { code: string; students: number; state: string }[];
+    offerings: {
+        code: string;
+        students: number;
+        state: string;
+    }[];
     rosterMetrics: [string, string, string?][];
     roster: RosterStudent[];
     remove: (id: string) => void;
@@ -30,11 +34,8 @@ export function RosterIngestion({
                 s.matric,
                 s.name,
                 s.programme,
-                status(
-                    s.status === 'active' ? 'Enrolled' : 'Pending',
-                    s.status === 'active' ? 'emerald' : 'amber',
-                ),
-                <Action size="sm" onClick={() => remove(s.id)}>
+                status(s.status === 'active' ? 'Enrolled' : 'Pending', s.status === 'active' ? 'emerald' : 'amber'),
+                <Action key="remove" size="sm" onClick={() => remove(s.id)}>
                     Remove
                 </Action>,
             ])}

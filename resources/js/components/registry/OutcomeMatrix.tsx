@@ -3,7 +3,10 @@ export function OutcomeMatrix({
     matrix,
 }: {
     columns: string[];
-    matrix: { outcome: string; weights: number[] }[];
+    matrix: {
+        outcome: string;
+        weights: number[];
+    }[];
 }) {
     return (
         <>

@@ -1,4 +1,9 @@
-export function Avatar({ name, large = false }: { name: string; large?: boolean }) {
+type AvatarProps = {
+    name: string;
+    large?: boolean;
+};
+
+export function Avatar({ name, large = false }: AvatarProps) {
     const initials = name
         .split(' ')
         .map((w) => w[0])
@@ -22,7 +27,13 @@ export function Avatar({ name, large = false }: { name: string; large?: boolean 
         </span>
     );
 }
-export function Person({ name, id }: { name: string; id: string }) {
+
+type PersonProps = {
+    name: string;
+    id: string;
+};
+
+export function Person({ name, id }: PersonProps) {
     return (
         <div className="flex items-center gap-2.5">
             <Avatar name={name} />

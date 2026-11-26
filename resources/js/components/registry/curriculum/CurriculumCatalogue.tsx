@@ -33,12 +33,9 @@ export function CurriculumCatalogue({
     });
 
     function exportCurriculum() {
-        download(
-            'curriculum.json',
-            JSON.stringify({ courses, programmes: versions }, null, 2),
-            'application/json',
-        );
+        download('curriculum.json', JSON.stringify({ courses, programmes: versions }, null, 2), 'application/json');
     }
+
     return (
         <Register
             title="Curriculum catalogue"
@@ -57,11 +54,7 @@ export function CurriculumCatalogue({
             overlay={desk.overlay}
             active={tab}
             select={setTab}
-            tabs={[
-                ['Course catalogue', courses.length],
-                ['Programme versions', versions.length],
-                ['Outcome mapping'],
-            ]}
+            tabs={[['Course catalogue', courses.length], ['Programme versions', versions.length], ['Outcome mapping']]}
         >
             {tab === 0 && <DefinitionRegister {...{ courses, courseForm }} />}
             {tab === 1 && <ProgrammeVersions {...{ versions, mapOutcomes }} />}

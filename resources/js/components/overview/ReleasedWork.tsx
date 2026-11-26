@@ -13,7 +13,10 @@ export type Release = {
 
 export function ReleasedWork({ releases }: { releases: Release[] }) {
     return (
-        <InsightPanel title="Results & feedback" subtitle="Latest published course results and returned assignment marks.">
+        <InsightPanel
+            title="Results & feedback"
+            subtitle="Latest published course results and returned assignment marks."
+        >
             {releases.length ? (
                 <ul className="mt-3 divide-y">
                     {releases.map((row) => (

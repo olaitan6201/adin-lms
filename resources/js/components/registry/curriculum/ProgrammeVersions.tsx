@@ -27,7 +27,7 @@ export function ProgrammeVersions({
                         revision.state === 'approved' ? 'emerald' : 'amber',
                     ),
                     revision.approved ?? '—',
-                    <Action size="sm" onClick={() => mapOutcomes(p)}>
+                    <Action key="outcomes" size="sm" onClick={() => mapOutcomes(p)}>
                         Map outcomes
                     </Action>,
                 ];

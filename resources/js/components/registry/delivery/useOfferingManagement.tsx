@@ -12,7 +12,10 @@ export function useOfferingManagement({
 }: {
     initialOfferings: Offering[];
     previousSessions: string[];
-    staff: { name: string; role: string }[];
+    staff: {
+        name: string;
+        role: string;
+    }[];
     desk: Desk;
 }) {
     const [list, setList] = useState(initialOfferings);
@@ -51,5 +54,6 @@ export function useOfferingManagement({
                 }),
         });
     }
+
     return { list, append, unpublish, manage };
 }

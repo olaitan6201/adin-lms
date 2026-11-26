@@ -6,7 +6,11 @@ export function StructureHealth({
     structureChecks,
     healthScope,
 }: {
-    structureChecks: { result: string; title: string; detail: string }[];
+    structureChecks: {
+        result: string;
+        title: string;
+        detail: string;
+    }[];
     healthScope: [string, string][];
 }) {
     return (

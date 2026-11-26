@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { type Desk, Field } from '@/components/registry/Desk';
-import { Note } from '@/components/ui/feedback/Note';
-import { Records, Details, status, cap, val } from '@/components/registry/Records';
+import { type Desk } from '@/components/registry/Desk';
+import { Records, status, cap, val } from '@/components/registry/Records';
 import { Action } from '@/components/ui/controls/Action';
 import type { AcademicSession } from '@/types/registry/structure';
+import { SessionFields } from './SessionFields';
 
 export function AcademicSessions({
     academicSessions,
@@ -23,32 +23,7 @@ export function AcademicSessions({
             cancel: 'Cancel',
             submit: 'Save changes',
             message: 'Session settings saved',
-            body: (
-                <>
-                    <Field label="Session label" value={session.label} required />
-                    <div className="grid grid-cols-2 gap-3">
-                        <Field label="Resumption date" type="date" value={session.startDate} required />
-                        <Field label="Session end" type="date" value={session.endDate} required />
-                    </div>
-                    <Field
-                        label="Semester"
-                        value={session.semester}
-                        options={['First Semester', 'Second Semester']}
-                    />
-                    <section className="rounded-xl border border-ink-100 p-4">
-                        <p className="text-[13px] font-semibold">Semester windows</p>
-                        {windows[session.id] ? (
-                            <Details entries={windows[session.id]} />
-                        ) : (
-                            <p>No semester windows recorded for this session.</p>
-                        )}
-                    </section>
-                    <Note>
-                        Roster imports and result publication are scoped to the active session. Changing these
-                        dates does not alter historical records.
-                    </Note>
-                </>
-            ),
+            body: <SessionFields session={session} windows={windows} />,
             save: (data) =>
                 setSessions((records) =>
                     records.map((record) =>
@@ -75,15 +50,17 @@ export function AcademicSessions({
             subtitle="Session windows drive roster scope, course delivery and reporting periods"
             columns={['Session', 'State', 'Window', 'Semesters', '']}
             rows={sessions.map((session) => [
-                <span className="font-medium text-ink-800">{session.label}</span>,
+                <span key="session" className="font-medium text-ink-800">
+                    {session.label}
+                </span>,
                 status(cap(session.state)),
-                <span className="text-[13px] text-ink-500">
+                <span key="window" className="text-[13px] text-ink-500">
                     {session.start} to {session.end}
                 </span>,
-                <span className="text-[13px] text-ink-500">
+                <span key="semesters" className="text-[13px] text-ink-500">
                     {session.state === 'active' ? 'Semester 1 and 2' : 'Semesters 1 and 2'}
                 </span>,
-                <Action size="sm" onClick={() => manage(session)}>
+                <Action key="manage" size="sm" onClick={() => manage(session)}>
                     Manage
                 </Action>,
             ])}

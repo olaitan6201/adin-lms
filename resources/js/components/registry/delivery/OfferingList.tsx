@@ -39,20 +39,26 @@ export function OfferingList({
             rows={list
                 .filter((offering) => !filter || offering.state === filter.toLowerCase())
                 .map((offering) => [
-                    <div className="min-w-0">
+                    <div key="offering" className="min-w-0">
                         <p className="truncate font-medium text-ink-800">{offering.title}</p>
                         <p className="truncate font-mono text-[11px] text-ink-400">{offering.code}</p>
                     </div>,
-                    <span className="text-[13px] text-ink-600">{offering.term}</span>,
+                    <span key="term" className="text-[13px] text-ink-600">
+                        {offering.term}
+                    </span>,
                     status(offering.mode),
-                    <span className="text-[13px] text-ink-600">{offering.instructor}</span>,
-                    <span className="text-[13px] tnum">{offering.students}</span>,
+                    <span key="instructor" className="text-[13px] text-ink-600">
+                        {offering.instructor}
+                    </span>,
+                    <span key="students" className="text-[13px] tnum">
+                        {offering.students}
+                    </span>,
                     offering.completion ? <Progress n={offering.completion} /> : '-',
                     status(
                         offering.state,
                         offering.state === 'approved' ? 'amber' : offering.state === 'draft' ? 'slate' : undefined,
                     ),
-                    <div className="flex justify-end gap-1.5">
+                    <div key="actions" className="flex justify-end gap-1.5">
                         <Action size="sm" onClick={() => manage(offering)}>
                             Manage
                         </Action>

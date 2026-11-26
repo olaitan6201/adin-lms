@@ -9,7 +9,13 @@ export function appendExportAudit(scope: ReportScope, format: ExportFormat) {
     try {
         const stored: unknown = JSON.parse(sessionStorage.getItem(key) ?? '[]');
         const recent = Array.isArray(stored) ? stored.slice(-99) : [];
-        const entry = { screen: location.pathname, scope: scope.label, scopeId: scope.id, format, at: new Date().toISOString() };
+        const entry = {
+            screen: location.pathname,
+            scope: scope.label,
+            scopeId: scope.id,
+            format,
+            at: new Date().toISOString(),
+        };
         sessionStorage.setItem(key, JSON.stringify([...recent, entry]));
         return true;
     } catch {

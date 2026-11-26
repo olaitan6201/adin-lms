@@ -11,7 +11,10 @@ export function OfferingSettings({
     unpublish,
 }: {
     offering: Offering;
-    staff: { role: string; name: string }[];
+    staff: {
+        role: string;
+        name: string;
+    }[];
     previousSessions: string[];
     unpublish: (record: Offering) => void;
 }) {
@@ -35,11 +38,7 @@ export function OfferingSettings({
                                 : [offering.instructor, 'Unassigned']
                         }
                     />
-                    <Field
-                        label="Teaching assistants"
-                        value={offering.assistants}
-                        options={['2 assigned', 'None']}
-                    />
+                    <Field label="Teaching assistants" value={offering.assistants} options={['2 assigned', 'None']} />
                     <Field
                         label="Access scope"
                         value={offering.scope}
@@ -73,10 +72,7 @@ export function OfferingSettings({
                 <Details
                     entries={[
                         ['Approved by HoD', status(offering.state === 'draft' ? 'Pending' : 'Done')],
-                        [
-                            'Instructor allocated',
-                            status(offering.instructor === 'Unassigned' ? 'Pending' : 'Done'),
-                        ],
+                        ['Instructor allocated', status(offering.instructor === 'Unassigned' ? 'Pending' : 'Done')],
                         ['Roster consumed', status(`${offering.students} enrolled`, 'emerald')],
                         [
                             'Published to students',

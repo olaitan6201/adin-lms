@@ -40,6 +40,7 @@ export function useResources({ initialResources, allowed, notify, onUpload }: Re
 
     function upload(incoming: FileList | null) {
         if (!incoming?.length) return;
+
         const batch = Array.from(incoming);
         if (batch.some((file) => file.size > 200 * 1024 * 1024 || !allowed.includes(extension(file.name)))) {
             notify('Upload rejected. Select an allowed file type no larger than 200 MB.');

@@ -8,7 +8,10 @@ export function openOfferingCreation({
     onCreate,
     desk,
 }: {
-    courses: { code: string; title: string }[];
+    courses: {
+        code: string;
+        title: string;
+    }[];
     currentTerm: string;
     onCreate: (offering: Offering) => void;
     desk: Desk;
@@ -26,6 +29,7 @@ export function openOfferingCreation({
         save: (d) => {
             const course = courses.find((record) => record.code === val(d, 'Course'));
             if (!course) return 'Select an available course to create an offering.';
+
             onCreate({
                 id: crypto.randomUUID(),
                 code: course.code,

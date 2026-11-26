@@ -41,7 +41,7 @@ export function StudentRegister({
             }
             columns={['Student', 'Programme', 'Level', 'Attendance', 'GPA', 'Status', '']}
             rows={students.map((student) => [
-                <Person name={student.name} id={student.matric} />,
+                <Person key="student" name={student.name} id={student.matric} />,
                 student.programme,
                 status(`Level ${student.level}`),
                 `${student.attendance}%`,
@@ -50,7 +50,7 @@ export function StudentRegister({
                     student.status === 'pending' ? 'Pending activation' : cap(student.status),
                     student.status === 'active' ? 'emerald' : student.status === 'pending' ? 'sky' : 'amber',
                 ),
-                <Action size="sm" onClick={() => editStudent(student)}>
+                <Action key="details" size="sm" onClick={() => editStudent(student)}>
                     Open
                 </Action>,
             ])}

@@ -10,7 +10,6 @@ type Behavior = {
     | { href: string }
     | { onClick: MouseEventHandler<Element> }
     | { disabled: true }
-    | { href: string | undefined; disabled: boolean }
 );
 
 type ActionProps = AriaAttributes & Behavior & {
@@ -59,7 +58,7 @@ export function Action({
         <button
             {...attributes}
             type="button"
-            disabled={disabled}
+            disabled={disabled || !onClick}
             onClick={onClick}
             className={className}
         >

@@ -63,9 +63,9 @@ export function Register({ eyebrow, title, description, actions, tabs, active, s
     return <><PageHeader {...{ eyebrow, title, description, actions }} />
         <div className="min-w-0 space-y-5">
             {tabs ? <Tabs.Root value={String(active)} onValueChange={v => select?.(Number(v))} className="space-y-5">
-                <Card bodyClassName="p-0"><div className="overflow-x-auto border-b border-ink-100"><Tabs.List aria-label={`${title} sections`} className="flex min-w-max gap-1">
+                <Card bodyClassName="p-0"><div data-scroll className="overflow-x-auto border-b border-ink-100"><Tabs.List aria-label={`${title} sections`} className="flex min-w-max gap-1">
                     {tabs.map(([label,count],i) => <Tabs.Trigger key={label} value={String(i)} className="whitespace-nowrap border-b-2 border-transparent px-3.5 py-2.5 text-sm font-medium text-ink-500 data-[state=active]:border-brand-600 data-[state=active]:text-brand-800">
-                        {label}{count !== undefined && <span className="ml-1.5 rounded-full bg-ink-100 px-1.5 py-0.5 text-[11px] font-semibold text-ink-600">{count}</span>}</Tabs.Trigger>)}
+                        {label}{count !== undefined && <span className="tnum ml-1.5 rounded-full bg-ink-100 px-1.5 py-0.5 text-[11px] leading-5 font-semibold text-ink-600">{count}</span>}</Tabs.Trigger>)}
                 </Tabs.List></div></Card><Tabs.Content value={String(active)} className="space-y-5">{children}</Tabs.Content>
             </Tabs.Root> : children}
         </div>{overlay}</>;

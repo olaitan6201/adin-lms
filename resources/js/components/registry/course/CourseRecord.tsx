@@ -61,9 +61,9 @@ export function CourseRecord({ selectedCourse, courseModules, gradeWeights }: Co
             overlay={desk.overlay}
         >
             <Note>
-                The overview, outline and outcome mapping shown here are the approved version for the{' '}
-                {selectedCourse.session} session. Any change starts a new draft and requires re-approval before it
-                reaches students.
+                {draft
+                    ? `The overview and outline shown here are a draft for the ${selectedCourse.session} session. Students continue to see the approved version until this draft is approved.`
+                    : `The overview, outline and outcome mapping shown here are the approved version for the ${selectedCourse.session} session. Any change starts a new draft and requires re-approval before it reaches students.`}
             </Note>
             <CourseOverview {...{ overview, draft, edit }} />
             <CoursePlan {...{ courseModules, gradeWeights, overview }} />

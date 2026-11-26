@@ -8,6 +8,7 @@ import { RoleSwitcher } from './workspace/RoleSwitcher';
 import { WorkspaceOverlays, useWorkspaceOverlays } from './workspace/WorkspaceOverlays';
 import { WorkspacePalette } from './workspace/WorkspacePalette';
 import { WorkspaceRail } from './workspace/WorkspaceRail';
+import { WorkspaceDrawerEdge } from './workspace/WorkspaceDrawerEdge';
 import { AccessibilityOptions, Notifications } from './workspace/WorkspaceTools';
 
 type Screen = (typeof entries)[number];
@@ -66,6 +67,7 @@ function WorkspaceChrome({ screen, children }: { screen: Screen; children: React
                 <div className="mx-auto w-full max-w-[1560px]">{children}</div>
             </main>
         </div>
+        <WorkspaceDrawerEdge screen={key} />
     </div>;
 }
 

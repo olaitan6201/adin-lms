@@ -1,0 +1,22 @@
+.ws-drawer-edge {
+    position: fixed;
+    inset: 0 0 0 auto;
+    z-index: 50;
+    width: min(100%, 560px);
+    translate: 100% 0;
+    pointer-events: none;
+    box-shadow: var(--shadow-lift);
+}
+
+.ws-drawer-edge[data-panels="2"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: var(--shadow-lift);
+}
+
+/* Native dialogs and portalled workspace sheets own their open presentation. */
+.workspace-shell:has(dialog[open]) .ws-drawer-edge,
+body:has([data-slot="sheet-content"], [data-slot="dialog-content"]) .ws-drawer-edge {
+    display: none;
+}

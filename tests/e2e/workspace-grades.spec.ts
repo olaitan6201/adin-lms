@@ -60,3 +60,23 @@ test('only the officer can confirm release and only approved rows are released',
     await expect(page.getByRole('row').filter({ hasText: 'In moderation' })).toHaveCount(2);
     await expect(page.getByRole('row').filter({ hasText: 'Entered' })).toHaveCount(1);
 });
+
+test('an officer cannot mark or release another result once all results are published', async ({ page }) => {
+    await page.goto('/admin/gradebook');
+    const dialog = page.getByRole('dialog');
+    for (const matric of ['AOU/2024/1187', 'AOU/2022/0067', 'AOU/2024/1322']) {
+        await page.getByRole('button', { name: 'Second marker' }).click();
+        await dialog.getByLabel('Student').selectOption(matric);
+        await dialog.getByLabel('Reason').fill('Script reviewed for publication');
+        await dialog.getByRole('button', { name: 'Save' }).click();
+    }
+    const publish = page.getByRole('button', { name: 'Publish results' }).first();
+    await publish.click();
+    await dialog.getByRole('button', { name: 'Confirm publication' }).click();
+    await page.getByRole('button', { name: 'Second marker' }).click();
+    await expect(dialog).toContainText('No unpublished results');
+    await expect(dialog.getByRole('button', { name: 'Save' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await publish.click();
+    await expect(dialog.getByRole('button', { name: 'Confirm publication' })).toBeDisabled();
+});

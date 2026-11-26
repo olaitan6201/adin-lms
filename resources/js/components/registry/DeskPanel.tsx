@@ -1,0 +1,83 @@
+import { useState, type ReactNode, type SubmitEvent } from 'react';
+import { Icon } from '@/components/icons/Icon';
+import { Action } from '@/components/ui/controls/Action';
+import { MountedDialog } from '@/components/ui/overlays/MountedDialog';
+
+export type Panel = {
+    title: string;
+    subtitle?: string;
+    body: ReactNode;
+    submit?: string;
+    save?: (data: FormData) => void;
+    message?: string;
+    confirm?: boolean;
+    cancel?: string;
+    portrait?: ReactNode;
+};
+
+export function PanelForm({ panel, close }: { panel: Panel; close: () => void }) {
+    const className = panel.confirm
+        ? 'm-auto w-[min(92vw,460px)] rounded-xl p-0 shadow-xl backdrop:bg-ink-950/45'
+        : 'fixed inset-y-0 right-0 ml-auto mr-0 h-dvh max-h-none w-full max-w-[560px] border-l border-ink-100 bg-white p-0 shadow-xl backdrop:bg-ink-950/45 backdrop:backdrop-blur-[2px]';
+
+    function submit(event: SubmitEvent<HTMLFormElement>) {
+        event.preventDefault();
+        panel.save?.(new FormData(event.currentTarget));
+        close();
+    }
+
+    return (
+        <MountedDialog labelledBy="registry-panel-title" close={close} className={className}>
+            <form className="flex max-h-dvh h-full flex-col" onSubmit={submit}>
+                <div className="flex items-start justify-between gap-3 border-b border-ink-100 px-5 py-4">
+                    <div className="flex items-center gap-3">
+                        {panel.portrait}
+                        <div>
+                            <h2 id="registry-panel-title" className="text-[15px] font-semibold text-ink-900">{panel.title}</h2>
+                            <p className="mt-0.5 text-[13px] text-ink-500">{panel.subtitle}</p>
+                        </div>
+                    </div>
+                    <button className="btn btn-ghost btn-sm" type="button" aria-label="Close panel" onClick={close}>
+                        <Icon name="close" className="size-4" />
+                    </button>
+                </div>
+                <div className="flex-1 space-y-4 overflow-auto p-5">{panel.body}</div>
+                <div className="flex justify-end gap-2 border-t border-ink-100 p-4">
+                    <Action onClick={close} variant="outline">{panel.cancel ?? (panel.confirm ? 'Cancel' : 'Close')}</Action>
+                    {panel.submit && <button className="btn btn-primary" type="submit">{panel.submit}</button>}
+                </div>
+            </form>
+        </MountedDialog>
+    );
+}
+
+export function useDesk() {
+    const [panel, open] = useState<Panel | null>(null);
+    const [notice, notify] = useState('');
+
+    function show(value: Panel) {
+        open({
+            ...value,
+            save(data) {
+                value.save?.(data);
+                notify(value.message ?? `${value.title} saved`);
+            },
+        });
+    }
+
+    const overlay = (
+        <>
+            {notice && (
+                <div role="status" className="fixed bottom-5 right-5 z-40 rounded-lg bg-slate-900 px-4 py-3 text-sm text-white">
+                    {notice}{' '}
+                    <button aria-label="Dismiss notification" onClick={() => notify('')}>×</button>
+                </div>
+            )}
+            {panel && <PanelForm key={panel.title} panel={panel} close={() => open(null)} />}
+        </>
+    );
+
+    return { show, notify, overlay };
+}
+
+export type Desk = ReturnType<typeof useDesk>;

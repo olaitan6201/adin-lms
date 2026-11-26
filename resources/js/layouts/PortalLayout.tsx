@@ -1,21 +1,38 @@
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Sidebar, SidebarContent, SidebarHeader, SidebarProvider } from '@/components/ui/sidebar';
-import { Link, usePage } from '@inertiajs/react';
+import '../../css/portal-shell.css';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { usePage } from '@inertiajs/react';
+import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ConnectionStatus } from './ConnectionStatus';
-import { SidebarNavigation, type Destination } from './SidebarNavigation';
+import { PortalRail, type PortalBrand } from './PortalRail';
+import { PortalTopbar } from './PortalTopbar';
+import type { Destination } from './SidebarNavigation';
+
+type Shared = {
+    signedIn: boolean; branding: PortalBrand; academicLinks?: Destination[];
+    name?: string; audience?: string; portalIdentity?: { name: string; role: string } | null;
+};
 
 export function PortalLayout({ children }: { children: ReactNode }) {
-    const { url, props } = usePage<{
-        signedIn: boolean; branding: { institution: string; logoFull: string }; academicLinks?: Destination[];
-    }>();
+    const { url, props, component } = usePage<Shared>();
     const path = url.split(/[?#]/)[0];
     const previous = useRef(path);
     const content = useRef<HTMLDivElement>(null);
     const close = useRef<HTMLButtonElement>(null);
     const navigated = useRef(false);
     const [open, setOpen] = useState(false);
+    const bare = ['Login', 'ForgotPassword', 'ResetPassword'].includes(component);
+    const dashboard = component === 'Insights/Dashboard';
+    const name = props.portalIdentity?.name || (dashboard && props.name) || 'My account';
+    const role = props.portalIdentity?.role || (dashboard && props.audience) || 'Academic workspace';
+    const account = { name, role, initials: name.trim().split(/\s+/).slice(-2).map(part => part[0]).join('').toUpperCase() };
+    const rail = {
+        branding: props.branding, signedIn: props.signedIn, academicLinks: props.academicLinks ?? [],
+        path, account, onCurrentPage: () => setOpen(false),
+    };
+    const module = component.split('/').pop() ?? component;
+    const title = dashboard ? 'Dashboard' : module === 'Home' ? 'Learning portal' : module.replace(/([a-z])([A-Z])/g, '$1 $2');
+
     useEffect(() => {
         if (previous.current === path) return;
         previous.current = path;
@@ -24,45 +41,40 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         content.current?.focus({ preventScroll: true });
     }, [path]);
     useEffect(() => {
-        const query = window.matchMedia('(min-width: 48rem)');
+        const query = window.matchMedia('(min-width: 1024px)');
         const resize = () => { if (query.matches) setOpen(false); };
         query.addEventListener('change', resize);
         return () => query.removeEventListener('change', resize);
     }, []);
-    const brand = <Link href={props.signedIn ? '/dashboard' : '/'} aria-label={`${props.branding.institution} home`}
-        className="flex min-w-0 items-center gap-3 rounded-md px-2 py-1 focus-visible:ring-2 focus-visible:ring-ring">
-        <img src={props.branding.logoFull} alt="" width="42" height="36" className="size-9 shrink-0 object-contain" />
-        <span className="text-sm font-semibold leading-tight">{props.branding.institution}</span>
-    </Link>;
-    const navigation = <SidebarNavigation signedIn={props.signedIn} academicLinks={props.academicLinks ?? []}
-        path={path} onCurrentPage={() => setOpen(false)} />;
-    return <SidebarProvider>
-        <a href="#portal-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:p-3 focus:ring-2">Skip to content</a>
-        <div className="sticky top-0 hidden h-svh shrink-0 border-r md:block">
-            <Sidebar collapsible="none">
-                <SidebarHeader>{brand}</SidebarHeader>
-                <SidebarContent>{navigation}</SidebarContent>
-            </Sidebar>
-        </div>
-        <div className="min-w-0 flex-1">
-            <header className="flex items-center justify-between gap-2 border-b px-4 py-2 md:hidden">
-                {brand}
-                <Sheet open={open} onOpenChange={value => { if (value) navigated.current = false; setOpen(value); }}>
-                    <SheetTrigger asChild><Button variant="outline" size="sm">Menu</Button></SheetTrigger>
-                    <SheetContent side="left" showCloseButton={false} className="overflow-y-auto"
-                        onOpenAutoFocus={event => { event.preventDefault(); close.current?.focus(); }}
-                        onCloseAutoFocus={event => { if (navigated.current) { event.preventDefault(); content.current?.focus(); } }}>
-                        <SheetHeader>
-                            <SheetTitle>Portal menu</SheetTitle>
-                            <SheetDescription>{props.branding.institution}</SheetDescription>
-                            <SheetClose asChild><Button ref={close} variant="outline" size="sm">Close menu</Button></SheetClose>
-                        </SheetHeader>
-                        {navigation}
-                    </SheetContent>
-                </Sheet>
-            </header>
+
+    const menu = <Sheet open={open} onOpenChange={value => {
+        if (value) navigated.current = false;
+        setOpen(value);
+    }}>
+        <SheetTrigger className="portal-icon portal-menu-trigger" aria-label="Menu"><Menu size={20} /></SheetTrigger>
+        <SheetContent side="left" showCloseButton={false} className="portal-mobile-rail"
+            onOpenAutoFocus={event => {
+                event.preventDefault();
+                close.current?.focus();
+            }}
+            onCloseAutoFocus={event => {
+                if (navigated.current) {
+                    event.preventDefault();
+                    content.current?.focus({ preventScroll: true });
+                }
+            }}>
+            <SheetTitle className="sr-only">Portal menu</SheetTitle>
+            <SheetDescription className="sr-only">{props.branding.institution}</SheetDescription>
+            <PortalRail {...rail} close={<SheetClose ref={close} className="portal-icon" aria-label="Close menu"><X size={16} /></SheetClose>} />
+        </SheetContent>
+    </Sheet>;
+    return <div className={bare ? 'portal-shell portal-bare' : 'portal-shell'}>
+        <a href="#portal-content" className="portal-skip">Skip to content</a>
+        {!bare && <aside className="portal-desktop-rail"><PortalRail {...rail} /></aside>}
+        <div className="portal-shell-body">
+            {!bare && <PortalTopbar menu={menu} branding={props.branding} title={title} signedIn={props.signedIn} account={account} academicLinks={rail.academicLinks} />}
             <ConnectionStatus />
-            <div id="portal-content" tabIndex={-1} ref={content} className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+            <div id="portal-content" tabIndex={-1} ref={content}>{children}</div>
         </div>
-    </SidebarProvider>;
+    </div>;
 }

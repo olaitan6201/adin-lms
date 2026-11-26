@@ -32,7 +32,13 @@ function WorkspaceSidebar({
     tools,
     courses,
     desk,
-}: Pick<Props, 'tools' | 'courses'> & { desk: { side: string; url: string; action: string } }) {
+}: Pick<Props, 'tools' | 'courses'> & {
+    desk: {
+        side: string;
+        url: string;
+        action: string;
+    };
+}) {
     return (
         <aside className="min-w-0 space-y-3">
             {tools.length > 0 && (
@@ -94,6 +100,7 @@ export default function Dashboard({
             </StudyWeek>
         );
     }
+
     const desk = workspaceCopy[workspace];
     return (
         <main className="w-full min-w-0 space-y-5 wrap-anywhere">

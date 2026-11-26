@@ -10,7 +10,12 @@ import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Note } from '@/components/learning/Parts';
 
-function ModuleLink({ title, description, href, action }: { title: string; description: string; href: string; action: string }) {
+function ModuleLink({ title, description, href, action }: {
+    title: string;
+    description: string;
+    href: string;
+    action: string
+}) {
     return (
         <div className="rounded-xl border border-ink-100 bg-white p-8 text-center">
             <p className="text-sm font-semibold text-ink-800">{title}</p>

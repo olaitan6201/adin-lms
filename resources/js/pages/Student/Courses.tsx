@@ -34,7 +34,10 @@ function RegisteredCourse({ course }: { course: (typeof registration.courses)[nu
     );
 }
 
-function ChecklistItem({ module, lockedLabel }: { module: (typeof studentModules)[number]; lockedLabel: string }) {
+function ChecklistItem({ module, lockedLabel }: {
+    module: (typeof studentModules)[number];
+    lockedLabel: string
+}) {
     const [tone, label] =
         module.state === 'complete'
             ? ['emerald', 'Done']

@@ -37,8 +37,11 @@ export type ReportProps = {
 
 export function reportSummary(family: Family, scope: string | null, limit: string | null, rows: number, filters: number) {
     if (!scope) return 'No reporting scope assigned.';
+
     if (limit) return limit;
     // Completion includes its totals row even when no offering matches.
+
     if (rows > (family === 'completion' ? 1 : 0)) return `${rows} report ${rows === 1 ? 'row' : 'rows'}`;
+
     return filters ? 'No records match these filters.' : 'No records for this report yet.';
 }

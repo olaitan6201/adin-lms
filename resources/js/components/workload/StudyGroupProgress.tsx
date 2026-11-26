@@ -1,7 +1,10 @@
 import { Link } from '@inertiajs/react';
 import type { ClassReport } from './contracts';
 
-export function StudyGroupProgress({ groups, offeringId }: { groups: ClassReport['groups']; offeringId: string }) {
+export function StudyGroupProgress({ groups, offeringId }: {
+    groups: ClassReport['groups'];
+    offeringId: string
+}) {
     return (
         <section className="course-panel course-pad space-y-3">
             <h2 className="text-xl font-semibold tracking-tight">Study group progress</h2>

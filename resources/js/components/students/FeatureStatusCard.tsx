@@ -9,7 +9,10 @@ export function FeatureStatusCard({
 }: {
     title: string;
     subtitle: string;
-    items: { label: string; state: string }[];
+    items: {
+        label: string;
+        state: string;
+    }[];
     supported: string;
 }) {
     return (

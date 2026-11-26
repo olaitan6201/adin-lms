@@ -3,9 +3,20 @@ import { Card } from '@/components/ui/layout/Card';
 import { Ring } from '@/components/ui/data-display/Ring';
 import { status } from '@/components/registry/Records';
 
-type Summary = { scope: string; coursesInScope: number; passed: number; watch: number; failed: number; checksRun: number };
+type Summary = {
+    scope: string;
+    coursesInScope: number;
+    passed: number;
+    watch: number;
+    failed: number;
+    checksRun: number;
+};
 
-export function ComplianceRun({ summary, lastRun, runChecks }: { summary: Summary; lastRun: string; runChecks: () => void }) {
+export function ComplianceRun({ summary, lastRun, runChecks }: {
+    summary: Summary;
+    lastRun: string;
+    runChecks: () => void
+}) {
     const metrics = [
         ['Courses in scope', summary.coursesInScope, 'text-ink-900'],
         ['Passed', summary.passed, 'text-brand-700'],

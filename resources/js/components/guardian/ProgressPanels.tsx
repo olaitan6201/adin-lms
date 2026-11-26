@@ -4,7 +4,16 @@ import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
 import { Table } from '@/components/ui/data-display/Table';
 
-export function PublishedResults({ results }: { results: { course: string; title: string; total: number; grade: string }[] }) {
+export function PublishedResults({
+    results,
+}: {
+    results: {
+        course: string;
+        title: string;
+        total: number;
+        grade: string;
+    }[];
+}) {
     const rows = results.map((entry) => [
         <span key="course" className="font-mono text-[12px] text-ink-500">
             {entry.course}
@@ -34,7 +43,16 @@ export function PublishedResults({ results }: { results: { course: string; title
         </Card>
     );
 }
-export function Attendance({ rows }: { rows: { course: string; value: number; tone: string }[] }) {
+
+export function Attendance({
+    rows,
+}: {
+    rows: {
+        course: string;
+        value: number;
+        tone: string;
+    }[];
+}) {
     return (
         <Card title="Attendance" subtitle="Percentage of sessions attended, updated after each register is closed">
             <div className="space-y-4">
@@ -51,7 +69,17 @@ export function Attendance({ rows }: { rows: { course: string; value: number; to
         </Card>
     );
 }
-export function Deadlines({ rows }: { rows: { item: string; course: string; due: string; state: string }[] }) {
+
+export function Deadlines({
+    rows,
+}: {
+    rows: {
+        item: string;
+        course: string;
+        due: string;
+        state: string;
+    }[];
+}) {
     return (
         <Card title="Recent and upcoming dates" subtitle="Dates published to the whole cohort">
             <Table
@@ -74,7 +102,15 @@ export function Deadlines({ rows }: { rows: { item: string; course: string; due:
         </Card>
     );
 }
-export function Materials({ materials }: { materials: { name: string; size: string }[] }) {
+
+export function Materials({
+    materials,
+}: {
+    materials: {
+        name: string;
+        size: string;
+    }[];
+}) {
     return (
         <Card title="Materials made available" subtitle="Only materials the lecturer has opened to guardians">
             <ul className="space-y-2">

@@ -8,12 +8,19 @@ import { OperationsInput, OperationsSelect, CorrectionFocus } from '../Operation
 
 import { submitPrivacyAction, type PrivacyMode } from './submitPrivacyAction';
 
-export type OperationChoice = { value: string; label: string };
+export type OperationChoice = {
+    value: string;
+    label: string;
+};
 const headings = { approve: 'Approve a case action', execute: 'Execute an approval', refer: 'Record an incident referral' };
 const actions = { approve: 'Create approval receipt', execute: 'Execute recorded action', refer: 'Record referral' };
 const uuid = '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}';
 
-export default function PrivacyAction({ mode, csrf, operations }: { mode: PrivacyMode; csrf: string; operations: OperationChoice[] }) {
+export default function PrivacyAction({ mode, csrf, operations }: {
+    mode: PrivacyMode;
+    csrf: string;
+    operations: OperationChoice[]
+}) {
     const id = useId();
     const [busy, setBusy] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -24,6 +31,7 @@ export default function PrivacyAction({ mode, csrf, operations }: { mode: Privac
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (busy || (mode === 'execute' && !checkedReceipt)) return;
+
         const fields = new FormData(event.currentTarget);
         setErrors({});
         setResult('');

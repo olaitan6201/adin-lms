@@ -2,7 +2,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { useId } from 'react';
 
-export function VerifiedRecord({ children, error }: { children: string; error?: string }) {
+export function VerifiedRecord({ children, error }: {
+    children: string;
+    error?: string
+}) {
     const id = useId();
     return (
         <Field orientation="horizontal" data-invalid={error ? true : undefined}>
@@ -16,7 +19,9 @@ export function VerifiedRecord({ children, error }: { children: string; error?: 
             />
             <FieldContent>
                 <FieldLabel htmlFor={id}>{children}</FieldLabel>
-                <FieldError id={`${id}-error`} role={undefined}>{error}</FieldError>
+                <FieldError id={`${id}-error`} role={undefined}>
+                    {error}
+                </FieldError>
             </FieldContent>
         </Field>
     );

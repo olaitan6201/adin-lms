@@ -31,7 +31,11 @@ export function RecordHeading({
     );
 }
 
-export function RecordPanel({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
+export function RecordPanel({ title, description, children }: {
+    title: string;
+    description?: string;
+    children: ReactNode
+}) {
     return (
         <section className="card min-w-0">
             <header className="card-head">

@@ -4,7 +4,12 @@ import { MonitoringSettings } from '@/components/operations/infrastructure/Monit
 import { BackupReceiptForm } from '@/components/operations/infrastructure/BackupReceiptForm';
 
 export type Infrastructure = {
-    backup: { state: string; run?: string; finished_at?: string; overdue?: boolean | null };
+    backup: {
+        state: string;
+        run?: string;
+        finished_at?: string;
+        overdue?: boolean | null;
+    };
     settings: {
         storage_mib: number;
         probe_ms: number;

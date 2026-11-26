@@ -29,7 +29,10 @@ type Props = {
     grants: Grant[];
 };
 const label = (value: string) => value.split('_').join(' ');
-function GrantAccess({ path, roles }: { path: string; roles: Props['roles'] }) {
+function GrantAccess({ path, roles }: {
+    path: string;
+    roles: Props['roles']
+}) {
     const [role, selectRole] = useState('');
     const scope = roles.find((r) => r.code === role)?.scope;
 

@@ -1,6 +1,13 @@
 import { cap, Records, status } from '@/components/registry/Records';
 
-type Findings = { title: string; severity: string; course: string; owner: string; age: string; state: string }[];
+type Findings = {
+    title: string;
+    severity: string;
+    course: string;
+    owner: string;
+    age: string;
+    state: string;
+}[];
 
 export function ReviewFindings({ findings }: { findings: Findings }) {
     return (

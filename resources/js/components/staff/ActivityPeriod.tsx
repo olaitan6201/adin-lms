@@ -3,7 +3,11 @@ import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
 
-export function ActivityPeriod({ staffId, from, until }: { staffId: string; from: string; until: string }) {
+export function ActivityPeriod({ staffId, from, until }: {
+    staffId: string;
+    from: string;
+    until: string
+}) {
     return (
         <aside className="course-panel course-pad space-y-3">
             <h2 className="text-xl font-semibold tracking-tight">Reporting period</h2>

@@ -45,7 +45,11 @@ function RegistrationHistory({ records }: { records: Entry[] }) {
     );
 }
 
-export default function StudentHistory({ student, sessions, records }: { student: Profile; sessions: Session[]; records: Entry[] }) {
+export default function StudentHistory({ student, sessions, records }: {
+    student: Profile;
+    sessions: Session[];
+    records: Entry[]
+}) {
     return (
         <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Academic history" />

@@ -34,7 +34,11 @@ function ActiveSession({ session }: { session: Session }) {
     );
 }
 
-export default function Sessions({ sessions, previous, next }: { sessions: Session[]; previous: string | null; next: string | null }) {
+export default function Sessions({ sessions, previous, next }: {
+    sessions: Session[];
+    previous: string | null;
+    next: string | null
+}) {
     return (
         <main className="grid min-w-0 gap-5 wrap-anywhere">
             <Head title="Active sessions" />

@@ -2,9 +2,20 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 
 type Allocation = {
-    workload: { label: string; value: string }[];
-    preparation: { title: string; tone: string; state: string }[];
-    bands: { label: string; value: number; color: string }[];
+    workload: {
+        label: string;
+        value: string;
+    }[];
+    preparation: {
+        title: string;
+        tone: string;
+        state: string;
+    }[];
+    bands: {
+        label: string;
+        value: number;
+        color: string;
+    }[];
     cohortSize: number;
 };
 

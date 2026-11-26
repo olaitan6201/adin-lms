@@ -12,7 +12,10 @@ export type Staff = {
     offerings: string[];
 };
 
-export function LecturerRow({ lecturer, departments }: { lecturer: Staff; departments: DepartmentOption[] }) {
+export function LecturerRow({ lecturer, departments }: {
+    lecturer: Staff;
+    departments: DepartmentOption[]
+}) {
     return (
         <tr>
             <td>

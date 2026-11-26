@@ -5,6 +5,7 @@ import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Counts, type Measures } from './DeskDetails';
 import { LearnerTime } from '../components/LearnerTime';
+import { InsightPanel, MeasureBars } from './InsightPanel';
 
 type Option = { id: string; label: string };
 export type Period = { session: string | null; term: string | null; sessions: Option[]; terms: Option[]; summary: Measures };
@@ -13,7 +14,7 @@ export type Activity = { from: string; until: string; academic: Measures; latest
 export function ManagementPeriod({ period }: { period: Period }) {
     const current = period.term ? `term:${period.term}` : period.session ? `session:${period.session}` : '';
     const [selection, setSelection] = useState(current);
-    return <section className="my-5 border-y py-4" aria-label="Academic period">
+    return <section className="card card-pad" aria-label="Academic period">
         <form className="flex flex-wrap items-end gap-3" onSubmit={event => {
             event.preventDefault();
             const [key, id] = selection.split(':');
@@ -32,16 +33,14 @@ export function ManagementPeriod({ period }: { period: Period }) {
 }
 
 export function ActivitySummary({ activity }: { activity: Activity }) {
-    return <section className="mt-8 border-t pt-5">
-        <h2 className="text-xl font-semibold">Activity in the last seven days</h2>
-        <p className="text-sm text-muted-foreground">After <LearnerTime instant={activity.from} /> through <LearnerTime instant={activity.until} />.</p>
-        <Counts values={activity.academic} />
-        {activity.latest.length > 0 && <><h3>Latest academic activity</h3>
+    return <InsightPanel title="Activity in the last seven days" subtitle={<>After <LearnerTime instant={activity.from} /> through <LearnerTime instant={activity.until} />.</>}>
+        <MeasureBars values={activity.academic} />
+        {activity.latest.length > 0 && <><h3 className="card-title mt-5 border-t border-ink-100 pt-4">Latest academic activity</h3>
             <ul className="mb-4">{activity.latest.map(row => <li key={row.kind} className="py-1">
                 <strong>{row.title}</strong> · {row.course}<br />
                 <span className="text-sm text-muted-foreground">{row.kind} · <LearnerTime instant={row.at} /></span>
             </li>)}</ul></>}
-        {activity.usage && <><h3>Institution sign-ins</h3><Counts values={activity.usage} />
+        {activity.usage && <><h3 className="card-title mt-5 border-t border-ink-100 pt-4">Institution sign-ins</h3><Counts values={activity.usage} />
             <p className="text-sm text-muted-foreground">Accepted password and institutional sign-ins; does not indicate MFA completion.</p></>}
-    </section>;
+    </InsightPanel>;
 }

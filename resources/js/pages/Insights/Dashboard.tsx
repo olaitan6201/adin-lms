@@ -6,6 +6,8 @@ import { ActionQueue, type AgendaItem } from '../../insights/ActionQueue';
 import { Button } from '@/components/ui/button';
 import type { Release } from '../../insights/ReleasedWork';
 import { StudyWeek, type DeskCourse } from '../../insights/StudyWeek';
+import { DeskHeading } from '@/components/academics/DeskHeading';
+import { RegistryFigures, RegistryPanel } from '@/components/academics/RegistryPanel';
 
 type Workspace = keyof typeof workspaceCopy;
 type Props = {
@@ -32,46 +34,38 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
     }
     const desk = workspaceCopy[workspace];
     return (
-        <main className="mx-auto w-full max-w-6xl space-y-6 p-4 wrap-anywhere md:p-6">
+        <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title={`${audience} dashboard`} />
-            <header className="space-y-1">
-                <p className="text-sm text-muted-foreground">{audience} dashboard</p>
-                <h1 className="text-3xl font-semibold">{desk.title}</h1>
-                <p>{desk.lead}</p>
-                <div className="text-sm">{name}</div>
-            </header>
+            <DeskHeading area={`${audience} dashboard`} title={desk.title}>{name} · {desk.lead}</DeskHeading>
             {period && <ManagementPeriod key={`${period.session}:${period.term}`} period={period} />}
-            <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            {period && <section aria-label="Period summary"><h2 className="sr-only">Period summary</h2>
+                <RegistryFigures values={period.summary} /></section>}
+            <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
                 <div className="min-w-0 space-y-6">
                     <ActionQueue title={desk.queue} hint={desk.hint} empty={desk.empty} items={queue} />
                     {!queue.length && <Button asChild variant="outline"><Link href={desk.url}>{desk.action}</Link></Button>}
-                    {period && <section aria-label="Period summary"><h2 className="text-xl font-semibold">Period summary</h2>
-                        <Counts values={period.summary} /></section>}
                     {teaching && <TeachingDetails teaching={teaching} />}
                     {activity && <ActivitySummary activity={activity} />}
-                    {population && <section className="mt-8 border-t pt-5" aria-labelledby="population-title">
-                        <h2 className="text-xl font-semibold" id="population-title">Institution census</h2>
-                        <p className="text-sm text-muted-foreground">Current records, including people and units without course activity.</p>
+                    {population && <RegistryPanel title="Institution census" subtitle="Current records, including people and units without course activity.">
                         <Counts values={population} />
                         <Link className="inline-block py-1 underline underline-offset-4" href="/reports?family=institution-usage">View institution usage</Link>
-                    </section>}
+                    </RegistryPanel>}
                 </div>
                 <aside className="min-w-0 space-y-3">
                     {tools.length > 0 && (
-                        <nav aria-label="Office workspaces" className="mb-6">
-                            <h2 className="text-xl font-semibold">Office workspaces</h2>
-                            <ul>
+                        <RegistryPanel title="Office workspaces"><nav aria-label="Office workspaces">
+                            <ul className="divide-y divide-ink-100">
                                 {tools.map((tool) => (
                                     <li key={tool.href}>
                                         <Link className="inline-block py-2 underline" href={tool.href}>{tool.label}</Link>
                                     </li>
                                 ))}
                             </ul>
-                        </nav>
+                        </nav></RegistryPanel>
                     )}
-                    <h2 className="text-xl font-semibold">{desk.side}</h2>
+                    <RegistryPanel title={desk.side}>
                     {courses.length ? (
-                        <ul>
+                        <ul className="divide-y divide-ink-100">
                             {courses.map((course) => (
                                 <li key={course.href}>
                                     <Link className="block py-2 underline" href={course.href}>
@@ -87,6 +81,7 @@ export default function Dashboard({ audience, workspace, name, queue, courses, r
                     <Link className="inline-block py-1 underline underline-offset-4" href={desk.url}>
                         {desk.action} →
                     </Link>
+                    </RegistryPanel>
                 </aside>
             </div>
         </main>

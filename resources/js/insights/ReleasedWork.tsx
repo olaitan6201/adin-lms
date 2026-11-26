@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ResultSheetDownloads } from '../assessment/ResultSheetDownloads';
+import { InsightPanel } from './InsightPanel';
 
 export type Release = {
     title: string;
@@ -12,11 +13,7 @@ export type Release = {
 
 export function ReleasedWork({ releases }: { releases: Release[] }) {
     return (
-        <section className="mt-8 border-t pt-5" aria-labelledby="published-work">
-            <h2 className="text-xl font-semibold" id="published-work">
-                Results & feedback
-            </h2>
-            <p className="text-sm text-muted-foreground">Latest published course results and returned assignment marks.</p>
+        <InsightPanel title="Results & feedback" subtitle="Latest published course results and returned assignment marks.">
             {releases.length ? (
                 <ul className="mt-3 divide-y">
                     {releases.map((row) => (
@@ -42,6 +39,6 @@ export function ReleasedWork({ releases }: { releases: Release[] }) {
             ) : (
                 <p className="mt-3">No released results or feedback yet.</p>
             )}
-        </section>
+        </InsightPanel>
     );
 }

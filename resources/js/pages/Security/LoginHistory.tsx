@@ -15,7 +15,6 @@ const outcomeLabels = {
 
 type SignInEvent = {
     id: string;
-    user_id: string | null;
     account_name: string | null;
     occurred_at: string;
     outcome: keyof typeof outcomeLabels;
@@ -48,25 +47,20 @@ export default function LoginHistory({ events, sessionsUrl, previous, next }: Lo
                 {!events.length ? (
                     <p className="py-4 text-sm text-muted-foreground">No authentication events recorded on this page.</p>
                 ) : (
-                    <>
-                        <ol className="relative space-y-5 border-l border-ink-200 pl-5">
-                            {events.map((event) => (
-                                <li className="relative grid gap-1 text-sm sm:grid-cols-[1fr_auto]" key={event.id}>
-                                    <span
-                                        aria-hidden="true"
-                                        className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-brand-600"
-                                    />
-                                    <div>
-                                        <strong>{outcomeLabels[event.outcome] ?? event.outcome}</strong>
-                                        <p className="text-sm text-muted-foreground break-all">
-                                            {event.account_name ?? 'Account not identified'}
-                                        </p>
-                                    </div>
-                                    <time dateTime={event.occurred_at}>{new Date(event.occurred_at).toLocaleString()}</time>
-                                </li>
-                            ))}
-                        </ol>
-                    </>
+                    <ol className="relative space-y-5 border-l border-ink-200 pl-5">
+                        {events.map((event) => (
+                            <li className="relative grid gap-1 text-sm sm:grid-cols-[1fr_auto]" key={event.id}>
+                                <span aria-hidden="true" className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-brand-600" />
+                                <div>
+                                    <strong>{outcomeLabels[event.outcome] ?? event.outcome}</strong>
+                                    <p className="text-sm text-muted-foreground break-all">
+                                        {event.account_name ?? 'Account not identified'}
+                                    </p>
+                                </div>
+                                <time dateTime={event.occurred_at}>{new Date(event.occurred_at).toLocaleString()}</time>
+                            </li>
+                        ))}
+                    </ol>
                 )}
                 {(previous || next) && (
                     <nav aria-label="History pages" className="mt-3 flex flex-wrap gap-4">

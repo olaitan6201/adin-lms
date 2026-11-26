@@ -18,6 +18,44 @@ function focusAfterVisit(id: string) {
     requestAnimationFrame(() => document.getElementById(id)?.focus());
 }
 
+function ApprovedRecords({ approvals, previous, next }: Pick<Props, 'previous' | 'next'> & { approvals: NonNullable<Props['approvals']> }) {
+    return (
+        <RecordPanel title="Approved records" description="Select a student reference to view completed lessons.">
+            {approvals.length ? (
+                <ul className="divide-y divide-ink-100">
+                    {approvals.map(({ reference, href }) => (
+                        <li key={href}>
+                            <Link
+                                className="grid gap-1 py-2 text-primary underline underline-offset-4"
+                                href={href}
+                                id={`record-${reference}`}
+                                onSuccess={() => focusAfterVisit('progress-title')}
+                            >
+                                View progress · {reference}
+                                <small>Completed lessons</small>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="py-3 text-muted-foreground">No progress records are currently shared with you.</p>
+            )}
+            <nav aria-label="Records pages">
+                {previous && (
+                    <Link className="text-primary underline underline-offset-4" href={previous}>
+                        Previous records
+                    </Link>
+                )}
+                {next && (
+                    <Link className="text-primary underline underline-offset-4" href={next}>
+                        More records
+                    </Link>
+                )}
+            </nav>
+        </RecordPanel>
+    );
+}
+
 export default function Progress({ approvals, completed_lessons, previous, next, reference, recordsUrl }: Props) {
     return (
         <main className="grid min-w-0 gap-5">
@@ -34,42 +72,7 @@ export default function Progress({ approvals, completed_lessons, previous, next,
             </p>
             <div className="grid items-start gap-5 xl:grid-cols-2">
                 {approvals ? (
-                    <RecordPanel
-                        title="Approved records"
-                        description="Select a student reference to view completed lessons."
-                    >
-                        {approvals.length ? (
-                            <ul className="divide-y divide-ink-100">
-                                {approvals.map(({ reference, href }) => (
-                                    <li key={href}>
-                                        <Link
-                                            className="grid gap-1 py-2 text-primary underline underline-offset-4"
-                                            href={href}
-                                            id={`record-${reference}`}
-                                            onSuccess={() => focusAfterVisit('progress-title')}
-                                        >
-                                            View progress · {reference}
-                                            <small>Completed lessons</small>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="py-3 text-muted-foreground">No progress records are currently shared with you.</p>
-                        )}
-                        <nav aria-label="Records pages">
-                            {previous && (
-                                <Link className="text-primary underline underline-offset-4" href={previous}>
-                                    Previous records
-                                </Link>
-                            )}
-                            {next && (
-                                <Link className="text-primary underline underline-offset-4" href={next}>
-                                    More records
-                                </Link>
-                            )}
-                        </nav>
-                    </RecordPanel>
+                    <ApprovedRecords approvals={approvals} previous={previous} next={next} />
                 ) : (
                     <RecordPanel title="Completed lessons" description={`Student reference: ${reference}`}>
                         <p className="kpi-value tabular-nums">{completed_lessons}</p>

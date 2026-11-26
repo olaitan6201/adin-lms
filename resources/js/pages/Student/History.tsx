@@ -22,15 +22,30 @@ type Entry = {
     } | null;
 };
 
-export default function StudentHistory({
-    student,
-    sessions,
-    records,
-}: {
-    student: Profile;
-    sessions: Session[];
-    records: Entry[];
-}) {
+function RegistrationHistory({ records }: { records: Entry[] }) {
+    return (
+        <RegistryPanel title="Offerings and released results">
+            {records.length ? (
+                <RegistryTable title="Registrations" columns={['Offering', 'Status', 'Released result']}>
+                    {records.map((r) => (
+                        <tr key={r.id}>
+                            <td>
+                                <span className="block font-mono text-xs">{r.external_offering_id}</span>
+                                {r.title && <strong>{r.title}</strong>}
+                            </td>
+                            <td>{r.status}</td>
+                            <td>{r.result ? `Released: ${r.result.total_percent}% (${r.result.grade})` : 'No released result'}</td>
+                        </tr>
+                    ))}
+                </RegistryTable>
+            ) : (
+                <p>No registrations received.</p>
+            )}
+        </RegistryPanel>
+    );
+}
+
+export default function StudentHistory({ student, sessions, records }: { student: Profile; sessions: Session[]; records: Entry[] }) {
     return (
         <main className="w-full min-w-0 space-y-5 wrap-anywhere">
             <Head title="Academic history" />
@@ -38,17 +53,10 @@ export default function StudentHistory({
                 My courses
             </Link>
             <DeskHeading area="Student record" title="Academic history">
-                {student.photo && (
-                    <img
-                        src={student.photo}
-                        className="h-24 w-24 rounded object-cover"
-                        alt="Student profile photograph"
-                    />
-                )}
+                {student.photo && <img src={student.photo} className="h-24 w-24 rounded object-cover" alt="Student profile photograph" />}
                 <p className="break-words">
-                    {[student.source_name, student.matric_number, student.source_email, student.status]
-                        .filter(Boolean)
-                        .join(' · ') || 'Awaiting student profile.'}
+                    {[student.source_name, student.matric_number, student.source_email, student.status].filter(Boolean).join(' · ') ||
+                        'Awaiting student profile.'}
                 </p>
             </DeskHeading>
             <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
@@ -69,25 +77,7 @@ export default function StudentHistory({
                         <p>No session records received.</p>
                     )}
                 </RegistryPanel>
-                <RegistryPanel title="Offerings and released results">
-                    {records.length ? (
-                        <RegistryTable title="Registrations" columns={['Offering', 'Status', 'Released result']}>
-                            {records.map((r) => (
-                                <tr key={r.id}>
-                                    <td><span className="block font-mono text-xs">{r.external_offering_id}</span>{r.title && <strong>{r.title}</strong>}</td>
-                                    <td>{r.status}</td>
-                                    <td>
-                                        {r.result
-                                            ? `Released: ${r.result.total_percent}% (${r.result.grade})`
-                                            : 'No released result'}
-                                    </td>
-                                </tr>
-                            ))}
-                        </RegistryTable>
-                    ) : (
-                        <p>No registrations received.</p>
-                    )}
-                </RegistryPanel>
+                <RegistrationHistory records={records} />
             </div>
         </main>
     );

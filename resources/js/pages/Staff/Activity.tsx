@@ -1,9 +1,7 @@
-import { PortalField } from '@/components/forms/PortalForm';
-import { FormFeedback } from '@/components/forms/FormFeedback';
-import { Button } from '@/components/ui/button';
-import { Form, Head, Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { TeachingFigures, type Activity } from '@/components/workload/TeachingFigures';
 import { CourseHeader } from '@/components/learning/CourseHeader';
+import { ActivityPeriod } from '@/components/staff/ActivityPeriod';
 
 type Props = {
     staff: {
@@ -61,34 +59,7 @@ export default function LecturerActivity({ staff, from, until, rows }: Props) {
                         </p>
                     )}
                 </section>
-                <aside className="course-panel course-pad space-y-3">
-                    <h2 className="text-xl font-semibold tracking-tight">Reporting period</h2>
-                    <Form method="get" action={`/staff/${staff.id}/activity`} className="mt-4 grid gap-3">
-                        {({ errors, processing }) => (
-                            <FormFeedback errors={errors}>
-                                <PortalField
-                                    label="From"
-                                    type="date"
-                                    name="from"
-                                    defaultValue={from}
-                                    required
-                                    error={errors.from}
-                                    announceError={false}
-                                />
-                                <PortalField
-                                    label="Through"
-                                    type="date"
-                                    name="until"
-                                    defaultValue={until}
-                                    required
-                                    error={errors.until}
-                                    announceError={false}
-                                />
-                                <Button disabled={processing}>Apply dates</Button>
-                            </FormFeedback>
-                        )}
-                    </Form>
-                </aside>
+                <ActivityPeriod staffId={staff.id} from={from} until={until} />
             </div>
         </main>
     );

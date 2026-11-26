@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { Head, Link } from '@inertiajs/react';
-import { CourseMeta, PerformanceNote, Totals } from './ClassMetrics';
+import { Head } from '@inertiajs/react';
+import { PerformanceNote, Totals } from './ClassMetrics';
 import { TermSelector } from './TermSelector';
 import type { WorkloadData } from './contracts';
 import { CourseHeader } from '@/components/learning/CourseHeader';
+import { AllocatedClass } from '@/components/workload/AllocatedClass';
 
 export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
     return (
@@ -30,29 +30,11 @@ export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
                     <span className="text-sm text-muted-foreground">{workload.totals.classes} total</span>
                 </div>
                 {workload.classes.length === 0 ? (
-                    <p className="mt-4 border-y py-4 text-muted-foreground">
-                        No teaching allocations are linked to this term.
-                    </p>
+                    <p className="mt-4 border-y py-4 text-muted-foreground">No teaching allocations are linked to this term.</p>
                 ) : (
                     <ul className="mt-4 grid gap-4">
                         {workload.classes.map((course) => (
-                            <li key={course.id} className="course-panel course-pad space-y-3">
-                                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                                    <div>
-                                        <p className="text-sm font-semibold text-primary">{course.code}</p>
-                                        <h3 className="mt-1 text-lg font-semibold text-foreground">{course.title}</h3>
-                                    </div>
-                                    <Button asChild variant="outline">
-                                        <Link href={course.report_url} aria-label={`Open class report for ${course.code}`}>
-                                            Open report
-                                        </Link>
-                                    </Button>
-                                </div>
-                                <CourseMeta course={course} />
-                                <div className="mt-5">
-                                    <Totals totals={course.totals} />
-                                </div>
-                            </li>
+                            <AllocatedClass key={course.id} course={course} />
                         ))}
                     </ul>
                 )}

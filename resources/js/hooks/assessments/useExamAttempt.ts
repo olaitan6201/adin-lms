@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import type { Sitting } from '@/types/assessments/examPaper';
 
 type Attempt = {
@@ -8,6 +8,29 @@ type Attempt = {
     deadline: number;
     submitted: number | null;
 };
+
+/** A saved receipt identifies the exact revision successfully written to storage. */
+function createAttemptPersistence() {
+    let saved: Attempt | null = null;
+    const listeners = new Set<() => void>();
+
+    return {
+        snapshot: () => saved,
+        subscribe(listener: () => void) {
+            listeners.add(listener);
+            return () => { listeners.delete(listener); };
+        },
+        persist(key: string, attempt: Attempt) {
+            try {
+                sessionStorage.setItem(key, JSON.stringify(attempt));
+                saved = attempt;
+            } catch {
+                saved = null;
+            }
+            for (const listener of listeners) listener();
+        },
+    };
+}
 
 function readAttempt({ paper, storageKey: key, minutes }: Sitting): Attempt {
     const ids = paper.map(q => q.id);
@@ -28,13 +51,12 @@ export function useExamAttempt(sitting: Sitting) {
     const { paper, storageKey: key } = sitting;
     const [attempt, setAttempt] = useState(() => readAttempt(sitting));
     const [now, setNow] = useState(Date.now);
-    const [stored, setStored] = useState(false);
+    const [persistence] = useState(createAttemptPersistence);
+    const saved = useSyncExternalStore(persistence.subscribe, persistence.snapshot, () => null);
+    const stored = saved === attempt;
     useEffect(() => {
-        try {
-            sessionStorage.setItem(key, JSON.stringify(attempt));
-            setStored(true);
-        } catch { setStored(false); }
-    }, [attempt, key]);
+        persistence.persist(key, attempt);
+    }, [attempt, key, persistence]);
     useEffect(() => {
         if (attempt.submitted !== null) return;
         function tick() {

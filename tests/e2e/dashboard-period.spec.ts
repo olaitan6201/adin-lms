@@ -5,7 +5,9 @@ import { join } from 'node:path';
 import { dashboardWeek } from './dashboard-fixture';
 
 let restore: (() => void) | undefined;
-test.beforeAll(({}, info) => { restore = dashboardWeek(info.project.name); });
+test.beforeAll(() => {
+    restore = dashboardWeek(test.info().project.name);
+});
 test.afterAll(() => restore?.());
 
 for (const role of ['learner', 'officer', 'lecturer']) {

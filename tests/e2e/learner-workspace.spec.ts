@@ -1,8 +1,8 @@
 import { expect, test as base } from '@playwright/test';
 
 const test = base.extend({
-    timezoneId: async ({}, use, info) => {
-        await use(info.project.name === 'phone' ? 'America/New_York' : 'Asia/Kolkata');
+    timezoneId: async ({ hasTouch }, use) => {
+        await use(hasTouch ? 'America/New_York' : 'Asia/Kolkata');
     },
 });
 

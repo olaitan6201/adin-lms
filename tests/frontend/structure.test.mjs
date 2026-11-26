@@ -100,7 +100,7 @@ test('reusable UI cannot reach sample records directly or through another module
 test('the data tree contains no React views and imports no UI modules', () => {
     assert.ok(existsSync(join(root, 'data')));
     const data = sources.filter(f => relative(root, f).startsWith('data/'));
-    const invalid = data.filter(f => /\.tsx$/.test(f) || dependencies(f).some(d =>
+    const invalid = data.filter(f => f.endsWith('.tsx') || dependencies(f).some(d =>
         /^(components|pages|layouts)\//.test(relative(root, d))));
     assert.deepEqual(invalid.map(f => relative(root, f)), []);
 });

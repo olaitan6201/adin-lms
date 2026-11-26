@@ -14,12 +14,17 @@ export function Drawer({ title, description, trigger, open, onOpenChange, childr
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
-            <SheetContent className="w-full gap-0 bg-white sm:max-w-lg" {...(!description && { 'aria-describedby': undefined })}>
+            <SheetContent
+                className="w-full gap-0 bg-white sm:max-w-lg"
+                {...(!description && { 'aria-describedby': undefined })}
+            >
                 <SheetHeader className="border-b border-ink-100 p-5 pr-12">
                     <SheetTitle>{title}</SheetTitle>
                     {description && <SheetDescription>{description}</SheetDescription>}
                 </SheetHeader>
-                <div className="min-h-0 overflow-y-auto p-5" data-scroll>{children}</div>
+                <div className="min-h-0 overflow-y-auto p-5" data-scroll>
+                    {children}
+                </div>
             </SheetContent>
         </Sheet>
     );

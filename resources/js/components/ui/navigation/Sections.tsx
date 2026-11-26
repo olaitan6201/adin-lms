@@ -2,7 +2,12 @@ import type { ReactNode } from 'react';
 import { Tabs } from 'radix-ui';
 import { Card } from '@/components/ui/layout/Card';
 
-export type SectionItem<Id extends string> = { id: Id; label: string; count?: number; panel: ReactNode };
+export type SectionItem<Id extends string> = {
+    id: Id;
+    label: string;
+    count?: number;
+    panel: ReactNode
+};
 
 export function Sections<Id extends string>({
     items,
@@ -14,7 +19,7 @@ export function Sections<Id extends string>({
     change: (id: Id) => void;
 }) {
     function select(value: string) {
-        const item = items.find((item) => item.id === value);
+        const item = items.find(item => item.id === value);
         if (item) change(item.id);
     }
 

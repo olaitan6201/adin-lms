@@ -8,6 +8,9 @@ const tones = new Map([
     ['sky', 'bg-sky-50 text-sky-700 ring-sky-200'],
 ]);
 
-export function Badge({ children, tone = 'slate' }: { children: ReactNode; tone?: string }) {
+export function Badge({ children, tone = 'slate' }: {
+    children: ReactNode;
+    tone?: string
+}) {
     return <span className={`badge ring-1 ring-inset ${tones.get(tone) ?? tones.get('slate')}`}>{children}</span>;
 }

@@ -114,19 +114,23 @@ export function Deadlines({
 export function Materials({
     materials,
 }: {
-    materials: {
-        name: string;
-        size: string;
+    materials: readonly {
+        title: string;
+        bytes: number;
+        href: string;
+        filename: string;
     }[];
 }) {
     return (
         <Card title="Materials made available" subtitle="Only materials the lecturer has opened to guardians">
             <ul className="space-y-2">
                 {materials.map((item) => (
-                    <li key={item.name} className="flex items-center gap-2 text-[13px] text-ink-700">
+                    <li key={item.filename} className="flex items-center gap-2 text-[13px] text-ink-700">
                         <StudyIcon name="document" className="h-4 w-4 text-ink-400" />
-                        <span className="min-w-0 flex-1 truncate">{item.name}</span>
-                        <span className="shrink-0 text-[12px] text-ink-400">{item.size}</span>
+                        <a className="min-w-0 flex-1 truncate hover:underline" href={item.href} download={item.filename}>
+                            {item.title}
+                        </a>
+                        <span className="shrink-0 text-[12px] text-ink-400">{Math.ceil(item.bytes / 1024)} KB</span>
                     </li>
                 ))}
             </ul>

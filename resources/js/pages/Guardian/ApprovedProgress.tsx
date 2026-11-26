@@ -4,7 +4,8 @@ import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { progress, guardian, withheld } from '@/data/learning/guardian';
 import { GuardianIdentity, Withheld } from '@/components/learning/GuardianIdentity';
 import { Note } from '@/components/learning/Parts';
-import { studentResults, offlineDownloads } from '@/data/learning/courseWorkspace';
+import { studentResults } from '@/data/learning/courseWorkspace';
+import { studyFiles } from '@/data/learning/studyFiles';
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { PublishedResults, Attendance, Deadlines, Materials } from '@/components/guardian/ProgressPanels';
@@ -57,7 +58,7 @@ export default function Progress() {
                     </div>
                     <div className="space-y-5">
                         <Attendance rows={progress.attendance} />
-                        <Materials materials={offlineDownloads.slice(0, 3)} />
+                        <Materials materials={studyFiles.slice(0, 3)} />
                     </div>
                 </div>
             </div>

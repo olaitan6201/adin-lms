@@ -33,3 +33,17 @@ test('changing workspace text size announces the applied preference', async ({ p
     await expect(page.locator('html')).toHaveAttribute('data-font-scale', 'xl');
     await expect(page.getByRole('status').filter({ hasText: 'Text size set to larger' })).toBeVisible();
 });
+
+test('guardian materials link only to the three shared sample files', async ({ page }) => {
+    await page.goto('/guardian/progress');
+    const manuscript = page.getByRole('link', { name: 'Week 3 manuscript (PDF)' });
+    const download = page.waitForEvent('download');
+    await manuscript.click();
+    const file = await download;
+    expect(file.suggestedFilename()).toBe('acc302-week3-v1.pdf');
+    const content = await readFile((await file.path())!);
+    expect(content.subarray(0, 5).toString()).toBe('%PDF-');
+    await expect(page.getByRole('link', { name: 'Practice set (DOCX)' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Trial balance template (XLSX)' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /lecture slides/i })).toHaveCount(0);
+});

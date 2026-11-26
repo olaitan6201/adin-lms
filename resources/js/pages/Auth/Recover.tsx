@@ -8,7 +8,7 @@ export default function Recover() {
         intro="Enter the identifier issued to you. If it matches an active account, a recovery code is sent to the channel registered against it.">
         <form className="mt-7 space-y-4" onSubmit={event => {
             event.preventDefault();
-            notify('Password reset recorded. The account is signed out on every other device.');
+            notify('Demo reset complete. No password was changed and no sessions were signed out.');
         }}>
             <AccessField label="Matric number, staff ID or email" type="text" autoComplete="username" placeholder="AOU/2023/0412" />
             <button type="button" className="btn btn-outline w-full justify-center" onClick={() =>

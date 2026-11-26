@@ -17,7 +17,7 @@ test('workspace sign-in and recovery use local feedback without sending identifi
     await page.getByLabel('Recovery code', { exact: false }).fill('123456');
     await page.getByLabel(/New password/).fill('fixture-password-2');
     await page.getByRole('button', { name: 'Set new password' }).press('Enter');
-    await expect(page.getByRole('status').filter({ hasText: 'Password reset recorded.' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'No password was changed' })).toBeVisible();
     await page.goBack();
     await expect(page.getByRole('heading', { name: 'Access your learning record' })).toBeVisible();
     expect(writes).toEqual([]);

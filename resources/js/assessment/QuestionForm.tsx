@@ -4,7 +4,7 @@ import { NativeSelect } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { PortalField, SubmitButton } from '../components/PortalForm';
+import { PortalField, SubmitButton } from '@/components/forms/PortalForm';
 import type { QuestionFormValues, QuestionKind } from './contracts';
 
 type Props = {

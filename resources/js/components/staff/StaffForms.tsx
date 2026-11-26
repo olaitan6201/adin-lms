@@ -1,7 +1,7 @@
 import { VerifiedRecord } from '@/components/shared/records/VerifiedRecord';
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Button } from '@/components/ui/button';
-import { PortalField } from '../PortalForm';
+import { PortalField } from '@/components/forms/PortalForm';
 import { RecordField } from '../academics/RecordField';
 import { Form } from '@inertiajs/react';
 

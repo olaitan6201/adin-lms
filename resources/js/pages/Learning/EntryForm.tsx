@@ -1,4 +1,4 @@
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';

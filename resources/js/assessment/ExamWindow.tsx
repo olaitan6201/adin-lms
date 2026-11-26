@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PortalField } from '../components/PortalForm';
+import { PortalField } from '@/components/forms/PortalForm';
 
 export function ExamWindow({ errors = {} }: { errors?: Record<string, string> }) {
     const [opens, setOpens] = useState('');

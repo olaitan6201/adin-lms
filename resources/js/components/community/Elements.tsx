@@ -1,6 +1,6 @@
 import { Label } from '@/components/ui/label';
 import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, Head, Link } from '@inertiajs/react';

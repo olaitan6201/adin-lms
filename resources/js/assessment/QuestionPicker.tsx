@@ -1,14 +1,14 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { selectionTotal } from './selectionPoints';
 import { ExamWindowControls } from './ExamWindowControls';
 import { Form } from '@inertiajs/react';
 import { useRef, useState } from 'react';
-import { SubmitButton } from '../components/PortalForm';
+import { SubmitButton } from '@/components/forms/PortalForm';
 import type { BankQuestion } from './contracts';
 
 type Props = {

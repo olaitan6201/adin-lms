@@ -2,7 +2,7 @@ import { NativeSelectOption } from '@/components/ui/native-select';
 import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Form } from '@inertiajs/react';
 
 interface Props {

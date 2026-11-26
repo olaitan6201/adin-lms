@@ -1,4 +1,4 @@
-import { LearnerTime } from '../components/LearnerTime';
+import { LearnerTime } from '@/components/calendar/LearnerTime';
 
 type Limits = {
     opens_at: string;

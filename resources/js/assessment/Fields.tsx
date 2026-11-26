@@ -3,7 +3,7 @@ import { ValidatedInput, ValidatedSelect } from './ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { FormFeedback } from '@/components/FormFeedback';
+import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Form } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 

@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { PortalField, SubmitButton } from '@/components/PortalForm';
+import { PortalField, SubmitButton } from '@/components/forms/PortalForm';
 import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 type ProfileProps = {

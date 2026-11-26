@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LearnerTime } from '@/components/LearnerTime';
+import { LearnerTime } from '@/components/calendar/LearnerTime';
 import { localDate, type AgendaDate } from './dates';
 
 export function DateList({ events, empty }: { events: AgendaDate[]; empty: string }) {

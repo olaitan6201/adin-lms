@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { InsightPanel } from './InsightPanel';
 import { Badge } from '@/components/ui/badge';
-import { LearnerTime } from '../components/LearnerTime';
+import { LearnerTime } from '@/components/calendar/LearnerTime';
 
 export type AgendaItem = {
     title: string;

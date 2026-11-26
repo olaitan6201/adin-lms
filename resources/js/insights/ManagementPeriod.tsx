@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Counts, type Measures } from './DeskDetails';
-import { LearnerTime } from '../components/LearnerTime';
+import { LearnerTime } from '@/components/calendar/LearnerTime';
 import { InsightPanel, MeasureBars } from './InsightPanel';
 
 type Option = { id: string; label: string };

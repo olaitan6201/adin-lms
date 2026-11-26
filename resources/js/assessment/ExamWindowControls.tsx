@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ExamWindow } from './ExamWindow';
-import { PortalField } from '../components/PortalForm';
+import { PortalField } from '@/components/forms/PortalForm';
 
 export function ExamWindowControls({ errors }: { errors: Record<string, string> }) {
     return (

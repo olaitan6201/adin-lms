@@ -1,7 +1,7 @@
 import { Disclosure } from './Disclosure';
 import { InsightPanel, RatioRing } from './InsightPanel';
 import { Link } from '@inertiajs/react';
-import { LearnerTime } from '../components/LearnerTime';
+import { LearnerTime } from '@/components/calendar/LearnerTime';
 
 export type Entry = { title: string; context: string | null; href: string; at?: string };
 export type Measures = Record<string, number>;

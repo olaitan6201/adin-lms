@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FormFeedback, useFieldFeedback } from '@/components/FormFeedback';
+import { FormFeedback, useFieldFeedback } from '@/components/forms/FormFeedback';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form, usePage } from '@inertiajs/react';

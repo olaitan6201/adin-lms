@@ -1,4 +1,4 @@
-import { useFieldFeedback } from '@/components/FormFeedback';
+import { useFieldFeedback } from '@/components/forms/FormFeedback';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';

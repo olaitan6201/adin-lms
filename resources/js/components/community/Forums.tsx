@@ -9,15 +9,21 @@ import { Field } from '@/components/ui/controls/Field';
 
 import { applyTopicChange, type ForumBoard, type TopicChange } from './forumBoard';
 import { TopicEditor } from './TopicEditor';
+import { availableCourses, selectedCourse } from './communityCourses';
 
 type Selection = { kind: 'topic' | 'forum'; id: string } | { kind: 'new' } | null;
 
 export function Forums({ student, forums, threads }: { forums: Forum[]; threads: Thread[]; student: boolean }) {
     const [{ forums: list, topics }, setBoard] = useState<ForumBoard>({ forums, topics: threads });
     const [selected, setSelected] = useState<Selection>(null);
+    const [courseError, setCourseError] = useState('');
+    const courses = availableCourses(forums);
     const topic = selected?.kind === 'topic' ? topics.find((topic) => topic.id === selected.id) : undefined;
     const forum = selected?.kind === 'forum' ? list.find((forum) => forum.id === selected.id) : undefined;
-    const close = () => setSelected(null);
+    function close() {
+        setCourseError('');
+        setSelected(null);
+    }
     const openTopic = (id: string) => setSelected({ kind: 'topic', id });
 
     function moderateForum(id: string) {
@@ -28,10 +34,15 @@ export function Forums({ student, forums, threads }: { forums: Forum[]; threads:
     function createForum(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const fields = new FormData(event.currentTarget);
+        const course = selectedCourse(fields, courses);
+        if (!course) {
+            setCourseError('Select an available course.');
+            return;
+        }
         const created: Forum = {
             id: crypto.randomUUID(),
             title: String(fields.get('title')).trim(),
-            course: String(fields.get('course')),
+            course,
             threads: 0,
             posts: 0,
             last: 'Created just now',
@@ -53,11 +64,12 @@ export function Forums({ student, forums, threads }: { forums: Forum[]; threads:
                 title="Forums"
                 subtitle="Course forums with moderated threads, peer and group discussion"
                 actions={
-                    <Action size="sm" icon="plus" variant="primary" onClick={() => setSelected({ kind: 'new' })}>
+                    <Action size="sm" icon="plus" variant="primary" disabled={!courses.length} onClick={() => setSelected({ kind: 'new' })}>
                         New forum
                     </Action>
                 }
             >
+                {!courses.length && <p>No courses available for forum creation.</p>}
                 <Table
                     columns={['Forum', 'Threads', 'Posts', 'Last activity', '']}
                     rows={list.map((f) => [
@@ -112,13 +124,14 @@ export function Forums({ student, forums, threads }: { forums: Forum[]; threads:
                             <input name="title" className="input" required pattern=".*\S.*" />
                         </Field>
                         <Field label="Course">
-                            <select name="course" className="select">
-                                {forums.map((f) => (
-                                    <option key={f.id}>{f.course}</option>
+                            <select name="course" className="select" required onChange={() => setCourseError('')}>
+                                {courses.map(course => (
+                                    <option key={course}>{course}</option>
                                 ))}
                             </select>
                         </Field>
-                        <button className="btn btn-primary">Create forum</button>
+                        {courseError && <p role="alert">{courseError}</p>}
+                        <button className="btn btn-primary" disabled={!courses.length}>Create forum</button>
                     </form>
                 </Drawer>
             )}

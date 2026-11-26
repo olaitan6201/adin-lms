@@ -15,6 +15,20 @@ before(async () => {
 });
 after(() => server.close());
 
+for (const [view, props, action, noun] of [
+    ['Forums', { forums: [], threads: [] }, 'New forum', 'forum'],
+    ['Groups', { discussionGroups: [], groupPosts: [] }, 'Create group', 'group'],
+]) {
+    test(`${view} explains why creation is unavailable without course choices`, async () => {
+        const module = await server.ssrLoadModule(`/resources/js/components/community/${view}.tsx`);
+        const html = renderToStaticMarkup(createElement(module[view], { ...props, student: false }));
+        assert.match(html, new RegExp(`No courses available for ${noun} creation`));
+        const button = html.match(/<button\b[^>]*>[\s\S]*?<\/button>/g)?.find(markup => markup.includes(action));
+        assert.match(button ?? '', /^<button\b[^>]*disabled=""/);
+        assert.doesNotMatch(html, /<dialog\b/);
+    });
+}
+
 for (const recipients of [[], [{ id: 'missing', name: null }, { id: 'blank', name: '   ' }]]) {
     test(`composer cannot send with ${recipients.length ? 'unnamed' : 'no'} recipients`, async () => {
         const { Messages } = await server.ssrLoadModule('/resources/js/components/community/Messages.tsx');

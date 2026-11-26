@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Group, GroupPost } from '@/types/community/communication';
 import { GroupEditor } from './GroupEditor';
+import { availableCourses } from './communityCourses';
 
 export function Groups({
     student,
@@ -21,6 +22,7 @@ export function Groups({
     const [adding, setAdding] = useState(false);
     const group = groups.find((g) => g.id === active);
     const items = posts.filter((p) => p.group === group?.name);
+    const courses = availableCourses(discussionGroups);
     function postToGroup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!group) return;
@@ -49,13 +51,14 @@ export function Groups({
                     <>
                         <Badge>{groups.length} groups</Badge>
                         {!student && (
-                            <Action variant="primary" size="sm" icon="plus" onClick={() => setAdding(true)}>
+                            <Action variant="primary" size="sm" icon="plus" disabled={!courses.length} onClick={() => setAdding(true)}>
                                 Create group
                             </Action>
                         )}
                     </>
                 }
             >
+                {!student && !courses.length && <p>No courses available for group creation.</p>}
                 <Table
                     columns={['Group', 'Members', 'Posts', 'Files', 'Last activity', '']}
                     rows={groups.map((g) => [
@@ -136,7 +139,7 @@ export function Groups({
                     </div>
                 </Card>
             )}
-            {adding && <GroupEditor groups={groups} create={createGroup} close={() => setAdding(false)} />}
+            {adding && <GroupEditor groups={groups} courses={courses} create={createGroup} close={() => setAdding(false)} />}
         </div>
     );
 }

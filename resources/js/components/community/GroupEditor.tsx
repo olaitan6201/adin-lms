@@ -1,12 +1,21 @@
-import type { FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
+import { selectedCourse } from './communityCourses';
 import type { Group } from '@/types/community/communication';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 
-export function GroupEditor({ groups, create, close }: { groups: Group[]; create: (group: Group) => void; close: () => void }) {
+export function GroupEditor({ groups, courses, create, close }: {
+    groups: Group[]; courses: string[]; create: (group: Group) => void; close: () => void;
+}) {
+    const [courseError, setCourseError] = useState('');
     function createGroup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const d = new FormData(e.currentTarget);
+        const course = selectedCourse(d, courses);
+        if (!course) {
+            setCourseError('Select an available course.');
+            return;
+        }
         const name = String(d.get('name')).trim();
         if (groups.some((g) => g.name === name)) {
             const input = e.currentTarget.elements.namedItem('name') as HTMLInputElement;
@@ -17,7 +26,7 @@ export function GroupEditor({ groups, create, close }: { groups: Group[]; create
         create({
             id: crypto.randomUUID(),
             name,
-            course: String(d.get('course')),
+            course,
             members: ['You'],
             posts: 0,
             sharedFiles: 0,
@@ -40,8 +49,8 @@ export function GroupEditor({ groups, create, close }: { groups: Group[]; create
                     />
                 </Field>
                 <Field label="Course">
-                    <select name="course" className="select">
-                        {[...new Set(groups.map((g) => g.course))].map((c) => (
+                    <select name="course" className="select" required onChange={() => setCourseError('')}>
+                        {courses.map((c) => (
                             <option key={c}>{c}</option>
                         ))}
                     </select>
@@ -49,7 +58,8 @@ export function GroupEditor({ groups, create, close }: { groups: Group[]; create
                 <Field label="Group task">
                     <textarea name="task" className="input" required />
                 </Field>
-                <button className="btn btn-primary">Create group</button>
+                {courseError && <p role="alert">{courseError}</p>}
+                <button className="btn btn-primary" disabled={!courses.length}>Create group</button>
             </form>
         </Drawer>
     );

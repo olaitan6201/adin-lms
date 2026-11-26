@@ -4,6 +4,7 @@
 @import './portal-theme.css';
 @import './portal-components.css';
 @import './portal-controls.css';
+@import './workspace-type.css';
 @import './layouts/portal.css';
 @import './layouts/workspace.css';
 @import './learning/study.css';

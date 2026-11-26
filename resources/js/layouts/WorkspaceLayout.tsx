@@ -1,10 +1,9 @@
-import '../../css/portal-shell.css';
-import '../../css/workspace-shell.css';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePage } from '@inertiajs/react';
 import { Icon } from '@/components/icons/Icon';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { entries } from './workspace/navigation';
+import { useWorkspaceShell } from './workspace/shellModel';
 import { RoleSwitcher } from './workspace/RoleSwitcher';
 import { WorkspaceOverlays, useWorkspaceOverlays } from './workspace/WorkspaceOverlays';
 import { WorkspacePalette } from './workspace/WorkspacePalette';
@@ -15,6 +14,7 @@ type Screen = (typeof entries)[number];
 
 function WorkspaceChrome({ screen, children }: { screen: Screen; children: ReactNode }) {
     const { role, key, title } = screen;
+    const { brand, academicPeriod } = useWorkspaceShell();
     const { notify, close } = useWorkspaceOverlays();
     const [open, setOpen] = useState(false);
     const main = useRef<HTMLElement>(null);
@@ -42,7 +42,7 @@ function WorkspaceChrome({ screen, children }: { screen: Screen; children: React
                     <SheetTrigger className="btn btn-ghost btn-sm lg:hidden" aria-label="Open navigation"><Icon name="menu" className="size-5" /></SheetTrigger>
                     <SheetContent side="left" className="portal-mobile-rail ws-mobile-rail" showCloseButton={false}>
                         <SheetTitle className="sr-only">Module navigation</SheetTitle>
-                        <SheetDescription className="sr-only">Adin Open University</SheetDescription>
+                        <SheetDescription className="sr-only">{brand.institution}</SheetDescription>
                         <WorkspaceRail role={role} screen={key} onNavigate={() => setOpen(false)} close={
                             <SheetClose className="ml-auto rounded-lg p-1.5 text-ink-400 hover:bg-white/10 hover:text-white" aria-label="Close navigation">
                                 <Icon name="close" className="size-4" />
@@ -51,7 +51,9 @@ function WorkspaceChrome({ screen, children }: { screen: Screen; children: React
                     </SheetContent>
                 </Sheet>
                 <div className="min-w-0">
-                    <p className="truncate text-[11px] font-medium tracking-[0.1em] text-ink-400 uppercase">Adin Open University · 2025/2026 · First Semester</p>
+                    <p className="truncate text-[11px] font-medium tracking-[0.1em] text-ink-400 uppercase">
+                        {brand.institution} · {academicPeriod.year} · {academicPeriod.semester}
+                    </p>
                     <h2 className="truncate text-[15px] font-semibold tracking-[-0.01em] text-ink-900">{title}</h2>
                 </div>
                 <div className="portal-tools" key={key}><WorkspacePalette /><Notifications notify={notify} />

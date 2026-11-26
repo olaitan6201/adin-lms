@@ -1,0 +1,25 @@
+.assessment-view .tbl thead th,
+.assessment-view .tbl td p,
+.assessment-view .section-count,
+.assessment-view .btn-sm {
+    line-height: 1.25rem;
+}
+
+.assessment-view .tbl .btn {
+    white-space: normal;
+}
+
+.assessment-view .tbl td:last-child:has(.btn) {
+    text-align: right;
+}
+
+.assessment-view .assignment-list th:last-child { width: 150px; }
+.assessment-view .bank-list th:last-child,
+.assessment-view .student-assignments th:last-child { width: 120px; }
+.assessment-view .session-list th:last-child { width: 110px; }
+
+.assessment-view .exam-facts dl > div {
+    padding-block: .5rem;
+    font-size: 13px;
+    line-height: 1.25rem;
+}

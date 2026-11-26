@@ -1,4 +1,3 @@
-import '../../css/portal-shell.css';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePage } from '@inertiajs/react';
 import { Menu, X } from 'lucide-react';

@@ -4,6 +4,12 @@
 @import './portal-theme.css';
 @import './portal-components.css';
 @import './portal-controls.css';
+@import './layouts/portal.css';
+@import './layouts/workspace.css';
+@import './learning/study.css';
+@import './learning/course.css';
+@import './assessments/desk.css';
+@import './assessments/panels.css';
 
 @custom-variant dark (&:is(.dark *));
 

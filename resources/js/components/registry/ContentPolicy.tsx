@@ -34,7 +34,8 @@ export function ContentPolicy({
                 footer={
                     <p className="mt-3 text-xs leading-relaxed text-ink-500">
                         This browser’s upload policy applies to file selection and drag and drop. Source code is
-                        accepted only in permitted archives. Links are not file types.
+                        accepted only in permitted archives (for example, .java, .py, .js, .ts, .cpp, .cs, .sql,
+                        .php, .rb and .go files inside a ZIP). Links are not file types.
                     </p>
                 }
                 title="Upload allow-list"

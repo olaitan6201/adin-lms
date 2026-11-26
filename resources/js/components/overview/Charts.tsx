@@ -25,7 +25,7 @@ export function AreaChart({ labels, height, label, values, color }: Series & { l
     const y = (ratio: number) => 16 + (height - 42) * (1 - ratio);
     const points = values.map<Point>((v, i) => [34 + 714 * i / (labels.length - 1), y(v / max)]);
     const line = smoothPath(points);
-    return <svg viewBox={`0 0 760 ${height}`} className="h-auto w-full" role="img" aria-label={label} fontFamily="Outfit, sans-serif" fontSize="10" fill="#7A8CA0">
+    return <svg viewBox={`0 0 760 ${height}`} className="h-auto w-full" role="img" aria-label={label} fontSize="10" fill="#7A8CA0">
         {[0, .25, .5, .75, 1].map(ratio => <g key={ratio}>
             <line x1="34" x2="748" y1={y(ratio)} y2={y(ratio)} stroke="#E7ECF1"/>
             <text x="26" y={y(ratio) + 3.5} textAnchor="end">{Math.round(max * ratio)}</text>

@@ -6,7 +6,7 @@ export function Trend({ data, label, height = 240 }: { data: ReportSeries; label
     const max = Math.max(...data.series.flatMap(s => s.values));
     const x = (i: number) => 34 + 714 * i / (data.labels.length - 1);
     const y = (value: number) => 16 + (height - 42) * (1 - value / max);
-    return <svg viewBox={`0 0 760 ${height}`} className="h-auto w-full" role="img" aria-label={label} fontFamily="Outfit, sans-serif" fontSize="10" fill="#7A8CA0">
+    return <svg viewBox={`0 0 760 ${height}`} className="h-auto w-full" role="img" aria-label={label} fontSize="10" fill="#7A8CA0">
         <desc>{data.series.map(s => `${s.name}: ${s.values.map((v,i) => `${data.labels[i]} ${v}`).join(', ')}`).join('. ')}</desc>
         {[0,.25,.5,.75,1].map(r => <g key={r}><line x1="34" x2="748" y1={y(r*max)} y2={y(r*max)} stroke="#E7ECF1"/>
             <text x="26" y={y(r*max)+3.5} textAnchor="end">{Math.round(r*max)}</text></g>)}

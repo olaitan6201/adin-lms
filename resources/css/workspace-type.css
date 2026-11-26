@@ -53,6 +53,7 @@ body:has(.workspace-shell, #access-content) {
 }
 
 @layer utilities {
+    :is(.workspace-shell, .auth-shell, .ws-mobile-rail) .bg-white\/10 { background-color: rgb(255 255 255 / 10%); }
     :is(.workspace-shell, .auth-shell) .bg-sky-50\/70 { background-color: rgb(240 249 255 / 70%); }
     :is(.workspace-shell, .auth-shell) .bg-amber-50\/70 { background-color: rgb(255 251 235 / 70%); }
 }

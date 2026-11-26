@@ -3,6 +3,7 @@ import { AlertIcon, CheckIcon, HistoryIcon, InfoIcon, KeyIcon, LockIcon, PhoneIc
 import { useEffect, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { WorkspaceShellModel } from '@/types/navigation/shell';
+import { InstitutionMark } from '@/components/shared/branding/InstitutionMark';
 
 const identityCopy = {
     signin: {
@@ -38,7 +39,7 @@ export function AccessFrame({ mode, brand, eyebrow, title, intro, children }: {
         <aside className="auth-aside">
             <div>
                 <div className="flex items-center gap-3">
-                    <img alt="" src={brand.crest} className="h-10 w-auto shrink-0" />
+                    <InstitutionMark source={brand.crest} className="h-10 w-auto shrink-0" />
                     <div>
                         <p className="text-[15px] font-semibold leading-tight text-white">{brand.name}</p>
                         <p className="text-[11.5px] leading-tight text-ink-400">{brand.institution}</p>

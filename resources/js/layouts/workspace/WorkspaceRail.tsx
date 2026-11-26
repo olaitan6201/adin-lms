@@ -6,6 +6,7 @@ import { WorkspaceInstall } from './WorkspaceInstall';
 import { groupsFor, roles, type RoleKey } from './navigation';
 import { RoleSwitcher } from './RoleSwitcher';
 import { useWorkspaceShell } from './shellModel';
+import { InstitutionMark } from '@/components/shared/branding/InstitutionMark';
 
 export function WorkspaceRail({ role, screen, close, onNavigate }: {
     role: RoleKey; screen: string; close?: ReactNode; onNavigate?: () => void;
@@ -14,7 +15,7 @@ export function WorkspaceRail({ role, screen, close, onNavigate }: {
     return <>
         <div className="portal-brand-row">
             <Link href={workspaceUrl(`${role}/${roles[role].home}`)} className="portal-brand" onClick={onNavigate}>
-                <img src={brand.crest} width="42" height="36" alt="" />
+                <InstitutionMark source={brand.crest} className="h-9 w-auto shrink-0" />
                 <span><strong>{brand.name}</strong><small>{brand.institution}</small></span>
             </Link>{close}
         </div>

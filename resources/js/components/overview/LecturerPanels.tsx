@@ -1,11 +1,11 @@
+import type { Offering, Submission, MetricBar } from './panelTypes';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import { AreaChart, HorizontalBars } from './Charts';
 import { CourseProgress, Go, RecordName } from './OverviewParts';
-import { offerings, submissions } from '@/data/overview/lecturer';
 
-export function Courses() {
+export function Courses({ offerings }: { offerings: readonly Offering[] }) {
     return <Card title="My courses" subtitle="Allocated to you for this semester" actions={<Go to="lecturer/courses" icon="external">All courses</Go>}>
         <Table columns={['Course', 'Students', 'Mode', 'Completion', '']} rows={offerings.map(o => [
             <RecordName title={o.title} code={`${o.code} · ${o.term}`}/>,
@@ -16,8 +16,8 @@ export function Courses() {
     </Card>;
 }
 
-export function Marking() {
-    return <Card title="Waiting for you" subtitle="Submissions that cannot be released until they are marked" actions={<Badge tone="amber">2 new</Badge>}>
+export function Marking({ submissions }: { submissions: readonly Submission[] }) {
+    return <Card title="Waiting for you" subtitle="Submissions that cannot be released until they are marked" actions={<Badge tone="amber">{submissions.length} new</Badge>}>
         <Table columns={['Student', 'Assignment', 'Submitted', 'Timing', '']} rows={submissions.map(s => [
             <RecordName title={s.student} code={s.matric}/>, <span className="text-[13px] text-ink-600">{s.assignment}</span>,
             <span className="text-[12.5px] text-ink-500">{s.submitted}</span>,
@@ -27,15 +27,7 @@ export function Marking() {
     </Card>;
 }
 
-const scores = [64, 61, 66, 63, 69, 68, 71, 70, 74, 72];
-const performance = [
-    { label: 'ACC302 submission rate', value: 75, color: '#10B981' },
-    { label: 'ACC302 attendance', value: 92, color: '#3B82F6' },
-    { label: 'ENG210 submission rate', value: 95, color: '#F59E0B' },
-    { label: 'CHM401 submission rate', value: 88, color: '#10B981' },
-];
-
-export function Performance() {
+export function Performance({ scores, performance }: { scores: readonly number[]; performance: readonly MetricBar[] }) {
     return <Card title="Class performance" subtitle="Mean score and submission rate across your courses">
         <div className="space-y-5">
             <AreaChart color="#10B981" height={190} labels={scores.map((_, i) => `W${i + 1}`)} values={scores} label="Mean score by week"/>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Community\BoardController;
 use App\Http\Controllers\Community\DeliveryRecoveryController;
 use App\Http\Controllers\Community\DiscussionController;
 use App\Http\Controllers\Community\InboxController;
+use App\Http\Controllers\Community\NotificationSettingsController;
 use App\Http\Controllers\Community\StudyGroupController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,7 @@ Route::middleware('auth')
     ->name('community.')
     ->group(function (): void {
         Route::get('/', [InboxController::class, 'index'])->name('inbox');
+        Route::get('/notification-settings', NotificationSettingsController::class)->name('notifications.settings');
         Route::get('/delivery-failures', [DeliveryRecoveryController::class, 'index'])->name('delivery.failures');
         Route::post('/delivery-failures/{delivery}', [DeliveryRecoveryController::class, 'retry'])
             ->whereUuid('delivery')->name('delivery.retry');

@@ -1,0 +1,67 @@
+import { Action, Badge, Card, Table } from '@/components/workspace/Elements';
+import { Go, RecordName } from './OverviewParts';
+import { courses, notifications, pending, studentResults } from './studentFixtures';
+
+function CompletionRing() {
+    return <div className="relative inline-flex size-24 shrink-0" role="img" aria-label="Progress 46 percent">
+        <svg viewBox="0 0 96 96" className="size-full -rotate-90"><circle cx="48" cy="48" r="43.5" fill="none" stroke="#E7ECF1" strokeWidth="9"/>
+            <circle cx="48" cy="48" r="43.5" fill="none" stroke="#10B981" strokeWidth="9" strokeLinecap="round" pathLength="100" strokeDasharray="46 54"/></svg>
+        <span className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-lg font-semibold text-ink-900 tnum">46%</span><span className="text-[10px] font-medium uppercase tracking-wide text-ink-400">ACC302</span></span>
+    </div>;
+}
+
+export function ContinueLearning({ save }: { save: () => void }) {
+    return <Card title="Continue learning" subtitle="The lesson you were last working on">
+        <div className="space-y-5"><div className="flex flex-wrap items-center gap-5"><CompletionRing/>
+            <div className="min-w-0 flex-1"><p className="text-[14px] font-semibold text-ink-900">Week 3 · Journals and ledgers</p>
+                <p className="mt-1 text-[13px] leading-relaxed text-ink-500">Chapter manuscript, worked example and the practice set. You have 22 minutes of study time left in this module.</p>
+                <div className="mt-3 flex flex-wrap gap-2"><Go to="student/course" primary>Resume lesson</Go>
+                    <Action variant="outline" size="sm" onClick={save}>Save offline</Action></div>
+            </div></div>
+            <div className="grid grid-cols-1 gap-3 border-t border-ink-100 pt-4 sm:grid-cols-3">
+                {[['Lessons completed this week', '4', '22 min studied'], ['Next quiz', 'Friday', '10 objective items'], ['Feedback waiting', '1', 'Lab report, 74%']].map(([label, value, hint]) =>
+                    <div key={label} className="rounded-xl bg-ink-50/70 p-3.5"><p className="text-[11px] font-semibold uppercase tracking-wider text-ink-400">{label}</p>
+                        <p className="mt-1 text-[15px] font-semibold text-ink-900">{value}</p><p className="mt-0.5 text-[11.5px] text-ink-500">{hint}</p></div>)}
+            </div>
+        </div>
+    </Card>;
+}
+
+export function Courses() {
+    return <Card title="My courses" subtitle="Four registered courses this semester" actions={<Go to="student/courses" icon="external">All courses</Go>}>
+        <Table columns={['Course', 'Progress', 'Lessons', '']} rows={courses.map(c => [
+            <RecordName title={c.title} code={c.code}/>, <div className="w-32 space-y-1.5">
+                <div className="flex items-center justify-between gap-3"><span className="text-xs font-semibold text-ink-700 tnum">{c.value}%</span></div>
+                <div className="prog-track"><div className="prog-fill bg-brand-500" style={{ width: `${c.value}%` }}/></div></div>,
+            <Badge tone="slate">3 / 12 lessons</Badge>, <div className="flex justify-end"><Go to="student/course">Continue</Go></div>,
+        ])}/>
+    </Card>;
+}
+
+export function Pending() {
+    return <Card title="Pending assignments" subtitle="Work that is outstanding across your courses" actions={<Badge tone="amber">3 outstanding</Badge>}>
+        <Table columns={['Assignment', 'Due', 'Status', '']} rows={pending.map(a => [
+            <RecordName title={a.title} code={a.course}/>, <span className="text-[13px] text-ink-600">{a.due}</span>,
+            <Badge tone={a.tone}>{a.state}</Badge>, <div className="flex justify-end"><Go to="student/assignments">Open</Go></div>,
+        ])}/>
+    </Card>;
+}
+
+export function Results() {
+    return <Card title="Released results" subtitle="Scores released to you by the examination officer" actions={<Go to="student/results" icon="external">All results</Go>}>
+        <Table columns={['Code', 'Course', 'CA', 'Mid', 'Total', 'Grade']} rows={studentResults.map(r => [
+            <span className="font-mono text-[12px] font-medium text-ink-700">{r.course}</span>, <span className="font-medium text-ink-800">{r.title}</span>,
+            <span className="text-[13px] tnum">{r.ca}</span>, <span className="text-[13px] tnum">{r.mid}</span>,
+            <span className="text-[13px] font-semibold tnum">{r.total}</span>, <Badge tone={r.state === 'released' ? 'emerald' : 'amber'}>{r.grade}</Badge>,
+        ])}/>
+    </Card>;
+}
+
+export function Notices() {
+    return <Card title="Notices for you" subtitle="Published to the whole cohort">
+        <ul className="divide-y divide-ink-100">{notifications.map(n => <li key={n.id} className="py-3">
+            <p className="text-[13px] font-medium text-ink-800">{n.title}</p><p className="mt-0.5 text-xs text-ink-500">{n.meta}</p>
+            <p className="mt-1 text-[11px] text-ink-400">{n.time}</p></li>)}</ul>
+    </Card>;
+}

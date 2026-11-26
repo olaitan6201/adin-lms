@@ -1,3 +1,6 @@
+import { manuscript, chapter, practice } from '@/data/learning/lesson';
+import { studentModules } from '@/data/learning/courseWorkspace';
+import { studyCourse } from '@/data/learning/studentStudy';
 import { LessonMenu } from '@/components/learning/LessonMenu';
 import { Lesson } from '@/components/learning/Lesson';
 import { Card } from '@/components/ui/layout/Card';
@@ -9,9 +12,9 @@ export default function Course() {
     return (
         <div className="learning-surface">
             <PageHeader
-                eyebrow="ACC302 · Week 3"
-                title="Intermediate Financial Accounting"
-                description="Blended delivery · Dr. Peter Adeyemi · 46% of the course completed"
+                eyebrow={studyCourse.week}
+                title={studyCourse.title}
+                description={studyCourse.summary}
                 actions={
                     <>
                         <Action icon="chat" variant="outline">
@@ -26,17 +29,17 @@ export default function Course() {
 
             <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
                 <div className="xl:col-span-4 space-y-5">
-                    <LessonMenu />
+                    <LessonMenu studentModules={studentModules} summary={studyCourse.lessons} />
                     <Card title="Course progress">
                         <div className="space-y-3">
-                            <Meter value={46} label="Content completed" showValue={true} />
-                            <Meter value={75} label="Assignments submitted" showValue={true} tone="sky" />
-                            <Meter value={92} label="Attendance" showValue={true} tone="sky" />
+                            <Meter value={studyCourse.completion} label="Content completed" showValue={true} />
+                            <Meter value={studyCourse.submissionRate} label="Assignments submitted" showValue={true} tone="sky" />
+                            <Meter value={studyCourse.attendance} label="Attendance" showValue={true} tone="sky" />
                         </div>
                     </Card>
                 </div>
                 <div className="xl:col-span-8">
-                    <Lesson />
+                    <Lesson manuscript={manuscript} chapter={chapter} practice={practice} />
                 </div>
             </div>
 

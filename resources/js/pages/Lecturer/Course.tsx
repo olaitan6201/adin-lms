@@ -1,9 +1,11 @@
+import { teachingCourse, health, chapterOutline } from '@/data/learning/teaching';
 import { TeachingOverview } from '@/components/learning/TeachingOverview';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 import { ContentPanel, ResourcesPanel } from '@/components/learning/TeachingPanels';
 import { AssignmentsPanel, GradebookPanel } from '@/components/learning/TeachingAssessment';
-import { course } from '@/components/learning/TeachingPanels';
+import { courseModules, resources, assignments, gradeRows } from '@/data/learning/courseWorkspace';
+
 import { Tabs } from '@/components/ui/navigation/Tabs';
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
@@ -11,11 +13,11 @@ import { Note } from '@/components/learning/Parts';
 
 export default function Course() {
     const panels: Record<string, React.ReactNode> = {
-        overview: <TeachingOverview />,
-        content: <ContentPanel />,
-        resources: <ResourcesPanel />,
-        assignments: <AssignmentsPanel />,
-        gradebook: <GradebookPanel />,
+        overview: <TeachingOverview health={health} />,
+        content: <ContentPanel courseModules={courseModules} outline={chapterOutline} />,
+        resources: <ResourcesPanel resources={resources} />,
+        assignments: <AssignmentsPanel assignments={assignments} />,
+        gradebook: <GradebookPanel gradeRows={gradeRows} />,
         attendance: (
             <div className="rounded-xl border border-ink-100 bg-white p-8 text-center">
                 <p className="text-sm font-semibold text-ink-800">Attendance for this course</p>
@@ -41,9 +43,9 @@ export default function Course() {
     return (
         <div className="learning-surface">
             <PageHeader
-                eyebrow="ACC302 · 2025/2026 first semester"
-                title="Intermediate Financial Accounting"
-                description={`Blended delivery · 68 students · ${course.mode} · 5 of 7 modules published`}
+                eyebrow={teachingCourse.term}
+                title={teachingCourse.title}
+                description={teachingCourse.summary}
                 actions={
                     <>
                         <Action icon="eye" variant="outline">
@@ -61,9 +63,9 @@ export default function Course() {
                     label="Course workspace"
                     items={[
                         { id: 'overview', label: 'Overview' },
-                        { id: 'content', label: 'Content', count: 7 },
-                        { id: 'resources', label: 'Resources', count: 7 },
-                        { id: 'assignments', label: 'Assignments', count: 2 },
+                        { id: 'content', label: 'Content', count: teachingCourse.modules },
+                        { id: 'resources', label: 'Resources', count: teachingCourse.resources },
+                        { id: 'assignments', label: 'Assignments', count: teachingCourse.assignments },
                         { id: 'gradebook', label: 'Gradebook' },
                         { id: 'attendance', label: 'Attendance' },
                         { id: 'discussions', label: 'Discussions' },

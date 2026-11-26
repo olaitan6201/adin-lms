@@ -1,3 +1,4 @@
+import { standing } from '@/data/learning/results';
 import { studentResults as releasedResults } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -32,12 +33,7 @@ export default function Results() {
 
             <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {[
-                        { label: 'GPA this session', value: '4.12', hint: '5 point scale' },
-                        { label: 'Units registered', value: '12', hint: 'of 15 required' },
-                        { label: 'Units earned', value: '12', hint: 'no outstanding units' },
-                        { label: 'Class position', value: '14', hint: 'of 68 in programme' },
-                    ].map((metric) => (
+                    {standing.metrics.map((metric) => (
                         <StudyMetric key={metric.label} {...metric} />
                     ))}
                 </div>
@@ -47,8 +43,8 @@ export default function Results() {
                     subtitle="Continuous assessment, mid-term and final components"
                     actions={
                         <>
-                            <Badge tone="emerald">3 released</Badge>
-                            <Badge tone="amber">1 pending</Badge>
+                            <Badge tone="emerald">{standing.released}</Badge>
+                            <Badge tone="amber">{standing.pending}</Badge>
                         </>
                     }
                 >
@@ -58,10 +54,7 @@ export default function Results() {
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
                     <Card title="Session history" subtitle="Scores from previous sessions">
                         <ul className="divide-y divide-ink-100">
-                            {[
-                                { session: '2024/2025', courses: '6 courses', gpa: '3.94', units: '18 units earned' },
-                                { session: '2023/2024', courses: '6 courses', gpa: '3.71', units: '18 units earned' },
-                            ].map((entry) => (
+                            {standing.history.map((entry) => (
                                 <li key={entry.session} className="flex items-center justify-between gap-3 py-3">
                                     <div>
                                         <p className="text-[13px] font-medium text-ink-800">{entry.session}</p>
@@ -77,12 +70,7 @@ export default function Results() {
                     <Card title="How these numbers were produced" subtitle="The policy behind your score sheet">
                         <>
                             <ul className="space-y-2.5">
-                                {[
-                                    'Continuous assessment counts for 30 percent of each course.',
-                                    'The mid-term counts for 20 percent and is marked automatically for objective items.',
-                                    'The final examination counts for 40 percent and is moderated before release.',
-                                    'Scores appear here only after an authorised officer publishes them.',
-                                ].map((rule) => (
+                                {standing.policy.map((rule) => (
                                     <li key={rule} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-600">
                                         <span className="mt-0.5 shrink-0 text-brand-600">
                                             <StudyIcon name="check" className="w-4 h-4" />

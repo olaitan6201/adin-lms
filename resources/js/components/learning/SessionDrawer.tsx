@@ -1,9 +1,10 @@
+import type { Session } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
+export function SessionDrawer({ session, open, setOpen }: { session: Session; open: boolean; setOpen: (open: boolean) => void }) {
     const { notify } = useWorkspaceOverlays();
     const closeSession = () => setOpen(false);
     const panel = useRef<HTMLDialogElement>(null);
@@ -15,14 +16,25 @@ export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open
         }
     }, [open]);
     return (
-        <dialog ref={panel} inert={!open} aria-labelledby="session-title" aria-describedby="session-description" className="learning-session"
-            onCancel={closeSession} onClick={event => {
+        <dialog
+            ref={panel}
+            inert={!open}
+            aria-labelledby="session-title"
+            aria-describedby="session-description"
+            className="learning-session"
+            onCancel={closeSession}
+            onClick={(event) => {
                 if (event.target === panel.current && event.clientX < panel.current.getBoundingClientRect().left) closeSession();
-            }}>
+            }}
+        >
             <div className="flex items-start justify-between gap-3 border-b border-ink-100 px-5 py-4">
                 <div>
-                    <h3 id="session-title" className="text-[15px] font-semibold text-ink-900">Tutorial: consolidation of accounts</h3>
-                    <p id="session-description" className="mt-0.5 text-[13px] text-ink-500">ACC302 · Today, 16:00 · 60 minutes</p>
+                    <h3 id="session-title" className="text-[15px] font-semibold text-ink-900">
+                        {session.title}
+                    </h3>
+                    <p id="session-description" className="mt-0.5 text-[13px] text-ink-500">
+                        {session.summary}
+                    </p>
                 </div>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={closeSession} aria-label="Close panel">
                     <StudyIcon name="close" className="h-4 w-4" />
@@ -33,16 +45,16 @@ export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open
                     <div className="space-y-3">
                         <label className="block">
                             <span className="label">Title</span>
-                            <input className="input" defaultValue="Tutorial: consolidation of accounts" />
+                            <input className="input" defaultValue={session.title} />
                         </label>
                         <div className="grid grid-cols-2 gap-3">
                             <label className="block">
                                 <span className="label">Date</span>
-                                <input className="input" type="date" defaultValue="2026-11-26" />
+                                <input className="input" type="date" defaultValue={session.date} />
                             </label>
                             <label className="block">
                                 <span className="label">Start time</span>
-                                <input className="input" type="time" defaultValue="16:00" />
+                                <input className="input" type="time" defaultValue={session.start} />
                             </label>
                         </div>
                         <label className="block">
@@ -55,7 +67,7 @@ export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open
                         </label>
                         <label className="block">
                             <span className="label">Meeting link</span>
-                            <input className="input" defaultValue="Issued to enrolled students 15 minutes before start" readOnly />
+                            <input className="input" defaultValue={session.meetingLink} readOnly />
                         </label>
                         <label className="block">
                             <span className="label">Announcement</span>
@@ -72,7 +84,7 @@ export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open
                             <StudyIcon name="qr" className="w-4 h-4" />
                         </span>
                         <div>
-                            <p className="text-[13px] font-semibold text-ink-800">QR check-in enabled</p>
+                            <p className="text-[13px] font-semibold text-ink-800">{session.checkin}</p>
                             <p className="mt-0.5 text-xs text-ink-500">Manual register remains available as a fallback</p>
                         </div>
                     </div>

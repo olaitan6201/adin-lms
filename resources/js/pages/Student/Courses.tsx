@@ -1,3 +1,4 @@
+import { registration } from '@/data/learning/studentStudy';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { studentModules } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -7,44 +8,7 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Meter, Note, StudyIcon } from '@/components/learning/Parts';
 
 export default function Courses() {
-    const courses = [
-        {
-            code: 'ACC302',
-            title: 'Intermediate Financial Accounting',
-            lecturer: 'Dr. Peter Adeyemi',
-            value: 46,
-            lessons: '3 / 12',
-            mode: 'Blended',
-            next: 'Practice set 3.1',
-        },
-        {
-            code: 'BSC205',
-            title: 'Cell and Molecular Biology',
-            lecturer: 'Dr. Amaka Eze',
-            value: 61,
-            lessons: '5 / 9',
-            mode: 'Online',
-            next: 'Lab report submission',
-        },
-        {
-            code: 'ENG210',
-            title: 'Literary Devices and Criticism',
-            lecturer: 'Dr. Halima Yusuf',
-            value: 38,
-            lessons: '2 / 11',
-            mode: 'Face-to-face',
-            next: 'Group presentation prep',
-        },
-        {
-            code: 'MTH112',
-            title: 'Calculus I',
-            lecturer: 'Dr. Uche Okonkwo',
-            value: 54,
-            lessons: '6 / 12',
-            mode: 'Online',
-            next: 'Revision quiz 3',
-        },
-    ];
+    const courses = registration.courses;
 
     const cards = courses.map((course) => (
         <article key={course.code} className="card card-pad flex flex-col gap-4">
@@ -76,7 +40,7 @@ export default function Courses() {
             <PageHeader
                 eyebrow="Learning"
                 title="My courses"
-                description="Four registered courses for the 2025/2026 first semester, 12 units in total."
+                description={registration.summary}
                 actions={
                     <>
                         <Action href={workspaceUrl('student/downloads')} icon="download" variant="outline">
@@ -92,7 +56,7 @@ export default function Courses() {
             <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">{cards}</div>
 
-                <Card title="Lesson checklist" subtitle="ACC302 · what is still to be done in this course">
+                <Card title="Lesson checklist" subtitle={registration.checklist}>
                     <ul className="divide-y divide-ink-100">
                         {studentModules.map((module) => {
                             const tone =
@@ -109,7 +73,7 @@ export default function Courses() {
                                     : module.state === 'in progress'
                                       ? 'In progress'
                                       : module.state === 'locked'
-                                        ? 'Opens 18 Nov'
+                                        ? registration.lockedLabel
                                         : 'Available';
                             return (
                                 <li key={module.title} className="flex items-center gap-3 py-2.5">

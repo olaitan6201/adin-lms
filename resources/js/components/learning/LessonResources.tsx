@@ -1,7 +1,8 @@
+import type { Practice } from '@/types/learning/lesson';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { StudyIcon } from '@/components/learning/Parts';
 
-export function LessonResources() {
+export function LessonResources({ practice }: { practice: Practice }) {
     const { notify } = useWorkspaceOverlays();
     return (
         <>
@@ -17,8 +18,8 @@ export function LessonResources() {
                             <StudyIcon name="clipboard" className="w-4 h-4" />
                         </span>
                         <span>
-                            <span className="block text-[13px] font-medium text-ink-800">Exercise set 3.1</span>
-                            <span className="mt-0.5 block text-xs text-ink-500">8 questions · attempt now</span>
+                            <span className="block text-[13px] font-medium text-ink-800">{practice.exercise}</span>
+                            <span className="mt-0.5 block text-xs text-ink-500">{practice.exerciseMeta}</span>
                         </span>
                     </button>
                     <button
@@ -30,8 +31,8 @@ export function LessonResources() {
                             <StudyIcon name="timer" className="w-4 h-4" />
                         </span>
                         <span>
-                            <span className="block text-[13px] font-medium text-ink-800">Topic quiz</span>
-                            <span className="mt-0.5 block text-xs text-ink-500">10 objective items · 15 min</span>
+                            <span className="block text-[13px] font-medium text-ink-800">{practice.quiz}</span>
+                            <span className="mt-0.5 block text-xs text-ink-500">{practice.quizMeta}</span>
                         </span>
                     </button>
                 </div>
@@ -47,15 +48,12 @@ export function LessonResources() {
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/70 px-4 py-2.5">
                         <span className="flex items-center gap-2">
                             <StudyIcon name="link" className="h-4 w-4 text-brand-600" />
-                            <span className="text-[12.5px] font-medium text-ink-800">IFRS Foundation: IAS 2 Inventories</span>
+                            <span className="text-[12.5px] font-medium text-ink-800">{practice.readingTitle}</span>
                         </span>
-                        <span className="font-mono text-[11px] text-ink-500">external link · ifrs.org</span>
+                        <span className="font-mono text-[11px] text-ink-500">{practice.readingSource}</span>
                     </div>
                     <div className="p-4">
-                        <p className="text-[13px] leading-relaxed text-ink-600">
-                            Embedded summary of the measurement and cost formula requirements, read alongside Week 4 on inventory valuation. The
-                            embedded copy is a read-only capture; the live text always opens in a new tab.
-                        </p>
+                        <p className="text-[13px] leading-relaxed text-ink-600">{practice.readingSummary}</p>
                         <div className="mt-3 flex flex-wrap items-center gap-2">
                             <button
                                 type="button"
@@ -81,13 +79,7 @@ export function LessonResources() {
             <section>
                 <h3 className="text-[14px] font-semibold text-ink-900">Resources for this week</h3>
                 <ul className="mt-2 divide-y divide-ink-100 rounded-xl border border-ink-100">
-                    {[
-                        { name: 'Week 3 manuscript: journals and ledgers', type: 'PDF', size: '3.2 MB', icon: 'document' },
-                        { name: 'Practice set with worked solutions', type: 'DOCX', size: '860 KB', icon: 'document' },
-                        { name: 'Trial balance template', type: 'XLSX', size: '124 KB', icon: 'sheet' },
-                        { name: 'Audio summary: the accounting cycle', type: 'MP3', size: '18.6 MB', icon: 'mic' },
-                        { name: 'IFRS 15 guidance: external reading', type: 'Link', size: 'External URL', icon: 'link' },
-                    ].map((resource) => (
+                    {practice.resources.map((resource) => (
                         <li key={resource.name} className="flex items-center gap-3 px-3.5 py-3">
                             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500">
                                 <StudyIcon name={resource.icon} className="w-4 h-4" />

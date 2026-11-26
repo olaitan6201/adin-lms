@@ -1,15 +1,11 @@
+import type { Health } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Card } from '@/components/ui/layout/Card';
 import { Meter, StudyIcon } from '@/components/learning/Parts';
 
-export function TeachingOverview() {
+export function TeachingOverview({ health }: { health: Health }) {
     const { notify } = useWorkspaceOverlays();
-    const tiles = [
-        { label: 'Enrolled students', value: '68' },
-        { label: 'Published modules', value: '5 of 7' },
-        { label: 'Resources', value: '7' },
-        { label: 'Assignments', value: '2' },
-    ];
+    const tiles = health.tiles;
 
     return (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
@@ -25,34 +21,15 @@ export function TeachingOverview() {
                             ))}
                         </div>
                         <div className="mt-5 space-y-4">
-                            <Meter value={46} label="Material completed by students" showValue={true} />
-                            <Meter value={75} label="Assignment submission rate" showValue={true} />
-                            <Meter value={92} label="Attendance" showValue={true} tone="sky" />
+                            <Meter value={health.completion} label="Material completed by students" showValue={true} />
+                            <Meter value={health.submissions} label="Assignment submission rate" showValue={true} />
+                            <Meter value={health.attendanceRate} label="Attendance" showValue={true} tone="sky" />
                         </div>
                     </>
                 </Card>
                 <Card title="What needs attention">
                     <ul className="divide-y divide-ink-100">
-                        {[
-                            {
-                                icon: 'alert',
-                                tone: 'text-amber-600',
-                                title: 'Week 6 and Week 7 modules are still in draft',
-                                meta: '14 students have reached Week 6',
-                            },
-                            {
-                                icon: 'clipboard',
-                                tone: 'text-amber-600',
-                                title: '34 submissions are waiting for a score',
-                                meta: 'Oldest received 12 Nov 2026',
-                            },
-                            {
-                                icon: 'users',
-                                tone: 'text-rose-600',
-                                title: '5 students are below 60% attendance',
-                                meta: 'Head of department has been notified',
-                            },
-                        ].map((item) => (
+                        {health.attention.map((item) => (
                             <li key={item.title} className="flex items-start gap-3 py-3">
                                 <span className={`mt-0.5 ${item.tone}`}>
                                     <StudyIcon name={item.icon} className="w-4 h-4" />
@@ -104,10 +81,10 @@ export function TeachingOverview() {
                         </label>
                     </div>
                 </Card>
-                <Card title="Classmates" subtitle="68 registered students">
+                <Card title="Classmates" subtitle={health.rosterLabel}>
                     <>
                         <ul className="divide-y divide-ink-100">
-                            {['Blessing Okonkwo', 'Chinedu Okafor', 'Aisha Bello', 'Emeka Uzoma', 'Oluwaseun Ajayi'].map((name, index) => (
+                            {health.classmates.map(({ name, attendance, needsAttention }) => (
                                 <li key={name} className="flex items-center gap-3 py-2.5">
                                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-100 text-[10px] font-semibold text-ink-600">
                                         {name
@@ -116,8 +93,8 @@ export function TeachingOverview() {
                                             .join('')}
                                     </span>
                                     <span className="min-w-0 flex-1 truncate text-[13px] text-ink-700">{name}</span>
-                                    <span className={`text-[12px] tnum ${index === 3 ? 'text-rose-700' : 'text-ink-500'}`}>
-                                        {[92, 78, 96, 64, 88][index]}%
+                                    <span className={`text-[12px] tnum ${needsAttention ? 'text-rose-700' : 'text-ink-500'}`}>
+                                        {attendance}%
                                     </span>
                                 </li>
                             ))}

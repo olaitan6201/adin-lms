@@ -1,5 +1,5 @@
+import type { StudyModules } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { studentModules } from '@/data/learning/courseWorkspace';
 import { StudyIcon } from '@/components/learning/Parts';
 
 const stateIcon: Record<string, string> = {
@@ -8,7 +8,7 @@ const stateIcon: Record<string, string> = {
     available: 'document',
     locked: 'lock',
 };
-export function LessonMenu() {
+export function LessonMenu({ studentModules, summary }: { summary: string; studentModules: StudyModules }) {
     const { notify } = useWorkspaceOverlays();
     const items = studentModules.map((module) => (
         <li key={module.title}>
@@ -48,7 +48,7 @@ export function LessonMenu() {
         <div className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-soft">
             <div className="flex items-center justify-between gap-3 border-b border-ink-100 px-4 py-3">
                 <p className="text-[13px] font-semibold text-ink-900">Course content</p>
-                <span className="text-[11.5px] text-ink-500">5 of 12 lessons</span>
+                <span className="text-[11.5px] text-ink-500">{summary}</span>
             </div>
             <ul className="divide-y divide-ink-50">{items}</ul>
         </div>

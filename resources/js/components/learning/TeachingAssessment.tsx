@@ -1,4 +1,4 @@
-import { assignments, gradeRows } from '@/data/learning/courseWorkspace';
+import type { GradeRows, TeachingAssignments } from '@/types/learning/study';
 
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -7,7 +7,7 @@ import { Table } from '@/components/ui/data-display/Table';
 
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
-export function AssignmentsPanel() {
+export function AssignmentsPanel({ assignments }: { assignments: TeachingAssignments }) {
     const rows = assignments.slice(0, 3).map((assignment) => [
         <div className="min-w-0">
             <p className="truncate font-medium text-ink-800">{assignment.title}</p>
@@ -32,7 +32,7 @@ export function AssignmentsPanel() {
         </Card>
     );
 }
-export function GradebookPanel() {
+export function GradebookPanel({ gradeRows }: { gradeRows: GradeRows }) {
     const rows = gradeRows
         .slice(0, 5)
         .map((row) => [

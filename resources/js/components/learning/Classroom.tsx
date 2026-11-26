@@ -1,8 +1,8 @@
+import type { ClassSessions, Room, Archive, Session } from '@/types/learning/study';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { SessionDrawer } from '@/components/learning/SessionDrawer';
 import { LiveRoom, Recordings } from '@/components/learning/LiveRoom';
 import { useState } from 'react';
-import { liveClasses } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
@@ -10,7 +10,7 @@ import { Table } from '@/components/ui/data-display/Table';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Note } from '@/components/learning/Parts';
 
-function SessionTable({ openSession }: { openSession: () => void }) {
+function SessionTable({ liveClasses, label, openSession }: { liveClasses: ClassSessions; label: string; openSession: () => void }) {
     const { notify } = useWorkspaceOverlays();
     const rows = liveClasses.map((session) => [
         <div className="min-w-0">
@@ -39,11 +39,12 @@ function SessionTable({ openSession }: { openSession: () => void }) {
 
     return (
         <Card
-            className="[&_th:last-child]:w-[110px]" title="Scheduled classes"
+            className="[&_th:last-child]:w-[110px]"
+            title="Scheduled classes"
             subtitle="Meeting links are issued per session; no conferencing vendor is mandated"
             actions={
                 <>
-                    <Badge tone="sky">3 scheduled</Badge>
+                    <Badge tone="sky">{label}</Badge>
                     <Action icon="plus" variant="primary" size="sm" onClick={openSession}>
                         Schedule class
                     </Action>
@@ -54,7 +55,19 @@ function SessionTable({ openSession }: { openSession: () => void }) {
         </Card>
     );
 }
-export default function Classroom() {
+export default function Classroom({
+    liveClasses,
+    room,
+    archive,
+    session,
+    scheduleLabel,
+}: {
+    liveClasses: ClassSessions;
+    room: Room;
+    archive: Archive;
+    session: Session;
+    scheduleLabel: string;
+}) {
     const [open, setOpen] = useState(false);
     const openSession = () => setOpen(true);
 
@@ -77,15 +90,15 @@ export default function Classroom() {
             />
 
             <div className="space-y-5">
-                <LiveRoom />
-                <SessionTable openSession={openSession} />
-                <Recordings />
+                <LiveRoom room={room} />
+                <SessionTable liveClasses={liveClasses} label={scheduleLabel} openSession={openSession} />
+                <Recordings archive={archive} />
                 <Note tone="sky">
                     Conferencing is vendor neutral. A session can run on any provider that issues a meeting link, and every session keeps its own
                     attendance and participation record.
                 </Note>
             </div>
-            <SessionDrawer open={open} setOpen={setOpen} />
+            <SessionDrawer session={session} open={open} setOpen={setOpen} />
         </div>
     );
 }

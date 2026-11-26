@@ -1,3 +1,4 @@
+import { allocation } from '@/data/learning/teaching';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { offerings } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -48,12 +49,13 @@ export default function Courses() {
 
             <div className="space-y-5">
                 <Card
-                    className="[&_th:last-child]:w-[120px]" title="Allocated courses"
-                    subtitle="2025/2026 first semester"
+                    className="[&_th:last-child]:w-[120px]"
+                    title="Allocated courses"
+                    subtitle={allocation.term}
                     actions={
                         <>
-                            <Badge tone="emerald">3 courses</Badge>
-                            <Badge tone="slate">195 students</Badge>
+                            <Badge tone="emerald">{allocation.courseCount}</Badge>
+                            <Badge tone="slate">{allocation.studentCount}</Badge>
                         </>
                     }
                 >
@@ -63,12 +65,7 @@ export default function Courses() {
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
                     <Card title="Teaching workload" subtitle="Contact hours and assessment load this semester">
                         <ul className="divide-y divide-ink-100">
-                            {[
-                                { label: 'Scheduled classes', value: '24 hours' },
-                                { label: 'Assignments to mark', value: '112 scripts' },
-                                { label: 'Examination sittings', value: '2' },
-                                { label: 'Students supervised', value: '195' },
-                            ].map((item) => (
+                            {allocation.workload.map((item) => (
                                 <li key={item.label} className="flex items-center justify-between gap-3 py-2.5">
                                     <span className="text-[13px] text-ink-600">{item.label}</span>
                                     <span className="text-[13px] font-semibold text-ink-800 tnum">{item.value}</span>
@@ -78,12 +75,7 @@ export default function Courses() {
                     </Card>
                     <Card title="Course preparation" subtitle="What must be ready before the next class">
                         <ul className="divide-y divide-ink-100">
-                            {[
-                                { title: 'Week 6 module published', state: 'Draft', tone: 'amber' },
-                                { title: 'Practice set uploaded', state: 'Ready', tone: 'emerald' },
-                                { title: 'Mid-term blueprint approved', state: 'Ready', tone: 'emerald' },
-                                { title: 'Recording of 12 Nov class', state: 'Processing', tone: 'sky' },
-                            ].map((item) => (
+                            {allocation.preparation.map((item) => (
                                 <li key={item.title} className="flex items-center justify-between gap-3 py-2.5">
                                     <span className="text-[13px] text-ink-700">{item.title}</span>
                                     <Badge tone={item.tone}>{item.state}</Badge>
@@ -93,11 +85,7 @@ export default function Courses() {
                     </Card>
                     <Card title="Your students" subtitle="Distribution of attention across cohorts">
                         <div className="space-y-4">
-                            {[
-                                { label: 'Strong (80%+)', value: 41, color: '#10B981' },
-                                { label: 'Steady (60-79%)', value: 19, color: '#3B82F6' },
-                                { label: 'At risk (<50%)', value: 8, color: '#F43F5E' },
-                            ].map((band) => (
+                            {allocation.bands.map((band) => (
                                 <div key={band.label}>
                                     <div className="mb-1 flex items-center justify-between gap-3">
                                         <span className="text-[13px] text-ink-600">{band.label}</span>
@@ -106,7 +94,7 @@ export default function Courses() {
                                     <div className="h-2 w-full overflow-hidden rounded-full bg-ink-100">
                                         <div
                                             className="h-full rounded-full"
-                                            style={{ width: `${(band.value / 68) * 100}%`, background: `${band.color}` }}
+                                            style={{ width: `${(band.value / allocation.cohortSize) * 100}%`, background: `${band.color}` }}
                                         />
                                     </div>
                                 </div>

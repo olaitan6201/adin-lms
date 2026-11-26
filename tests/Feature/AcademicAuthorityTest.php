@@ -17,12 +17,12 @@ class AcademicAuthorityTest extends TestCase
     public static function roles(): array
     {
         return [
-            ['institutional_admin', ['Organisation', 'Curriculum', 'Delivery'], true, false],
-            ['super_admin', ['Organisation', 'Curriculum', 'Delivery'], true, true],
-            ['quality_assurance_officer', ['Curriculum'], false, false],
-            ['dean', ['Organisation'], false, false],
-            ['head_of_department', ['Organisation'], false, false],
-            ['student', [], false, false],
+            ['institutional_admin', ['Organisation', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, false],
+            ['super_admin', ['Organisation', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, true],
+            ['quality_assurance_officer', ['Curriculum', 'Calendar', 'Quality review', 'Notification settings'], false, false],
+            ['dean', ['Organisation', 'Calendar', 'Notification settings'], false, false],
+            ['head_of_department', ['Organisation', 'Calendar', 'Notification settings'], false, false],
+            ['student', ['Calendar', 'Notification settings'], false, false],
         ];
     }
 

@@ -127,8 +127,8 @@ export default function AssignmentsDesk({
                 </div>
             )}
             <Note>
-                A submission receipt is issued on upload and every score change is retained with the reason
-                and the author.
+                Institutional policy requires a reason and author for score changes. Marks entered here
+                update this sample only; they do not create an institutional audit record.
             </Note>
             {edit && (
                 <AssignmentEditor

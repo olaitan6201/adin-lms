@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
+import { formatInstitutionalTime, submissionWindow } from '@/lib/submissionWindow';
 import type { Assignment, Receipt, StudentWork } from '@/types/assessments/assignments';
 import { Details, RecordName, Status } from './RecordDetails';
 import { Note } from '@/components/ui/feedback/Note';
@@ -16,17 +17,19 @@ export default function StudentAssignments({
     work,
     rules,
     sizeLimit,
+    sampleTime,
 }: {
     work: StudentWork[];
     rules: [string, string][];
     sizeLimit: number;
+    sampleTime: number;
 }) {
     const [records, setRecords] = useState(work);
     const [selectedId, selectAssignment] = useState<string>();
     const [message, setMessage] = useState('');
     const selected = records.find((record) => record.assignment.id === selectedId);
     const outstanding = records.filter(
-        ({ assignment, current }) => assignment.state === 'open' && !current,
+        ({ assignment, current }) => submissionWindow(assignment, sampleTime) === 'Open' && !current,
     ).length;
 
     function openAssignment(assignment: Assignment) {
@@ -34,7 +37,7 @@ export default function StudentAssignments({
     }
 
     function recordSubmission(receipt: Receipt) {
-        if (!selected || selected.assignment.state !== 'open') {
+        if (!selected || submissionWindow(selected.assignment, sampleTime) !== 'Open') {
             return;
         }
 
@@ -51,6 +54,16 @@ export default function StudentAssignments({
         );
         setMessage(`Work recorded locally. Receipt ${receipt.number} issued for ${receipt.file}.`);
         selectAssignment(undefined);
+    }
+
+    function rowStatus({ assignment, current }: StudentWork) {
+        const window = submissionWindow(assignment, sampleTime);
+        if (current) {
+            const result = current.feedback ? 'Graded' : 'Awaiting marking';
+            return window === 'Open' ? result : `${result} · ${window}`;
+        }
+
+        return window === 'Open' ? 'Not submitted' : window;
     }
 
     return (
@@ -73,42 +86,34 @@ export default function StudentAssignments({
             <Card
                 className="student-assignments"
                 title="Your assignments"
-                subtitle="Across all registered courses"
+                subtitle={`Sample clock: ${formatInstitutionalTime(sampleTime)} WAT · all deadlines in West Africa Time`}
                 actions={<Badge tone="amber">{outstanding} outstanding</Badge>}
             >
                 <Table
                     columns={['Assignment', 'Due', 'Status', 'Score', '']}
                     rowKeys={records.map(({ assignment }) => assignment.id)}
-                    rows={records.map(({ assignment: a, current }) => [
-                        <RecordName key="assignment" name={a.title} meta={a.course} />,
-                        <span key="due" className="text-[13px] text-ink-600">
-                            {a.due}
-                        </span>,
-                        <Status
-                            key="status"
-                            value={
-                                current?.feedback
-                                    ? 'Graded'
-                                    : current
-                                      ? 'Awaiting marking'
-                                      : a.state === 'closed'
-                                        ? 'Closed'
-                                        : a.state === 'scheduled' ? 'Not open yet' : 'Not submitted'
-                            }
-                        />,
-                        current?.feedback ? (
-                            <span className="tnum text-[13px] font-semibold">
-                                {current.feedback.score} / 100
-                            </span>
-                        ) : (
-                            <span className="text-[12.5px] text-ink-400">-</span>
-                        ),
-                        <div key="actions" className="flex justify-end">
-                            <Action size="sm" onClick={() => openAssignment(a)}>
-                                {current ? 'View receipt' : 'View assignment'}
-                            </Action>
-                        </div>,
-                    ])}
+                    rows={records.map((record) => {
+                        const { assignment: a, current } = record;
+                        return [
+                            <RecordName key="assignment" name={a.title} meta={a.course} />,
+                            <span key="due" className="text-[13px] text-ink-600">
+                                {a.due}
+                            </span>,
+                            <Status key="status" value={rowStatus(record)} />,
+                            current?.feedback ? (
+                                <span className="tnum text-[13px] font-semibold">
+                                    {current.feedback.score} / 100
+                                </span>
+                            ) : (
+                                <span className="text-[12.5px] text-ink-400">-</span>
+                            ),
+                            <div key="actions" className="flex justify-end">
+                                <Action size="sm" onClick={() => openAssignment(a)}>
+                                    {current ? 'View receipt' : 'View assignment'}
+                                </Action>
+                            </div>,
+                        ];
+                    })}
                 />
             </Card>
             <div className="grid gap-5 xl:grid-cols-3">
@@ -127,6 +132,7 @@ export default function StudentAssignments({
                     sizeLimit={sizeLimit}
                     key={selected.assignment.id}
                     row={selected.assignment}
+                    sampleTime={sampleTime}
                     revision={selected.current}
                     previous={selected.previous}
                     close={() => selectAssignment(undefined)}

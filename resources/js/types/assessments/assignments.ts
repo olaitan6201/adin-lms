@@ -57,7 +57,12 @@ export interface StudentRevision {
 }
 
 export interface StudentWork {
-    assignment: Assignment;
+    assignment: WindowedAssignment;
     current?: StudentRevision;
     previous: StudentRevision[];
+}
+
+export interface WindowedAssignment extends Assignment {
+    opensAt: number;
+    closesAt: number;
 }

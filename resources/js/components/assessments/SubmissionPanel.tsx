@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
-import type { Assignment, Receipt, StudentRevision } from '@/types/assessments/assignments';
+import type { WindowedAssignment, Receipt, StudentRevision } from '@/types/assessments/assignments';
+import { formatInstitutionalTime, submissionWindow } from '@/lib/submissionWindow';
 import { Drawer } from './Drawer';
 import { inputClass, submitClass } from './Editor';
 
@@ -12,16 +13,19 @@ export function SubmissionPanel({
     close,
     save,
     sizeLimit,
+    sampleTime,
 }: {
     sizeLimit: number;
-    row: Assignment;
+    row: WindowedAssignment;
+    sampleTime: number;
     revision?: StudentRevision;
     previous: StudentRevision[];
     close: () => void;
     save: (r: Receipt) => void;
 }) {
     const receipt = revision?.receipt;
-    const accepting = row.state === 'open';
+    const window = submissionWindow(row, sampleTime);
+    const accepting = window === 'Open';
     const [file, setFile] = useState<File>();
     const [note, setNote] = useState(receipt?.note ?? '');
     const [error, setError] = useState('');
@@ -45,7 +49,7 @@ export function SubmissionPanel({
             number: `RCP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
             file: file.name,
             size: `${(file.size / 1048576).toFixed(1)} MB`,
-            time: new Date().toLocaleString(),
+            time: `${formatInstitutionalTime(sampleTime)} WAT`,
             note,
         });
     }
@@ -59,7 +63,7 @@ export function SubmissionPanel({
                 </p>
             </Card>
             {!accepting && (
-                <p>{row.state === 'scheduled' ? 'Not open yet. Submissions are unavailable.' : 'Submissions are closed.'}</p>
+                <p>{window === 'Not open yet' ? 'Not open yet. Submissions are unavailable.' : 'Submissions are closed.'}</p>
             )}
             <form className="space-y-4" onSubmit={submit}>
                 {accepting && (

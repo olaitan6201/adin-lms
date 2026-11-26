@@ -93,3 +93,33 @@ test('returning the non-first same-title script counts precisely one assignment,
     assert.equal(returned.queue[0], records.queue[0]);
     assert.deepEqual(recordMark(returned, returned.queue[1]), returned);
 });
+
+test('student rows and the submission drawer respect the same half-open WAT window despite a stale open flag', async () => {
+    const { default: List } = await server.ssrLoadModule('/resources/js/components/assessments/StudentAssignments.tsx');
+    const { SubmissionPanel } = await server.ssrLoadModule('/resources/js/components/assessments/SubmissionPanel.tsx');
+    const { studentAssignments } = await server.ssrLoadModule('/resources/js/data/assessments/studentAssignments.ts');
+    const row = studentAssignments.work[0].assignment;
+    const closes = Date.parse('2026-11-14T22:59:00Z');
+    assert.equal(row.state, 'open');
+    for (const [sampleTime, status, accepting] of [
+        [row.opensAt - 1, 'Not open yet', false],
+        [row.opensAt, 'Not submitted', true],
+        [closes - 1, 'Not submitted', true],
+        [closes, 'Closed', false],
+        [closes + 1, 'Closed', false],
+    ]) {
+        const list = renderToStaticMarkup(createElement(List, {
+            ...studentAssignments, sampleTime, work: [{ assignment: row, previous: [] }],
+        }));
+        assert.ok(list.includes(`>${status}<`));
+        assert.ok(list.includes(`>${Number(accepting)} outstanding<`));
+        assert.ok(list.includes('14 Nov 2026, 23:59'));
+        const drawer = renderToStaticMarkup(createElement(SubmissionPanel, {
+            row, sampleTime, sizeLimit: 25, previous: [], revision: studentAssignments.work[0].current,
+        }));
+        assert.ok(drawer.includes('closes 14 Nov 2026, 23:59'));
+        assert.ok(drawer.includes('RCP-2026-11-12-0412-884'));
+        assert.equal(drawer.includes('type="file"'), accepting);
+        assert.equal(drawer.includes('>Submit work<'), accepting);
+    }
+});

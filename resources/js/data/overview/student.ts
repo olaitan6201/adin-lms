@@ -1,4 +1,5 @@
 import { studentAssignments } from '@/data/assessments/studentAssignments';
+import { submissionWindow } from '@/lib/submissionWindow';
 export { studentResults } from '@/data/learning/courseWorkspace';
 
 export const notifications = [
@@ -6,7 +7,7 @@ export const notifications = [
 ] as const;
 
 export const pending = studentAssignments.work
-    .filter(({ assignment, current }) => assignment.state !== 'closed' && !current)
+    .filter(({ assignment, current }) => submissionWindow(assignment, studentAssignments.sampleTime) === 'Open' && !current)
     .map(({ assignment }) => ({
         title: assignment.title,
         course: assignment.course,

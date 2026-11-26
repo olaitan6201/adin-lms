@@ -77,8 +77,8 @@ export function AssignmentEditor({
                     />
                 </Card>
                 <Note amber>
-                    Changing a closing date after submissions exist notifies affected students and is written
-                    to the audit log.
+                    Institutional policy calls for notifying students and recording deadline changes.
+                    Saving here changes this sample only; no notification or audit entry is created.
                 </Note>
                 <div className="flex justify-end gap-2">
                     <Action onClick={close}>Close</Action>

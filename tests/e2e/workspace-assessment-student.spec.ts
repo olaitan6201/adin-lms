@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 
 test('replacing a returned script keeps its grade only on the previous receipt', async ({ page }) => {
     await page.goto('/student/assignments');
+    await expect(page.getByText(/Sample clock: 13 Nov 2026, 12:00 WAT/)).toBeVisible();
     const chemistry = page.getByRole('row').filter({ hasText: 'CHM401' });
     const dialog = page.getByRole('dialog');
     await expect(chemistry).toContainText('81 / 100');
@@ -17,6 +18,7 @@ test('replacing a returned script keeps its grade only on the previous receipt',
     await expect(upload).toContainText('Awaiting marking');
     await upload.getByRole('button').click();
     await expect(dialog).toContainText('unmarked-revision.pdf');
+    await expect(dialog).toContainText('uploaded 13 Nov 2026, 12:00 WAT');
     await expect(dialog).toContainText('Awaiting marking');
     await expect(dialog).not.toContainText('81 / 100');
     await page.keyboard.press('Escape');

@@ -7,10 +7,13 @@ test('renaming an assignment to a duplicate title does not borrow another course
     const english = page.getByRole('row').filter({ hasText: 'ENG210' });
     const dialog = page.getByRole('dialog');
     await english.getByRole('button', { name: 'Edit' }).click();
+    await expect(dialog).toContainText('no notification or audit entry is created');
+    await dialog.getByLabel('Closes').fill('2026-11-21T12:30');
     await dialog.getByLabel('Title', { exact: true }).fill(title);
     await dialog.getByLabel('Instructions', { exact: true }).fill('Submit the essay.');
     await dialog.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(english).toContainText(title);
+    await expect(english).toContainText('2026-11-21 12:30');
     await english.getByRole('button', { name: 'Mark', exact: true }).click();
     await expect(page.getByText('No submissions for this assignment.')).toBeVisible();
     await expect(page.getByText('0 submissions shown')).toBeVisible();
@@ -20,6 +23,7 @@ test('renaming an assignment to a duplicate title does not borrow another course
     await expect(dialog).toHaveAccessibleName('Blessing Okonkwo');
     await dialog.getByRole('button', { name: 'Return to student' }).click();
     await expect(accounting).toContainText('66%');
+    await expect(page.getByText(/they do not create an institutional audit record/)).toBeVisible();
     await expect(english).toContainText('0%');
     await page.getByRole('button', { name: /Marking queue/ }).click();
     await expect(page.getByText('33 awaiting')).toBeVisible();

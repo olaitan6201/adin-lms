@@ -29,4 +29,6 @@ const work: StudentWork[] = assignments.map(assignment => ({
     previous: [],
 }));
 
-export const studentAssignments = { work, rules, sizeLimit: 25 };
+const sampleTime = Date.parse('2026-11-13T12:00:00+01:00');
+
+export const studentAssignments = { work, rules, sizeLimit: 25, sampleTime };

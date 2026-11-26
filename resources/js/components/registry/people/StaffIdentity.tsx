@@ -3,16 +3,14 @@ import { Field } from '@/components/registry/Desk';
 import { Note } from '@/components/ui/feedback/Note';
 import { status, cap } from '@/components/registry/Records';
 import { Card } from '@/components/ui/layout/Card';
-import { Sessions } from './Sessions';
+import { Sessions, SessionCount } from './Sessions';
 export function StaffIdentity({
     member,
     directorySummary,
-    devices,
     roleMatrix,
 }: {
     member?: StaffRecord;
     directorySummary: DirectorySummary;
-    devices: string[][];
     roleMatrix: RoleEntry[];
 }) {
     return (
@@ -22,7 +20,7 @@ export function StaffIdentity({
                     {status(member.role, 'emerald')}
                     {status(member.mfa ? 'MFA enrolled' : 'Not enrolled', member.mfa ? 'emerald' : 'amber')}
                     {status(cap(member.status))}
-                    {status('Sessions: 2')}
+                    <SessionCount staffId={member.id} />
                 </div>
             )}
             <Card title="Identity">
@@ -60,7 +58,7 @@ export function StaffIdentity({
                     />
                 </div>
             </Card>
-            {member && <Sessions devices={devices} />}
+            {member && <Sessions staffId={member.id} />}
             <Note amber>
                 Privileged roles must enrol in multi-factor authentication. Password recovery resets the secret and
                 revokes every active session.

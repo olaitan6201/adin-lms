@@ -8,13 +8,11 @@ import type { StaffRecord, RoleEntry, DirectorySummary } from '@/types/registry/
 export function useStaffDirectory({
     staffDirectory,
     directorySummary,
-    devices,
     roleMatrix,
     desk,
 }: {
     staffDirectory: StaffRecord[];
     directorySummary: DirectorySummary;
-    devices: string[][];
     roleMatrix: RoleEntry[];
     desk: Desk;
 }) {
@@ -52,9 +50,9 @@ export function useStaffDirectory({
             subtitle: member ? `${member.role} · ${member.unit}` : undefined,
             submit: 'Save changes',
             message: 'User record updated',
-            body: <StaffIdentity {...{ member, directorySummary, devices, roleMatrix }} />,
+            body: <StaffIdentity {...{ member, directorySummary, roleMatrix }} />,
             save: (data) => saveStaff(data, member),
         });
     }
-    return { visible, query, search, filter, setFilter, editStaff };
+    return { staff, visible, query, search, filter, setFilter, editStaff };
 }

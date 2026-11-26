@@ -1,3 +1,4 @@
+export type PreviewDevice = { id: string; title: string; detail: string; current: boolean };
 export type StaffRecord = {
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export type DirectorySummary = {
 export type PeopleDirectoryInputs = {
     staffDirectory: StaffRecord[];
     studentDirectory: StudentRecord[];
-    devices: string[][];
+    devices: PreviewDevice[];
     learningHistory: [string, string][];
     studentMetrics: [string, string, string?][];
     directorySummary: DirectorySummary;

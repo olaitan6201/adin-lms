@@ -5,12 +5,17 @@ function escapeText(value: string) {
     return value.replaceAll('\\', '\\\\').replaceAll(';', '\\;').replaceAll(',', '\\,').replace(/[\r\n]+/g, '\\n');
 }
 
+function utcStamp(date: Date) {
+    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+}
+
 function eventRecord(event: CalendarEvent) {
+    const startsAt = new Date(`${event.date}T${event.time}:00+01:00`);
     return [
         'BEGIN:VEVENT',
         `UID:${event.id}@adin-lms`,
-        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')}`,
-        `DTSTART:${event.date.replaceAll('-', '')}T${event.time.replace(':', '')}00`,
+        `DTSTAMP:${utcStamp(new Date())}`,
+        `DTSTART:${utcStamp(startsAt)}`,
         `SUMMARY:${escapeText(event.title)}`,
         `DESCRIPTION:${escapeText(event.course)}`,
         'END:VEVENT',

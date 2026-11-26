@@ -43,7 +43,7 @@ export function EventEditor({ defaultDate, defaultTime, defaultCourse, kinds, on
                     defaultValue={defaultDate}
                 />
             </Field>
-            <Field label="Time">
+            <Field label="Time (WAT, UTC+01:00)">
                 <input
                     name="time"
                     type="time"

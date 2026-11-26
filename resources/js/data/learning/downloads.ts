@@ -1,21 +1,4 @@
 export const deviceStudy = {
-    metrics: [
-        {
-            label: 'Saved on this device',
-            value: '4 files',
-            hint: '15.6 MB used',
-        },
-        {
-            label: 'Available to save',
-            value: '11 files',
-            hint: 'Across 4 courses',
-        },
-        {
-            label: 'Last sync',
-            value: 'Today, 09:14',
-            hint: 'All up to date',
-        },
-    ],
     mobileFeatures: [
         {
             label: 'Secure sign-in with the same credentials',

@@ -1,34 +1,75 @@
-import { deviceStudy } from '@/data/learning/downloads';
-import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { offlineDownloads } from '@/data/learning/courseWorkspace';
-import { Badge } from '@/components/ui/data-display/Badge';
-import { Card } from '@/components/ui/layout/Card';
-import { Action } from '@/components/ui/controls/Action';
-import { Table } from '@/components/ui/data-display/Table';
-import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { useEffect, useState } from 'react';
+import { SampleDownload } from '@/components/learning/SampleDownload';
+import { removeFile, savedDates, type StudyFile } from '@/components/learning/deviceFiles';
 import { StudyMetric, Note } from '@/components/learning/Parts';
 import { FeatureStatusCard } from '@/components/students/FeatureStatusCard';
+import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
+import { Table } from '@/components/ui/data-display/Table';
+import { Card } from '@/components/ui/layout/Card';
+import { PageHeader } from '@/components/ui/layout/PageHeader';
+import { studyFiles, studyPack } from '@/data/learning/studyFiles';
+import { deviceStudy } from '@/data/learning/downloads';
+import { WorkspaceInstall } from '@/layouts/workspace/WorkspaceInstall';
+
+function sampleLibraryDate(value?: string) {
+    return value ? new Date(value).toLocaleDateString(undefined, { dateStyle: 'medium' }) : 'Not saved';
+}
 
 export default function Downloads() {
-    const { notify } = useWorkspaceOverlays();
-    const rows = offlineDownloads.map((item) => [
-        <div key="material" className="min-w-0">
-            <p className="truncate font-medium text-ink-800">{item.name}</p>
-            <p className="truncate text-[11px] text-ink-400">{item.course}</p>
+    const [dates, setDates] = useState<Record<string, string>>({});
+    const [error, setError] = useState('');
+    const saved = studyFiles.filter((file) => dates[file.id]);
+    const latest = Object.values(dates).sort().at(-1);
+    const bytes = saved.reduce((total, file) => total + file.bytes, 0);
+
+    async function refresh() {
+        try {
+            setDates(await savedDates(studyFiles));
+            setError('');
+        } catch {
+            setError('Device storage is unavailable. Direct downloads are still available online.');
+        }
+    }
+
+    useEffect(() => {
+        let active = true;
+        savedDates(studyFiles).then((initial) => {
+            if (active) {
+                setDates(initial);
+            }
+        }).catch(() => {
+            if (active) {
+                setError('Device storage is unavailable. Direct downloads are still available online.');
+            }
+        });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    async function remove(file: StudyFile) {
+        try {
+            await removeFile(file);
+            await refresh();
+        } catch {
+            setError('Could not remove the device copy.');
+        }
+    }
+
+    const rows = studyFiles.map((file) => [
+        <div key="material">
+            <p className="font-medium">{file.title}</p>
+            <p className="text-xs text-ink-500">{file.course}</p>
         </div>,
-        <span key="size" className="text-[13px] tnum">
-            {item.size}
-        </span>,
-        <span key="saved" className="text-[12.5px] text-ink-500">
-            {item.synced}
-        </span>,
-        <Badge key="status" tone="emerald">
-            Available offline
+        `${file.bytes.toLocaleString()} B`,
+        sampleLibraryDate(dates[file.id]),
+        <Badge key="status" tone={dates[file.id] ? 'emerald' : 'sky'}>
+            {dates[file.id] ? 'Available offline' : 'Available to save'}
         </Badge>,
-        <div key="remove" className="flex justify-end">
-            <button type="button" className="btn btn-ghost btn-sm" onClick={() => notify(`${item.name} removed from this device`)}>
-                Remove
-            </button>
+        <div key="actions" className="flex gap-2">
+            <SampleDownload file={file} label={`Download ${file.format}`} onSaved={refresh} />
+            {dates[file.id] && <Action onClick={() => remove(file)}>Remove</Action>}
         </div>,
     ]);
 
@@ -37,48 +78,40 @@ export default function Downloads() {
             <PageHeader
                 eyebrow="Learning"
                 title="Offline downloads"
-                description="Saved materials stay on this device for low bandwidth study. Work you submit always needs a connection."
+                description="Download a sample file to keep a library copy on this device, or get all four originals together as a ZIP."
                 actions={
                     <>
-                        <Action icon="smartphone" variant="outline">
-                            Install app
-                        </Action>
-                        <Action icon="download" variant="primary">
-                            Download all available
-                        </Action>
+                        <WorkspaceInstall />
+                        <a className="btn btn-primary" href={studyPack.href} download={studyPack.filename}>Download all available</a>
                     </>
                 }
             />
-
             <div className="space-y-5">
+                {error && <p role="alert">{error}</p>}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    {deviceStudy.metrics.map((metric) => (
-                        <StudyMetric key={metric.label} {...metric} />
-                    ))}
+                    <StudyMetric label="Saved on this device" value={`${saved.length} files`} hint={`${bytes.toLocaleString()} bytes in this library`} />
+                    <StudyMetric label="Available to save" value={`${studyFiles.length} files`} hint="ACC302 sample materials" />
+                    <StudyMetric label="Last library save" value={sampleLibraryDate(latest)} hint="Latest copy in this library" />
                 </div>
-
-                <Card className="[&_th:last-child]:w-[100px]" title="Saved materials" subtitle="Kept on this device until you remove them">
+                <Card title="Saved materials" subtitle="Saved status applies to this browser library. The ZIP downloads separately.">
                     <Table columns={['Material', 'Size', 'Saved', 'Status', '']} rows={rows} />
                 </Card>
-
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
                     <FeatureStatusCard
                         title="Mobile access"
-                        subtitle="What the phone application can do"
+                        subtitle="Reference feature checklist"
                         items={deviceStudy.mobileFeatures}
                         supported="Available"
                     />
                     <FeatureStatusCard
                         title="Accessibility"
-                        subtitle="Target: WCAG 2.2 level AA"
+                        subtitle="Design target: WCAG 2.2 level AA"
                         items={deviceStudy.accessibilityFeatures}
                         supported="Supported"
                     />
                 </div>
-
                 <Note tone="sky">
-                    Offline copies hold the material as it was when it was saved. Replacing a file on the server does not change a copy
-                    already on your device.
+                    Offline copies hold the material as it was when saved. Removing a library copy does not delete files from your browser downloads.
                 </Note>
             </div>
         </div>

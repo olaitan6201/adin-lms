@@ -1,7 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import type { Recording } from '@/types/learning/study';
 
-export type Attachment = { moduleId: string; name: string };
+export type Attachment = {
+    moduleId: string;
+    name: string;
+};
 
 export function RecordingAttachment({ recording, initial, save, cancel }: {
     recording: Recording;
@@ -20,10 +23,12 @@ export function RecordingAttachment({ recording, initial, save, cancel }: {
             setError(`Choose a module from ${recording.course}.`);
             return;
         }
+
         if (!name || name.length > 120) {
             setError('Enter a resource name of 1 to 120 characters.');
             return;
         }
+
         save({ moduleId, name });
     }
 

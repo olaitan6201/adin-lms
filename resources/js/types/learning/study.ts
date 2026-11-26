@@ -100,7 +100,10 @@ export type Recording = {
     length: string;
     views: number;
     transcript: string | null;
-    modules: { id: string; title: string }[];
+    modules: {
+        id: string;
+        title: string;
+    }[];
 };
 
 export type Archive = { recordings: Recording[] };

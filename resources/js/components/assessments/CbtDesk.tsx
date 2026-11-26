@@ -12,14 +12,17 @@ import { Blueprint } from './SittingBlueprint';
 import { BankCatalogue } from './cbt/BankCatalogue';
 import { SittingList } from './cbt/SittingList';
 import { useBankCatalogue } from './cbt/useBankCatalogue';
+import { windowError } from './cbt/sittingWindow';
 
 export default function CbtDesk({
+    officer,
     exams,
     questionBanks,
     bankItems,
     blueprint,
     invigilationLog,
 }: {
+    officer: boolean;
     exams: Exam[];
     questionBanks: Bank[];
     bankItems: Record<string, Question[]>;
@@ -28,13 +31,13 @@ export default function CbtDesk({
 }) {
     const [tab, setTab] = useState(0);
     const { banks, items, questionTotal, bank, bankId, setBankId, createBank, addQuestion } =
-        useBankCatalogue(questionBanks, bankItems);
+        useBankCatalogue(questionBanks, bankItems, officer);
     const [sittings, setSittings] = useState<Exam[]>(exams);
     const [exam, setExam] = useState<Exam | 'new'>();
     const [selected, setSelected] = useState(guards.slice(0, 4));
 
     function saveSitting(draft: SittingDraft) {
-        if (!exam) {
+        if (!exam || windowError(draft.window)) {
             return;
         }
 
@@ -92,7 +95,14 @@ export default function CbtDesk({
                 active={tab}
                 change={setTab}
             />
-            {tab === 0 && <BankCatalogue banks={banks} questionTotal={questionTotal} open={setBankId} />}
+            {tab === 0 && (
+                <BankCatalogue
+                    officer={officer}
+                    banks={banks}
+                    questionTotal={questionTotal}
+                    open={setBankId}
+                />
+            )}
             {tab === 1 && <SittingList sittings={sittings} schedule={schedule} open={setExam} />}
             {tab === 2 && (
                 <SecurityPanel invigilationLog={invigilationLog} selected={selected} change={setSelected} />
@@ -101,7 +111,7 @@ export default function CbtDesk({
                 Each attempt keeps the paper that was actually drawn, so a result can be reproduced against
                 the candidate record at any time.
             </Note>
-            {bankId === 'new' && <NewBankPanel close={() => setBankId('')} save={createBank} />}
+            {bankId === 'new' && <NewBankPanel officer={officer} close={() => setBankId('')} save={createBank} />}
             {bank && (
                 <BankPanel
                     key={bank.id}

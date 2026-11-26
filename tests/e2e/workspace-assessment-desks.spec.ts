@@ -48,7 +48,7 @@ test('a newly created bank starts empty and owns its added question', async ({ p
     await expect(dialog).toContainText('Compare narrative voices.');
     await page.keyboard.press('Escape');
     await expect(page.getByText('405 questions')).toBeVisible();
-    await page.getByRole('row').filter({ hasText: 'Accounting theory essay prompts' }).getByRole('button').click();
+    await page.getByRole('row').filter({ hasText: 'English literature comprehension' }).getByRole('button').click();
     await expect(dialog).not.toContainText('Compare narrative voices.');
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: /^Examinations/ }).click();

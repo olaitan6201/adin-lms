@@ -4,13 +4,16 @@ import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Bank } from '@/types/assessments/cbt';
 import { RecordName } from '../RecordDetails';
+import { canOpenBank } from './bankAccess';
 
 export function BankCatalogue({
     banks,
+    officer,
     questionTotal,
     open,
 }: {
     banks: Bank[];
+    officer: boolean;
     questionTotal: number;
     open: (id: string) => void;
 }) {
@@ -48,7 +51,7 @@ export function BankCatalogue({
                         {b.security === 'restricted' ? 'Restricted to officers' : 'Open to lecturer'}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Action size="sm" onClick={() => open(b.id)}>
+                        <Action size="sm" disabled={!canOpenBank(b, officer)} onClick={() => open(b.id)}>
                             Open bank
                         </Action>
                     </div>,

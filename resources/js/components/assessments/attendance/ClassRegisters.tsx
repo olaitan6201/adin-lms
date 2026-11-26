@@ -43,7 +43,7 @@ export function ClassRegisters({ sessions, open }: ClassRegistersProps) {
         <Card
             className="session-list"
             title="Class registers"
-            subtitle="One register per scheduled class, with the source of the mark recorded"
+            subtitle="Sample session methods. Use the register to mark attendance manually."
             actions={
                 <>
                     <Badge>{sessions.length} sessions this week</Badge>

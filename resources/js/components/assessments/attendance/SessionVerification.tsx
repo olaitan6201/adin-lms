@@ -22,7 +22,7 @@ export function SessionVerification({ course, codeSuffix }: VerificationProps) {
     }, [course]);
 
     return (
-        <Card title="Controlled verification" subtitle="Optional QR check-in for the session">
+        <Card title="Manual session code" subtitle="Attendance sample · mark learners in the register">
             <div className="mb-3 flex items-center gap-4">
                 <span className="rounded-xl bg-ink-900 p-4 text-white">
                     <Icon name="qr" className="size-10" />
@@ -32,8 +32,8 @@ export function SessionVerification({ course, codeSuffix }: VerificationProps) {
                         Session code <output>{code}</output>
                     </p>
                     <p className="my-2 text-sm text-ink-500">
-                        Refreshes every 60 seconds. A scan records the time and the device, and marks the
-                        student present.
+                        This sample code refreshes every 60 seconds. The QR icon is illustrative.
+                        Refreshing the code does not change the register.
                     </p>
                 </div>
             </div>

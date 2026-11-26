@@ -2,7 +2,8 @@ import type { BankDraft } from '@/types/assessments/cbt';
 import { Drawer } from '../Drawer';
 import { type Values, Editor } from '../Editor';
 
-export function NewBankPanel({ close, save }: {
+export function NewBankPanel({ officer, close, save }: {
+    officer: boolean;
     close: () => void;
     save: (draft: BankDraft) => void;
 }) {
@@ -22,7 +23,7 @@ export function NewBankPanel({ close, save }: {
                     { label: 'Bank name', required: true },
                     { label: 'Course', required: true },
                     { label: 'Types', initial: 'MCQ' },
-                    { label: 'Access', options: ['restricted', 'open'] },
+                    { label: 'Access', options: officer ? ['restricted', 'open'] : ['open'] },
                 ]}
                 save={submit}
             />

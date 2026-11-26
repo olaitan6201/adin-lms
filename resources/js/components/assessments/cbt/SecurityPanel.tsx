@@ -25,7 +25,7 @@ export function SecurityPanel({
         <div className="grid gap-5 lg:grid-cols-2">
             <Card
                 title="Invigilation log"
-                subtitle="Identity checks, browser guard events and submissions during a sitting"
+                subtitle="Sample records of identity checks, browser events and submissions"
                 actions={
                     <Action
                         size="sm"
@@ -63,8 +63,7 @@ export function SecurityPanel({
             >
                 <Checks labels={guards} selected={selected} change={change} />
                 <p className="mt-3 text-xs text-slate-600">
-                    Suspicious events are logged for officer review. Device capabilities limit browser
-                    restrictions.
+                    These sample settings do not monitor a device or record new events.
                 </p>
             </Card>
         </div>

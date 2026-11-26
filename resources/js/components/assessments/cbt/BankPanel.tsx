@@ -66,8 +66,7 @@ export function BankPanel({
                 />
             )}
             <Note amber>
-                Question text is only visible to authorised roles. Opening a bank is written to the audit log
-                with the officer and the time.
+                This sample keeps question edits on this page. Opening a bank does not create an audit entry.
             </Note>
             <div className="flex justify-end gap-2">
                 <Action onClick={close}>Close</Action>

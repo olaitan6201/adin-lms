@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { canOpenBank, selectedBank } from './bankAccess';
 import type { Bank, BankDraft, Question } from '@/types/assessments/cbt';
 
 export function useBankCatalogue(
     questionBanks: Bank[],
     bankItems: Record<string, Question[]>,
+    officer: boolean,
 ) {
     const [catalogue, setCatalogue] = useState({
         banks: questionBanks,
@@ -12,9 +14,13 @@ export function useBankCatalogue(
     const { banks, items } = catalogue;
     const questionTotal = banks.reduce((sum, row) => sum + row.questions, 0);
     const [bankId, setBankId] = useState('');
-    const bank = banks.find((b) => b.id === bankId);
+    const bank = selectedBank(banks, bankId, officer);
 
     function createBank(draft: BankDraft) {
+        if (!canOpenBank(draft, officer)) {
+            return;
+        }
+
         const created = {
             ...draft,
             id: crypto.randomUUID(),

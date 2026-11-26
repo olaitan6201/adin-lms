@@ -46,7 +46,7 @@ const papers = [
 ];
 
 export const cbtDesk = {
-    exams, questionBanks, invigilationLog, total: 406,
+    exams, questionBanks, invigilationLog,
     bankItems: { 'qb-1': questions, 'qb-2': questions.filter(q => q.type === 'Essay' || q.type === 'Short answer') },
     blueprint: { examBlueprint, papersByExam: { 'ex-1': papers }, accommodations: { 'ex-1': 3 }, defaultCourse: 'ACC302', duration: '90', opens: '2026-11-18T08:45', closes: '2026-11-18T10:45' },
 };

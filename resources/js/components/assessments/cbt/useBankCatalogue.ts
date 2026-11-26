@@ -4,14 +4,13 @@ import type { Bank, BankDraft, Question } from '@/types/assessments/cbt';
 export function useBankCatalogue(
     questionBanks: Bank[],
     bankItems: Record<string, Question[]>,
-    total: number,
 ) {
     const [catalogue, setCatalogue] = useState({
         banks: questionBanks,
         items: bankItems,
-        questionTotal: total,
     });
-    const { banks, items, questionTotal } = catalogue;
+    const { banks, items } = catalogue;
+    const questionTotal = banks.reduce((sum, row) => sum + row.questions, 0);
     const [bankId, setBankId] = useState('');
     const bank = banks.find((b) => b.id === bankId);
 
@@ -37,7 +36,6 @@ export function useBankCatalogue(
             banks: current.banks.map((row) =>
                 row.id === id ? { ...row, questions: row.questions + 1 } : row,
             ),
-            questionTotal: current.questionTotal + 1,
         }));
     }
 

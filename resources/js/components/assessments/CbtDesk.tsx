@@ -16,21 +16,19 @@ import { useBankCatalogue } from './cbt/useBankCatalogue';
 export default function CbtDesk({
     exams,
     questionBanks,
-    total,
     bankItems,
     blueprint,
     invigilationLog,
 }: {
     exams: Exam[];
     questionBanks: Bank[];
-    total: number;
     bankItems: Record<string, Question[]>;
     blueprint: BlueprintData;
     invigilationLog: LogEntry[];
 }) {
     const [tab, setTab] = useState(0);
     const { banks, items, questionTotal, bank, bankId, setBankId, createBank, addQuestion } =
-        useBankCatalogue(questionBanks, bankItems, total);
+        useBankCatalogue(questionBanks, bankItems);
     const [sittings, setSittings] = useState<Exam[]>(exams);
     const [exam, setExam] = useState<Exam | 'new'>();
     const [selected, setSelected] = useState(guards.slice(0, 4));

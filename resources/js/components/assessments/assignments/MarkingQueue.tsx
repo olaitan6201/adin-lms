@@ -1,4 +1,5 @@
 import { Action } from '@/components/ui/controls/Action';
+import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Submission } from '@/types/assessments/assignments';
@@ -7,30 +8,34 @@ import { exportSheet } from '@/lib/csv';
 
 export function MarkingQueue({
     rows,
+    awaiting,
     filterTitle,
     open,
 }: {
     rows: Submission[];
+    awaiting: number;
     filterTitle?: string;
     open: (row: Submission) => void;
 }) {
+    function downloadQueue() {
+        exportSheet(
+            'submission-queue',
+            ['Student', 'Matric', 'Score'],
+            rows.map((row) => [row.student, row.matric, row.score]),
+        );
+    }
+
     return (
         <Card
             title="Marking queue"
             subtitle={filterTitle || 'Submissions awaiting a score, written feedback and a returned script'}
             actions={
-                <Action
-                    size="sm"
-                    onClick={() =>
-                        exportSheet(
-                            'submission-queue',
-                            ['Student', 'Matric', 'Score'],
-                            rows.map((r) => [r.student, r.matric, r.score]),
-                        )
-                    }
-                >
-                    Export sheet
-                </Action>
+                <>
+                    <Badge>{filterTitle ? `${rows.length} submissions shown` : `${awaiting} awaiting`}</Badge>
+                    <Action size="sm" onClick={downloadQueue}>
+                        Export sheet
+                    </Action>
+                </>
             }
         >
             <Table

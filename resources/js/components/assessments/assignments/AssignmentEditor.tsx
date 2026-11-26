@@ -25,7 +25,7 @@ export function AssignmentEditor({
 }) {
     const [values, setValues] = useState<Values>({
         ...Object.fromEntries(timing.map((f) => [f.label, f.options?.[0] ?? ''])),
-        ...rules,
+        ...(!row && rules),
         Title: row?.title ?? '',
         Course: row?.course ?? course ?? '',
         Instructions: row?.instructions ?? '',

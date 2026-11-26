@@ -105,7 +105,14 @@ export default function AssignmentsDesk({
                 change={changeTab}
             />
             {tab === 0 && <AssignmentList rows={rows} edit={setEdit} openMarking={openMarking} />}
-            {tab === 1 && <MarkingQueue rows={filteredQueue} filterTitle={filterTitle} open={setMark} />}
+            {tab === 1 && (
+                <MarkingQueue
+                    rows={filteredQueue}
+                    awaiting={awaitingCount}
+                    filterTitle={filterTitle}
+                    open={setMark}
+                />
+            )}
             {tab === 2 && (
                 <div className="grid gap-5 lg:grid-cols-2">
                     <Card

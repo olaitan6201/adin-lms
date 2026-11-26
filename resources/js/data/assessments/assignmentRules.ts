@@ -9,7 +9,7 @@ export const ruleFields: FieldSpec[] = [
 ];
 
 export const timing: FieldSpec[] = [
-    { label: 'Opens', type: 'date', required: true }, { label: 'Closes', type: 'datetime-local', required: true },
-    { label: 'Accepted formats', options: ['PDF, DOCX, XLSX'] }, { label: 'Size limit', options: ['25 MB'] },
-    { label: 'Late policy', options: ['10% penalty', 'Not accepted'] }, { label: 'Revision', options: ['Until closing'] },
+    { label: 'Opens', type: 'date', required: true },
+    { label: 'Closes', type: 'datetime-local', required: true },
+    ...ruleFields,
 ];

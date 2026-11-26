@@ -13,6 +13,7 @@ test('renaming an assignment to a duplicate title does not borrow another course
     await expect(english).toContainText(title);
     await english.getByRole('button', { name: 'Mark', exact: true }).click();
     await expect(page.getByText('No submissions for this assignment.')).toBeVisible();
+    await expect(page.getByText('0 submissions shown')).toBeVisible();
     await page.getByRole('navigation', { name: 'Page sections' }).getByRole('button', { name: /Assignments/ }).click();
     const accounting = page.getByRole('row').filter({ hasText: title }).filter({ hasText: 'ACC302' });
     await accounting.getByRole('button', { name: 'Mark', exact: true }).click();
@@ -20,6 +21,9 @@ test('renaming an assignment to a duplicate title does not borrow another course
     await dialog.getByRole('button', { name: 'Return to student' }).click();
     await expect(accounting).toContainText('66%');
     await expect(english).toContainText('0%');
+    await page.getByRole('button', { name: /Marking queue/ }).click();
+    await expect(page.getByText('33 awaiting')).toBeVisible();
+    await page.getByRole('navigation', { name: 'Page sections' }).getByRole('button', { name: /Assignments/ }).click();
     await accounting.getByRole('button', { name: 'Mark', exact: true }).click();
     await dialog.getByRole('button', { name: 'Return to student' }).click();
     await expect(accounting).toContainText('66%');
@@ -27,6 +31,7 @@ test('renaming an assignment to a duplicate title does not borrow another course
 
 test('a newly created bank starts empty and owns its added question', async ({ page }) => {
     await page.goto('/lecturer/cbt');
+    await expect(page.getByText('404 questions')).toBeVisible();
     const dialog = page.getByRole('dialog');
     await page.getByRole('button', { name: 'New bank' }).click();
     await dialog.getByLabel('Bank name').fill('Revision essays');
@@ -38,7 +43,7 @@ test('a newly created bank starts empty and owns its added question', async ({ p
     await dialog.getByRole('button', { name: 'Save question' }).click();
     await expect(dialog).toContainText('Compare narrative voices.');
     await page.keyboard.press('Escape');
-    await expect(page.getByText('407 questions')).toBeVisible();
+    await expect(page.getByText('405 questions')).toBeVisible();
     await page.getByRole('row').filter({ hasText: 'Accounting theory essay prompts' }).getByRole('button').click();
     await expect(dialog).not.toContainText('Compare narrative voices.');
     await page.keyboard.press('Escape');
@@ -84,4 +89,39 @@ test('a scheduled register discards cancelled marks and saves only the selected 
     await page.getByRole('button', { name: 'Attendance report' }).first().click();
     const path = await (await downloaded).path();
     expect(await readFile(path!, 'utf8')).toContain('"Practical session: slide preparation","16 Nov 2026","1","0","0"');
+});
+
+test('all new assignment rules inherit the desk defaults and overrides stay with the assignment', async ({ page }) => {
+    await page.goto('/lecturer/assignments');
+    await page.getByRole('button', { name: /Marking queue/ }).click();
+    await expect(page.getByText('34 awaiting', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Rules and feedback' }).click();
+    const rules = {
+        'Accepted formats': 'PDF only',
+        'Maximum file size': '10 MB',
+        'Late submission policy': 'Not accepted after closing',
+        'Revision after submission': 'Not allowed',
+        'Individual or group': 'Group',
+    };
+    for (const [label, value] of Object.entries(rules)) {
+        await page.getByRole('combobox', { name: label, exact: true }).selectOption(value);
+    }
+
+    await page.getByRole('button', { name: 'New assignment' }).first().click();
+    const dialog = page.getByRole('dialog');
+    for (const [label, value] of Object.entries(rules)) {
+        await expect(dialog.getByRole('combobox', { name: label, exact: true })).toHaveValue(value);
+    }
+
+    await dialog.getByLabel('Maximum file size').selectOption('50 MB');
+    await dialog.getByLabel('Title').fill('Local override');
+    await dialog.getByLabel('Instructions').fill('Submit one document.');
+    await dialog.getByLabel('Closes').fill('2026-12-01T10:00');
+    await dialog.getByRole('button', { name: 'Save' }).click();
+    await page.getByRole('button', { name: /^Assignments/ }).click();
+    await page.getByRole('row').filter({ hasText: 'Local override' }).getByRole('button', { name: 'Edit' }).click();
+    await expect(dialog.getByLabel('Maximum file size')).toHaveValue('50 MB');
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'New assignment' }).first().click();
+    await expect(dialog.getByLabel('Maximum file size')).toHaveValue('10 MB');
 });

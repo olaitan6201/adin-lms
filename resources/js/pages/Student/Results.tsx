@@ -5,17 +5,52 @@ import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';
 import { Table } from '@/components/ui/data-display/Table';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
-import { StudyMetric, Note, StudyIcon } from '@/components/learning/Parts';
+import { StudyMetric, Note } from '@/components/learning/Parts';
+import { ResultPolicy } from '@/components/students/ResultPolicy';
+
+function SessionHistory({ history }: { history: typeof standing.history }) {
+    return (
+        <Card title="Session history" subtitle="Scores from previous sessions">
+            <ul className="divide-y divide-ink-100">
+                {history.map((entry) => (
+                    <li key={entry.session} className="flex items-center justify-between gap-3 py-3">
+                        <div>
+                            <p className="text-[13px] font-medium text-ink-800">{entry.session}</p>
+                            <p className="mt-0.5 text-xs text-ink-500">
+                                {entry.courses} · {entry.units}
+                            </p>
+                        </div>
+                        <span className="text-[15px] font-semibold text-ink-900 tnum">{entry.gpa}</span>
+                    </li>
+                ))}
+            </ul>
+        </Card>
+    );
+}
 
 export default function Results() {
     const rows = releasedResults.map((result) => [
-        <span className="font-mono text-[12px] font-medium text-ink-700">{result.course}</span>,
-        <span className="font-medium text-ink-800">{result.title}</span>,
-        <span className="text-[13px] tnum">{result.ca}</span>,
-        <span className="text-[13px] tnum">{result.mid}</span>,
-        <span className="text-[13px] tnum">{result.final}</span>,
-        <span className="text-[13px] font-semibold tnum">{result.total}</span>,
-        <Badge tone={result.grade === 'Pending' ? 'amber' : result.grade === 'A' ? 'emerald' : 'slate'}>{result.grade}</Badge>,
+        <span key="course" className="font-mono text-[12px] font-medium text-ink-700">
+            {result.course}
+        </span>,
+        <span key="title" className="font-medium text-ink-800">
+            {result.title}
+        </span>,
+        <span key="ca" className="text-[13px] tnum">
+            {result.ca}
+        </span>,
+        <span key="mid" className="text-[13px] tnum">
+            {result.mid}
+        </span>,
+        <span key="final" className="text-[13px] tnum">
+            {result.final}
+        </span>,
+        <span key="total" className="text-[13px] font-semibold tnum">
+            {result.total}
+        </span>,
+        <Badge key="grade" tone={result.grade === 'Pending' ? 'amber' : result.grade === 'A' ? 'emerald' : 'slate'}>
+            {result.grade}
+        </Badge>,
     ]);
 
     return (
@@ -52,42 +87,8 @@ export default function Results() {
                 </Card>
 
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                    <Card title="Session history" subtitle="Scores from previous sessions">
-                        <ul className="divide-y divide-ink-100">
-                            {standing.history.map((entry) => (
-                                <li key={entry.session} className="flex items-center justify-between gap-3 py-3">
-                                    <div>
-                                        <p className="text-[13px] font-medium text-ink-800">{entry.session}</p>
-                                        <p className="mt-0.5 text-xs text-ink-500">
-                                            {entry.courses} · {entry.units}
-                                        </p>
-                                    </div>
-                                    <span className="text-[15px] font-semibold text-ink-900 tnum">{entry.gpa}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </Card>
-                    <Card title="How these numbers were produced" subtitle="The policy behind your score sheet">
-                        <>
-                            <ul className="space-y-2.5">
-                                {standing.policy.map((rule) => (
-                                    <li key={rule} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-600">
-                                        <span className="mt-0.5 shrink-0 text-brand-600">
-                                            <StudyIcon name="check" className="w-4 h-4" />
-                                        </span>
-                                        {rule}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="mt-4 rounded-xl bg-ink-50 p-3.5">
-                                <p className="text-[12px] font-semibold text-ink-700">Query a result</p>
-                                <p className="mt-1 text-xs leading-relaxed text-ink-500">
-                                    If a score looks wrong, message the examination officer through Communication. Queries are recorded against
-                                    the result.
-                                </p>
-                            </div>
-                        </>
-                    </Card>
+                    <SessionHistory history={standing.history} />
+                    <ResultPolicy policy={standing.policy} />
                 </div>
 
                 <Note tone="amber">

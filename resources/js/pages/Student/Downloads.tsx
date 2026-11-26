@@ -7,18 +7,25 @@ import { Action } from '@/components/ui/controls/Action';
 import { Table } from '@/components/ui/data-display/Table';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { StudyMetric, Note } from '@/components/learning/Parts';
+import { FeatureStatusCard } from '@/components/students/FeatureStatusCard';
 
 export default function Downloads() {
     const { notify } = useWorkspaceOverlays();
     const rows = offlineDownloads.map((item) => [
-        <div className="min-w-0">
+        <div key="material" className="min-w-0">
             <p className="truncate font-medium text-ink-800">{item.name}</p>
             <p className="truncate text-[11px] text-ink-400">{item.course}</p>
         </div>,
-        <span className="text-[13px] tnum">{item.size}</span>,
-        <span className="text-[12.5px] text-ink-500">{item.synced}</span>,
-        <Badge tone="emerald">Available offline</Badge>,
-        <div className="flex justify-end">
+        <span key="size" className="text-[13px] tnum">
+            {item.size}
+        </span>,
+        <span key="saved" className="text-[12.5px] text-ink-500">
+            {item.synced}
+        </span>,
+        <Badge key="status" tone="emerald">
+            Available offline
+        </Badge>,
+        <div key="remove" className="flex justify-end">
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => notify(`${item.name} removed from this device`)}>
                 Remove
             </button>
@@ -55,31 +62,23 @@ export default function Downloads() {
                 </Card>
 
                 <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                    <Card title="Mobile access" subtitle="What the phone application can do">
-                        <ul className="divide-y divide-ink-100">
-                            {deviceStudy.mobileFeatures.map((item) => (
-                                <li key={item.label} className="flex items-center justify-between gap-3 py-2.5">
-                                    <span className="text-[13px] text-ink-700">{item.label}</span>
-                                    <Badge tone={item.state === 'Available' ? 'emerald' : 'amber'}>{item.state}</Badge>
-                                </li>
-                            ))}
-                        </ul>
-                    </Card>
-                    <Card title="Accessibility" subtitle="Target: WCAG 2.2 level AA">
-                        <ul className="divide-y divide-ink-100">
-                            {deviceStudy.accessibilityFeatures.map((item) => (
-                                <li key={item.label} className="flex items-center justify-between gap-3 py-2.5">
-                                    <span className="text-[13px] text-ink-700">{item.label}</span>
-                                    <Badge tone={item.state === 'Supported' ? 'emerald' : 'amber'}>{item.state}</Badge>
-                                </li>
-                            ))}
-                        </ul>
-                    </Card>
+                    <FeatureStatusCard
+                        title="Mobile access"
+                        subtitle="What the phone application can do"
+                        items={deviceStudy.mobileFeatures}
+                        supported="Available"
+                    />
+                    <FeatureStatusCard
+                        title="Accessibility"
+                        subtitle="Target: WCAG 2.2 level AA"
+                        items={deviceStudy.accessibilityFeatures}
+                        supported="Supported"
+                    />
                 </div>
 
                 <Note tone="sky">
-                    Offline copies hold the material as it was when it was saved. Replacing a file on the server does not change a copy already
-                    on your device.
+                    Offline copies hold the material as it was when it was saved. Replacing a file on the server does not change a copy
+                    already on your device.
                 </Note>
             </div>
         </div>

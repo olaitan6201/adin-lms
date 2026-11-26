@@ -9,6 +9,7 @@ export const notifications = [
 export const pending = studentAssignments.work
     .filter(({ assignment, current }) => submissionWindow(assignment, studentAssignments.sampleTime) === 'Open' && !current)
     .map(({ assignment }) => ({
+        id: assignment.id,
         title: assignment.title,
         course: assignment.course,
         due: assignment.due,

@@ -7,11 +7,12 @@ export function useAssignmentRecords(
     submissions: Submission[],
     awaiting: number,
     enrolment: number,
+    initialScript?: Submission,
 ) {
     const [records, setRecords] = useState({ rows: assignments, queue: submissions, awaiting });
     const { rows, queue } = records;
     const [edit, setEdit] = useState<Assignment | 'new'>();
-    const [mark, setMark] = useState<Submission>();
+    const [mark, setMark] = useState<Submission | undefined>(initialScript);
     function saveAssignment(draft: AssignmentDraft) {
         if (!edit) {
             return;

@@ -16,6 +16,7 @@ import { useAssignmentRecords } from './assignments/useAssignmentRecords';
 
 export default function AssignmentsDesk({
     lecturer = false,
+    initialSubmissionId,
     assignments,
     submissions,
     awaiting,
@@ -28,6 +29,7 @@ export default function AssignmentsDesk({
     timing: FieldSpec[];
     ruleFields: FieldSpec[];
     lecturer?: boolean;
+    initialSubmissionId?: string;
     assignments: Assignment[];
     submissions: Submission[];
     awaiting: number;
@@ -35,7 +37,9 @@ export default function AssignmentsDesk({
     opens: string;
     enrolment: number;
 }) {
-    const [tab, setTab] = useState(0);
+    const initialScript = submissions.find((script) => script.id === initialSubmissionId
+        && assignments.some((assignment) => assignment.id === script.assignmentId));
+    const [tab, setTab] = useState(initialScript ? 1 : 0);
     const {
         rows,
         queue,
@@ -46,7 +50,7 @@ export default function AssignmentsDesk({
         setMark,
         saveMark,
         saveAssignment,
-    } = useAssignmentRecords(assignments, submissions, awaiting, enrolment);
+    } = useAssignmentRecords(assignments, submissions, awaiting, enrolment, initialScript);
     const [rules, setRules] = useState<Values>({});
     const [checks, setChecks] = useState(feedbackChecks.slice(0, 3));
     const [filter, setFilter] = useState('');

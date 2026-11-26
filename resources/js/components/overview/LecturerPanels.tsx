@@ -1,3 +1,5 @@
+import { selectionFragment } from '@/lib/assignmentSelection';
+import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { Offering, Submission, MetricBar } from './panelTypes';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -61,7 +63,12 @@ export function Marking({ submissions }: { submissions: readonly Submission[] })
                         {s.late ? 'Late' : 'On time'}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="lecturer/assignments">Marking desk</Go>
+                        <a
+                            className="btn btn-outline btn-sm"
+                            href={workspaceUrl('lecturer/assignments') + selectionFragment('submission', s.id)}
+                        >
+                            Marking desk
+                        </a>
                     </div>,
                 ])}
             />

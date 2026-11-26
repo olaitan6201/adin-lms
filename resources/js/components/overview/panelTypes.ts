@@ -34,6 +34,7 @@ export type Offering = {
     completion: number;
 };
 export type Submission = {
+    id: string;
     student: string;
     matric: string;
     assignment: string;
@@ -47,6 +48,7 @@ export type StudentCourse = {
     lessons: string;
 };
 export type PendingWork = {
+    id: string;
     title: string;
     course: string;
     due: string;

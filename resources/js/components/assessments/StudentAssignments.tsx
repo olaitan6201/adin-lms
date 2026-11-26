@@ -18,14 +18,18 @@ export default function StudentAssignments({
     rules,
     sizeLimit,
     sampleTime,
+    initialAssignmentId,
 }: {
     work: StudentWork[];
     rules: [string, string][];
     sizeLimit: number;
     sampleTime: number;
+    initialAssignmentId?: string;
 }) {
     const [records, setRecords] = useState(work);
-    const [selectedId, selectAssignment] = useState<string>();
+    const [selectedId, selectAssignment] = useState(() => work.find(({ assignment, current }) =>
+        assignment.id === initialAssignmentId && !current && submissionWindow(assignment, sampleTime) === 'Open',
+    )?.assignment.id);
     const [message, setMessage] = useState('');
     const selected = records.find((record) => record.assignment.id === selectedId);
     const outstanding = records.filter(

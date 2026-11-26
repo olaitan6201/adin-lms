@@ -1,3 +1,5 @@
+import { selectionFragment } from '@/lib/assignmentSelection';
+import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { StudentCourse, PendingWork, Result, Notice } from './panelTypes';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -69,7 +71,12 @@ export function Pending({ pending }: { pending: readonly PendingWork[] }) {
                         {a.state}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="student/assignments">Assignments</Go>
+                        <a
+                            className="btn btn-outline btn-sm"
+                            href={workspaceUrl('student/assignments') + selectionFragment('assignment', a.id)}
+                        >
+                            Assignments
+                        </a>
                     </div>,
                 ])}
             />

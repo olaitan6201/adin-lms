@@ -30,7 +30,9 @@ export function AccessFrame({ mode, eyebrow, title, intro, children }: {
     mode: keyof typeof identityCopy; eyebrow: string; title: string; intro: string; children: ReactNode;
 }) {
     const copy = identityCopy[mode];
-    return <main className="pr-4 pb-20 sm:pr-6 lg:pr-8"><div className="auth-shell mx-auto w-full max-w-[1560px]">
+    return <>
+        <a className="skip-link" href="#access-content">Skip to main content</a>
+        <main id="access-content" tabIndex={-1} className="pr-4 pb-20 outline-none sm:pr-6 lg:pr-8"><div className="auth-shell mx-auto w-full max-w-[1560px]">
         <Head title={eyebrow} />
         <aside className="auth-aside">
             <div>
@@ -68,7 +70,7 @@ export function AccessFrame({ mode, eyebrow, title, intro, children }: {
                 </div>
             </div>
         </section>
-    </div></main>;
+    </div></main></>;
 }
 
 export function AccessField({ label, hint, className = '', ...props }: InputHTMLAttributes<HTMLInputElement> & {

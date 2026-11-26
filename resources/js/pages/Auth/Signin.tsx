@@ -17,7 +17,7 @@ export default function Signin() {
                 <label className="flex items-center gap-2 text-[12.5px] text-ink-600">
                     <input type="checkbox" className="h-4 w-4 rounded border-ink-300 text-brand-600" />Keep me signed in on this device
                 </label>
-                <Link href={workspaceUrl('auth/recover')} className="text-[12.5px] font-medium text-brand-700 hover:underline">Forgotten your password?</Link>
+                <Link href={workspaceUrl('auth/recover')} className="text-center text-[12.5px] font-medium text-brand-700 hover:underline">Forgotten your password?</Link>
             </div>
             <button className="btn btn-primary w-full justify-center" type="submit">Sign in</button>
         </form>

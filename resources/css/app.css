@@ -13,6 +13,7 @@
 @import './learning/course.css';
 @import './assessments/desk.css';
 @import './assessments/panels.css';
+@import './reports/print.css';
 
 @custom-variant dark (&:is(.dark *));
 

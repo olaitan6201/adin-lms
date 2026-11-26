@@ -1,5 +1,4 @@
 import type { ReportsData, ReportScopeId, ReportTableData } from '@/types/reports/analytics';
-import '../../../css/reports/print.css';
 import { useState, type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';

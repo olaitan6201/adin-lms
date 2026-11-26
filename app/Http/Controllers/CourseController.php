@@ -18,7 +18,7 @@ class CourseController extends Controller
 {
     public function index(Request $request, ScopedAuthority $authority): Response
     {
-        return Inertia::render('Courses', [
+        return Inertia::render('Learning/Courses/Index', [
             'workloadUrl' => $request->user()->lecturer ? route('workload.index') : null,
             'historyUrl' => $request->user()->student
                 ? route('students.history', $request->user()->student)
@@ -37,7 +37,7 @@ class CourseController extends Controller
 
         $teaching = $this->teaching($request)->where('teaching_allocations.offering_id', $offering->id)->exists();
 
-        return Inertia::render('Course', [
+        return Inertia::render('Learning/Courses/Show', [
             'course' => $course,
             'teaching' => $teaching,
             'learningToolsUrl' => route('integrations.index', $offering, false),

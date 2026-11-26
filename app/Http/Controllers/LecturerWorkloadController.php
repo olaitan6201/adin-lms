@@ -19,7 +19,7 @@ class LecturerWorkloadController extends Controller
         $termId = $request->query('term');
         abort_unless($termId === null || is_string($termId), 404);
 
-        return Inertia::render('Workload', [
+        return Inertia::render('Staff/Workload', [
             'report' => null,
             'workload' => $workload->forUser($request->user(), $termId === '' ? null : $termId),
         ]);
@@ -30,7 +30,7 @@ class LecturerWorkloadController extends Controller
         Gate::authorize('viewRoster', $offering);
         abort_unless($workload->isAllocatedTo($request->user(), $offering), 403);
 
-        return Inertia::render('Workload', [
+        return Inertia::render('Staff/Workload', [
             'report' => $workload->classReport($request->user(), $offering) + [
                 'groups' => $groups->forOffering($offering),
                 'activity' => $activity->byOffering($request->user(), now()->startOfMonth()->toDateString(), today()->toDateString(), $offering->id)->first(),

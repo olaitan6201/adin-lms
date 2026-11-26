@@ -1,6 +1,6 @@
 import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { ValidatedSelect } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head, Link } from '@inertiajs/react';

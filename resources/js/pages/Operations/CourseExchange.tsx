@@ -5,10 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
-import { useCourseTransfer, type Format } from '../components/useCourseTransfer';
+import { useCourseTransfer, type Format } from '@/components/operations/useCourseTransfer';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { CourseHeader } from './Learning/CourseHeader';
+import { CourseHeader } from '../Learning/CourseHeader';
 
 type Offering = {
     id: string;

@@ -1,9 +1,9 @@
-import { PortalField } from '../components/PortalForm';
+import { PortalField } from '@/components/PortalForm';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import { TeachingFigures, type Activity } from '../components/workload/TeachingFigures';
-import { CourseHeader } from './Learning/CourseHeader';
+import { TeachingFigures, type Activity } from '@/components/workload/TeachingFigures';
+import { CourseHeader } from '../Learning/CourseHeader';
 
 type Props = {
     staff: {

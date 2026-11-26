@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { useId, useLayoutEffect, useRef, type ComponentProps } from 'react';
-import { PortalField } from './PortalForm';
+import { PortalField } from '../PortalForm';
 
 export function OperationsInput(props: ComponentProps<typeof PortalField>) {
     return <PortalField {...props} announceError={false} />;

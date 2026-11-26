@@ -22,7 +22,7 @@ final class OperationsController
 {
     public function index(ConsentRegister $register, InfrastructureDesk $desk): Response
     {
-        return Inertia::render('Operations', [
+        return Inertia::render('Operations/Index', [
             'activeSessions' => AuthSession::whereNull('revoked_at')->where('expires_at', '>', now())->count(),
             'failedDeliveries' => NotificationDelivery::where('status', DeliveryStatus::Failed)->count(),
             'failedLogins' => LoginEvent::whereIn('outcome', [

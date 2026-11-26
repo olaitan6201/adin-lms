@@ -47,7 +47,7 @@ class StudentHistoryController extends Controller
                 'academic_levels.label as level',
             ]);
 
-        return Inertia::render('StudentHistory', [
+        return Inertia::render('Student/History', [
             'student' => $student->only('matric_number', 'source_name', 'source_email') + [
                 'status' => $student->status?->value,
                 'photo' => StudentPhoto::where('student_id', $student->id)->exists() ? route('students.photo', $student) : null,

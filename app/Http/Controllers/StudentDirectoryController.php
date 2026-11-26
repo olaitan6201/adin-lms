@@ -26,7 +26,7 @@ class StudentDirectoryController extends Controller
             ->orWhereLike('matric_number', "%$search%")))->orderBy('external_student_id')
             ->simplePaginate(40, ['id', 'external_student_id', 'matric_number', 'source_name', 'status'])->withQueryString();
 
-        return Inertia::render('StudentDirectory', [
+        return Inertia::render('Student/Directory', [
             'students' => $students->items(), 'q' => $search,
             'next' => $students->nextPageUrl(), 'previous' => $students->previousPageUrl(),
             'manage' => $authority->institutionAllows($request->user(), 'academics.manage'),

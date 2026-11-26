@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import PrivacyAction, { type OperationChoice } from '../components/PrivacyAction';
-import PrivacyCaseRegister, { type CasePage } from '../components/PrivacyCaseRegister';
+import PrivacyAction, { type OperationChoice } from '@/components/operations/privacy/PrivacyAction';
+import PrivacyCaseRegister, { type CasePage } from '@/components/operations/privacy/PrivacyCaseRegister';
 import { DeskHeading } from '@/components/academics/DeskHeading';
 
 export default function PrivacyDesk({ csrf, operations, cases }: { csrf: string; operations: OperationChoice[]; cases: CasePage }) {

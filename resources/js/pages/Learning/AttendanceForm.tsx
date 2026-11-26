@@ -1,4 +1,4 @@
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { Label } from '@/components/ui/label';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';

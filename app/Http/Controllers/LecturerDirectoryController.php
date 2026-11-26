@@ -33,7 +33,7 @@ class LecturerDirectoryController extends Controller
                 'departments.name as department',
             ]);
 
-        return Inertia::render('StaffDirectory', [
+        return Inertia::render('Staff/Directory', [
             'staff' => $staff->getCollection()->map(
                 fn (Lecturer $lecturer) => $lecturer->only('id', 'staff_number', 'full_name', 'department') + [
                     'offerings' => $lecturer->allocations

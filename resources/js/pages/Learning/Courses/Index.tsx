@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { CourseHeader } from './Learning/CourseHeader';
+import { CourseHeader } from '../CourseHeader';
 import { Head, Link } from '@inertiajs/react';
 
 export type CourseSummary = {

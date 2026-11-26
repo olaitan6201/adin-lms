@@ -29,7 +29,7 @@ class CourseAccessTest extends TestCase
         $this->assertGuest();
         $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('courses.index'));
         $this->get('/courses')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Courses')->has('courses', 1)->where('courses.0.id', $course));
+            ->component('Learning/Courses/Index')->has('courses', 1)->where('courses.0.id', $course));
         $this->get("/courses/{$course}")->assertOk();
         $this->get("/courses/{$other}")->assertNotFound();
 

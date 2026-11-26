@@ -1,4 +1,4 @@
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ExamWindow } from './ExamWindow';

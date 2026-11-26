@@ -1,4 +1,4 @@
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { Material } from './contracts';
 import { ExternalResource } from './ExternalResource';

@@ -1,10 +1,10 @@
-import { NextCourseActivity } from './Learning/NextCourseActivity';
-import { CourseTools } from './Learning/CourseTools';
-import { CourseActivityList } from '../components/CourseActivityList';
+import { NextCourseActivity } from '../NextCourseActivity';
+import { CourseTools } from '../CourseTools';
+import { CourseActivityList } from '@/components/learning/CourseActivityList';
 import { Head, Link } from '@inertiajs/react';
-import type { CourseSummary } from './Courses';
-import { TeachingOutline } from './Learning/TeachingOutline';
-import { CourseHeader } from './Learning/CourseHeader';
+import type { CourseSummary } from './Index';
+import { TeachingOutline } from '../TeachingOutline';
+import { CourseHeader } from '../CourseHeader';
 import { Eye, MessageSquare, Plus } from 'lucide-react';
 
 export interface Activity {

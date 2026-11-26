@@ -1,5 +1,5 @@
 import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { ValidatedInput } from '../../assessment/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head } from '@inertiajs/react';

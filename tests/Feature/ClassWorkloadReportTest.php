@@ -42,7 +42,7 @@ class ClassWorkloadReportTest extends TestCase
             ->get(route('workload.show', $fixture['offering']));
 
         $response->assertOk()->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->where('report.class.id', $fixture['offering']->id)
             ->where('report.class.code', 'CSC101')
             ->where('report.allocation.lecturer', 'Dr Ada Lecturer')
@@ -60,7 +60,7 @@ class ClassWorkloadReportTest extends TestCase
 
         $this->get(route('workload.show', $fixture['offering']))->assertForbidden();
         $this->get('/workload')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->has('workload.classes', 0));
         $this->assertDatabaseMissing('teaching_allocations', ['id' => $fixture['allocation']->id]);
     }
@@ -78,7 +78,7 @@ class ClassWorkloadReportTest extends TestCase
 
         $this->get(route('workload.show', $fixture['offering']))->assertForbidden();
         $this->get('/workload')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->has('workload.classes', 0));
         $this->assertModelExists($fixture['allocation']);
     }

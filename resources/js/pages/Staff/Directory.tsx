@@ -1,9 +1,9 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
-import RecordForm, { field } from '../components/academics/RecordForm';
+import RecordForm, { field } from '@/components/academics/RecordForm';
 
-import { ChangeAllocation, RegisterLecturer, type DepartmentOption } from '../components/staff/StaffForms';
+import { ChangeAllocation, RegisterLecturer, type DepartmentOption } from '@/components/staff/StaffForms';
 import { DeskHeading } from '@/components/academics/DeskHeading';
 import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 

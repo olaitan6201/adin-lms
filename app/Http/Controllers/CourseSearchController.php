@@ -32,7 +32,7 @@ class CourseSearchController extends Controller
             ->orderBy('courses.code')->orderBy('offerings.id')->limit(26)
             ->get(['offerings.id', 'courses.code', 'curriculum_courses.title', 'offerings.external_offering_id']);
 
-        return Inertia::render('CourseSearch', [
+        return Inertia::render('Learning/Courses/Search', [
             'term' => $term,
             'matches' => $results->take(25)->values(),
             'truncated' => $results->count() > 25,

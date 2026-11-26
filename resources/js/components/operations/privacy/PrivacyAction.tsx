@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { useId, useState, type FormEvent } from 'react';
-import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
+import { OperationsInput, OperationsSelect, CorrectionFocus } from '../OperationsFields';
 
 type Mode = 'approve' | 'execute' | 'refer';
 export type OperationChoice = { value: string; label: string };

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { InfrastructureReadings } from './InfrastructureReadings';
 import { Form } from '@inertiajs/react';
 import { RegistryPanel } from '@/components/academics/RegistryPanel';
-import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
+import { OperationsInput, OperationsSelect, CorrectionFocus } from '../OperationsFields';
 
 export type Infrastructure = {
     backup: { state: string; run?: string; finished_at?: string; overdue?: boolean | null };

@@ -16,7 +16,7 @@ final class PortabilityController
 {
     public function desk(): \Inertia\Response
     {
-        return Inertia::render('CourseExchange', [
+        return Inertia::render('Operations/CourseExchange', [
             'csrf' => csrf_token(),
             'uploadLimit' => min(9437184, UploadedFile::getMaxFilesize()),
             'offerings' => Offering::orderByDesc('id')->limit(100)->get(['id', 'external_offering_id', 'status']),

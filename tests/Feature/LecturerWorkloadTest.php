@@ -40,7 +40,7 @@ class LecturerWorkloadTest extends TestCase
             ->get('/workload?term='.$fixture['currentTerm']->id);
 
         $response->assertOk()->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->where('report', null)
             ->has('workload.terms', 2)
             ->where('workload.selected_term', $fixture['currentTerm']->id)
@@ -56,7 +56,7 @@ class LecturerWorkloadTest extends TestCase
             ->assertDontSee('93.12345678');
 
         $this->get('/workload?term='.$fixture['otherTerm']->id)->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->where('workload.selected_term', $fixture['otherTerm']->id)
             ->has('workload.classes', 1)
             ->where('workload.classes.0.id', $fixture['other']->id)
@@ -76,7 +76,7 @@ class LecturerWorkloadTest extends TestCase
         $this->actingAs($fixture['user']->fresh())
             ->get('/workload?term='.$fixture['currentTerm']->id)
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Workload')
+                ->component('Staff/Workload')
                 ->where('workload.classes.1.totals', [
                     'enrolled' => 1,
                     'completed' => 0,
@@ -90,7 +90,7 @@ class LecturerWorkloadTest extends TestCase
         $fixture = $this->fixture();
 
         $this->actingAs($fixture['user']->fresh())->get('/workload')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->where('workload.selected_term', $fixture['currentTerm']->id)
             ->has('workload.classes', 2));
     }
@@ -112,7 +112,7 @@ class LecturerWorkloadTest extends TestCase
         Lecturer::factory()->create(['user_id' => $user->id]);
 
         $this->actingAs($user)->get('/workload')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Workload')
+            ->component('Staff/Workload')
             ->has('workload.terms', 0)
             ->where('workload.selected_term', null)
             ->has('workload.classes', 0)

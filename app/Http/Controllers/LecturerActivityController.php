@@ -22,7 +22,7 @@ class LecturerActivityController extends Controller
         $from = $dates['from'] ?? now()->startOfMonth()->toDateString();
         $until = $dates['until'] ?? now()->toDateString();
 
-        return Inertia::render('LecturerActivity', [
+        return Inertia::render('Staff/Activity', [
             'staff' => $lecturer->only('id', 'staff_number') + ['name' => $lecturer->user->full_name],
             'from' => $from, 'until' => $until,
             'rows' => $activity->byOffering($lecturer->user, $from, $until),

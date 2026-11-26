@@ -1,5 +1,5 @@
 import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
 import { Head, Link } from '@inertiajs/react';
 import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';

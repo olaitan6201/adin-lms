@@ -39,7 +39,7 @@ class CourseSearchTest extends TestCase
         Enrolment::factory()->create(['offering_id' => $withdrawn->id, 'student_id' => $student->id, 'status' => 'withdrawn']);
 
         $this->actingAs($user)->get('/search?q=mAtH')->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('CourseSearch')->has('matches', 1)->where('matches.0.id', $visible->id)
+            ->component('Learning/Courses/Search')->has('matches', 1)->where('matches.0.id', $visible->id)
             ->where('matches.0.title', 'Maths and Logic')->missing('matches.0.student_id'));
         foreach (['', '%', '_'] as $term) {
             $this->get('/search?q='.urlencode($term))->assertInertia(fn (AssertableInertia $page) => $page->has('matches', 0));

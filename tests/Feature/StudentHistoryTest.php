@@ -44,7 +44,7 @@ class StudentHistoryTest extends TestCase
             ->get($url)
             ->assertInertia(
                 fn (AssertableInertia $page) => $page
-                    ->component('StudentHistory')
+                    ->component('Student/History')
                     ->has('records', 1)
                     ->where('records.0.result.grade', 'A')
                     ->where('records.0.status', 'withdrawn'),

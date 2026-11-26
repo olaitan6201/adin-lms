@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Form } from '@inertiajs/react';
-import { OperationsInput, CorrectionFocus } from './OperationsFields';
+import { OperationsInput, CorrectionFocus } from '../OperationsFields';
 
 export default function RetentionPolicy({ days: retentionDays }: { days: number | null }) {
     return (

@@ -1,5 +1,5 @@
 import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { CriterionFeedback, type CriterionScore } from '../../assessment/CriterionFeedback';
 import { Head } from '@inertiajs/react';
 import { AssignmentLimits } from '../../assessment/AssignmentLimits';

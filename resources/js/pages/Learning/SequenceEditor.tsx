@@ -1,7 +1,7 @@
-import { CourseDisclosure } from '@/components/CourseDisclosure';
+import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
-import type { Activity } from '../Course';
+import type { Activity } from './Courses/Show';
 
 type SequenceEditorProps = {
     activities: Activity[];

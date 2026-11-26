@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { OperationsInput, OperationsSelect, CorrectionFocus } from './OperationsFields';
+import { OperationsInput, OperationsSelect, CorrectionFocus } from '../OperationsFields';
 
 type CaseFile = {
     id: string;

@@ -1,11 +1,11 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { VerifiedRecord } from '../components/identity/VerifiedRecord';
-import { PortalField } from '../components/PortalForm';
+import { VerifiedRecord } from '@/components/shared/records/VerifiedRecord';
+import { PortalField } from '@/components/PortalForm';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Form, Head, Link } from '@inertiajs/react';
-import { DeskHeading } from '../components/academics/DeskHeading';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Student = {

@@ -24,7 +24,7 @@ final class PrivacyController
 {
     public function show(Request $request): Response
     {
-        return Inertia::render('OperationsConsent', [
+        return Inertia::render('Operations/Consent', [
             'notice' => ConsentRegister::NOTICE,
             'granted' => PrivacyConsent::where('user_id', $request->user()->id)->where('purpose', ConsentRegister::PURPOSE)
                 ->where('notice_version', ConsentRegister::NOTICE)->whereNull('withdrawn_at')->exists(),
@@ -33,7 +33,7 @@ final class PrivacyController
 
     public function desk(): Response
     {
-        return Inertia::render('PrivacyDesk', [
+        return Inertia::render('Operations/Privacy', [
             'csrf' => csrf_token(),
             'cases' => CaseFileResource::collection(PrivacyCaseFile::with('receipts')->orderByDesc('updated_at')->orderByDesc('id')->simplePaginate(15)),
             'operations' => [

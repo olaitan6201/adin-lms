@@ -29,7 +29,7 @@ class OperationsPrivacyTest extends TestCase
         $this->travel(3)->days();
         $this->actingAs($subject)->postJson('/operations/consent', ['grant' => true, 'notice' => '1'])->assertOk();
         $this->operator();
-        $this->get('/operations')->assertInertia(fn (AssertableInertia $page) => $page->component('Operations')->where('retentionDays', null));
+        $this->get('/operations')->assertInertia(fn (AssertableInertia $page) => $page->component('Operations/Index')->where('retentionDays', null));
         $this->postJson('/operations/retention', ['days' => 0])->assertUnprocessable();
         $this->post('/operations/retention', ['days' => 2])->assertRedirect('/operations');
         $base = "/operations/privacy/{$subject->id}";

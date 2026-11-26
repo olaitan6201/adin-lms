@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import InfrastructurePanel, { type Infrastructure } from '../components/InfrastructurePanel';
-import BrandingPanel from '../components/BrandingPanel';
-import RetentionPolicy from '../components/RetentionPolicy';
+import InfrastructurePanel, { type Infrastructure } from '@/components/operations/infrastructure/InfrastructurePanel';
+import BrandingPanel from '@/components/operations/BrandingPanel';
+import RetentionPolicy from '@/components/operations/privacy/RetentionPolicy';
 import { DeskHeading } from '@/components/academics/DeskHeading';
 
 type Status = {

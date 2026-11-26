@@ -1,12 +1,13 @@
-export type PrivacyMode = 'approve' | 'execute' | 'refer';
-type Outcome = { result: string } | { errors: Record<string, string> };
+import type { PrivacyOperation, Receipt } from './privacyOperation';
 
-export async function submitPrivacyAction(mode: PrivacyMode, csrf: string, fields: FormData): Promise<Outcome> {
-    const subject = encodeURIComponent(String(fields.get('subject')));
-    const approval = encodeURIComponent(String(fields.get('approval')));
-    const path = mode === 'refer' ? 'incidents' : mode === 'approve' ? `${subject}/approvals` : `${subject}/execute/${approval}`;
-    fields.delete('subject');
-    fields.delete('approval');
+export type PrivacyMode = 'approve' | 'execute' | 'refer';
+type Outcome = { result: Receipt } | { errors: Record<string, string> };
+
+export async function submitPrivacyAction(operation: PrivacyOperation, csrf: string, fields: FormData): Promise<Outcome> {
+    const path = operation.target(fields);
+    if (path === null) {
+        return { errors: { form: 'Confirm the identifiers against the approval receipt before submitting.' } };
+    }
 
     const response = await fetch(`/operations/privacy/${path}`, {
         method: 'POST',
@@ -15,11 +16,7 @@ export async function submitPrivacyAction(mode: PrivacyMode, csrf: string, field
     });
     if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         const data = await response.json();
-        if (mode === 'refer') return { result: `Referral receipt: ${data.audit}` };
-
-        if (mode === 'approve') return { result: `Approval receipt for ${fields.get('reference')}: ${data.approval}` };
-
-        return { result: JSON.stringify(data, null, 2) };
+        return { result: operation.receipt(data, fields) };
     }
 
     if (response.status === 422) {
@@ -27,10 +24,8 @@ export async function submitPrivacyAction(mode: PrivacyMode, csrf: string, field
         return { errors: Object.fromEntries(Object.entries(errors).map(([field, messages]) => [field, messages[0]])) };
     }
 
-    if (response.status === 404 && mode !== 'refer') {
-        return mode === 'approve'
-            ? { errors: { subject: 'Check the subject account UUID in the restricted case system.' } }
-            : { errors: { approval: 'Check the subject and approval UUIDs against the same approval receipt.' } };
+    if (response.status === 404 && operation.notFound) {
+        return { errors: operation.notFound };
     }
 
     const message = response.status === 409 ? (await response.json()).message : null;

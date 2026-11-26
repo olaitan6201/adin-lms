@@ -5,7 +5,7 @@ import { Meter, Note } from '@/components/learning/Parts';
 
 export default function Course() {
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="ACC302 · Week 3"
                 title="Intermediate Financial Accounting"
@@ -41,6 +41,6 @@ export default function Course() {
             <Note tone="sky">
                 Downloaded resources stay available offline. Uploaded work and examination responses always need a connection.
             </Note>
-        </>
+        </div>
     );
 }

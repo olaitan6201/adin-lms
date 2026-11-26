@@ -89,7 +89,7 @@ function Materials() {
 }
 export default function Progress() {
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Guardian access"
                 title="Approved progress"
@@ -126,6 +126,6 @@ export default function Progress() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

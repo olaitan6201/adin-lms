@@ -30,7 +30,7 @@ export function ContentPanel() {
     return (
         <>
             <Card
-                title="Weekly modules"
+                className="[&_th:last-child]:w-[90px] [&_th:first-child]:w-[70px]" title="Weekly modules"
                 subtitle="Content structure and learner progress per module"
                 actions={
                     <>
@@ -97,7 +97,7 @@ export function ResourcesPanel() {
 
     return (
         <Card
-            title="Resources"
+            className="[&_th:last-child]:w-[110px]" title="Resources"
             subtitle="Files, links and embeds attached to this course"
             actions={
                 <Action icon="upload" variant="primary" size="sm">

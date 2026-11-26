@@ -1,7 +1,7 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { offlineDownloads } from '@/components/learning/fixtures';
-import { StatTile, Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Note } from '@/components/learning/Parts';
+import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
+import { StudyMetric, Note } from '@/components/learning/Parts';
 
 export default function Downloads() {
     const { notify } = useWorkspaceOverlays();
@@ -21,7 +21,7 @@ export default function Downloads() {
     ]);
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Learning"
                 title="Offline downloads"
@@ -45,11 +45,11 @@ export default function Downloads() {
                         { label: 'Available to save', value: '11 files', hint: 'Across 4 courses' },
                         { label: 'Last sync', value: 'Today, 09:14', hint: 'All up to date' },
                     ].map((metric) => (
-                        <StatTile key={metric.label} label={metric.label} value={metric.value} deltaLabel={metric.hint} />
+                        <StudyMetric key={metric.label} {...metric} />
                     ))}
                 </div>
 
-                <Card title="Saved materials" subtitle="Kept on this device until you remove them">
+                <Card className="[&_th:last-child]:w-[100px]" title="Saved materials" subtitle="Kept on this device until you remove them">
                     <Table columns={['Material', 'Size', 'Saved', 'Status', '']} rows={rows} />
                 </Card>
 
@@ -96,6 +96,6 @@ export default function Downloads() {
                     on your device.
                 </Note>
             </div>
-        </>
+        </div>
     );
 }

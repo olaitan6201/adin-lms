@@ -1,14 +1,34 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { Drawer } from '@/components/workspace/Panels';
+import { useEffect, useRef } from 'react';
 import { Card } from '@/components/workspace/Elements';
 import { StudyIcon } from '@/components/learning/Parts';
 
 export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
     const { notify } = useWorkspaceOverlays();
     const closeSession = () => setOpen(false);
+    const panel = useRef<HTMLDialogElement>(null);
+    useEffect(() => {
+        if (open) {
+            panel.current?.showModal();
+        } else {
+            panel.current?.close();
+        }
+    }, [open]);
     return (
-        <Drawer title="Tutorial: consolidation of accounts" description="ACC302 · Today, 16:00 · 60 minutes" open={open} onOpenChange={setOpen}>
-            <div className="space-y-4">
+        <dialog ref={panel} inert={!open} aria-labelledby="session-title" aria-describedby="session-description" className="learning-session"
+            onCancel={closeSession} onClick={event => {
+                if (event.target === panel.current && event.clientX < panel.current.getBoundingClientRect().left) closeSession();
+            }}>
+            <div className="flex items-start justify-between gap-3 border-b border-ink-100 px-5 py-4">
+                <div>
+                    <h3 id="session-title" className="text-[15px] font-semibold text-ink-900">Tutorial: consolidation of accounts</h3>
+                    <p id="session-description" className="mt-0.5 text-[13px] text-ink-500">ACC302 · Today, 16:00 · 60 minutes</p>
+                </div>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={closeSession} aria-label="Close panel">
+                    <StudyIcon name="close" className="h-4 w-4" />
+                </button>
+            </div>
+            <div className="flex-1 space-y-4 overflow-y-auto p-5" data-scroll>
                 <Card title="Session definition">
                     <div className="space-y-3">
                         <label className="block">
@@ -66,6 +86,6 @@ export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open
                     Save and announce
                 </button>
             </div>
-        </Drawer>
+        </dialog>
     );
 }

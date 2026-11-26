@@ -38,7 +38,7 @@ export default function Course() {
     };
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="ACC302 · 2025/2026 first semester"
                 title="Intermediate Financial Accounting"
@@ -55,7 +55,7 @@ export default function Course() {
                 }
             />
 
-            <div className="space-y-5 [&_[role=tablist]]:rounded-xl [&_[role=tablist]]:bg-white [&_[role=tablist]]:shadow-soft">
+            <div className="learning-tabs space-y-5">
                 <Tabs
                     label="Course workspace"
                     items={[
@@ -74,6 +74,6 @@ export default function Course() {
                     invisible to them.
                 </Note>
             </div>
-        </>
+        </div>
     );
 }

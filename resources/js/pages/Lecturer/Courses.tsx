@@ -25,7 +25,7 @@ export default function Courses() {
     ]);
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Teaching"
                 title="My courses"
@@ -44,7 +44,7 @@ export default function Courses() {
 
             <div className="space-y-5">
                 <Card
-                    title="Allocated courses"
+                    className="[&_th:last-child]:w-[120px]" title="Allocated courses"
                     subtitle="2025/2026 first semester"
                     actions={
                         <>
@@ -115,6 +115,6 @@ export default function Courses() {
                     stays with an authorised officer.
                 </Note>
             </div>
-        </>
+        </div>
     );
 }

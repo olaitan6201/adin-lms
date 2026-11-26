@@ -1,0 +1,49 @@
+.learning-surface .tbl,
+.learning-surface .btn-sm,
+.learning-tabs [role="tab"] {
+    line-height: 1.25rem;
+}
+
+.learning-tabs > [data-orientation] > [data-scroll] {
+    border: 1px solid var(--color-ink-100);
+    border-radius: 1rem;
+    background: white;
+    box-shadow: var(--shadow-soft);
+}
+
+.learning-tabs [role="tablist"] {
+    border-bottom: 1px solid var(--color-ink-100);
+}
+
+.learning-tabs [role="tab"] > span {
+    line-height: inherit;
+}
+
+.learning-session {
+    position: fixed;
+    inset: 0 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 560px);
+    height: 100dvh;
+    max-height: none;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--color-ink-100);
+    background: white;
+    color: inherit;
+    box-shadow: var(--shadow-lift);
+}
+
+.learning-session:not([open]) {
+    translate: 100% 0;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.learning-session::backdrop {
+    background: rgb(10 17 28 / 45%);
+    backdrop-filter: blur(2px);
+}

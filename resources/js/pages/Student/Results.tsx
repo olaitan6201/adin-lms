@@ -1,6 +1,6 @@
 import { studentResults as releasedResults } from '@/components/learning/fixtures';
-import { StatTile, Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Note, StudyIcon } from '@/components/learning/Parts';
+import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
+import { StudyMetric, Note, StudyIcon } from '@/components/learning/Parts';
 
 export default function Results() {
     const rows = releasedResults.map((result) => [
@@ -14,7 +14,7 @@ export default function Results() {
     ]);
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Assessment"
                 title="Results"
@@ -34,7 +34,7 @@ export default function Results() {
                         { label: 'Units earned', value: '12', hint: 'no outstanding units' },
                         { label: 'Class position', value: '14', hint: 'of 68 in programme' },
                     ].map((metric) => (
-                        <StatTile key={metric.label} label={metric.label} value={metric.value} deltaLabel={metric.hint} />
+                        <StudyMetric key={metric.label} {...metric} />
                     ))}
                 </div>
 
@@ -102,6 +102,6 @@ export default function Results() {
                     Only released results appear here. A result under moderation stays hidden until it is approved and published.
                 </Note>
             </div>
-        </>
+        </div>
     );
 }

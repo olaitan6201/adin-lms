@@ -1,7 +1,20 @@
 import { type ReactNode } from 'react';
 import { Icon } from '@/components/workspace/Elements';
+import './learning.css';
 
 export { Icon as StudyIcon };
+
+export function StudyMetric({ label, value, hint }: { label: string; value: string; hint: string }) {
+    return (
+        <article className="kpi">
+            <div>
+                <p className="kpi-label">{label}</p>
+                <p className="kpi-value">{value}</p>
+            </div>
+            <p className="text-xs text-ink-400">{hint}</p>
+        </article>
+    );
+}
 
 export function Note({ children, tone }: { children: ReactNode; tone: string }) {
     const warning = tone === 'amber';

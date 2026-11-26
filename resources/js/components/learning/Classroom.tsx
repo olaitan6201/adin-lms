@@ -35,7 +35,7 @@ function SessionTable({ openSession }: { openSession: () => void }) {
 
     return (
         <Card
-            title="Scheduled classes"
+            className="[&_th:last-child]:w-[110px]" title="Scheduled classes"
             subtitle="Meeting links are issued per session; no conferencing vendor is mandated"
             actions={
                 <>
@@ -55,7 +55,7 @@ export default function Classroom() {
     const openSession = () => setOpen(true);
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Classroom"
                 title="Live classroom"
@@ -82,6 +82,6 @@ export default function Classroom() {
                 </Note>
             </div>
             <SessionDrawer open={open} setOpen={setOpen} />
-        </>
+        </div>
     );
 }

@@ -24,7 +24,7 @@ export function AssignmentsPanel() {
     ]);
 
     return (
-        <Card title="Assignments in this course" subtitle="Instructions, rules and marking progress">
+        <Card className="[&_th:last-child]:w-[90px]" title="Assignments in this course" subtitle="Instructions, rules and marking progress">
             <Table columns={['Assignment', 'Submitted', 'State', '']} rows={rows} />
         </Card>
     );

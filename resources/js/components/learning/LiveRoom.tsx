@@ -101,7 +101,7 @@ export function Recordings() {
 
     return (
         <Card
-            title="Recordings and asynchronous material"
+            className="[&_th:last-child]:w-[180px]" title="Recordings and asynchronous material"
             subtitle="Linked to the module they belong to, with transcripts where captions are available"
         >
             <Table columns={['Recording', 'Length', 'Views', '']} rows={rows} />

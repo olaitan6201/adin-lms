@@ -69,7 +69,7 @@ export default function Courses() {
     ));
 
     return (
-        <>
+        <div className="learning-surface">
             <PageHeader
                 eyebrow="Learning"
                 title="My courses"
@@ -128,6 +128,6 @@ export default function Courses() {
                     A lesson opens when the lecturer publishes it. Saving a lesson for offline use keeps it on your device until you remove it.
                 </Note>
             </div>
-        </>
+        </div>
     );
 }

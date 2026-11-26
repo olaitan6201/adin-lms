@@ -7,7 +7,7 @@ import { Table } from '@/components/ui/data-display/Table';
 import type { Assignment, Submission, MarkingGuide } from '@/types/assessments/assignments';
 import { AssignmentEditor, MarkingPanel, feedbackChecks } from './AssignmentPanels';
 import { Checks } from './Editor';
-import { DrawerActive, Fields, Note, RecordName, Sections, Status, exportSheet, type FieldSpec, type Values } from './Controls';
+import { Fields, Note, RecordName, Sections, Status, exportSheet, type FieldSpec, type Values } from './Controls';
 
 export default function AssignmentsDesk({ lecturer = false, assignments, submissions, awaiting, guide, opens, enrolment, timing, ruleFields }: { timing: FieldSpec[]; ruleFields: FieldSpec[]; lecturer?: boolean; assignments: Assignment[]; submissions: Submission[]; awaiting: number; guide: MarkingGuide; opens: string; enrolment: number }) {
     const [tab, setTab] = useState(0);
@@ -38,19 +38,19 @@ export default function AssignmentsDesk({ lecturer = false, assignments, submiss
         {tab === 2 && <div className="grid gap-5 lg:grid-cols-2"><Card title="Submission rules" subtitle="Applied per assignment unless the lecturer overrides them"><Fields fields={ruleFields} values={rules} change={setRules}/></Card>
             <Card title="Feedback and return" subtitle="How marked work reaches the student"><Checks labels={feedbackChecks} selected={checks} change={setChecks}/></Card></div>}
         <Note>A submission receipt is issued on upload and every score change is retained with the reason and the author.</Note>
-        <DrawerActive value={!!edit}><AssignmentEditor timing={timing} opens={opens} course={assignments[0]?.course} key={edit === 'new' ? edit : edit?.id ?? 'closed'} row={edit === 'new' ? undefined : edit ?? rows[0]} rules={rules} close={() => setEdit(undefined)} save={v => {
+        {edit && <AssignmentEditor timing={timing} opens={opens} course={assignments[0]?.course} key={edit === 'new' ? edit : edit.id} row={edit === 'new' ? undefined : edit} rules={rules} close={() => setEdit(undefined)} save={v => {
             if (!edit) return;
             const base = edit === 'new' ? { id: crypto.randomUUID(), marked: 0, total: enrolment, submissions: 0, late: 0, state: 'scheduled' } : edit;
             const updated = { ...base, title: v.Title, course: v.Course, due: v.Closes.replace('T', ' '), settings: v };
             setRows(edit === 'new' ? [...rows, updated] : rows.map(r => r.id === edit.id ? updated : r));
             setQueue(queue.map(r => edit !== 'new' && r.assignment === edit.title ? { ...r, assignment: v.Title } : r));
             setEdit(undefined);
-        }}/></DrawerActive>
-        <DrawerActive value={!!mark}><MarkingPanel guide={guide} key={mark?.id ?? 'closed'} row={mark ?? queue[0]} close={() => setMark(undefined)} save={v => {
+        }}/>}
+        {mark && <MarkingPanel guide={guide} key={mark.id} row={mark} close={() => setMark(undefined)} save={v => {
             if (!mark) return;
             setQueue(queue.map(r => r.id === v.id ? v : r));
             if ((mark.score === null || mark.status === 'feedback draft') && v.status === 'feedback returned') setRows(rows.map(r => r.title === v.assignment ? { ...r, marked: Math.min(r.submissions, r.marked + 1) } : r));
             setMark(undefined);
-        }}/></DrawerActive>
+        }}/>}
     </div>;
 }

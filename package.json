@@ -6,6 +6,7 @@
         "build": "vite build",
         "typecheck": "tsc --noEmit",
         "test:structure": "node --test tests/frontend/structure.test.mjs",
+        "test:frontend": "node --test tests/frontend/*.test.mjs",
         "dev": "vite",
         "test:e2e": "npm run build && playwright test"
     },

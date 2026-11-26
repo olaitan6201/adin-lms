@@ -6,7 +6,7 @@ import { Icon } from '@/components/icons/Icon';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Session, Learner, AttendanceBand } from '@/types/assessments/attendance';
-import { DrawerActive, Drawer, RecordName, Sections, Status, exportSheet } from './Controls';
+import { Drawer, RecordName, Sections, Status, exportSheet } from './Controls';
 
 type Marks = Record<string, string>;
 const statuses = ['present', 'late', 'absent', 'excused'];
@@ -43,7 +43,7 @@ export default function AttendanceDesk({ lecturer = false, attendanceSessions, l
     const [session, open] = useState<Session>();
     const [registers, setRegisters] = useState<Record<string, Marks>>({});
     const report = <Action icon="chart" onClick={() => exportSheet('attendance', ['Class', 'Date', 'Present', 'Absent', 'Late'], rows.map(s => [s.title, s.date, s.present, s.absent, s.late]))}>Attendance report</Action>;
-    return <div className="assessment-view space-y-5"><PageHeader eyebrow="Attendance" title="Attendance" description={lecturer ? 'Take a register for your classes and keep an eye on students whose attendance is slipping.' : 'Institution-wide attendance monitoring with per-student history and threshold alerts.'} actions={<>{report}<Action variant="primary" icon="calendarCheck" onClick={() => open(rows[0])}>Open register</Action></>}/>
+    return <div className="assessment-view space-y-5"><PageHeader eyebrow="Attendance" title="Attendance" description={lecturer ? 'Take a register for your classes and keep an eye on students whose attendance is slipping.' : 'Institution-wide attendance monitoring with per-student history and threshold alerts.'} actions={<>{report}<Action variant="primary" icon="calendarCheck" disabled={!rows.length} onClick={() => open(rows[0])}>Open register</Action></>}/>
         <Sections counts={[rows.length]} labels={['Class registers', 'Per-student history']} active={tab} change={setTab}/>
         {tab === 0 ? <><Card className="session-list" title="Class registers" subtitle="One register per scheduled class, with the source of the mark recorded" actions={<><Badge>{rows.length} sessions this week</Badge>{report}</>}>
             <Table columns={['Class', 'Method', 'Present', 'Absent', 'Late', 'State', '']} rows={rows.map(s => [<RecordName name={s.title} meta={`${s.course} · ${s.date} · ${s.time}`}/>, <Badge tone={s.method === 'QR' ? 'sky' : 'slate'}>{s.method}</Badge>, <span className="text-brand-700">{s.present}</span>, s.absent, <span className="text-amber-700">{s.late}</span>, <Badge tone={s.state === 'closed' ? 'emerald' : s.state === 'open' ? 'amber' : 'slate'}>{s.state.charAt(0).toUpperCase() + s.state.slice(1)}</Badge>, <Action size="sm" onClick={() => open(s)}>{s.state === 'scheduled' ? 'Plan' : 'Register'}</Action>])}/>
@@ -53,13 +53,13 @@ export default function AttendanceDesk({ lecturer = false, attendanceSessions, l
         </Card></> : <Card title="Per-student history" subtitle="Attendance across all registered courses this semester"><Table columns={['Student', 'Percentage', 'Sessions', 'Standing']} rows={learners.map(r => [
             <RecordName name={r.name} meta={r.matric}/>, `${r.percent}%`, `${Math.round(r.percent * sessionCount / 100)} / ${sessionCount}`, <Badge tone={r.percent < 50 ? 'rose' : r.percent < 75 ? 'amber' : 'emerald'}>{r.percent < 50 ? 'Below threshold' : r.percent < 75 ? 'Watch' : 'Good'}</Badge>,
         ])}/></Card>}
-        <DrawerActive value={!!session}><Register roster={roster} codeSuffix={codeSuffix} key={session?.id ?? 'closed'} session={session ?? rows[0]} initial={registers[(session ?? rows[0]).id] ?? initialMarks(session ?? rows[0], roster)} close={() => open(undefined)} save={v => {
+        {session && <Register roster={roster} codeSuffix={codeSuffix} key={session.id} session={session} initial={registers[session.id] ?? initialMarks(session, roster)} close={() => open(undefined)} save={v => {
             if (!session) return;
             const original = registers[session.id] ?? initialMarks(session, roster);
             const total = (s: 'present' | 'absent' | 'late') => Math.max(0, session[s] + count(v, s) - count(original, s));
             setRegisters({ ...registers, [session.id]: v });
             setRows(rows.map(r => r.id === session.id ? { ...r, present: total('present'), absent: total('absent'), late: total('late'), state: r.state === 'scheduled' ? 'open' : r.state } : r));
             open(undefined);
-        }}/></DrawerActive>
+        }}/>}
     </div>;
 }

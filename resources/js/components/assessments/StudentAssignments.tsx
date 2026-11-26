@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { Assignment, Receipt, Feedback } from '@/types/assessments/assignments';
-import { Details, DrawerActive, Drawer, Note, RecordName, Status, inputClass } from './Controls';
+import { Details, Drawer, Note, RecordName, Status, inputClass } from './Controls';
 import { submitClass } from './Editor';
 
 const displayTitle = (a?: Assignment) => a?.shortTitle ?? a?.title;
@@ -53,12 +53,12 @@ export default function StudentAssignments({ assignments, work, initial, courseR
             <Card title="Feedback waiting" subtitle="Marked work returned to you"><div className="space-y-3">{feedback.map(f => <article key={f.id} className="rounded-xl border border-ink-100 p-3.5 text-sm">
                 <p className="text-[13px] font-medium text-ink-800">{displayTitle(assignments.find(a => a.id === f.id))}</p><p className="mt-1 text-[13px] leading-relaxed text-ink-600">{f.text}</p><div className="mt-2 flex items-center gap-2"><Badge tone="emerald">{f.score} / 100</Badge><Action size="sm" onClick={() => setScript(f)}>Script</Action></div></article>)}</div></Card>
         </div><Note>A submitted file can be replaced until the closing time. Your score and any written feedback appear here once the lecturer has marked the work.</Note>
-        <DrawerActive value={!!row}><SubmissionPanel sizeLimit={sizeLimit} key={row?.id ?? 'closed'} row={row ?? work[0]} receipt={receipts[(row ?? work[0]).id] ?? courseReceipts[(row ?? work[0]).id]} close={() => setRow(undefined)} save={r => {
+        {row && <SubmissionPanel sizeLimit={sizeLimit} key={row.id} row={row} receipt={receipts[row.id] ?? courseReceipts[row.id]} close={() => setRow(undefined)} save={r => {
             if (!row) return;
             setReceipts({ ...receipts, [row.id]: r });
             setMessage(`Work recorded locally. Receipt ${r.number} issued for ${r.file}.`);
             setRow(undefined);
-        }}/></DrawerActive>
+        }}/>}
         {script && <Drawer title="Marked script" subtitle={assignments.find(a => a.id === script.id)?.title} close={() => setScript(undefined)}><Badge tone="emerald">{script.score} / 100</Badge><Card title="Marker feedback">{script.text}</Card></Drawer>}
     </div>;
 }

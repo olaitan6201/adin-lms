@@ -1,5 +1,5 @@
 import type { FieldSpec } from '@/types/assessments/fields';
-import { createContext, useContext, useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -28,22 +28,18 @@ export function Note({ children, amber = false }: { children: ReactNode; amber?:
         <Icon name={amber ? 'alert' : 'info'} className="mt-0.5 size-4 shrink-0"/><span>{children}</span></div>;
 }
 
-export const DrawerActive = createContext(true);
-
 export function Drawer({ title, subtitle, close, children }: { title: string; subtitle?: string; close: () => void; children: ReactNode }) {
     const ref = useRef<HTMLDialogElement>(null);
     const id = useId();
-    const active = useContext(DrawerActive);
     useEffect(() => {
         const dialog = ref.current;
-        if (active) dialog?.showModal();
+        dialog?.showModal();
         return () => dialog?.close();
-    }, [active]);
+    }, []);
     const contents = <><header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-ink-100 bg-white px-5 py-4">
         <div><h2 id={id} className="text-[15px] font-semibold">{title}</h2><p className="mt-0.5 text-[13px] text-ink-500">{subtitle}</p></div>
         <button type="button" className="btn btn-ghost btn-sm" aria-label="Close panel" onClick={close}><Icon name="close" className="size-4"/></button>
     </header><div className="space-y-4 p-5">{children}</div></>;
-    if (!active) return <aside inert aria-hidden="true" className="pointer-events-none fixed inset-y-0 right-0 w-full max-w-xl translate-x-full overflow-hidden">{contents}</aside>;
     return <dialog ref={ref} aria-labelledby={id} onCancel={close} className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-full max-w-xl overflow-auto bg-white p-0 text-slate-800 shadow-xl backdrop:bg-slate-900/45">{contents}</dialog>;
 }
 

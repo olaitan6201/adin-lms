@@ -8,6 +8,11 @@
 [data-slot=sheet-overlay]:has(+ .portal-mobile-rail), [data-slot=sheet-overlay]:has(+ .ws-detail-drawer) { backdrop-filter: blur(2px); }
 [data-slot=sheet-overlay]:has(+ .ws-mobile-rail) { background-color: rgb(10 17 28 / 50%); }
 .ws-role-switch { text-align: left; flex-shrink: 0; }
+.ws-role-switch .portal-monogram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .ws-detail-drawer[data-slot=sheet-content] { width: min(100vw, 560px); max-width: none; gap: 0; background: white; }
 .ws-confirm[data-slot=dialog-content] { width: min(28rem, calc(100vw - 2rem)); max-width: none; gap: 0; padding: 1.25rem; border-radius: 1rem; background: white; }
 @media (max-width: 639px) {

@@ -60,7 +60,7 @@ export function WorkspacePalette() {
     return (
         <Dialog open={open} onOpenChange={toggle}>
             <DialogTrigger
-                className="ws-search flex items-center gap-2 rounded-[8px] border border-transparent px-2.5 py-1.5 text-left text-[13px] text-ink-500 hover:bg-ink-100 md:h-9 md:w-56 md:border-ink-200 md:bg-white md:px-3 md:py-0 md:text-ink-400 md:hover:border-ink-300"
+                className="ws-search flex items-center gap-2 rounded-lg border border-transparent px-2.5 py-1.5 text-left text-[13px] text-ink-500 transition-colors max-md:hover:bg-ink-100 max-md:hover:text-ink-800 md:h-9 md:w-56 md:border-ink-200 md:bg-white md:px-3 md:py-0 md:text-ink-400 md:hover:border-ink-300"
                 aria-label="Search"
             >
                 <Icon name="search" className="size-5 shrink-0 md:size-4" />

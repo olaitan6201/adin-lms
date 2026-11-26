@@ -3,8 +3,16 @@ import { Link, usePage } from '@inertiajs/react';
 
 const signIn = [
     [LockKeyhole, 'One account per person', 'Use your matric number, staff ID or institutional email address.'],
-    [ShieldCheck, 'Second factor for privileged roles', 'When prompted, confirm your sign-in with your authenticator app.'],
-    [History, 'A record of sign-in activity', 'Password checks and authenticator activity are recorded in sign-in history.'],
+    [
+        ShieldCheck,
+        'Second factor for privileged roles',
+        'When prompted, confirm your sign-in with your authenticator app.',
+    ],
+    [
+        History,
+        'A record of sign-in activity',
+        'Password checks and authenticator activity are recorded in sign-in history.',
+    ],
 ] as const;
 
 const recover = [
@@ -17,11 +25,7 @@ export function IdentityMark({ compact = false }: { compact?: boolean }) {
     const { branding } = usePage<{ branding: { institution: string; logoWhite: string; logoFull: string } }>().props;
     return (
         <Link href="/" aria-label={`${branding.institution} home`} className="inline-flex items-center gap-3">
-            <img
-                alt=""
-                src={branding.logoWhite || branding.logoFull}
-                className="h-10 w-12 shrink-0 object-contain"
-            />
+            <img alt="" src={branding.logoWhite || branding.logoFull} className="h-10 w-12 shrink-0 object-contain" />
             <div>
                 <p className="text-[15px] font-semibold leading-tight">AdinOpen LMS</p>
                 <p className={compact ? 'text-xs text-ink-600' : 'text-xs text-ink-300'}>{branding.institution}</p>

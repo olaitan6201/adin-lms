@@ -82,7 +82,10 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 announceError={false}
                                 required
                             />
-                            <Link className="justify-self-end text-[12.5px] font-medium text-brand-700 hover:underline" href="/forgot-password">
+                            <Link
+                                className="justify-self-end text-[12.5px] font-medium text-brand-700 hover:underline"
+                                href="/forgot-password"
+                            >
                                 Forgot your password?
                             </Link>
                             <SubmitButton processing={processing}>Sign in</SubmitButton>
@@ -99,7 +102,9 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                 Some roles require an authenticator code after the password check. Have your authenticator app ready.
             </p>
             <div className="mt-4 border-t border-ink-100 pt-5">
-                <Link className="text-[12.5px] font-medium text-ink-600 hover:text-ink-900" href="/">Return to the learning portal</Link>
+                <Link className="text-[12.5px] font-medium text-ink-600 hover:text-ink-900" href="/">
+                    Return to the learning portal
+                </Link>
             </div>
         </AccountTask>
     );

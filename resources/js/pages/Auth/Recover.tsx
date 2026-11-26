@@ -1,4 +1,5 @@
-import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
+import { AccessFrame } from '@/components/auth/AccessFrame';
+import { AccessField, AccessNote, useAccessNotice } from '@/components/auth/AccessControls';
 import { useWorkspaceShell } from '@/layouts/workspace/shellModel';
 
 export default function Recover() {
@@ -59,8 +60,8 @@ export default function Recover() {
             </form>
             <div className="mt-6 space-y-3">
                 <AccessNote warning>
-                    If the account has a registered second factor, recovery cannot be completed by code alone and the ICT
-                    Directorate must verify the requester in person.
+                    If the account has a registered second factor, recovery cannot be completed by code alone and the
+                    ICT Directorate must verify the requester in person.
                 </AccessNote>
             </div>
             {feedback}

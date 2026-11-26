@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
+import { AccessFrame } from '@/components/auth/AccessFrame';
+import { AccessField, AccessNote, useAccessNotice } from '@/components/auth/AccessControls';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { useWorkspaceShell } from '@/layouts/workspace/shellModel';
 
@@ -52,8 +53,8 @@ export default function Signin() {
             </form>
             <div className="mt-6 space-y-3">
                 <AccessNote>
-                    Accounts are issued by the Registrar. A student who cannot sign in should report to the ICT Directorate
-                    rather than create an account.
+                    Accounts are issued by the Registrar. A student who cannot sign in should report to the ICT
+                    Directorate rather than create an account.
                 </AccessNote>
                 <AccessNote warning>
                     Privileged roles are challenged for a second factor on every new device. A session left idle for 30

@@ -10,6 +10,7 @@ import { Announcements } from './Announcements';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
 import { type TeachingRole } from '@/types/identity/roles';
+import '../../../css/layouts/engagement.css';
 
 export function Communication({ role, data }: { data: CommunicationData; role: TeachingRole }) {
     const student = role === 'student';
@@ -18,7 +19,7 @@ export function Communication({ role, data }: { data: CommunicationData; role: T
     const [compose, setCompose] = useState(false);
     const [notice, setNotice] = useState('');
     const [unread, setUnread] = useState(() => data.messages.reduce((sum, m) => sum + m.unread, 0));
-    return <div className="space-y-5 [&_.btn-sm]:leading-5 [&_.tbl_th]:leading-5 [&_.tbl_td_p]:leading-5 [&_.tbl_td_.badge]:leading-5"><PageHeader eyebrow="Communication" title="Communication"
+    return <div className="engagement-workspace space-y-5 [&_[role=tab]>span]:text-ink-600"><PageHeader eyebrow="Communication" title="Communication"
         description={student ? 'Ask questions in course forums, message your lecturers directly, and read the notices published for your cohort.' : 'Moderated course forums, private messages, and announcements to cohorts and to the whole institution.'}
         actions={<><Action icon="bell" href={workspaceUrl(`${role}/settings/notifications`)}>Notification settings</Action>
             <Action variant="primary" icon="send" onClick={() => {

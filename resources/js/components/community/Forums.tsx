@@ -19,13 +19,13 @@ export function Forums({ student, forums, threads }: { forums: Forum[]; threads:
             actions={<Action size="sm" icon="plus" variant="primary" onClick={() => setSelected('new')}>New forum</Action>}>
             <Table columns={['Forum','Threads','Posts','Last activity','']} rows={list.map(f => [
                 <div className="min-w-0"><div className="flex items-center gap-2"><p className="truncate font-medium text-ink-800">{f.title}</p>{f.pinned && <Badge tone="amber">Pinned</Badge>}</div><p className="truncate text-[11.5px] text-ink-400">{f.course}</p></div>,
-                f.threads, f.posts, <span className="text-[12.5px] text-ink-500">{f.last}</span>, <div className="flex justify-end"><Action size="sm" onClick={() => setSelected(topics.find(t => t.forum === f.id)?.id ?? f.id)}>Moderate</Action></div>,
+                <span className="text-[13px] tnum">{f.threads}</span>, <span className="text-[13px] tnum">{f.posts}</span>, <span className="text-[12.5px] text-ink-500">{f.last}</span>, <div className="flex justify-end"><Action size="sm" onClick={() => setSelected(topics.find(t => t.forum === f.id)?.id ?? f.id)}>Moderate</Action></div>,
             ])}/>
         </Card>
         <Card className="[&_th:last-child]:w-[90px]" title="Recent threads" subtitle="Threads needing moderation or a lecturer response" actions={<Badge tone="amber">{topics.filter(t => !t.responses.length).length} need review</Badge>}>
             <Table columns={['Thread','Author','Replies','Updated','']} rows={topics.map(t => [
                 <div className="min-w-0"><p className="truncate font-medium text-ink-800">{t.title} {t.pinned && <Badge>Pinned</Badge>}</p><p className="truncate text-[11.5px] text-ink-400">{t.tag}</p></div>,
-                t.author, t.replies, <span className="text-[12.5px] text-ink-500">{t.updated}</span>, <div className="flex justify-end"><Action size="sm" onClick={() => setSelected(t.id)}>Open</Action></div>,
+                <span className="text-[13px] text-ink-600">{t.author}</span>, <span className="text-[13px] tnum">{t.replies}</span>, <span className="text-[12.5px] text-ink-500">{t.updated}</span>, <div className="flex justify-end"><Action size="sm" onClick={() => setSelected(t.id)}>Open</Action></div>,
             ])}/>
         </Card>
         {selected === 'new' && <Drawer title="New forum" close={close}><form className="space-y-4" onSubmit={e => {

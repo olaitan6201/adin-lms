@@ -9,6 +9,7 @@ import { Bars, Columns, DepartmentHeatmap, Mix, Trend } from './ReportCharts';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
 import { download } from '@/lib/download';
+import '../../../css/layouts/engagement.css';
 
 function exportSheet(scope: string, sheets: ReportSheet[]) {
     const escape = (s: string | number) => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
@@ -48,7 +49,7 @@ export function Reports({ data }: { data: ReportsData }) {
         if (format === 'PDF') window.print();
         else exportSheet(scope, data.exports[scope]);
     }
-    return <div className="space-y-5 [&_.btn-sm]:leading-5 [&_.tbl_th]:leading-5"><PageHeader eyebrow="Reporting and analytics" title="Reports and analytics"
+    return <div className="engagement-workspace space-y-5"><PageHeader eyebrow="Reporting and analytics" title="Reports and analytics"
         description="The same measures read at four scopes, from the institution down to one student."
         actions={<><Badge>Figures refresh nightly</Badge><Action icon="document" size="sm" onClick={() => exportReport('PDF')}>PDF</Action>
             <Action icon="sheet" size="sm" onClick={() => exportReport('Excel')}>Excel</Action></>}/>

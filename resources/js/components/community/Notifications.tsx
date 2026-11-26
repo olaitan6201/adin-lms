@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { Note } from '@/components/ui/feedback/Note';
 import { type WorkspaceRole } from '@/types/identity/roles';
+import '../../../css/layouts/engagement.css';
 
 type Settings = Record<string, boolean>;
 function readPrefs(key: string): Settings {
@@ -37,7 +38,7 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
         } catch { setStatus('Browser storage is unavailable. Your changes are still on this page.'); }
     }
     const saveButton = <Action icon="save" variant="primary" onClick={save}>Save preferences</Action>;
-    return <div className="space-y-5 [&_.btn-sm]:leading-5 [&_.tbl_th]:leading-5"><PageHeader eyebrow="Preferences" title="Notification settings" description="Choose what reaches you, on which channel, and when you are interrupted."
+    return <div className="engagement-workspace space-y-5"><PageHeader eyebrow="Preferences" title="Notification settings" description="Choose what reaches you, on which channel, and when you are interrupted."
         actions={<><Action icon="bell" onClick={() => setStatus('Test notification: your local notification preview is working.')}>Test notification</Action>{saveButton}</>}/>
         <Note>{data.defaultsNotice}</Note>
         <div role="status" className="empty:hidden">{status && <Note>{status}</Note>}</div>
@@ -47,15 +48,15 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
                 <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[13.5px] font-medium text-ink-800">{title}</p><p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-500">{description}</p></div><span className="shrink-0 rounded-full bg-ink-100 px-2.5 py-1 text-[11px] font-medium text-ink-600">{digest} digest</span></div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">{channels.map(({ label: channel, enabled }) => {
                     const id = `${title}:${channel}`;
-                    return <label className="flex items-center gap-2 rounded-lg border px-3 py-2 text-[12.5px]" key={id}>
-                        <input type="checkbox" className="size-4 accent-brand-600" checked={settings[id] ?? enabled} onChange={e => toggle(id,e.target.checked)}/>{channel}</label>;
+                    return <label className="flex items-center gap-2 rounded-lg border px-3 py-2 text-[12.5px] text-ink-700" key={id}>
+                        <input type="checkbox" className="size-4" checked={settings[id] ?? enabled} onChange={e => toggle(id,e.target.checked)}/>{channel}</label>;
                 })}</div>
             </fieldset>)}</div>
         </Card>
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2"><Card title="Quiet hours and escalation" subtitle="Urgent items always break through">
             <div className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border p-4"><p className="text-[13px] font-semibold">Quiet hours</p>
                 <p className="mt-1 text-[12.5px] leading-relaxed text-ink-500">{quietHours.description}</p>
-                <div className="mt-3 flex items-center gap-2 text-xs leading-[18px]"><span className="rounded-lg border px-2.5 py-1 font-mono">{quietHours.start}</span>to<span className="rounded-lg border px-2.5 py-1 font-mono">{quietHours.end}</span></div></div>
+                <div className="mt-3 flex items-center gap-2 text-xs leading-[18px] text-ink-700"><span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">{quietHours.start}</span><span className="text-ink-400">to</span><span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">{quietHours.end}</span></div></div>
                 <div className="rounded-xl border p-4"><p className="text-[13px] font-semibold">Escalation</p><p className="mt-1 text-[12.5px] leading-relaxed text-ink-500">{escalation.description}</p>
                     <p className="mt-3 flex items-center gap-2 text-xs leading-[18px] text-ink-600"><Icon name="target" className="size-4 text-brand-600"/>{escalation.timing}</p></div></div>
             <div className="mt-4 divide-y">{switches.map(({ name, description, enabled }) => <label key={name} className="flex items-start justify-between gap-6 py-3">
@@ -69,7 +70,7 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
                 setStatus('Other devices signed out in this local preview.');
             }}>Sign out other devices</Action>}>
             <Table columns={['Device','Last seen from','Last activity','State']} rows={(revoked ? devices.filter(d => d.current) : devices).map(({ device, location, last, state, current }) => [
-                <span className="flex items-center gap-2 text-[13px] leading-5 font-medium"><Icon name="monitor" className="size-4 text-ink-400"/>{device}</span>, <span className="text-[12.5px] text-ink-600">{location}</span>, <span className="text-[12.5px] text-ink-600">{last}</span>, <Badge tone={current ? 'emerald' : 'slate'}>{state}</Badge>,
+                <span className="flex items-center gap-2"><Icon name="monitor" className="size-4 text-ink-400"/><span className="text-[13px] font-medium text-ink-800">{device}</span></span>, <span className="text-[12.5px] text-ink-600">{location}</span>, <span className="text-[12.5px] text-ink-600">{last}</span>, <Badge tone={current ? 'emerald' : 'slate'}>{state}</Badge>,
             ])}/>
         </Card></div>
     </div>;

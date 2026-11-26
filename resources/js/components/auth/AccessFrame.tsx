@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { AlertIcon, CheckIcon, HistoryIcon, InfoIcon, KeyIcon, LockIcon, PhoneIcon, ShieldIcon } from '@/components/icons';
 import { useEffect, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { workspaceUrl } from '@/lib/workspaceUrl';
+import type { WorkspaceShellModel } from '@/types/navigation/shell';
 
 const identityCopy = {
     signin: {
@@ -26,8 +27,8 @@ const identityCopy = {
     },
 } as const;
 
-export function AccessFrame({ mode, eyebrow, title, intro, children }: {
-    mode: keyof typeof identityCopy; eyebrow: string; title: string; intro: string; children: ReactNode;
+export function AccessFrame({ mode, brand, eyebrow, title, intro, children }: {
+    mode: keyof typeof identityCopy; brand: WorkspaceShellModel['brand']; eyebrow: string; title: string; intro: string; children: ReactNode;
 }) {
     const copy = identityCopy[mode];
     return <>
@@ -37,10 +38,10 @@ export function AccessFrame({ mode, eyebrow, title, intro, children }: {
         <aside className="auth-aside">
             <div>
                 <div className="flex items-center gap-3">
-                    <img alt="" src="/brand/adin/crest.svg" className="h-10 w-auto shrink-0" />
+                    <img alt="" src={brand.crest} className="h-10 w-auto shrink-0" />
                     <div>
-                        <p className="text-[15px] font-semibold leading-tight text-white">AdinOpen LMS</p>
-                        <p className="text-[11.5px] leading-tight text-ink-400">Adin Open University</p>
+                        <p className="text-[15px] font-semibold leading-tight text-white">{brand.name}</p>
+                        <p className="text-[11.5px] leading-tight text-ink-400">{brand.institution}</p>
                     </div>
                 </div>
                 <h1 className="mt-12 max-w-md text-[30px] font-semibold leading-[1.15] tracking-[-0.02em] text-white">{copy.headline}</h1>

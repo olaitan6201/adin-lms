@@ -1,8 +1,10 @@
 import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
+import { useWorkspaceShell } from '@/layouts/workspace/shellModel';
 
 export default function Recover() {
     const { notify, feedback } = useAccessNotice();
-    return <AccessFrame mode="recover" eyebrow="Password recovery" title="Reset your password"
+    const { brand } = useWorkspaceShell();
+    return <AccessFrame mode="recover" brand={brand} eyebrow="Password recovery" title="Reset your password"
         intro="Enter the identifier issued to you. If it matches an active account, a recovery code is sent to the channel registered against it.">
         <form className="mt-7 space-y-4" onSubmit={event => {
             event.preventDefault();

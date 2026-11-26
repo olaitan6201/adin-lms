@@ -1,4 +1,4 @@
-import type { ShellNotice } from '@/layouts/workspace/shellModel';
+import type { ShellNotice } from '@/types/navigation/shell';
 
 export const notices: readonly ShellNotice[] = [
     {

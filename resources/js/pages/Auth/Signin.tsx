@@ -1,10 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
 import { workspaceUrl } from '@/lib/workspaceUrl';
+import { useWorkspaceShell } from '@/layouts/workspace/shellModel';
 
 export default function Signin() {
     const { notify, feedback } = useAccessNotice();
-    return <AccessFrame mode="signin" eyebrow="Sign in" title="Access your learning record"
+    const { brand } = useWorkspaceShell();
+    return <AccessFrame mode="signin" brand={brand} eyebrow="Sign in" title="Access your learning record"
         intro="Use the identifier issued to you. The system accepts a matric number, a staff ID or your institutional email address.">
         <form className="mt-7 space-y-4" onSubmit={event => {
             event.preventDefault();

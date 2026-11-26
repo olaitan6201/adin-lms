@@ -4,7 +4,8 @@ import { Icon } from '@/components/icons/Icon';
 import { Popover } from 'radix-ui';
 import { useEffect, useState } from 'react';
 import type { RoleKey } from './navigation';
-import { useWorkspaceShell, type ShellNotice } from './shellModel';
+import type { ShellNotice } from '@/types/navigation/shell';
+import { useWorkspaceShell } from './shellModel';
 
 const noticeColors: Record<ShellNotice['tone'], string> = {
     info: 'bg-sky-500', warning: 'bg-amber-500', success: 'bg-brand-500', danger: 'bg-rose-500',

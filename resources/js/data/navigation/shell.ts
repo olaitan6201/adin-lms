@@ -1,4 +1,4 @@
-import type { WorkspaceShellModel } from '@/layouts/workspace/shellModel';
+import type { WorkspaceShellModel } from '@/types/navigation/shell';
 import { notices } from './notices';
 
 export const shell: WorkspaceShellModel = {

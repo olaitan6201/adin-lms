@@ -1,9 +1,6 @@
-export const offerings = [
-  { id: 'off-1', code: 'ACC302', title: 'Intermediate Financial Accounting', instructor: 'Dr. Peter Adeyemi', students: 68, sessions: 12, completion: 46, state: 'published', mode: 'Blended', term: '2025/2026 S1' },
-  { id: 'off-2', code: 'BSC205', title: 'Cell and Molecular Biology', instructor: 'Dr. Amaka Eze', students: 54, sessions: 12, completion: 61, state: 'published', mode: 'Online', term: '2025/2026 S1' },
-  { id: 'off-3', code: 'ENG210', title: 'Literary Devices and Criticism', instructor: 'Dr. Halima Yusuf', students: 82, sessions: 11, completion: 38, state: 'published', mode: 'Face-to-face', term: '2025/2026 S1' },
-  { id: 'off-4', code: 'CHM401', title: 'Physical Chemistry II', instructor: 'Dr. Grace Mbeki', students: 41, sessions: 12, completion: 74, state: 'published', mode: 'Blended', term: '2025/2026 S1' },
-] as const;
+import { offerings as catalogue } from '@/data/learning/courseWorkspace';
+
+export const offerings = catalogue.slice(0, 4);
 
 export const submissions = [
   { id: 'sub-1', student: 'Blessing Okonkwo', matric: 'AOU/2023/0412', assignment: 'Journal entry and trial balance problem set', submitted: '12 Nov, 21:04', status: 'awaiting marking', late: false, score: null },
@@ -11,7 +8,7 @@ export const submissions = [
 ] as const;
 
 export const tiles = [
-      { label: 'Allocated courses', value: '3', delta: '68', deltaLabel: 'students total', icon: 'book', spark: { values: [2, 2, 2, 3, 3, 3], color: '#10B981' } },
+      { label: 'Allocated courses', value: '4', delta: '245', deltaLabel: 'students total', icon: 'book', spark: { values: [2, 2, 2, 3, 3, 4], color: '#10B981' } },
       { label: 'Awaiting marking', value: '34', delta: '2', deltaLabel: 'new since yesterday', icon: 'clipboard', spark: { values: [18, 24, 22, 31, 29, 34], color: '#F59E0B' } },
       { label: 'Live classes this week', value: '4', delta: '2', deltaLabel: 'recordings to publish', icon: 'video', spark: { values: [1, 3, 2, 4, 4, 4], color: '#3B82F6' } },
       { label: 'Mean score, ACC302', value: '72', delta: '+4', deltaLabel: 'vs mid-term 2024/2025', icon: 'chart', spark: { values: [64, 63, 66, 69, 71, 72], color: '#33475F' } }

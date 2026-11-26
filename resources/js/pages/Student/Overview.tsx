@@ -1,13 +1,14 @@
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { ContinueLearning, Courses, Notices, Pending, Results } from '@/components/overview/StudentPanels';
-import { Columns, ComingUp, Note, Tiles, useFeedback } from '@/components/overview/OverviewParts';
-import { courses, notifications, pending, schedule, studentResults, tiles } from '@/data/overview/student';
+import { Columns, ComingUp, Note, Tiles } from '@/components/overview/OverviewParts';
+import { notifications, pending, schedule, studentResults, tiles } from '@/data/overview/student';
 import { study } from '@/data/overview/dashboardDetails';
 import { workspaceUrl } from '@/lib/workspaceUrl';
+import { studyFiles } from '@/data/learning/studyFiles';
+import { registration } from '@/data/learning/studentStudy';
 
 export default function Overview() {
-    const { notify, feedback } = useFeedback();
     return (
         <>
             <PageHeader
@@ -29,7 +30,7 @@ export default function Overview() {
                 <Tiles items={tiles} />
                 <Columns
                     left={
-                        <ContinueLearning lesson={study.lesson} save={() => notify('Material saved for offline use')} />
+                        <ContinueLearning lesson={study.lesson} material={studyFiles[0]} />
                     }
                     right={<ComingUp student events={schedule} />}
                 />
@@ -37,7 +38,7 @@ export default function Overview() {
                     seven
                     left={
                         <Courses
-                            courses={courses.map((c) => ({ ...c, lessons: study.lessonCount }))}
+                            courses={registration.courses}
                             subtitle={study.coursesSubtitle}
                         />
                     }
@@ -52,7 +53,6 @@ export default function Overview() {
                     until the examination officer publishes them.
                 </Note>
             </div>
-            {feedback}
         </>
     );
 }

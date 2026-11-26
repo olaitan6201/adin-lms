@@ -16,10 +16,10 @@ export default function Overview() {
                 actions={
                     <>
                         <Action icon="upload" variant="outline" href={workspaceUrl('lecturer/course')}>
-                            Upload material
+                            Course workspace
                         </Action>
                         <Action icon="plus" variant="primary" href={workspaceUrl('lecturer/assignments')}>
-                            Create assignment
+                            Assignment desk
                         </Action>
                     </>
                 }

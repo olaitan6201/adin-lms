@@ -1,5 +1,6 @@
 import type { Lesson } from './panelTypes';
-import { Action } from '@/components/ui/controls/Action';
+import { SampleDownload } from '@/components/learning/SampleDownload';
+import type { StudyFile } from '@/components/learning/deviceFiles';
 import { ProgressRing } from '@/components/icons/ProgressRing';
 import { Card } from '@/components/ui/layout/Card';
 import { Go } from './OverviewParts';
@@ -22,10 +23,10 @@ function CompletionRing({ progress, code }: Pick<Lesson, 'progress' | 'code'>) {
 
 type ContinueLearningProps = {
     lesson: Lesson;
-    save: () => void;
+    material: StudyFile;
 };
 
-export function ContinueLearning({ lesson, save }: ContinueLearningProps) {
+export function ContinueLearning({ lesson, material }: ContinueLearningProps) {
     return (
         <Card title="Continue learning" subtitle="The lesson you were last working on">
             <div className="space-y-5">
@@ -38,9 +39,7 @@ export function ContinueLearning({ lesson, save }: ContinueLearningProps) {
                             <Go to="student/course" primary>
                                 Resume lesson
                             </Go>
-                            <Action variant="outline" size="sm" onClick={save}>
-                                Save offline
-                            </Action>
+                            <SampleDownload file={material} label="Save offline" />
                         </div>
                     </div>
                 </div>

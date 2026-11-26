@@ -31,7 +31,7 @@ export function Courses({ offerings }: { offerings: readonly Offering[] }) {
                         <CourseProgress value={o.completion} />
                     </div>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="lecturer/course">Open</Go>
+                        <Go to={`lecturer/course?course=${o.code}`}>Open</Go>
                     </div>,
                 ])}
             />
@@ -61,7 +61,7 @@ export function Marking({ submissions }: { submissions: readonly Submission[] })
                         {s.late ? 'Late' : 'On time'}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="lecturer/assignments">Mark</Go>
+                        <Go to="lecturer/assignments">Marking desk</Go>
                     </div>,
                 ])}
             />

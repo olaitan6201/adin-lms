@@ -9,7 +9,7 @@ import {
     ServiceHealth,
 } from '@/components/overview/AdminPanels';
 import { ExamReadiness } from '@/components/overview/ExamReadiness';
-import { Columns, Note, Tiles, useFeedback } from '@/components/overview/OverviewParts';
+import { Columns, Note, Tiles } from '@/components/overview/OverviewParts';
 import {
     activityFeed,
     approvals,
@@ -22,7 +22,6 @@ import { institution } from '@/data/overview/dashboardDetails';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Overview() {
-    const { notify, feedback } = useFeedback();
     return (
         <>
             <PageHeader
@@ -32,10 +31,10 @@ export default function Overview() {
                 actions={
                     <>
                         <Action icon="download" variant="outline" href={workspaceUrl('admin/reports')}>
-                            Export report
+                            Reports
                         </Action>
                         <Action icon="plus" variant="primary" href={workspaceUrl('admin/delivery')}>
-                            New course offering
+                            Course offerings
                         </Action>
                     </>
                 }
@@ -53,7 +52,7 @@ export default function Overview() {
                     right={<ServiceHealth performanceMetrics={performanceMetrics} backup={institution.backup} />}
                 />
                 <Columns
-                    left={<ApprovalQueue approvals={approvals} review={() => notify('Approval opened for review')} />}
+                    left={<ApprovalQueue approvals={approvals} />}
                     right={
                         <ExamReadiness
                             bank={institution.bank}
@@ -78,7 +77,6 @@ export default function Overview() {
                     describe institutional records.
                 </Note>
             </div>
-            {feedback}
         </>
     );
 }

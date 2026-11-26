@@ -38,7 +38,7 @@ export function Courses({ courses, subtitle }: CoursesProps) {
                         {c.lessons}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="student/course">Continue</Go>
+                        <Go to={`student/course?course=${c.code}`}>Continue</Go>
                     </div>,
                 ])}
             />
@@ -56,6 +56,7 @@ export function Pending({ pending }: { pending: readonly PendingWork[] }) {
         >
             <Table
                 columns={['Assignment', 'Due', 'Status', '']}
+                empty="No assignments are awaiting submission."
                 rows={pending.map((a) => [
                     <div key="assignment" className="min-w-0">
                         <p className="truncate font-medium text-ink-800">{a.title}</p>
@@ -68,7 +69,7 @@ export function Pending({ pending }: { pending: readonly PendingWork[] }) {
                         {a.state}
                     </Badge>,
                     <div key="actions" className="flex justify-end">
-                        <Go to="student/assignments">Open</Go>
+                        <Go to="student/assignments">Assignments</Go>
                     </div>,
                 ])}
             />
@@ -89,7 +90,7 @@ export function Results({ studentResults }: { studentResults: readonly Result[] 
         >
             <Table
                 columns={['Code', 'Course', 'CA', 'Mid', 'Total', 'Grade']}
-                rows={studentResults.map((r) => [
+                rows={studentResults.filter((result) => result.state === 'released').map((r) => [
                     <span key="course" className="font-mono text-[12px] font-medium text-ink-700">
                         {r.course}
                     </span>,

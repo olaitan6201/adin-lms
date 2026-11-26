@@ -1,3 +1,4 @@
+import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import type { ServiceMetric, Approval } from './panelTypes';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
@@ -38,10 +39,19 @@ export function ServiceHealth({
 
 type ApprovalQueueProps = {
     approvals: readonly Approval[];
-    review: () => void;
 };
 
-export function ApprovalQueue({ approvals, review }: ApprovalQueueProps) {
+export function ApprovalQueue({ approvals }: ApprovalQueueProps) {
+    const { openDrawer } = useWorkspaceOverlays();
+
+    function review(item: Approval) {
+        openDrawer({
+            title: item.item,
+            description: `${item.kind} · ${item.level} priority`,
+            content: <p>Requested by {item.requester}. Waiting: {item.age}. This sample is awaiting a decision.</p>,
+        });
+    }
+
     return (
         <Card
             className="overview-actions-wide"
@@ -72,7 +82,7 @@ export function ApprovalQueue({ approvals, review }: ApprovalQueueProps) {
                         key="review"
                         variant="outline"
                         size="sm"
-                        onClick={review}
+                        onClick={() => review(a)}
                     >
                         Review
                     </Action>,

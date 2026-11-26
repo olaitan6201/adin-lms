@@ -4,9 +4,13 @@ use App\Http\Controllers\Learning\ClassroomController;
 use App\Http\Controllers\Learning\ContentController;
 use App\Http\Controllers\Learning\RegisterController;
 use App\Http\Controllers\Learning\RevisionController;
+use App\Http\Controllers\Learning\StudentDownloadsController;
 use App\Http\Controllers\Learning\TeachingPlanController;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Route;
+
+Route::get('student/downloads', StudentDownloadsController::class)
+    ->middleware(['auth', 'cache.headers:private;no_store'])->name('student.downloads');
 
 Route::middleware('auth')->prefix('courses/{offering}/learning')->name('learning.')->group(function (): void {
     Route::get('/', [ContentController::class, 'index'])->name('index');

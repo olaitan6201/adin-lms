@@ -1,5 +1,12 @@
 import { expect, test } from '@playwright/test';
 
+test('materials meter and outstanding count agree with the course inventory', async ({ page }) => {
+    await page.goto('/admin/course');
+    const progress = page.getByRole('progressbar', { name: 'Materials uploaded (14 of 16)' });
+    await expect(progress).toHaveAttribute('aria-valuenow', '88');
+    await expect(page.getByText('2 required materials outstanding')).toBeVisible();
+});
+
 test('course overview copy and status distinguish a saved draft from the approved text', async ({ page }) => {
     await page.goto('/admin/course');
     await expect(page.getByText(/shown here are the approved version/)).toBeVisible();

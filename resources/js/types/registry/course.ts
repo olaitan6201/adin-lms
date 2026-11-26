@@ -11,7 +11,6 @@ export type Overview = {
     materials: {
         present: number;
         required: number;
-        missing: number;
     };
     team: string[];
 };

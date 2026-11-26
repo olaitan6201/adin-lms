@@ -11,6 +11,9 @@ export function CourseDeliveryRecord({
     overview: Overview;
 }) {
     const { offering, definition } = selectedCourse;
+    const { present, required } = overview.materials;
+    const outstanding = Math.max(0, required - present);
+    const percent = required > 0 ? Math.round(100 * Math.min(present, required) / required) : 0;
 
     return (
         <Card title="Delivery record" subtitle="The offering this overview is attached to">
@@ -44,11 +47,11 @@ export function CourseDeliveryRecord({
                     <div className="mt-4 border-t border-ink-100 pt-3">
                         <Progress
                             stacked
-                            n={overview.materials.present}
-                            label={`Materials uploaded (${overview.materials.present} of ${overview.materials.required})`}
+                            n={percent}
+                            label={`Materials uploaded (${present} of ${required})`}
                         />
                         <p className="mt-2 text-[12px] text-amber-700">
-                            {overview.materials.missing} required materials outstanding
+                            {outstanding} required materials outstanding
                         </p>
                     </div>
                 </Card>

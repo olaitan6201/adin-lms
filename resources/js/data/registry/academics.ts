@@ -55,7 +55,7 @@ export const courseOverviews = {
       { code: 'LO3', text: 'Select and defend an inventory valuation method for a given reporting context.', mapped: 'PO3, PO5' },
       { code: 'LO4', text: 'Prepare and interpret the primary financial statements of a reporting entity.', mapped: 'PO4, PO5' }
     ],
-    materials: { present: 18, required: 16, missing: 2 },
+    materials: { present: 14, required: 16 },
     team: ['Dr. Peter Adeyemi (course leader)', 'Mrs. Bisi Afolabi (examination officer)']
   },
   'BSC205': {
@@ -68,7 +68,7 @@ export const courseOverviews = {
       { code: 'LO2', text: 'Explain transport across the cell membrane.', mapped: 'PO2' },
       { code: 'LO3', text: 'Prepare a slide and observe mitosis under the microscope.', mapped: 'PO6' }
     ],
-    materials: { present: 11, required: 11, missing: 0 },
+    materials: { present: 11, required: 11 },
     team: ['Dr. Amaka Eze (course leader)']
   }
 };

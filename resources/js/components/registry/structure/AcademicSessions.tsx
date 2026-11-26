@@ -11,7 +11,7 @@ export function AcademicSessions({
     desk,
 }: {
     academicSessions: AcademicSession[];
-    windows: [string, string][];
+    windows: Record<string, [string, string][]>;
     desk: Desk;
 }) {
     const [sessions, setSessions] = useState(academicSessions);
@@ -37,7 +37,11 @@ export function AcademicSessions({
                     />
                     <section className="rounded-xl border border-ink-100 p-4">
                         <p className="text-[13px] font-semibold">Semester windows</p>
-                        <Details entries={windows} />
+                        {windows[session.id] ? (
+                            <Details entries={windows[session.id]} />
+                        ) : (
+                            <p>No semester windows recorded for this session.</p>
+                        )}
                     </section>
                     <Note>
                         Roster imports and result publication are scoped to the active session. Changing these

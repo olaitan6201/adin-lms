@@ -35,7 +35,7 @@ export type AcademicStructureInputs = {
     initialFaculties: Faculty[];
     initialProgrammes: Programme[];
     academicSessions: AcademicSession[];
-    windows: [string, string][];
+    windows: Record<string, [string, string][]>;
     healthScope: [string, string][];
     structureChecks: { result: string; title: string; detail: string }[];
 };

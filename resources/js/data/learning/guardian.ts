@@ -16,6 +16,7 @@ export const guardian = {
     ],
     initials: 'BO',
     consentState: 'Consent active',
+    sharedMaterialIds: ['week-3-manuscript', 'practice-set', 'trial-balance'],
 };
 
 export const progress = {

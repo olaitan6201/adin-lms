@@ -14,6 +14,7 @@ export default function Progress() {
     const [request, setRequest] = useState<RequestKind | null>(null);
     const { notify } = useWorkspaceOverlays();
     const released = studentResults.filter(entry => entry.state === 'released');
+    const sharedMaterials = studyFiles.filter(file => guardian.sharedMaterialIds.includes(file.id));
 
     function closeRequest() {
         setRequest(null);
@@ -58,7 +59,7 @@ export default function Progress() {
                     </div>
                     <div className="space-y-5">
                         <Attendance rows={progress.attendance} />
-                        <Materials materials={studyFiles.slice(0, 3)} />
+                        <Materials materials={sharedMaterials} />
                     </div>
                 </div>
             </div>

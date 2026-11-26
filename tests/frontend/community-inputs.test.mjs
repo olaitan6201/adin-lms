@@ -34,7 +34,7 @@ for (const recipients of [[], [{ id: 'missing', name: null }, { id: 'blank', nam
         const { Messages } = await server.ssrLoadModule('/resources/js/components/community/Messages.tsx');
         const html = renderToStaticMarkup(createElement(Messages, { inbox: { messages: [] }, composing: true, recipients }));
         assert.match(html, /No recipients available/);
-        assert.match(html, /<button[^>]*disabled=""[^>]*>Send message/);
+        assert.match(html, /<button[^>]*disabled=""[^>]*>Send sample message/);
         assert.doesNotMatch(html, /<option\b/);
     });
 }

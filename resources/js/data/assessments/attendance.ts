@@ -15,3 +15,10 @@ export const learners = [
     { name: 'Oluwaseun Ajayi', matric: 'AOU/2023/0901', percent: 88, mark: 'present' },
     { name: 'Ngozi Obi', matric: 'AOU/2025/0044', percent: 0, mark: '' },
 ];
+
+const bands = [['90% and above', 48, 'bg-emerald-500'], ['70 to 89%', 62, 'bg-blue-500'], ['50 to 69%', 31, 'bg-amber-500'], ['Below 50%', 17, 'bg-rose-500']] as const;
+
+export const attendanceDesk = {
+    attendanceSessions, learners, bands, sessionCount: 12, codeSuffix: '1209',
+    roster: [...learners.slice(0, 4), learners[5], learners[4]],
+};

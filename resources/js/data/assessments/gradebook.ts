@@ -20,3 +20,9 @@ export const scoreHistory = [
   { when: '13 Nov 2026, 16:05', who: 'Dr. Peter Adeyemi', change: 'Final 28 to 30', reason: 'Re-mark of essay 1' },
   { when: '12 Nov 2026, 11:20', who: 'System', change: 'Mid-term imported', reason: 'CBT exam 1 sync' }
 ];
+
+const boundaries: [string, number][] = [['A', 70], ['B', 60], ['C', 50], ['D', 45], ['E', 40], ['F', 0]];
+const metrics = [['ca', 'Assign. /20', 20], ['participation', 'Particip. /10', 10], ['mid', 'Mid /20', 20], ['practical', 'Prac /10', 10], ['final', 'Final /40', 40]] as const;
+const rubric: [string, string][] = [['Correct journal entry', '10 marks · 4 levels'], ['Correct ledger posting', '6 marks · 3 levels'], ['Trial balance extracted and balanced', '4 marks · 3 levels'], ['Presentation and clarity', '5 marks · 3 levels']];
+
+export const gradeDesk = { gradeRows, scoreHistory, policy: { gradeWeights, boundaries, rubric }, metrics, course: 'ACC302' };

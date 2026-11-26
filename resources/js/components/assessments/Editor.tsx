@@ -3,14 +3,14 @@ import { Fields, type FieldSpec, type Values } from './Controls';
 
 export const submitClass = 'rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800';
 
-export function Editor({ fields, initial, save, label = 'Save', children }: {
-    fields: FieldSpec[]; initial?: Values; save: (values: Values) => void; label?: string; children?: ReactNode;
+export function Editor({ fields, initial, save, label = 'Save', children, formId, externalSubmit }: {
+    fields: FieldSpec[]; initial?: Values; save: (values: Values) => void; label?: string; children?: ReactNode; formId?: string; externalSubmit?: boolean;
 }) {
     const [values, setValues] = useState<Values>(() => ({
         ...Object.fromEntries(fields.map(f => [f.label, f.initial ?? f.options?.[0] ?? ''])), ...initial,
     }));
-    return <form className="space-y-4" onSubmit={e => { e.preventDefault(); save(values); }}>
-        {children}<Fields fields={fields} values={values} change={setValues}/><button className={submitClass}>{label}</button>
+    return <form id={formId} className="space-y-4" onSubmit={e => { e.preventDefault(); save(values); }}>
+        {children}<Fields fields={fields} values={values} change={setValues}/>{!externalSubmit && <button className={submitClass}>{label}</button>}
     </form>;
 }
 

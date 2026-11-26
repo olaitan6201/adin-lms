@@ -5,3 +5,7 @@ export interface PaperQuestion {
     stem: string;
     options: string[];
 }
+
+export interface Sitting {
+    paper: PaperQuestion[]; storageKey: string; minutes: number; title: string; eyebrow: string; facts: [string,string][];
+}

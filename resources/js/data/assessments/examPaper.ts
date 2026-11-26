@@ -1,4 +1,4 @@
-import type { PaperQuestion } from '@/types/assessments/examPaper';
+import type { PaperQuestion, Sitting } from '@/types/assessments/examPaper';
 
 export const paper: PaperQuestion[] = [
   {
@@ -56,3 +56,9 @@ export const paper: PaperQuestion[] = [
     options: []
   }
 ];
+
+export const studentSitting: Sitting = {
+    paper, storageKey: 'workspace:student:ACC302:sample-attempt:v1', minutes: 90,
+    eyebrow: 'ACC302 · Mid-term', title: 'ACC302 mid-term examination',
+    facts: [['Paper', 'Drawn per candidate'], ['Attempts allowed', '1 of 1'], ['Total marks', '41'], ['Invigilation', 'Live, monitored']],
+};

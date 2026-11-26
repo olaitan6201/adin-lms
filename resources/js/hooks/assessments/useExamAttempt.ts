@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { paper } from '@/data/assessments/examPaper';
+import type { Sitting } from '@/types/assessments/examPaper';
 
 type Attempt = {
     index: number;
@@ -8,10 +8,9 @@ type Attempt = {
     deadline: number;
     submitted: number | null;
 };
-const key = 'workspace:student:ACC302:sample-attempt:v1';
-const ids = paper.map(q => q.id);
 
-function readAttempt(): Attempt {
+function readAttempt({ paper, storageKey: key, minutes }: Sitting): Attempt {
+    const ids = paper.map(q => q.id);
     try {
         const v = JSON.parse(sessionStorage.getItem(key) ?? 'null');
         if (v && Number.isFinite(v.deadline) && v.deadline > 0 && Number.isInteger(v.index) && paper[v.index]
@@ -22,11 +21,12 @@ function readAttempt(): Attempt {
             return { ...v, submitted: v.submitted ?? (Date.now() >= v.deadline ? v.deadline : null) };
         }
     } catch { /* An unavailable store still permits an in-memory sitting. */ }
-    return { index: 0, answers: {}, flags: [], deadline: Date.now() + 90 * 60_000, submitted: null };
+    return { index: 0, answers: {}, flags: [], deadline: Date.now() + minutes * 60_000, submitted: null };
 }
 
-export function useExamAttempt() {
-    const [attempt, setAttempt] = useState(readAttempt);
+export function useExamAttempt(sitting: Sitting) {
+    const { paper, storageKey: key } = sitting;
+    const [attempt, setAttempt] = useState(() => readAttempt(sitting));
     const [now, setNow] = useState(Date.now);
     const [stored, setStored] = useState(false);
     useEffect(() => {
@@ -34,7 +34,7 @@ export function useExamAttempt() {
             sessionStorage.setItem(key, JSON.stringify(attempt));
             setStored(true);
         } catch { setStored(false); }
-    }, [attempt]);
+    }, [attempt, key]);
     useEffect(() => {
         if (attempt.submitted !== null) return;
         function tick() {

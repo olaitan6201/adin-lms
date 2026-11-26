@@ -3,8 +3,9 @@ import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import type { Assignment, AssignmentDraft, MarkingGuide, Submission } from '@/types/assessments/assignments';
-import { Drawer, Fields, Note, inputClass, type FieldSpec, type Values } from './Controls';
-import { submitClass } from './Editor';
+import { Drawer } from './Controls';
+import { Fields, inputClass, type FieldSpec, type Values, submitClass } from './Editor';
+import { Note } from '@/components/ui/feedback/Note';
 
 export const feedbackChecks = [
     'Issue a submission receipt on upload',

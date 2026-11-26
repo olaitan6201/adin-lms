@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
-import { Note } from './Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { Metrics, Records, status } from './Records';
 type Check = {item: string; detail: string};
 

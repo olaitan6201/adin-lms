@@ -7,7 +7,8 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { Assignment, Receipt, Feedback } from '@/types/assessments/assignments';
-import { Details, Drawer, Note, RecordName, Status } from './Controls';
+import { Details, Drawer, RecordName, Status } from './Controls';
+import { Note } from '@/components/ui/feedback/Note';
 import { SubmissionPanel } from './SubmissionPanel';
 
 const displayTitle = (a?: Assignment) => a?.shortTitle ?? a?.title;

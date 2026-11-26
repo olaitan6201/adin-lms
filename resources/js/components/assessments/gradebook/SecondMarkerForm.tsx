@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GradeRow } from '@/types/assessments/gradebook';
-import { inputClass, Note } from '../Controls';
+import { inputClass } from '../Editor';
+import { Note } from '@/components/ui/feedback/Note';
 import { submitClass } from '../Editor';
 import type { MarkerDecision } from './useGradebook';
 

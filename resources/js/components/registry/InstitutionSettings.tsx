@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
-import { Field, Note } from './Desk';
+import { Field } from './Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { Records, status } from './Records';
 type SwitchList = readonly (readonly [string,string,boolean])[];
 

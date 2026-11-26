@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Tabs } from 'radix-ui';
-import { Icon } from '@/components/icons/Icon';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { download } from '@/lib/download';
@@ -93,17 +92,6 @@ export function Field(props: FieldProps) {
             <span className="label">{props.label}</span>
             <FieldInput {...props} />
         </label>
-    );
-}
-
-export function Note({ children, amber }: { children: ReactNode; amber?: boolean }) {
-    const tone = amber ? 'border-amber-200 bg-amber-50/70 text-amber-900' : 'border-sky-200 bg-sky-50/70 text-sky-900';
-
-    return (
-        <div className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-[13px] leading-relaxed ${tone}`}>
-            <Icon name={amber ? 'alert' : 'info'} className="mt-0.5 size-4 shrink-0" />
-            <span>{children}</span>
-        </div>
     );
 }
 

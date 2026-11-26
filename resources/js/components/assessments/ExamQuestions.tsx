@@ -3,7 +3,8 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import type { PaperQuestion } from '@/types/assessments/examPaper';
-import { Status, inputClass } from './Controls';
+import { Status } from './Controls';
+import { inputClass } from './Editor';
 
 export function QuestionPalette({
     paper,

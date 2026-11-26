@@ -3,7 +3,8 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Assignment, Submission } from '@/types/assessments/assignments';
-import { RecordName, Status, exportSheet } from './Controls';
+import { RecordName, Status } from './Controls';
+import { exportSheet } from '@/lib/csv';
 
 export function AssignmentList({
     rows,

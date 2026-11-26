@@ -1,5 +1,6 @@
 import type { StaffRecord, DirectorySummary, RoleEntry } from '@/types/registry/people';
-import { Field, Note } from '@/components/registry/Desk';
+import { Field } from '@/components/registry/Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { status, cap } from '@/components/registry/Records';
 import { Card } from '@/components/ui/layout/Card';
 import { Sessions } from './Sessions';

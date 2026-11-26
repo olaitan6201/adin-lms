@@ -1,6 +1,6 @@
 import { Action } from '@/components/ui/controls/Action';
 import type { Session } from '@/types/assessments/attendance';
-import { exportSheet } from '../Controls';
+import { exportSheet } from '@/lib/csv';
 
 interface ReportProps {
     sessions: Session[];

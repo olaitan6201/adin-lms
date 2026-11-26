@@ -3,8 +3,8 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import type { Exam, SittingDraft, BlueprintData } from '@/types/assessments/cbt';
-import { Drawer, type Values } from './Controls';
-import { Editor } from './Editor';
+import { Drawer } from './Controls';
+import { type Values, Editor } from './Editor';
 
 export function Blueprint({
     exam,

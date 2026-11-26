@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useDesk, Register, Note, Field } from '@/components/registry/Desk';
+import { useDesk, Register, Field } from '@/components/registry/Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { val } from '@/components/registry/Records';
 import { Action } from '@/components/ui/controls/Action';
 import { workspaceUrl } from '@/lib/workspaceUrl';

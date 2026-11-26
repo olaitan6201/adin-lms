@@ -5,7 +5,8 @@ import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { Details, Drawer, Note } from './Controls';
+import { Details, Drawer } from './Controls';
+import { Note } from '@/components/ui/feedback/Note';
 import type { Sitting } from '@/types/assessments/examPaper';
 import { useExamAttempt } from '@/hooks/assessments/useExamAttempt';
 

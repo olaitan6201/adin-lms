@@ -6,8 +6,10 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import type { Assignment, AssignmentDraft, Submission, MarkingGuide } from '@/types/assessments/assignments';
 import { recordMark } from './assignmentRecords';
 import { AssignmentEditor, MarkingPanel, feedbackChecks } from './AssignmentPanels';
-import { Checks } from './Editor';
-import { Fields, Note, Sections, exportSheet, type FieldSpec, type Values } from './Controls';
+import { Checks, Fields, type FieldSpec, type Values } from './Editor';
+import { Note } from '@/components/ui/feedback/Note';
+import { Sections } from './Controls';
+import { exportSheet } from '@/lib/csv';
 
 export default function AssignmentsDesk({
     lecturer = false,

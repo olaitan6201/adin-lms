@@ -1,9 +1,8 @@
-import { useId, type ChangeEvent, type ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { Icon } from '@/components/icons/Icon';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { MountedDialog } from '@/components/ui/overlays/MountedDialog';
-import type { FieldSpec } from '@/types/assessments/fields';
 
 interface SectionsProps {
     labels: string[];
@@ -63,17 +62,6 @@ export function Status({ value }: { value: string }) {
     return <Badge tone={tone}>{label}</Badge>;
 }
 
-export function Note({ children, amber = false }: { children: ReactNode; amber?: boolean }) {
-    const tone = amber ? 'border-amber-200 bg-amber-50/70 text-amber-900' : 'border-sky-200 bg-sky-50/70 text-sky-900';
-
-    return (
-        <div className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-[13px] leading-relaxed ${tone}`}>
-            <Icon name={amber ? 'alert' : 'info'} className="mt-0.5 size-4 shrink-0" />
-            <span>{children}</span>
-        </div>
-    );
-}
-
 interface DrawerProps {
     title: string;
     subtitle?: string;
@@ -104,56 +92,6 @@ export function Drawer({ title, subtitle, close, children }: DrawerProps) {
     );
 }
 
-export type { FieldSpec } from '@/types/assessments/fields';
-export type Values = Record<string, string>;
-export const inputClass = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800';
-
-interface FieldsProps {
-    fields: FieldSpec[];
-    values: Values;
-    change: (values: Values) => void;
-}
-
-function FieldInput({ field, value, change }: { field: FieldSpec; value: string; change: (value: string) => void }) {
-    const props = {
-        className: inputClass,
-        value,
-        required: field.required,
-        onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => change(event.target.value),
-    };
-
-    if (field.options) {
-        return (
-            <select {...props}>
-                {field.options.map(option => <option key={option}>{option}</option>)}
-            </select>
-        );
-    }
-
-    if (field.type === 'textarea') {
-        return <textarea rows={4} {...props} />;
-    }
-
-    return <input type={field.type ?? 'text'} min={field.min} max={field.max} {...props} />;
-}
-
-export function Fields({ fields, values, change }: FieldsProps) {
-    return (
-        <div className="grid gap-4">
-            {fields.map(field => (
-                <label key={field.label} className="grid gap-1.5 text-sm font-medium">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">{field.label}</span>
-                    <FieldInput
-                        field={field}
-                        value={values[field.label] ?? field.initial ?? field.options?.[0] ?? ''}
-                        change={value => change({ ...values, [field.label]: value })}
-                    />
-                </label>
-            ))}
-        </div>
-    );
-}
-
 export function Details({ items }: { items: [string, ReactNode][] }) {
     return (
         <dl className="divide-y divide-ink-100">
@@ -166,5 +104,3 @@ export function Details({ items }: { items: [string, ReactNode][] }) {
         </dl>
     );
 }
-
-export { exportSheet } from '@/lib/csv';

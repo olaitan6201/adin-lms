@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useDesk, Register, Note, exportRecords } from '@/components/registry/Desk';
+import { useDesk, Register, exportRecords } from '@/components/registry/Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { Action } from '@/components/ui/controls/Action';
 import { ContentPolicy, Checklist } from '@/components/registry/ContentPolicy';
 import { ResourceRegister } from '@/components/registry/ResourceRegister';

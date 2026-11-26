@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import type { Assignment, Receipt } from '@/types/assessments/assignments';
-import { Drawer, inputClass } from './Controls';
-import { submitClass } from './Editor';
+import { Drawer } from './Controls';
+import { inputClass, submitClass } from './Editor';
 
 export function SubmissionPanel({
     row,

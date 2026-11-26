@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { type Desk, Note, Field } from '@/components/registry/Desk';
+import { type Desk, Field } from '@/components/registry/Desk';
+import { Note } from '@/components/ui/feedback/Note';
 import { cap, val } from '@/components/registry/Records';
 import type { CourseDefinition } from '@/types/registry/curriculum';
 

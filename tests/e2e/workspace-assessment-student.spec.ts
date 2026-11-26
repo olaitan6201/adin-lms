@@ -45,6 +45,7 @@ test('unavailable storage blocks save and exit but keeps the current answer edit
     });
     await page.goto('/student/exam');
     await expect(page.getByText('Local storage unavailable; keep this page open')).toBeVisible();
+    await expect(page.getByText(/Leaving the page does not clear your work/)).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Save and exit' })).toBeDisabled();
     await page.getByRole('radio').last().check();
     await expect(page.getByRole('radio').last()).toBeChecked();

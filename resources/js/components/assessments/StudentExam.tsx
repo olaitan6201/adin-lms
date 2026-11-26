@@ -93,8 +93,9 @@ function ExamRunner(sitting: Sitting) {
                         </div>
                     </div>
                     <Note amber>
-                        Answers are saved continuously. Leaving the page does not clear your work, but the paper still closes when the
-                        access window expires.
+                        {stored
+                            ? 'Answers are saved continuously. Leaving the page does not clear your work, but the paper still closes when the access window expires.'
+                            : 'Responses are only in memory. Keep this page open to avoid losing your work.'}
                     </Note>
                 </>
             )}

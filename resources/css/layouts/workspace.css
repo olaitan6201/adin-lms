@@ -1,5 +1,6 @@
 .workspace-shell .rail, .ws-mobile-rail { color: var(--color-ink-800); }
 :is(.workspace-shell,.ws-mobile-rail) .rail-link { border-radius: .5rem; }
+:is(.workspace-shell,.ws-mobile-rail) .rail-link-active { background-color: rgb(255 255 255 / 10%); }
 :is(.workspace-shell,.ws-mobile-rail) .portal-brand small { line-height: 1.25; }
 :is(.workspace-shell,.ws-mobile-rail) :is(.portal-brand small,.portal-account-copy small,.portal-rail-footer) { color: var(--color-ink-400); }
 :is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer > div { color: var(--color-ink-200); font-weight: 500; }

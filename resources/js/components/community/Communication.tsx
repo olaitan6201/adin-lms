@@ -10,7 +10,6 @@ import { Announcements } from './Announcements';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
 import { type TeachingRole } from '@/types/identity/roles';
-import '../../../css/layouts/engagement.css';
 
 export function Communication({ role, data }: { data: CommunicationData; role: TeachingRole }) {
     const student = role === 'student';

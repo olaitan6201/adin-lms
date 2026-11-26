@@ -8,7 +8,6 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { Note } from '@/components/ui/feedback/Note';
 import { type WorkspaceRole } from '@/types/identity/roles';
-import '../../../css/layouts/engagement.css';
 
 type Settings = Record<string, boolean>;
 function readPrefs(key: string): Settings {

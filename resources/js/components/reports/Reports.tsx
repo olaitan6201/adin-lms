@@ -9,7 +9,6 @@ import { Bars, Columns, DepartmentHeatmap, Mix, Trend } from './ReportCharts';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
 import { download } from '@/lib/download';
-import '../../../css/layouts/engagement.css';
 
 function exportSheet(scope: string, sheets: ReportSheet[]) {
     const escape = (s: string | number) => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');

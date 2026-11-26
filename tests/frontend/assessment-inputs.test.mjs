@@ -46,7 +46,7 @@ for (const [view, dataset, name, empty] of [
     ['AssignmentsDesk', 'assignments', 'assignmentDesk', { assignments: [], submissions: [] }],
     ['CbtDesk', 'cbt', 'cbtDesk', { questionBanks: [], exams: [] }],
     ['AttendanceDesk', 'attendance', 'attendanceDesk', { attendanceSessions: [] }],
-    ['StudentAssignments', 'studentAssignments', 'studentAssignments', { work: [], assignments: [] }],
+    ['StudentAssignments', 'studentAssignments', 'studentAssignments', { work: [] }],
 ]) {
     test(`${view} renders an empty collection without selecting a substitute record`, async () => {
         const { default: View } = await server.ssrLoadModule(`/resources/js/components/assessments/${view}.tsx`);

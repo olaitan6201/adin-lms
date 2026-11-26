@@ -5,7 +5,7 @@ import type { Assignment, Submission } from '@/types/assessments/assignments';
 export const assignments: Assignment[] = [
   { id: 'as-1', instructions: 'Answer questions 1 to 8. For each transaction, state the journal entry, post it to the ledger and extract a trial balance.', attachments: 'problem-set.pdf (1.2 MB), template-trial-balance.xlsx (94 KB)', title: 'Journal entry and trial balance problem set', course: 'ACC302', due: '14 Nov 2026, 23:59', submissions: 51, total: 68, late: 7, marked: 44, state: 'open' },
   { id: 'as-2', title: 'Case analysis: IFRS 15 revenue recognition', course: 'ACC302', due: '28 Nov 2026, 23:59', submissions: 22, total: 68, late: 0, marked: 0, state: 'scheduled' },
-  { id: 'as-3', publishedScore: 72, title: 'Lab report: mitosis observation', course: 'BSC205', due: '10 Nov 2026, 18:00', submissions: 54, total: 54, late: 4, marked: 54, state: 'closed' },
+  { id: 'as-3', title: 'Lab report: mitosis observation', course: 'BSC205', due: '10 Nov 2026, 18:00', submissions: 54, total: 54, late: 4, marked: 54, state: 'closed' },
   { id: 'as-4', title: 'Group presentation: narrative voice', course: 'ENG210', due: '20 Nov 2026, 12:00', submissions: 78, total: 82, late: 2, marked: 0, state: 'open' },
   { id: 'as-5', shortTitle: 'Practical: titration', title: 'Practical: titration and concentration', course: 'CHM401', due: '24 Nov 2026, 23:59', submissions: 36, total: 41, late: 1, marked: 29, state: 'open' }
 ];

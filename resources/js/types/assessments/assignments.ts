@@ -1,7 +1,7 @@
 export interface Assignment {
     id: string; title: string; course: string; due: string; state: string;
     submissions: number; total: number; late: number; marked: number;
-    settings?: Record<string, string>; instructions?: string; attachments?: string; shortTitle?: string; publishedScore?: number;
+    settings?: Record<string, string>; instructions?: string; attachments?: string; shortTitle?: string;
 }
 export interface Submission {
     id: string; student: string; matric: string; assignmentId: string; submitted: string; status: string;
@@ -10,4 +10,5 @@ export interface Submission {
 export interface MarkingGuide { scriptPreview: string; rubric: string[]; maximum: number[] }
 export type AssignmentDraft = Pick<Assignment, 'title' | 'course' | 'due' | 'settings' | 'instructions' | 'attachments'>;
 export type Receipt = { number: string; file: string; size: string; time: string; note: string };
-export type Feedback = { id: string; score: number; text: string };
+export type Feedback = { score: number; text: string };
+export interface StudentWork { assignment: Assignment; receipt?: Receipt; feedback?: Feedback }

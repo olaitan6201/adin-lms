@@ -42,7 +42,6 @@ interface RegisterProps {
 
 export function RegisterEditor({ session, roster, codeSuffix, initial, close, save }: RegisterProps) {
     const [marks, setMarks] = useState(initial);
-    const enrolled = session.present + session.late + session.absent;
 
     function markAllPresent() {
         setMarks(previous => Object.fromEntries(Object.keys(previous).map(matric => [matric, 'present'])));
@@ -64,7 +63,7 @@ export function RegisterEditor({ session, roster, codeSuffix, initial, close, sa
         >
             <Card
                 title="Register"
-                subtitle={`${enrolled} enrolled students`}
+                subtitle={`${roster.length} editable learners`}
                 actions={<>
                     <Action size="sm" onClick={markAllPresent}>All present</Action>
                     <Action size="sm" variant="primary" onClick={saveRegister}>Save register</Action>

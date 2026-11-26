@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { TeachingProposalForm } from './TeachingProposalForm';
+import { CourseHeader } from './CourseHeader';
 
 type Week = {
     title: string;
@@ -72,19 +73,23 @@ function Decision({ action }: { action: string }) {
 
 export default function TeachingPlan({ shell, base, back, canSubmit, history }: Props) {
     return (
-        <main className="mx-auto w-full max-w-3xl p-4 sm:p-6 space-y-6">
+        <main className="course-page">
             <Head title="Teaching plan" />
-            <Link className="underline" href={back}>
-                Return to offering
-            </Link>
-            <header>
-                <p className="text-sm text-muted-foreground">{shell}</p>
-                <h1 className="text-3xl font-semibold">Teaching plan</h1>
-                <p>
-                    Propose an introduction and weekly activities for this assigned shell. Approval creates draft
-                    lessons; the offering stays unpublished.
-                </p>
-            </header>
+            <CourseHeader
+                eyebrow={shell}
+                title="Teaching plan"
+                actions={
+                    <Link className="course-action" href={back}>
+                        Return to offering
+                    </Link>
+                }
+                description={
+                    <p>
+                        Propose an introduction and weekly activities for this assigned shell. Approval creates draft
+                        lessons; the offering stays unpublished.
+                    </p>
+                }
+            />
             {canSubmit && <TeachingProposalForm key={history[0]?.id ?? 'first'} base={base} previous={history[0]} />}
             <section className="space-y-3">
                 <h2 className="text-xl font-semibold">Submitted revisions</h2>

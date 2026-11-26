@@ -14,7 +14,7 @@ type ProposalFormProps = {
 export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
     const [count, setCount] = useState(previous?.snapshot.weeks.length ?? 1);
     return (
-        <section>
+        <section className="course-panel course-pad">
             <h2 className="text-xl font-semibold">{previous ? 'Revise your proposal' : 'Propose a teaching plan'}</h2>
             <EntryForm action={base} label="Submit for academic review">
                 <input type="hidden" name="previous_revision" value={previous?.revision ?? 0} />

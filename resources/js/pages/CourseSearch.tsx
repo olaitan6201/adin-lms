@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, Head, Link } from '@inertiajs/react';
+import { CourseHeader } from './Learning/CourseHeader';
 
 type CourseMatch = {
     id: string;
@@ -37,17 +38,19 @@ function resultSummary({ term, matches, truncated }: SearchProps): string {
 
 export default function CourseSearch(props: SearchProps) {
     return (
-        <main className="mx-auto w-full max-w-3xl space-y-5 p-4 sm:p-6">
+        <main className="course-page">
             <Head title="Search my courses" />
-            <Link href="/courses" className="underline">
-                ← My courses
-            </Link>
-            <header className="space-y-2">
-                <p className="text-sm text-muted-foreground">Course catalogue</p>
-                <h1 className="text-3xl font-semibold">Search my courses</h1>
-                <p>Find a published course in your current registrations.</p>
-            </header>
-            <Form action="/search" method="get" role="search" className="my-6 max-w-2xl">
+            <CourseHeader
+                eyebrow="Course catalogue"
+                title="Search my courses"
+                description={<p>Find a published course in your current registrations.</p>}
+                actions={
+                    <Link href="/courses" className="course-action">
+                        ← My courses
+                    </Link>
+                }
+            />
+            <Form action="/search" method="get" role="search" className="course-panel course-pad">
                 {({ processing, errors }) => (
                     <>
                         <Label htmlFor="course-query" className="block font-semibold">
@@ -75,7 +78,7 @@ export default function CourseSearch(props: SearchProps) {
                 )}
             </Form>
             <p role="status">{resultSummary(props)}</p>
-            <ul className="mt-4 space-y-2">
+            <ul className="course-catalogue">
                 {props.matches.map((course) => (
                     <li key={course.id}>
                         <Card>

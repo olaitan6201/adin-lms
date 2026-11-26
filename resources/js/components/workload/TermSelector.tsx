@@ -5,7 +5,7 @@ import type { WorkloadData } from './contracts';
 
 export function TermSelector({ workload }: { workload: Pick<WorkloadData, 'terms' | 'selected_term'> }) {
     return (
-        <section aria-labelledby="term-heading" className="min-w-0 rounded-lg border p-4 sm:p-6 mt-8">
+        <section aria-labelledby="term-heading" className="course-panel course-pad">
             <h2 id="term-heading" className="text-xl font-semibold tracking-tight">
                 Select a term
             </h2>
@@ -14,7 +14,8 @@ export function TermSelector({ workload }: { workload: Pick<WorkloadData, 'terms
                     <label htmlFor="term" className="text-sm font-medium">
                         Academic term
                     </label>
-                    <NativeSelect className="mt-1"
+                    <NativeSelect
+                        className="mt-1"
                         id="term"
                         name="term"
                         defaultValue={workload.selected_term ?? ''}
@@ -28,10 +29,7 @@ export function TermSelector({ workload }: { workload: Pick<WorkloadData, 'terms
                         ))}
                     </NativeSelect>
                 </div>
-                <Button
-                    type="submit"
-                    disabled={workload.terms.length === 0}
-                >
+                <Button type="submit" disabled={workload.terms.length === 0}>
                     View workload
                 </Button>
             </form>

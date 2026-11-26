@@ -1,24 +1,21 @@
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Check, FileText, LockKeyhole } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import type { Activity } from '../pages/Course';
 import { LearnerTime } from './LearnerTime';
 
 export function CourseActivityList({ activities }: { activities: Activity[] }) {
     return (
-        <ol className="grid gap-3">
-            {activities.map((a, i) => (
-                <li key={a.id}>
-                    <Separator className="mb-3" />
-                    <div className="flex items-start gap-3">
-                        <Badge variant="outline" aria-hidden="true">
-                            {String(i + 1).padStart(2, '0')}
-                        </Badge>
+        <ol>
+            {activities.map((a) => {
+                const Icon = a.complete ? Check : a.locked ? LockKeyhole : FileText;
+                return (
+                    <li key={a.id} className="course-module">
+                        <Icon aria-hidden />
                         <div className="grid min-w-0 gap-1">
-                            <small>
+                            <small className="course-code">
                                 {a.type} · {a.complete ? 'Completed' : a.detail}
                             </small>
-                            <Link className="underline" href={a.href}>
+                            <Link className="font-medium hover:underline" href={a.href}>
                                 {a.title}
                             </Link>
                             {a.at && (
@@ -27,9 +24,9 @@ export function CourseActivityList({ activities }: { activities: Activity[] }) {
                                 </p>
                             )}
                         </div>
-                    </div>
-                </li>
-            ))}
+                    </li>
+                );
+            })}
         </ol>
     );
 }

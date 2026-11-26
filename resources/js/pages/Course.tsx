@@ -1,9 +1,11 @@
 import { NextCourseActivity } from './Learning/NextCourseActivity';
-import { Separator } from '@/components/ui/separator';
+import { CourseTools } from './Learning/CourseTools';
 import { CourseActivityList } from '../components/CourseActivityList';
 import { Head, Link } from '@inertiajs/react';
 import type { CourseSummary } from './Courses';
-import { SequenceEditor } from './Learning/SequenceEditor';
+import { TeachingOutline } from './Learning/TeachingOutline';
+import { CourseHeader } from './Learning/CourseHeader';
+import { Eye, MessageSquare, Plus } from 'lucide-react';
 
 export interface Activity {
     id: string;
@@ -46,56 +48,71 @@ export default function Course({
     const base = `/courses/${course.id}`;
 
     return (
-        <main className="mx-auto w-full max-w-6xl space-y-6 p-4 sm:p-6">
+        <main className="course-page">
             <Head title={title} />
             <Link className="underline" href="/courses">
                 ← My courses
             </Link>
-            <header className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                    {course.code || course.external_offering_id} · {teaching ? 'Teaching workspace' : 'Course overview'}
-                </p>
-                <h1 className="text-3xl font-semibold">{title}</h1>
-                {course.description && <p>{course.description}</p>}
-                <p className="text-sm text-muted-foreground">
-                    {[
-                        course.section && `Section ${course.section}`,
-                        course.delivery_mode,
-                        course.credits && `${Number(course.credits)} credits`,
-                        course.status,
-                    ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                </p>
-            </header>
-            <div className="grid items-start gap-6 lg:grid-cols-[2fr_1fr]">
-                <div className="min-w-0 space-y-4">
-                    {visible && !teaching && <NextCourseActivity activities={activities} />}
+            <CourseHeader
+                eyebrow={`${course.code || course.external_offering_id} · ${teaching ? 'Teaching workspace' : 'Course overview'}`}
+                title={title}
+                description={
+                    <>
+                        {course.description && <p>{course.description}</p>}
+                        <p className="text-sm text-muted-foreground">
+                            {[
+                                course.section && `Section ${course.section}`,
+                                course.delivery_mode,
+                                course.credits && `${Number(course.credits)} credits`,
+                                course.status,
+                            ]
+                                .filter(Boolean)
+                                .join(' · ')}
+                        </p>
+                    </>
+                }
+                actions={
+                    <nav aria-label="Course actions">
+                        {teaching ? (
+                            <>
+                                <Link className="course-action" href={`${base}/learning?preview=1`}>
+                                    <Eye aria-hidden />
+                                    Preview as student
+                                </Link>
+                                <Link className="course-action primary" href={`${base}/learning`}>
+                                    <Plus aria-hidden />
+                                    Add content
+                                </Link>
+                            </>
+                        ) : (
+                            <Link href={`/community/courses/${course.id}`} className="course-action">
+                                <MessageSquare aria-hidden />
+                                Ask a question
+                            </Link>
+                        )}
+                    </nav>
+                }
+            />
+            <CourseTools
+                id={course.id}
+                visible={visible}
+                teaching={teaching}
+                tools={learningToolsUrl}
+                readings={packageReadingsUrl}
+            />
+            <div className={teaching ? 'course-reader course-teaching' : 'course-reader'}>
+                <div className="space-y-4">
                     {!teaching && visible && activities.length > 0 && (
-                        <nav aria-label="Course sequence">
-                            <h2 className="text-xl font-semibold">Course outline</h2>
+                        <nav aria-label="Course sequence" className="course-panel">
+                            <div className="course-panel-head">
+                                <h2>Course outline</h2>
+                                <span className="course-tag">{activities.length}</span>
+                            </div>
                             <CourseActivityList activities={activities} />
                         </nav>
                     )}
-                    {teaching && <h2 className="text-xl font-semibold">Course outline</h2>}
-                    {teaching && course.status === 'draft' && (
-                        <p>
-                            <Link className="underline" href={`${base}/learning/teaching-plan`}>
-                                Teaching plan and academic review
-                            </Link>
-                        </p>
-                    )}
                     {teaching && (
-                        <Link className="underline" href={`${base}/learning?compose=overview`}>
-                            Draft a course introduction
-                        </Link>
-                    )}
-                    {teaching && activities.length > 1 && (
-                        <SequenceEditor
-                            key={activities.map((a) => a.id).join(',')}
-                            activities={activities}
-                            action={`${base}/learning/sequence`}
-                        />
+                        <TeachingOutline base={base} draft={course.status === 'draft'} activities={activities} />
                     )}
                     {!visible ? (
                         <p>
@@ -106,52 +123,29 @@ export default function Course({
                     ) : !activities.length ? (
                         <p>No activities available yet.</p>
                     ) : teaching ? (
-                        <CourseActivityList activities={activities} />
+                        <div className="course-panel">
+                            <CourseActivityList activities={activities} />
+                        </div>
                     ) : null}
                 </div>
-                <aside className="min-w-0 space-y-4">
-                    <h2 className="text-xl font-semibold">Course information</h2>
-                    <h3 className="font-medium">Teaching team</h3>
-                    <p>{lecturers.join(', ') || 'No lecturer listed yet.'}</p>
-                    {outcomes.length > 0 && (
-                        <>
-                            <h3 className="font-medium">Learning outcomes</h3>
-                            <ul className="list-disc pl-5">
-                                {outcomes.map((s, i) => (
-                                    <li key={i}>{s}</li>
-                                ))}
-                            </ul>
-                        </>
-                    )}
-                    <Separator />
-                    <nav aria-label="Course tools" className="grid justify-items-start gap-2">
-                        <h3 className="font-medium">{teaching ? 'Authoring and delivery' : 'Course tools'}</h3>
-                        {visible && (
+                <div className="space-y-5">
+                    {visible && !teaching && <NextCourseActivity activities={activities} />}
+                    <aside className="course-panel course-pad space-y-4">
+                        <h2 className="text-xl font-semibold">Course information</h2>
+                        <h3 className="font-medium">Teaching team</h3>
+                        <p>{lecturers.join(', ') || 'No lecturer listed yet.'}</p>
+                        {outcomes.length > 0 && (
                             <>
-                                <Link className="underline" href={`${base}/learning`}>
-                                    {teaching ? 'Author or preview lessons' : 'Lessons and materials'}
-                                </Link>
-                                <Link className="underline" href={`${base}/learning/classes`}>
-                                    Classroom and attendance
-                                </Link>
-                                <Link className="underline" href={`${base}/assessments`}>
-                                    Assessments
-                                </Link>
-                                <Link className="underline" href={learningToolsUrl}>
-                                    Library and learning tools
-                                </Link>
-                                {packageReadingsUrl && (
-                                    <a className="underline" href={packageReadingsUrl}>
-                                        Packaged readings
-                                    </a>
-                                )}
+                                <h3 className="font-medium">Learning outcomes</h3>
+                                <ul className="list-disc pl-5">
+                                    {outcomes.map((s, i) => (
+                                        <li key={i}>{s}</li>
+                                    ))}
+                                </ul>
                             </>
                         )}
-                        <Link className="underline" href={`/community/courses/${course.id}`}>
-                            Course board
-                        </Link>
-                    </nav>
-                </aside>
+                    </aside>
+                </div>
             </div>
         </main>
     );

@@ -5,6 +5,11 @@
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.zip binary
 
 /.github export-ignore
 CHANGELOG.md export-ignore

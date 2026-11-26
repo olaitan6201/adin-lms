@@ -51,7 +51,12 @@ function ExamRunner(sitting: Sitting) {
                             >
                                 Save and exit
                             </Action>
-                            <Action icon="check" size="sm" variant="primary" onClick={() => setConfirm(true)}>
+                            <Action
+                                icon="check"
+                                size="sm"
+                                variant="primary"
+                                onClick={() => setConfirm(true)}
+                            >
                                 Submit examination
                             </Action>
                         </>

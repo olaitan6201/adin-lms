@@ -33,8 +33,18 @@ export default function Course() {
                     <Card title="Course progress">
                         <div className="space-y-3">
                             <Meter value={studyCourse.completion} label="Content completed" showValue={true} />
-                            <Meter value={studyCourse.submissionRate} label="Assignments submitted" showValue={true} tone="sky" />
-                            <Meter value={studyCourse.attendance} label="Attendance" showValue={true} tone="sky" />
+                            <Meter
+                                value={studyCourse.submissionRate}
+                                label="Assignments submitted"
+                                showValue={true}
+                                tone="sky"
+                            />
+                            <Meter
+                                value={studyCourse.attendance}
+                                label="Attendance"
+                                showValue={true}
+                                tone="sky"
+                            />
                         </div>
                     </Card>
                 </div>

@@ -18,7 +18,12 @@ export function ResourceForm({ action, item }: ResourceFormProps) {
             <EntryForm originalTimes={item} action={action} label="Save revision">
                 <Label className="grid gap-2">
                     Resource title
-                    <Input name="title" required maxLength={191} defaultValue={item?.title} />
+                    <Input
+                        name="title"
+                        required
+                        maxLength={191}
+                        defaultValue={item?.title}
+                    />
                 </Label>
                 <Label className="grid gap-2">
                     Resource text

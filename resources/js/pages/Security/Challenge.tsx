@@ -17,7 +17,12 @@ export default function Challenge() {
                 <p id="code-help" className="text-sm text-muted-foreground">
                     Enter the current six-digit code, including any leading zero.
                 </p>
-                <Form action="/security/challenge" method="post" resetOnError={['code']} className="grid gap-4">
+                <Form
+                    action="/security/challenge"
+                    method="post"
+                    resetOnError={['code']}
+                    className="grid gap-4"
+                >
                     {({ errors, processing }) => (
                         <>
                             <PortalField

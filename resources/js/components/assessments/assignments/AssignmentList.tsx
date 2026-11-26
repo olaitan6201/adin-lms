@@ -22,7 +22,12 @@ export function AssignmentList({
             actions={
                 <>
                     <Badge>{rows.length} assignments</Badge>
-                    <Action size="sm" variant="primary" icon="plus" onClick={() => edit('new')}>
+                    <Action
+                        size="sm"
+                        variant="primary"
+                        icon="plus"
+                        onClick={() => edit('new')}
+                    >
                         New assignment
                     </Action>
                 </>

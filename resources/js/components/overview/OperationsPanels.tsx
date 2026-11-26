@@ -68,7 +68,12 @@ export function ApprovalQueue({ approvals, review }: ApprovalQueueProps) {
                     <span key="waiting" className="text-[13px] text-ink-500">
                         {a.age}
                     </span>,
-                    <Action key="review" variant="outline" size="sm" onClick={review}>
+                    <Action
+                        key="review"
+                        variant="outline"
+                        size="sm"
+                        onClick={review}
+                    >
                         Review
                     </Action>,
                 ])}

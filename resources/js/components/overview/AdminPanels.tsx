@@ -30,7 +30,12 @@ export function Enrolment({
                 </>
             }
         >
-            <AreaChart {...series} labels={labels} height={250} label="Registered students over the session" />
+            <AreaChart
+                {...series}
+                labels={labels}
+                height={250}
+                label="Registered students over the session"
+            />
         </Card>
     );
 }

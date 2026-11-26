@@ -69,7 +69,12 @@ export function GradebookPanel({ gradeRows }: { gradeRows: GradeRows }) {
             title="Scores"
             subtitle="Current sheet for this course"
             actions={
-                <Action icon="external" variant="ghost" size="sm" href={workspaceUrl('lecturer/gradebook')}>
+                <Action
+                    icon="external"
+                    variant="ghost"
+                    size="sm"
+                    href={workspaceUrl('lecturer/gradebook')}
+                >
                     Open gradebook
                 </Action>
             }

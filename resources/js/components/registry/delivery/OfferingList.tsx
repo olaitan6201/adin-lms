@@ -30,7 +30,12 @@ export function OfferingList({
                     <Action size="sm" icon="upload" onClick={() => setTab(1)}>
                         Import roster
                     </Action>
-                    <Action size="sm" variant="primary" icon="plus" onClick={add}>
+                    <Action
+                        size="sm"
+                        variant="primary"
+                        icon="plus"
+                        onClick={add}
+                    >
                         New offering
                     </Action>
                 </>

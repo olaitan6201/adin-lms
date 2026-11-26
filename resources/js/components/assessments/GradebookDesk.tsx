@@ -97,7 +97,12 @@ export default function GradebookDesk({
                             <Action size="sm" icon="sheet" onClick={download}>
                                 Download sheet
                             </Action>
-                            <Action size="sm" icon="check" variant="primary" onClick={release}>
+                            <Action
+                                size="sm"
+                                icon="check"
+                                variant="primary"
+                                onClick={release}
+                            >
                                 Publish results
                             </Action>
                         </>

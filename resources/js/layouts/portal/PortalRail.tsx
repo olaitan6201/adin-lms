@@ -41,7 +41,12 @@ export function PortalRail({
                     className="portal-brand"
                     aria-label={`${branding.institution} home`}
                 >
-                    <img src={branding.logoWhite || branding.logoFull} width="42" height="36" alt="" />
+                    <img
+                        src={branding.logoWhite || branding.logoFull}
+                        width="42"
+                        height="36"
+                        alt=""
+                    />
                     <span>
                         <strong>AdinOpen LMS</strong>
                         <small>{branding.institution}</small>
@@ -69,7 +74,12 @@ export function PortalRail({
                         </span>
                     </div>
                     <InstallPortal />
-                    <Link href="/logout" as="button" method="post" aria-label="Sign out">
+                    <Link
+                        href="/logout"
+                        as="button"
+                        method="post"
+                        aria-label="Sign out"
+                    >
                         <LogOut size={16} aria-hidden="true" />
                         Sign out of this session
                     </Link>

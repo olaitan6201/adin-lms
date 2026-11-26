@@ -27,16 +27,38 @@ export function EventEditor({ defaultDate, defaultTime, defaultCourse, kinds, on
     return (
         <form className="space-y-4" onSubmit={submit}>
             <Field label="Title">
-                <input name="title" className="input" required pattern=".*\S.*" />
+                <input
+                    name="title"
+                    className="input"
+                    required
+                    pattern=".*\S.*"
+                />
             </Field>
             <Field label="Date">
-                <input name="date" type="date" className="input" required defaultValue={defaultDate} />
+                <input
+                    name="date"
+                    type="date"
+                    className="input"
+                    required
+                    defaultValue={defaultDate}
+                />
             </Field>
             <Field label="Time">
-                <input name="time" type="time" className="input" required defaultValue={defaultTime} />
+                <input
+                    name="time"
+                    type="time"
+                    className="input"
+                    required
+                    defaultValue={defaultTime}
+                />
             </Field>
             <Field label="Course">
-                <input name="course" className="input" defaultValue={defaultCourse} required />
+                <input
+                    name="course"
+                    className="input"
+                    defaultValue={defaultCourse}
+                    required
+                />
             </Field>
             <Field label="Event type">
                 <select className="select" name="kind">

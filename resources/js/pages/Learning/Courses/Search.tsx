@@ -50,7 +50,12 @@ export default function CourseSearch(props: SearchProps) {
                     </Link>
                 }
             />
-            <Form action="/search" method="get" role="search" className="course-panel course-pad">
+            <Form
+                action="/search"
+                method="get"
+                role="search"
+                className="course-panel course-pad"
+            >
                 {({ processing, errors }) => (
                     <>
                         <Label htmlFor="course-query" className="block font-semibold">

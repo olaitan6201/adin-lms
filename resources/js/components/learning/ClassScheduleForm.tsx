@@ -34,7 +34,12 @@ export function ClassScheduleForm({
                 </Label>
                 <Label className="grid gap-2">
                     Ends (local time)
-                    <Input type="datetime-local" name="ends_at" required defaultValue={localInput(session?.ends_at)} />
+                    <Input
+                        type="datetime-local"
+                        name="ends_at"
+                        required
+                        defaultValue={localInput(session?.ends_at)}
+                    />
                 </Label>
                 <Label className="grid gap-2">
                     Meeting link (HTTPS)

@@ -88,7 +88,12 @@ export function FacultyHierarchy({
                                 </p>
                             </div>
                         </div>
-                        <Action icon="shield" variant="ghost" size="sm" onClick={() => onOversight(faculty)}>
+                        <Action
+                            icon="shield"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onOversight(faculty)}
+                        >
                             Oversight scope
                         </Action>
                     </div>

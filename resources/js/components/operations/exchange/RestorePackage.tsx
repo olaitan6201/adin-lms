@@ -21,7 +21,12 @@ export function RestorePackage({ csrf, uploadLimit, disabled, onSubmit }: Restor
                     <input type="hidden" name="_token" value={csrf} />
                     <Label className="grid gap-2">
                         Package (up to {(uploadLimit / 1048576).toFixed(1)} MiB)
-                        <Input required type="file" accept=".zip,.imscc" name="package" />
+                        <Input
+                            required
+                            type="file"
+                            accept=".zip,.imscc"
+                            name="package"
+                        />
                     </Label>
                     <Button disabled={disabled}>Restore package</Button>
                 </form>

@@ -92,13 +92,23 @@ export function QuestionForm({ action, method = 'post', initial, submitLabel, ca
                     {kind === 'matching' && (
                         <Label className="grid min-w-0 gap-2 leading-normal">
                             Matching pairs (one left =&gt; right pair per line)
-                            <Textarea name="pairs" required rows={6} defaultValue={initial?.pairs} />
+                            <Textarea
+                                name="pairs"
+                                required
+                                rows={6}
+                                defaultValue={initial?.pairs}
+                            />
                         </Label>
                     )}
                     {subjective && (
                         <Label className="grid min-w-0 gap-2 leading-normal">
                             Marking guide
-                            <Textarea name="guide" rows={4} maxLength={5000} defaultValue={initial?.guide} />
+                            <Textarea
+                                name="guide"
+                                rows={4}
+                                maxLength={5000}
+                                defaultValue={initial?.guide}
+                            />
                         </Label>
                     )}
                     {Object.entries(errors).map(([key, error]) => (

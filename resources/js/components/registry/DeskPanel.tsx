@@ -47,7 +47,9 @@ export function PanelForm({
 
     function submit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (!panel.submit) return;
+        if (!panel.submit) {
+            return;
+        }
 
         if (panel.save) {
             const rejection = panel.save(new FormData(event.currentTarget));
@@ -77,7 +79,12 @@ export function PanelForm({
                             <p className="mt-0.5 text-[13px] text-ink-500">{panel.subtitle}</p>
                         </div>
                     </div>
-                    <button className="btn btn-ghost btn-sm" type="button" aria-label="Close panel" onClick={close}>
+                    <button
+                        className="btn btn-ghost btn-sm"
+                        type="button"
+                        aria-label="Close panel"
+                        onClick={close}
+                    >
                         <Icon name="close" className="size-4" />
                     </button>
                 </div>
@@ -128,7 +135,12 @@ export function useDesk() {
                 </div>
             )}
             {selection && (
-                <PanelForm key={selection.key} panel={selection.panel} notify={notify} close={() => open(null)} />
+                <PanelForm
+                    key={selection.key}
+                    panel={selection.panel}
+                    notify={notify}
+                    close={() => open(null)}
+                />
             )}
         </>
     );

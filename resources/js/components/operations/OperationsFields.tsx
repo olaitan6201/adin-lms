@@ -15,8 +15,12 @@ export function OperationsSelect({ label, error, children, ...select }: Componen
     return (
         <div>
             <Label htmlFor={id}>{label}</Label>
-            <NativeSelect {...select} id={id} aria-invalid={error ? true : undefined}
-                aria-describedby={error ? `${id}-error` : undefined}>
+            <NativeSelect
+                {...select}
+                id={id}
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? `${id}-error` : undefined}
+            >
                 {children}
             </NativeSelect>
             {error && <p className="mt-1 text-sm text-destructive" id={`${id}-error`}>{error}</p>}

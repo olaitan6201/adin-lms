@@ -54,7 +54,12 @@ export function SessionDrawer({ selection, session, open, closeSession, save }: 
                         {summary}
                     </p>
                 </div>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={closeSession} aria-label="Close panel">
+                <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={closeSession}
+                    aria-label="Close panel"
+                >
                     <StudyIcon name="close" className="h-4 w-4" />
                 </button>
             </div>

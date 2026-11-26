@@ -17,7 +17,9 @@ export function MessageComposer({ recipients, close, send }: Props) {
         const fields = new FormData(event.currentTarget);
         const recipient = available.find((option) => option.id === fields.get('recipient'));
         const body = String(fields.get('body') ?? '').trim();
-        if (!recipient || !body) return;
+        if (!recipient || !body) {
+            return;
+        }
 
         send(recipient.name, String(fields.get('subject')), body);
         close();
@@ -27,7 +29,12 @@ export function MessageComposer({ recipients, close, send }: Props) {
         <Drawer title="New message" close={close}>
             <form className="space-y-4" onSubmit={submitMessage}>
                 <Field label="Recipient">
-                    <select name="recipient" className="select" required disabled={!available.length}>
+                    <select
+                        name="recipient"
+                        className="select"
+                        required
+                        disabled={!available.length}
+                    >
                         {available.map((m) => (
                             <option key={m.id} value={m.id}>
                                 {m.name}
@@ -37,7 +44,12 @@ export function MessageComposer({ recipients, close, send }: Props) {
                 </Field>
                 {!available.length && <p role="status">No recipients available.</p>}
                 <Field label="Subject">
-                    <input name="subject" className="input" required pattern=".*\S.*" />
+                    <input
+                        name="subject"
+                        className="input"
+                        required
+                        pattern=".*\S.*"
+                    />
                 </Field>
                 <Field label="Message">
                     <textarea name="body" className="input min-h-24" required />

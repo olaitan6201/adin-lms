@@ -95,7 +95,12 @@ export default function Dashboard({
 }: Props) {
     if (workspace === 'study') {
         return (
-            <StudyWeek name={name} courses={courses} queue={queue} releases={releases}>
+            <StudyWeek
+                name={name}
+                courses={courses}
+                queue={queue}
+                releases={releases}
+            >
                 {study && <StudyDetails study={study} />}
             </StudyWeek>
         );
@@ -117,7 +122,12 @@ export default function Dashboard({
             )}
             <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
                 <div className="min-w-0 space-y-6">
-                    <ActionQueue title={desk.queue} hint={desk.hint} empty={desk.empty} items={queue} />
+                    <ActionQueue
+                        title={desk.queue}
+                        hint={desk.hint}
+                        empty={desk.empty}
+                        items={queue}
+                    />
                     {!queue.length && (
                         <Button asChild variant="outline">
                             <Link href={desk.url}>{desk.action}</Link>

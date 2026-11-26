@@ -39,7 +39,9 @@ export function PortalSearch({ academicLinks }: { academicLinks: Destination[] }
             open={open}
             onOpenChange={value => {
                 setOpen(value);
-                if (value) setQuery('');
+                if (value) {
+                    setQuery('');
+                }
             }}
         >
             <DialogTrigger className="portal-search" aria-label="Search navigation">

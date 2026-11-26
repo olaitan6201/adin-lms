@@ -55,14 +55,24 @@ export function EntryForm({
 }) {
     return (
         <RecordPanel title={title}>
-            <Form action={action} method="post" resetOnSuccess={resetOnSuccess} className="grid gap-3">
+            <Form
+                action={action}
+                method="post"
+                resetOnSuccess={resetOnSuccess}
+                className="grid gap-3"
+            >
                 {({ processing, errors, recentlySuccessful }) => (
                     <FormFeedback errors={errors}>
                         {children}
                         {body && (
                             <Label className="grid gap-2">
                                 Message
-                                <Textarea name="body" required maxLength={10000} rows={3} />
+                                <Textarea
+                                    name="body"
+                                    required
+                                    maxLength={10000}
+                                    rows={3}
+                                />
                             </Label>
                         )}
                         <Button className="justify-self-start" disabled={processing}>

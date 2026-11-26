@@ -59,7 +59,13 @@ export default function Reports({
                     </nav>
                 </Disclosure>
                 {options && reportScope && (
-                    <ReportFilters key={path('/reports', family)} path="/reports" filters={filters} options={options} family={family} />
+                    <ReportFilters
+                        key={path('/reports', family)}
+                        path="/reports"
+                        filters={filters}
+                        options={options}
+                        family={family}
+                    />
                 )}
             </div>
             <ReportResults

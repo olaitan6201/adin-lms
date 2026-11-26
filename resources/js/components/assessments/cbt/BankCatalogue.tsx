@@ -22,7 +22,12 @@ export function BankCatalogue({
             actions={
                 <>
                     <Badge tone="emerald">{questionTotal} questions</Badge>
-                    <Action size="sm" icon="plus" variant="primary" onClick={() => open('new')}>
+                    <Action
+                        size="sm"
+                        icon="plus"
+                        variant="primary"
+                        onClick={() => open('new')}
+                    >
                         New bank
                     </Action>
                 </>

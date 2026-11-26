@@ -34,7 +34,12 @@ export function StudentRegister({
             actions={
                 <>
                     {status(`${directorySummary.students.toLocaleString('en-US')} total`, 'emerald')}
-                    <Action variant="primary" size="sm" icon="upload" onClick={importRoster}>
+                    <Action
+                        variant="primary"
+                        size="sm"
+                        icon="upload"
+                        onClick={importRoster}
+                    >
                         Import roster
                     </Action>
                 </>

@@ -22,8 +22,18 @@ export function CourseRecord({ selectedCourse, courseModules, gradeWeights }: Co
             submit: 'Save draft',
             body: (
                 <>
-                    <Field label="Purpose" type="textarea" value={overview.purpose} required />
-                    <Field label="Course outline" type="textarea" value={overview.outline} required />
+                    <Field
+                        label="Purpose"
+                        type="textarea"
+                        value={overview.purpose}
+                        required
+                    />
+                    <Field
+                        label="Course outline"
+                        type="textarea"
+                        value={overview.outline}
+                        required
+                    />
                     <Field label="Entry requirement" value={overview.entry} />
                     <Field label="Delivery mode" value={overview.delivery} />
                 </>

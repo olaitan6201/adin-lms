@@ -35,7 +35,11 @@ export function Blueprint({
                     rows={data.examBlueprint.map((s) => [s.section, s.items, s.marks, s.type])}
                 />
             </Card>
-            <SittingConfiguration exam={exam} data={data} save={save} />
+            <SittingConfiguration
+                exam={exam}
+                data={data}
+                save={save}
+            />
             <Card
                 title="Attempt papers"
                 subtitle="The paper drawn for each attempt, kept as issued so a candidate can be shown exactly what they sat"
@@ -53,7 +57,9 @@ export function Blueprint({
                     rows={data.papersByExam[exam?.id ?? ''] ?? []}
                 />
                 <div className="mt-3 rounded-xl border border-ink-100 p-3.5">
-                    <strong>Re-issue rule</strong> <Badge tone="amber">Second attempt</Badge>
+                    <strong>Re-issue rule</strong>
+                    {' '}
+                    <Badge tone="amber">Second attempt</Badge>
                     <p className="mt-1 text-xs">
                         A candidate who is re-scheduled sits a new attempt drawn from the same blueprint. The
                         first paper is retained and shown to the reviewer alongside the second.
@@ -73,7 +79,10 @@ export function Blueprint({
             </Card>
             <div className="flex justify-end gap-2">
                 <Action onClick={close}>Close</Action>
-                <button className="btn btn-primary" form="sitting-configuration">
+                <button
+                    className="btn btn-primary"
+                    form="sitting-configuration"
+                >
                     Save
                 </button>
             </div>

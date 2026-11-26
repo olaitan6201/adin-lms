@@ -12,7 +12,9 @@ export function NextCourseActivity({ activities }: { activities: Activity[] }) {
         activities.find((a) => a.actionable) ??
         lessons.find((lesson) => !lesson.complete);
     const completed = lessons.filter((a) => a.complete).length;
-    if (!next && !lessons.length) return null;
+    if (!next && !lessons.length) {
+        return null;
+    }
 
     return (
         <Card>

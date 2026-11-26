@@ -35,7 +35,14 @@ export function RatioRing({ percent, label }: RatioRingProps) {
             className="relative grid size-20 shrink-0 place-items-center"
         >
             <svg viewBox="0 0 40 40" className="absolute inset-0 size-full -rotate-90" aria-hidden="true">
-                <circle cx="20" cy="20" r="17" fill="none" strokeWidth="3" className="stroke-ink-100" />
+                <circle
+                    cx="20"
+                    cy="20"
+                    r="17"
+                    fill="none"
+                    strokeWidth="3"
+                    className="stroke-ink-100"
+                />
                 <circle
                     cx="20"
                     cy="20"

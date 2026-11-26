@@ -23,7 +23,9 @@ export function WorkspacePalette() {
         .slice(0, 40);
     function toggle(value: boolean) {
         setOpen(value);
-        if (value) setQuery('');
+        if (value) {
+            setQuery('');
+        }
     }
 
     useEffect(() => {
@@ -37,12 +39,16 @@ export function WorkspacePalette() {
                 return;
 
             event.preventDefault();
-            if (event.repeat) return;
+            if (event.repeat) {
+                return;
+            }
 
             const modals = document.querySelectorAll(
                 'dialog:modal, [data-slot="sheet-content"][data-state="open"], [data-slot="dialog-content"][data-state="open"]',
             );
-            if (Array.from(modals).some(modal => modal !== panel.current)) return;
+            if (Array.from(modals).some(modal => modal !== panel.current)) {
+                return;
+            }
 
             setOpen(previous => !previous);
             setQuery('');

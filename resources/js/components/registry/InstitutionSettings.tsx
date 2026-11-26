@@ -94,7 +94,9 @@ export function InstitutionSettings({
 
     function replaceLogo(event: ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
-        if (!file || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) return;
+        if (!file || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = () => setLogo(String(reader.result));

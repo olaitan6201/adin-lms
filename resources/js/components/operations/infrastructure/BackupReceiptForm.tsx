@@ -8,7 +8,12 @@ export function BackupReceiptForm() {
     return (
         <Card>
             <CardContent>
-                <Form id="backup-receipt" className="min-w-0" action="/operations/backup-evidence" method="post">
+                <Form
+                    id="backup-receipt"
+                    className="min-w-0"
+                    action="/operations/backup-evidence"
+                    method="post"
+                >
                     {({ errors, processing, recentlySuccessful }) => (
                         <fieldset className="grid gap-3">
                             <legend className="font-semibold">New backup receipt</legend>

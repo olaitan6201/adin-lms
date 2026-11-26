@@ -14,8 +14,18 @@ export function SessionFields({
         <>
             <Field label="Session label" value={session.label} required />
             <div className="grid grid-cols-2 gap-3">
-                <Field label="Resumption date" type="date" value={session.startDate} required />
-                <Field label="Session end" type="date" value={session.endDate} required />
+                <Field
+                    label="Resumption date"
+                    type="date"
+                    value={session.startDate}
+                    required
+                />
+                <Field
+                    label="Session end"
+                    type="date"
+                    value={session.endDate}
+                    required
+                />
             </div>
             <Field label="Semester" value={session.semester} options={['First Semester', 'Second Semester']} />
             <section className="rounded-xl border border-ink-100 p-4">

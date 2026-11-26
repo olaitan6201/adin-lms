@@ -39,7 +39,12 @@ export function PortalTopbar({
                     href={signedIn ? (routes.dashboard ?? '/dashboard') : '/'}
                     aria-label={`${branding.institution} home`}
                 >
-                    <img src={branding.logoWhite || branding.logoFull} alt="" height={16} width={18} />
+                    <img
+                        src={branding.logoWhite || branding.logoFull}
+                        alt=""
+                        height={16}
+                        width={18}
+                    />
                     <span>{branding.institution}</span>
                 </Link>
                 <p>{title}</p>

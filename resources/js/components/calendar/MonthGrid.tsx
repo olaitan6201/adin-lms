@@ -28,7 +28,13 @@ function CalendarDay({ day, month, today, events }: {
                 const title = `${item.kind}: ${item.title} · ${item.context}`;
                 const style = `mt-1 hidden truncate rounded px-1 py-0.5 text-[11px] font-medium sm:block ${tones[eventGroup(item)]}`;
                 return item.href ? (
-                    <Link key={index} aria-label={title} title={title} href={item.href} className={style}>
+                    <Link
+                        key={index}
+                        aria-label={title}
+                        title={title}
+                        href={item.href}
+                        className={style}
+                    >
                         {item.title}
                     </Link>
                 ) : (

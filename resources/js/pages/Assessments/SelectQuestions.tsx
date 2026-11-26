@@ -50,7 +50,12 @@ export default function SelectQuestions({ item, title, maximum, questions, bank,
                     </div>
                 ))}
             </dl>
-            <QuestionPicker item={item} maximum={maximum} questions={questions} topics={topics} />
+            <QuestionPicker
+                item={item}
+                maximum={maximum}
+                questions={questions}
+                topics={topics}
+            />
         </AssessmentWorkspace>
     );
 }

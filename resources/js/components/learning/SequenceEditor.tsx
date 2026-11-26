@@ -23,7 +23,8 @@ export function SequenceEditor({ activities, action }: SequenceEditorProps) {
                 {form.data.activities.map((id, i) => (
                     <li key={id}>
                         {i + 1}. {titles.get(id)}{' '}
-                        <Button variant="outline"
+                        <Button
+                            variant="outline"
                             type="button"
                             aria-label={`Move ${titles.get(id)} earlier`}
                             onClick={() => move(i, -1)}
@@ -31,7 +32,8 @@ export function SequenceEditor({ activities, action }: SequenceEditorProps) {
                         >
                             Earlier
                         </Button>{' '}
-                        <Button variant="outline"
+                        <Button
+                            variant="outline"
                             type="button"
                             aria-label={`Move ${titles.get(id)} later`}
                             onClick={() => move(i, 1)}

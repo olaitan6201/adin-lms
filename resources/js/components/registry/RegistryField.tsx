@@ -10,7 +10,12 @@ interface FieldProps {
 function FieldInput({ label, value, options, type = 'text', required, readOnly }: FieldProps) {
     if (options) {
         return (
-            <select className="select block w-full" aria-label={label} name={label} defaultValue={value}>
+            <select
+                className="select block w-full"
+                aria-label={label}
+                name={label}
+                defaultValue={value}
+            >
                 {options.map((option) => (
                     <option key={option}>{option}</option>
                 ))}
@@ -20,7 +25,13 @@ function FieldInput({ label, value, options, type = 'text', required, readOnly }
 
     if (type === 'textarea') {
         return (
-            <textarea className="input block w-full" rows={3} name={label} defaultValue={value} required={required} />
+            <textarea
+                className="input block w-full"
+                rows={3}
+                name={label}
+                defaultValue={value}
+                required={required}
+            />
         );
     }
 

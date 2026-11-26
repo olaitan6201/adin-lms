@@ -41,7 +41,9 @@ export default function Classroom({
             session?.details?.date === date && session.details.start === start ? session.starts : `${date}, ${start}`;
         const fields = { title, course, duration, starts, details };
         if (selection.kind === 'details') {
-            if (!session?.details) return;
+            if (!session?.details) {
+                return;
+            }
 
             setSessions((rows) => rows.map((row) => (row.id === selection.sessionId ? { ...row, ...fields } : row)));
         } else {

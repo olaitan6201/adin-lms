@@ -58,7 +58,9 @@ export function PortalLayout({ children }: { children: ReactNode }) {
           : module.replace(/([a-z])([A-Z])/g, '$1 $2');
 
     useEffect(() => {
-        if (previous.current === path) return;
+        if (previous.current === path) {
+            return;
+        }
 
         previous.current = path;
         navigated.current = true;
@@ -68,7 +70,9 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     useEffect(() => {
         const query = window.matchMedia('(min-width: 1024px)');
         const resize = () => {
-            if (query.matches) setOpen(false);
+            if (query.matches) {
+                setOpen(false);
+            }
         };
 
         query.addEventListener('change', resize);
@@ -79,7 +83,9 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         <Sheet
             open={open}
             onOpenChange={value => {
-                if (value) navigated.current = false;
+                if (value) {
+                    navigated.current = false;
+                }
 
                 setOpen(value);
             }}

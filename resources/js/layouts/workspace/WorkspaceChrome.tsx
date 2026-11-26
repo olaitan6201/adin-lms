@@ -32,7 +32,9 @@ export function WorkspaceChrome({ screen, children }: {
     useEffect(() => {
         const desktop = window.matchMedia('(min-width: 1024px)');
         const resize = () => {
-            if (desktop.matches) setOpen(false);
+            if (desktop.matches) {
+                setOpen(false);
+            }
         };
 
         desktop.addEventListener('change', resize);

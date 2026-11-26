@@ -88,7 +88,13 @@ export default function Qa() {
                     title="Review queue"
                     subtitle="Structures, outcome mappings and record corrections submitted for review"
                     actions={
-                        <Action variant="primary" icon="target" size="sm" disabled={!queue.length} onClick={openReview}>
+                        <Action
+                            variant="primary"
+                            icon="target"
+                            size="sm"
+                            disabled={!queue.length}
+                            onClick={openReview}
+                        >
                             Open review
                         </Action>
                     }

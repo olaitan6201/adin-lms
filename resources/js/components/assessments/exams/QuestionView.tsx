@@ -74,7 +74,12 @@ export function QuestionView({
                     )}
                 </fieldset>
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-4">
-                    <Action size="sm" icon="flag" aria-pressed={flagged} onClick={flag}>
+                    <Action
+                        size="sm"
+                        icon="flag"
+                        aria-pressed={flagged}
+                        onClick={flag}
+                    >
                         {flagged ? 'Flagged for review' : 'Mark for review'}
                     </Action>
                     <small className="text-xs text-ink-400">

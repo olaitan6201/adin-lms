@@ -6,7 +6,9 @@ export function DateList({ events, empty }: {
     events: AgendaDate[];
     empty: string;
 }) {
-    if (!events.length) return <p className="text-sm text-ink-600">{empty}</p>;
+    if (!events.length) {
+        return <p className="text-sm text-ink-600">{empty}</p>;
+    }
 
     return (
         <ul className="divide-y divide-ink-100">

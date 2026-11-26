@@ -62,7 +62,9 @@ export function useCourseDefinitions({
             body: <DefinitionFields {...{ course, courses, prerequisite, selectedCourse, accountingOutcomes }} />,
             save: (data) => {
                 const next = changeDefinition(courses, data, prerequisite, course);
-                if (typeof next === 'string') return next;
+                if (typeof next === 'string') {
+                    return next;
+                }
 
                 setCourses(next);
             },

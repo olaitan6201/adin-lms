@@ -17,7 +17,12 @@ export function DefinitionRegister({
             actions={
                 <>
                     {status(`${courses.length} courses`)}
-                    <Action size="sm" variant="primary" icon="plus" onClick={() => courseForm()}>
+                    <Action
+                        size="sm"
+                        variant="primary"
+                        icon="plus"
+                        onClick={() => courseForm()}
+                    >
                         Add course
                     </Action>
                 </>

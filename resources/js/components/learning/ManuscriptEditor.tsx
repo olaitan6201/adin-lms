@@ -28,14 +28,18 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
 
     function insertQuiz(event: ChangeEvent<HTMLSelectElement>) {
         const quiz = quizzes.find((choice) => choice.id === event.currentTarget.value);
-        if (quiz) insert(`[${quiz.title}](${quiz.id})`);
+        if (quiz) {
+            insert(`[${quiz.title}](${quiz.id})`);
+        }
 
         event.currentTarget.value = '';
     }
 
     function insertResource(event: ChangeEvent<HTMLSelectElement>) {
         const resourceId = event.currentTarget.value;
-        if (resourceId) insert(`{{resource:${resourceId}}}`);
+        if (resourceId) {
+            insert(`{{resource:${resourceId}}}`);
+        }
 
         event.currentTarget.value = '';
     }
@@ -55,7 +59,12 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                     'Reading list',
                     'Summary',
                 ].map((name) => (
-                    <Button variant="outline" type="button" key={name} onClick={() => insert(`## ${name}`)}>
+                    <Button
+                        variant="outline"
+                        type="button"
+                        key={name}
+                        onClick={() => insert(`## ${name}`)}
+                    >
                         {name}
                     </Button>
                 ))}
@@ -97,7 +106,12 @@ export function ManuscriptEditor({ lesson, quizzes }: ManuscriptEditorProps) {
                     onChange={(e) => setText(e.target.value)}
                 />
             </Label>
-            <Button variant="outline" type="button" aria-expanded={preview} onClick={() => setPreview(!preview)}>
+            <Button
+                variant="outline"
+                type="button"
+                aria-expanded={preview}
+                onClick={() => setPreview(!preview)}
+            >
                 Preview manuscript
             </Button>
             {preview && <Manuscript text={text} />}

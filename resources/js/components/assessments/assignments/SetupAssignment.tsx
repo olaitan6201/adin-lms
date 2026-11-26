@@ -19,7 +19,12 @@ export function SetupAssignment({ id }: { id: string }) {
                     <Field label="Closes (server time)" name="closes_at" type="datetime-local" />
                 </div>
             </fieldset>
-            <Field label="Maximum file size in bytes" name="max_bytes" type="number" value="1048576" />
+            <Field
+                label="Maximum file size in bytes"
+                name="max_bytes"
+                type="number"
+                value="1048576"
+            />
             <Label className="grid min-w-0 gap-2 leading-normal">
                 Accepted formats
                 <ValidatedSelect
@@ -52,7 +57,12 @@ export function SetupAssignment({ id }: { id: string }) {
             <Check name="allow_late" label="Allow late submissions until close" />
             <Check name="group_work" label="Group work" />
             <Check name="editable" label="Accept revisions" />
-            <Field name="reference" type="file" label="Reference file (PDF or text)" optional />
+            <Field
+                name="reference"
+                type="file"
+                label="Reference file (PDF or text)"
+                optional
+            />
         </Post>
     );
 }

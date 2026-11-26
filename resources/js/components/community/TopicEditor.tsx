@@ -19,7 +19,9 @@ export function TopicEditor({ topic, forums, student, close, save }: Props) {
         const fields = new FormData(event.currentTarget);
         const reply = String(fields.get('reply') ?? '').trim();
         if (student) {
-            if (reply && topic.allowReplies) save({ kind: 'reply', topicId: topic.id, reply });
+            if (reply && topic.allowReplies) {
+                save({ kind: 'reply', topicId: topic.id, reply });
+            }
 
             return;
         }

@@ -15,7 +15,9 @@ export function AttendanceSummary({ columns, rows }: AttendanceProps) {
               }),
           )
         : null;
-    if (!attendanceCounts) return null;
+    if (!attendanceCounts) {
+        return null;
+    }
 
     return (
         <figure className="mb-5 rounded-xl bg-ink-50 p-4">

@@ -9,11 +9,15 @@ const Feedback = createContext<{
 
 export function useFieldFeedback(name?: string, description?: string) {
     const context = useContext(Feedback);
-    if (!context || !name) return {};
+    if (!context || !name) {
+        return {};
+    }
 
     const key = name.replace(/\[(\w+)\]/g, '.$1').replace(/\[\]$/, '');
     const fields = Object.keys(context.errors).filter((field) => field === key || field.startsWith(`${key}.`));
-    if (!fields.length) return {};
+    if (!fields.length) {
+        return {};
+    }
 
     return {
         'aria-invalid': true as const,
@@ -30,7 +34,13 @@ function ErrorSummary({ errors, id }: {
         summary.current?.focus();
     }, [errors]);
     return (
-        <Alert variant="destructive" ref={summary} role="group" aria-labelledby={`${id}-title`} tabIndex={-1}>
+        <Alert
+            variant="destructive"
+            ref={summary}
+            role="group"
+            aria-labelledby={`${id}-title`}
+            tabIndex={-1}
+        >
             <AlertTitle id={`${id}-title`}>Check your entries</AlertTitle>
             <AlertDescription>
                 <ul>

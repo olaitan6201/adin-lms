@@ -20,7 +20,12 @@ export function ScoreTable({
             rows={visible.map((r) => [
                 <RecordName key="student" name={r.student} meta={r.matric} />,
                 ...metrics.map((metric) => (
-                    <ScoreField key={metric[0]} row={r} metric={metric} adjust={adjustScore} />
+                    <ScoreField
+                        key={metric[0]}
+                        row={r}
+                        metric={metric}
+                        adjust={adjustScore}
+                    />
                 )),
                 <span key="total" className="tnum text-[13px] font-semibold text-ink-900">
                     {r.total}

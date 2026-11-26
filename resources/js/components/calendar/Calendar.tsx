@@ -68,7 +68,12 @@ export function Calendar({ role, data }: {
                             <Action icon="calendar" size="sm" onClick={() => setOffset(0)}>
                                 Today
                             </Action>
-                            <Action icon="plus" size="sm" variant="primary" onClick={() => setSelected('new')}>
+                            <Action
+                                icon="plus"
+                                size="sm"
+                                variant="primary"
+                                onClick={() => setSelected('new')}
+                            >
                                 Add event
                             </Action>
                         </>
@@ -105,7 +110,12 @@ export function Calendar({ role, data }: {
                             ))}
                         </div>
                     </div>
-                    <WorkspaceMonthGrid today={today} days={days} events={visibleEvents} onSelect={setSelected} />
+                    <WorkspaceMonthGrid
+                        today={today}
+                        days={days}
+                        events={visibleEvents}
+                        onSelect={setSelected}
+                    />
                 </Card>
                 <CalendarAgenda
                     upcoming={upcoming}

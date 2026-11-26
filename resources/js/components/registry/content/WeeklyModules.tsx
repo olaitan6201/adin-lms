@@ -54,7 +54,9 @@ export function WeeklyModules({
         });
     }
 
-    if (!visible) return null;
+    if (!visible) {
+        return null;
+    }
 
     return (
         <Records

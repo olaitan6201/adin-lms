@@ -20,7 +20,12 @@ export function ResourceRegister({ files, browse, upload, onSelect }: Props) {
             actions={
                 <>
                     {status('Upload limit 200 MB')}
-                    <Action icon="upload" size="sm" variant="primary" onClick={browse}>
+                    <Action
+                        icon="upload"
+                        size="sm"
+                        variant="primary"
+                        onClick={browse}
+                    >
                         Upload resource
                     </Action>
                 </>

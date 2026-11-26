@@ -18,10 +18,14 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
     const { messages, thread, open, send, reply } = inbox;
     function submitReply(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (!thread) return;
+        if (!thread) {
+            return;
+        }
 
         const body = String(new FormData(event.currentTarget).get('body')).trim();
-        if (!body) return;
+        if (!body) {
+            return;
+        }
 
         reply(thread.id, body);
         event.currentTarget.reset();

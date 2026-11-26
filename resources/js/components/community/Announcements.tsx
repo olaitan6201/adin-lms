@@ -45,7 +45,12 @@ export function Announcements({
             title="Announcements and notices"
             subtitle="Lecturer announcements and administrative notices, with optional SMS and push"
             actions={
-                <Action icon="megaphone" size="sm" variant="primary" onClick={() => select('new')}>
+                <Action
+                    icon="megaphone"
+                    size="sm"
+                    variant="primary"
+                    onClick={() => select('new')}
+                >
                     New announcement
                 </Action>
             }
@@ -90,7 +95,12 @@ export function Announcements({
                             </select>
                         </Field>
                         <Field label="Message">
-                            <textarea className="input min-h-28" name="body" defaultValue={item?.body} required />
+                            <textarea
+                                className="input min-h-28"
+                                name="body"
+                                defaultValue={item?.body}
+                                required
+                            />
                         </Field>
                         <fieldset className="space-y-2 rounded-xl border p-4">
                             <legend>Delivery channels</legend>

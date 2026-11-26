@@ -23,7 +23,12 @@ export function TeachingOverview({ health }: { health: Health }) {
                         <div className="mt-5 space-y-4">
                             <Meter value={health.completion} label="Material completed by students" showValue={true} />
                             <Meter value={health.submissions} label="Assignment submission rate" showValue={true} />
-                            <Meter value={health.attendanceRate} label="Attendance" showValue={true} tone="sky" />
+                            <Meter
+                                value={health.attendanceRate}
+                                label="Attendance"
+                                showValue={true}
+                                tone="sky"
+                            />
                         </div>
                     </>
                 </Card>

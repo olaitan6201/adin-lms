@@ -26,7 +26,13 @@ export function Trend({ data, label, height = 240 }: TrendProps) {
             </desc>
             {[0, 0.25, 0.5, 0.75, 1].map((r) => (
                 <g key={r}>
-                    <line x1="34" x2="748" y1={y(r * max)} y2={y(r * max)} stroke="#E7ECF1" />
+                    <line
+                        x1="34"
+                        x2="748"
+                        y1={y(r * max)}
+                        y2={y(r * max)}
+                        stroke="#E7ECF1"
+                    />
                     <text x="26" y={y(r * max) + 3.5} textAnchor="end">
                         {Math.round(r * max)}
                     </text>
@@ -35,7 +41,12 @@ export function Trend({ data, label, height = 240 }: TrendProps) {
             {data.labels.map(
                 (l, i) =>
                     (i % Math.ceil(data.labels.length / 8) === 0 || i === data.labels.length - 1) && (
-                        <text key={l} x={x(i)} y={height - 8} textAnchor="middle">
+                        <text
+                            key={l}
+                            x={x(i)}
+                            y={height - 8}
+                            textAnchor="middle"
+                        >
                             {l}
                         </text>
                     ),
@@ -60,7 +71,15 @@ export function Trend({ data, label, height = 240 }: TrendProps) {
                             strokeLinejoin="round"
                         />
                         {s.values.map((v, i) => (
-                            <circle key={i} cx={x(i)} cy={y(v)} r="2.6" strokeWidth="1.8" stroke={s.color} fill="white">
+                            <circle
+                                key={i}
+                                cx={x(i)}
+                                cy={y(v)}
+                                r="2.6"
+                                strokeWidth="1.8"
+                                stroke={s.color}
+                                fill="white"
+                            >
                                 <title>
                                     {data.labels[i]}: {v}
                                 </title>
@@ -71,8 +90,20 @@ export function Trend({ data, label, height = 240 }: TrendProps) {
             })}
             {data.series.map((s, i) => (
                 <g key={s.name} transform={`translate(${34 + i * 150} 8)`}>
-                    <rect x="0" y="-7" width="10" height="10" rx="3" fill={s.color} />
-                    <text x="16" y="2" fontSize="10.5" fill="#33475F">
+                    <rect
+                        x="0"
+                        y="-7"
+                        width="10"
+                        height="10"
+                        rx="3"
+                        fill={s.color}
+                    />
+                    <text
+                        x="16"
+                        y="2"
+                        fontSize="10.5"
+                        fill="#33475F"
+                    >
                         {s.name}
                     </text>
                 </g>

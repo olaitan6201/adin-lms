@@ -26,7 +26,12 @@ export default function QuestionBank({ offering, filters, topics, questions, kin
                 <h1 className="text-3xl font-semibold tracking-tight">Question bank</h1>
                 <p>Edits create a new revision. Existing examination papers keep their fixed versions.</p>
             </header>
-            <BankFilters base={base} filters={filters} kinds={kinds} topics={topics} />
+            <BankFilters
+                base={base}
+                filters={filters}
+                kinds={kinds}
+                topics={topics}
+            />
             <QuestionRevisions offering={offering} questions={questions} />
             <section aria-labelledby="author-title">
                 <h2 id="author-title" className="text-xl font-semibold">

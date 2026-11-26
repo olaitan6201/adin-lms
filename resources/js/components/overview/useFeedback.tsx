@@ -4,7 +4,9 @@ import { Icon } from '@/components/icons/Icon';
 export function useFeedback() {
     const [notice, setNotice] = useState<{ text: string }>();
     useEffect(() => {
-        if (!notice) return;
+        if (!notice) {
+            return;
+        }
 
         const id = window.setTimeout(() => setNotice(undefined), 3800);
         return () => window.clearTimeout(id);

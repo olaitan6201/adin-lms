@@ -54,7 +54,12 @@ export default function Assignment({
                 </nav>
             </header>
             <div className="grid items-start gap-5 xl:grid-cols-2">
-                <AssignmentBrief assignment={a} url={url} references={references} rubric={rubric} />
+                <AssignmentBrief
+                    assignment={a}
+                    url={url}
+                    references={references}
+                    rubric={rubric}
+                />
                 <div className="assessment-panel">
                     {!marker && individualSubmissionComplete && (
                         <section
@@ -87,7 +92,12 @@ export default function Assignment({
                     )}
                 </div>
             </div>
-            <SubmissionHistory rows={rows} url={url} marker={marker} rubric={rubric} />
+            <SubmissionHistory
+                rows={rows}
+                url={url}
+                marker={marker}
+                rubric={rubric}
+            />
         </AssessmentWorkspace>
     );
 }

@@ -116,7 +116,12 @@ export default function Desk({
                     ))}
                 </CourseDisclosure>
             )}
-            <ResultRevisions grades={grades} teacher={teacher} officer={officer} who={who} />
+            <ResultRevisions
+                grades={grades}
+                teacher={teacher}
+                officer={officer}
+                who={who}
+            />
         </AssessmentWorkspace>
     );
 }

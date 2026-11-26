@@ -39,11 +39,22 @@ export function Action({
     );
 
     return href && !disabled ? (
-        <Link {...attributes} href={href} onClick={onClick} className={className}>
+        <Link
+            {...attributes}
+            href={href}
+            onClick={onClick}
+            className={className}
+        >
             {content}
         </Link>
     ) : (
-        <button {...attributes} type="button" disabled={disabled} onClick={onClick} className={className}>
+        <button
+            {...attributes}
+            type="button"
+            disabled={disabled}
+            onClick={onClick}
+            className={className}
+        >
             {content}
         </button>
     );

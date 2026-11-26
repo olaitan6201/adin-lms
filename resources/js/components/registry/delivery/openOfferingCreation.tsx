@@ -28,7 +28,9 @@ export function openOfferingCreation({
         ),
         save: (d) => {
             const course = courses.find((record) => record.code === val(d, 'Course'));
-            if (!course) return 'Select an available course to create an offering.';
+            if (!course) {
+                return 'Select an available course to create an offering.';
+            }
 
             onCreate({
                 id: crypto.randomUUID(),

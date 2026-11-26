@@ -73,9 +73,19 @@ export function ContentLibrary({
                 onChange={pickFiles}
             />
             <WeeklyModules {...{ initialModules, contentSummary, contents, desk }} visible={tab === 0} />
-            {tab !== 2 && <ResourceRegister files={files} browse={browse} upload={upload} onSelect={selectResource} />}
+            {tab !== 2 && <ResourceRegister
+                files={files}
+                browse={browse}
+                upload={upload}
+                onSelect={selectResource}
+            />}
             {tab === 2 && <Checklist items={items} />}
-            {tab !== 0 && <ContentPolicy desk={desk} groups={groups} selection={selection} save={save} />}
+            {tab !== 0 && <ContentPolicy
+                desk={desk}
+                groups={groups}
+                selection={selection}
+                save={save}
+            />}
             <Note>
                 Resource access can be scheduled by week and restricted by delivery mode. Replacing a file keeps the
                 previous version available for audit and for students who downloaded it.

@@ -18,7 +18,14 @@ export function Ring({ value, label, sublabel, size = 104, tone }: RingProps) {
             aria-label={`${label}: ${percent}%`}
         >
             <svg viewBox="0 0 104 104" className="h-full w-full -rotate-90" aria-hidden="true">
-                <circle cx="52" cy="52" r="47.5" fill="none" className="stroke-ink-100" strokeWidth="9" />
+                <circle
+                    cx="52"
+                    cy="52"
+                    r="47.5"
+                    fill="none"
+                    className="stroke-ink-100"
+                    strokeWidth="9"
+                />
                 <circle
                     cx="52"
                     cy="52"

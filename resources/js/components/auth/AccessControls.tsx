@@ -44,7 +44,9 @@ export function AccessNote({ warning = false, children }: {
 export function useAccessNotice() {
     const [notice, setNotice] = useState<{ text: string } | null>(null);
     useEffect(() => {
-        if (!notice) return;
+        if (!notice) {
+            return;
+        }
 
         const timer = window.setTimeout(() => setNotice(null), 3800);
         return () => window.clearTimeout(timer);

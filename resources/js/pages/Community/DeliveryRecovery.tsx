@@ -45,7 +45,12 @@ function DeliveryRow({ row, onRecovered }: {
                 onSuccess={() => onRecovered(reference)}
             >
                 {({ processing }) => (
-                    <Button type="submit" variant="outline" disabled={processing} aria-busy={processing}>
+                    <Button
+                        type="submit"
+                        variant="outline"
+                        disabled={processing}
+                        aria-busy={processing}
+                    >
                         {processing ? 'Retrying delivery' : 'Retry delivery'} {reference}
                     </Button>
                 )}

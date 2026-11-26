@@ -59,7 +59,12 @@ export function GroupEditor({
                     />
                 </Field>
                 <Field label="Course">
-                    <select name="course" className="select" required onChange={() => setCourseError('')}>
+                    <select
+                        name="course"
+                        className="select"
+                        required
+                        onChange={() => setCourseError('')}
+                    >
                         {courses.map((c) => (
                             <option key={c}>{c}</option>
                         ))}

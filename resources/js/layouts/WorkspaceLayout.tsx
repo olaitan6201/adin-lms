@@ -11,7 +11,9 @@ export default function WorkspaceLayout({ children }: { children: ReactNode }) {
     const screen =
         entries.find(item => item.key === (props.screenKey ?? componentKey)) ??
         entries.find(item => path.endsWith(`/${item.key}`));
-    if (!screen) return <>{children}</>;
+    if (!screen) {
+        return <>{children}</>;
+    }
 
     return (
         <WorkspaceOverlays>

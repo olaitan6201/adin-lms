@@ -35,7 +35,12 @@ export function GroupManager({
         >
             <Label className="grid gap-2">
                 Group name
-                <Input name="name" required maxLength={191} defaultValue={team?.name} />
+                <Input
+                    name="name"
+                    required
+                    maxLength={191}
+                    defaultValue={team?.name}
+                />
             </Label>
             <fieldset>
                 <legend>Registered learners</legend>

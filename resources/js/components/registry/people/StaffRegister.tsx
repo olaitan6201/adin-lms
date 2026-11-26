@@ -39,7 +39,12 @@ export function StaffRegister({
             actions={
                 <>
                     {status(`${visible.length} shown`)}
-                    <Action variant="primary" size="sm" icon="userPlus" onClick={() => editStaff()}>
+                    <Action
+                        variant="primary"
+                        size="sm"
+                        icon="userPlus"
+                        onClick={() => editStaff()}
+                    >
                         Invite user
                     </Action>
                 </>

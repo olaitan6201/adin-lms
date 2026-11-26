@@ -21,8 +21,18 @@ export function DefinitionFields({
     return (
         <>
             <div className="grid grid-cols-2 gap-3">
-                <Field label="Course code" value={course?.code} readOnly={!!course} required />
-                <Field label="Credit units" type="number" value={course?.units ?? 3} required />
+                <Field
+                    label="Course code"
+                    value={course?.code}
+                    readOnly={!!course}
+                    required
+                />
+                <Field
+                    label="Credit units"
+                    type="number"
+                    value={course?.units ?? 3}
+                    required
+                />
                 <Field
                     label="Level"
                     value={course?.level}

@@ -20,7 +20,9 @@ export function Sections<Id extends string>({
 }) {
     function select(value: string) {
         const item = items.find(item => item.id === value);
-        if (item) change(item.id);
+        if (item) {
+            change(item.id);
+        }
     }
 
     return (
@@ -44,7 +46,13 @@ export function Sections<Id extends string>({
                 </Tabs.List>
             </Card>
             {items.map(({ id, panel }) => (
-                <Tabs.Content forceMount value={id} key={id} hidden={active !== id} className="space-y-5">
+                <Tabs.Content
+                    forceMount
+                    value={id}
+                    key={id}
+                    hidden={active !== id}
+                    className="space-y-5"
+                >
                     {panel}
                 </Tabs.Content>
             ))}

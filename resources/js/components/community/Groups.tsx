@@ -25,10 +25,14 @@ export function Groups({
     const courses = availableCourses(discussionGroups);
     function postToGroup(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!group) return;
+        if (!group) {
+            return;
+        }
 
         const body = String(new FormData(e.currentTarget).get('post')).trim();
-        if (!body) return;
+        if (!body) {
+            return;
+        }
 
         const post: GroupPost = {
             id: crypto.randomUUID(),
@@ -97,7 +101,12 @@ export function Groups({
             </Card>
             {group && <GroupDiscussion {...{ group, items, postToGroup }} />}
             {adding && (
-                <GroupEditor groups={groups} courses={courses} create={createGroup} close={() => setAdding(false)} />
+                <GroupEditor
+                    groups={groups}
+                    courses={courses}
+                    create={createGroup}
+                    close={() => setAdding(false)}
+                />
             )}
         </div>
     );

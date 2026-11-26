@@ -50,7 +50,12 @@ export default function Courses({ courses, historyUrl, staffUrl, workloadUrl }: 
                         <h2>Course offerings</h2>
                         <span className="course-tag">{courses.length} total</span>
                     </div>
-                    <div className="course-table-scroll" tabIndex={0} role="region" aria-label="Course offerings">
+                    <div
+                        className="course-table-scroll"
+                        tabIndex={0}
+                        role="region"
+                        aria-label="Course offerings"
+                    >
                         <table className="course-table">
                             <thead>
                                 <tr>

@@ -36,7 +36,9 @@ export function Forums({ student, forums, threads }: {
 
     function moderateForum(id: string) {
         const first = topics.find((topic) => topic.forum === id);
-        if (first) openTopic(first.id);
+        if (first) {
+            openTopic(first.id);
+        }
         else setSelected({ kind: 'forum', id });
     }
 

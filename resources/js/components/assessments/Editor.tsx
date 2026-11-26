@@ -40,17 +40,32 @@ function FieldInput({
     }
 
     if (field.type === 'textarea') {
-        return <textarea rows={4} {...props} />;
+        return (
+            <textarea
+                rows={4}
+                {...props}
+            />
+        );
     }
 
-    return <input type={field.type ?? 'text'} min={field.min} max={field.max} {...props} />;
+    return (
+        <input
+            type={field.type ?? 'text'}
+            min={field.min}
+            max={field.max}
+            {...props}
+        />
+    );
 }
 
 export function Fields({ fields, values, change }: FieldsProps) {
     return (
         <div className="grid gap-4">
             {fields.map((field) => (
-                <label key={field.label} className="grid gap-1.5 text-sm font-medium">
+                <label
+                    key={field.label}
+                    className="grid gap-1.5 text-sm font-medium"
+                >
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
                         {field.label}
                     </span>
@@ -95,9 +110,17 @@ export function Editor({
     }
 
     return (
-        <form id={formId} className="space-y-4" onSubmit={submit}>
+        <form
+            id={formId}
+            className="space-y-4"
+            onSubmit={submit}
+        >
             {children}
-            <Fields fields={fields} values={values} change={setValues} />
+            <Fields
+                fields={fields}
+                values={values}
+                change={setValues}
+            />
             {!externalSubmit && <button className={submitClass}>{label}</button>}
         </form>
     );

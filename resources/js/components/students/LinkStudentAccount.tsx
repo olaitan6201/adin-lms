@@ -17,7 +17,13 @@ export function LinkStudentAccount() {
                 <Form action="/students/link" method="post" className="grid gap-3">
                     {({ errors, processing }) => (
                         <FormFeedback errors={errors}>
-                            <PortalField label="Upstream student ID" name="student" required error={errors.student} announceError={false} />
+                            <PortalField
+                                label="Upstream student ID"
+                                name="student"
+                                required
+                                error={errors.student}
+                                announceError={false}
+                            />
                             <PortalField
                                 label="Existing LMS account email"
                                 name="account"

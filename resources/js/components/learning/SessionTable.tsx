@@ -58,7 +58,12 @@ export function SessionTable({
             actions={
                 <>
                     <Badge tone="sky">{liveClasses.filter((row) => row.state === 'scheduled').length} scheduled</Badge>
-                    <Action icon="plus" variant="primary" size="sm" onClick={openSchedule}>
+                    <Action
+                        icon="plus"
+                        variant="primary"
+                        size="sm"
+                        onClick={openSchedule}
+                    >
                         Schedule class
                     </Action>
                 </>

@@ -23,5 +23,10 @@ const drawerCounts: Readonly<Partial<Record<string, 1 | 2>>> = {
 export function WorkspaceDrawerEdge({ screen }: { screen: string }) {
     const count = drawerCounts[screen];
 
-    return count ? <span aria-hidden="true" inert className="ws-drawer-edge" data-panels={count} /> : null;
+    return count ? <span
+        aria-hidden="true"
+        inert
+        className="ws-drawer-edge"
+        data-panels={count}
+    /> : null;
 }

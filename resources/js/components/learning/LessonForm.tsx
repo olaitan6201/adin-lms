@@ -35,7 +35,12 @@ export function LessonForm({
             >
                 <Label className="grid gap-2">
                     Title
-                    <Input name="title" required maxLength={191} defaultValue={lesson?.title} />
+                    <Input
+                        name="title"
+                        required
+                        maxLength={191}
+                        defaultValue={lesson?.title}
+                    />
                 </Label>
                 <Label className="grid gap-2">
                     Order

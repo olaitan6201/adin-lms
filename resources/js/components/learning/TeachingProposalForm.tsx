@@ -20,7 +20,12 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                 <input type="hidden" name="previous_revision" value={previous?.revision ?? 0} />
                 <Label className="grid gap-2">
                     Proposed teaching title
-                    <Input name="title" required maxLength={191} defaultValue={previous?.snapshot.title} />
+                    <Input
+                        name="title"
+                        required
+                        maxLength={191}
+                        defaultValue={previous?.snapshot.title}
+                    />
                 </Label>
                 <Label className="grid gap-2">
                     Course introduction and outcomes
@@ -57,7 +62,12 @@ export function TeachingProposalForm({ base, previous }: ProposalFormProps) {
                     </fieldset>
                 ))}
                 <div className="flex gap-4">
-                    <Button variant="outline" type="button" disabled={count >= 32} onClick={() => setCount(count + 1)}>
+                    <Button
+                        variant="outline"
+                        type="button"
+                        disabled={count >= 32}
+                        onClick={() => setCount(count + 1)}
+                    >
                         Add week
                     </Button>
                     {count > 1 && (

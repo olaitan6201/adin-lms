@@ -119,7 +119,12 @@ export function RubricEditor({ index, criteria, maximum, onChange }: Props) {
                     </Button>
                 </fieldset>
             ))}
-            <Button variant="outline" type="button" disabled={criteria.length >= 50} onClick={addCriterion}>
+            <Button
+                variant="outline"
+                type="button"
+                disabled={criteria.length >= 50}
+                onClick={addCriterion}
+            >
                 Add criterion to assessment {index + 1}
             </Button>
         </fieldset>

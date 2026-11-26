@@ -9,7 +9,12 @@ export function MonitoringSettings({ settings }: { settings: Infrastructure['set
     return (
         <Card>
             <CardContent>
-                <Form id="monitor-settings" className="min-w-0" action="/operations/infrastructure" method="post">
+                <Form
+                    id="monitor-settings"
+                    className="min-w-0"
+                    action="/operations/infrastructure"
+                    method="post"
+                >
                     {({ errors, processing, recentlySuccessful }) => (
                         <fieldset className="grid gap-3">
                             <legend className="font-semibold">Monitoring and attendance integration</legend>

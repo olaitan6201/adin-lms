@@ -38,7 +38,12 @@ export function ReportResults({
                         </p>
                     )}
                     {table.rows.length > 0 && (
-                        <ReportTable title={names[family]} columns={columns} rows={table.rows} usage={family === 'institution-usage'} />
+                        <ReportTable
+                            title={names[family]}
+                            columns={columns}
+                            rows={table.rows}
+                            usage={family === 'institution-usage'}
+                        />
                     )}
                 </>
             )}

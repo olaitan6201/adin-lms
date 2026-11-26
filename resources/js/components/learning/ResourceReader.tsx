@@ -27,7 +27,12 @@ export function ResourceReader({ material, action }: ResourceReaderProps) {
                                 </small>
                                 {v.body && <p className="whitespace-pre-wrap">{v.body}</p>}
                                 {v.image && (
-                                    <img loading="lazy" className="max-w-full" src={v.image} alt={material.title} />
+                                    <img
+                                        loading="lazy"
+                                        className="max-w-full"
+                                        src={v.image}
+                                        alt={material.title}
+                                    />
                                 )}
                                 {v.media && (
                                     <Player

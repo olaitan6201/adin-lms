@@ -30,7 +30,12 @@ export function CoursePlan({
                 title="Learning outcomes and programme mapping"
                 subtitle="CCMAS mapping checked at approval and re-checked by quality assurance"
                 actions={
-                    <Action size="sm" variant="primary" icon="target" href={workspaceUrl('admin/qa')}>
+                    <Action
+                        size="sm"
+                        variant="primary"
+                        icon="target"
+                        href={workspaceUrl('admin/qa')}
+                    >
                         Report approved structure for QA
                     </Action>
                 }

@@ -13,7 +13,12 @@ export function OpenPrivacyCase() {
     return (
         <Card>
             <CardContent>
-                <Form id="open-case" className="min-w-0" action="/operations/privacy/cases" method="post">
+                <Form
+                    id="open-case"
+                    className="min-w-0"
+                    action="/operations/privacy/cases"
+                    method="post"
+                >
                     {({ processing, errors, recentlySuccessful }) => (
                         <fieldset className="grid min-w-0 gap-2">
                             <legend className="text-xl font-semibold">Open a case</legend>

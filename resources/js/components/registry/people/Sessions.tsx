@@ -12,7 +12,9 @@ type SessionDirectory = {
 const Directory = createContext<SessionDirectory | null>(null);
 function useSessions() {
     const directory = useContext(Directory);
-    if (!directory) throw new Error('Session directory is required');
+    if (!directory) {
+        throw new Error('Session directory is required');
+    }
 
     return directory;
 }
@@ -30,7 +32,9 @@ export function SessionProvider({
     const devicesFor = (id: string) => (staffIds.includes(id) ? devices : []);
     const revoked = (id: string, deviceId: string) => revocations[id]?.includes(deviceId) ?? false;
     function revoke(id: string, deviceId: string) {
-        if (!devicesFor(id).some((d) => d.id === deviceId && !d.current)) return;
+        if (!devicesFor(id).some((d) => d.id === deviceId && !d.current)) {
+            return;
+        }
 
         setRevocations((records) => ({ ...records, [id]: [...(records[id] ?? []), deviceId] }));
     }

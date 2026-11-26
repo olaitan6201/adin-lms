@@ -26,7 +26,9 @@ const OverlayContext = createContext<OverlayApi | null>(null);
 
 export function useWorkspaceOverlays() {
     const overlays = useContext(OverlayContext);
-    if (!overlays) throw new Error('Workspace overlays require a workspace layout.');
+    if (!overlays) {
+        throw new Error('Workspace overlays require a workspace layout.');
+    }
 
     return overlays;
 }
@@ -71,7 +73,9 @@ export function WorkspaceOverlays({ children }: { children: ReactNode }) {
             <Sheet
                 open={!!drawer}
                 onOpenChange={open => {
-                    if (!open) setDrawer(null);
+                    if (!open) {
+                        setDrawer(null);
+                    }
                 }}
             >
                 {drawer && (
@@ -94,7 +98,9 @@ export function WorkspaceOverlays({ children }: { children: ReactNode }) {
             <Dialog
                 open={!!confirmation}
                 onOpenChange={open => {
-                    if (!open) confirm(null);
+                    if (!open) {
+                        confirm(null);
+                    }
                 }}
             >
                 {confirmation && (

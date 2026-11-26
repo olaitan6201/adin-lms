@@ -30,7 +30,13 @@ export function RecoverySettings({ backups, metrics, drillDate, runBackup, desk 
                     <Action icon="save" size="sm" onClick={runBackup}>
                         Run backup now
                     </Action>
-                    <Action icon="refresh" size="sm" variant="primary" disabled={!backups.length} onClick={restore}>
+                    <Action
+                        icon="refresh"
+                        size="sm"
+                        variant="primary"
+                        disabled={!backups.length}
+                        onClick={restore}
+                    >
                         Restore
                     </Action>
                 </>

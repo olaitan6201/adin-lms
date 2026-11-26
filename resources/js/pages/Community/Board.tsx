@@ -53,7 +53,12 @@ export default function Board({ offering, canManage, forums, groups, registratio
                 <EntryForm action={`${base}/messages`} title="Send private message">
                     <Label className="grid gap-2">
                         Recipient{' '}
-                        <NativeSelect className="max-w-full" name="recipient_id" required defaultValue="">
+                        <NativeSelect
+                            className="max-w-full"
+                            name="recipient_id"
+                            required
+                            defaultValue=""
+                        >
                             <NativeSelectOption value="" disabled>
                                 Select a participant
                             </NativeSelectOption>

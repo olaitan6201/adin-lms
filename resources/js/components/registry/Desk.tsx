@@ -63,7 +63,12 @@ export function Register({
 }: RegisterProps) {
     return (
         <>
-            <PageHeader eyebrow={eyebrow} title={title} description={description} actions={actions} />
+            <PageHeader
+                eyebrow={eyebrow}
+                title={title}
+                description={description}
+                actions={actions}
+            />
             <div className="min-w-0 space-y-5">
                 {tabs ? (
                     <Tabs.Root

@@ -9,7 +9,12 @@ import { Form } from '@inertiajs/react';
 export function ApproveSharing() {
     return (
         <RecordPanel title="Approve sharing">
-            <Form action="/guardian/permissions" method="post" resetOnSuccess className="mt-4 grid gap-4">
+            <Form
+                action="/guardian/permissions"
+                method="post"
+                resetOnSuccess
+                className="mt-4 grid gap-4"
+            >
                 {({ errors, processing, recentlySuccessful }) => (
                     <FormFeedback errors={errors}>
                         <Label className="grid gap-2">

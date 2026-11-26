@@ -50,7 +50,12 @@ export function RegistryTable({
     grouped?: boolean;
 }) {
     return (
-        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={title}>
+        <div
+            className="overflow-x-auto"
+            tabIndex={0}
+            role="region"
+            aria-label={title}
+        >
             <table
                 className={
                     grouped

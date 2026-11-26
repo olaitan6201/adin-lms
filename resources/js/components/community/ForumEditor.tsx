@@ -36,10 +36,20 @@ export function ForumEditor({ courses, close, save }: Props) {
         <Drawer title="New forum" close={close}>
             <form className="space-y-4" onSubmit={createForum}>
                 <Field label="Forum title">
-                    <input name="title" className="input" required pattern=".*\S.*" />
+                    <input
+                        name="title"
+                        className="input"
+                        required
+                        pattern=".*\S.*"
+                    />
                 </Field>
                 <Field label="Course">
-                    <select name="course" className="select" required onChange={() => setCourseError('')}>
+                    <select
+                        name="course"
+                        className="select"
+                        required
+                        onChange={() => setCourseError('')}
+                    >
                         {courses.map((course) => (
                             <option key={course}>{course}</option>
                         ))}

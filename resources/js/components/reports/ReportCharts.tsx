@@ -41,9 +41,21 @@ export function Columns({ items: completionByFaculty }: { items: Breakdown }) {
     const max = Math.max(...completionByFaculty.map((d) => d.value));
     const slot = 482 / completionByFaculty.length;
     return (
-        <svg viewBox="0 0 520 200" className="h-auto w-full" role="img" aria-label="Completion by faculty">
+        <svg
+            viewBox="0 0 520 200"
+            className="h-auto w-full"
+            role="img"
+            aria-label="Completion by faculty"
+        >
             {[12, 92, 172].map((y) => (
-                <line key={y} x1="30" x2="512" y1={y} y2={y} stroke="#E7ECF1" />
+                <line
+                    key={y}
+                    x1="30"
+                    x2="512"
+                    y1={y}
+                    y2={y}
+                    stroke="#E7ECF1"
+                />
             ))}
             {completionByFaculty.map((d, i) => {
                 const x = 30 + slot * (i + 0.5);
@@ -53,8 +65,21 @@ export function Columns({ items: completionByFaculty }: { items: Breakdown }) {
                         <title>
                             {d.label}: {d.value}%
                         </title>
-                        <rect x={x - 17} y={172 - h} width="34" height={h} rx="5" fill={d.color} />
-                        <text x={x} y="190" textAnchor="middle" fontSize="10" fill="#7A8CA0">
+                        <rect
+                            x={x - 17}
+                            y={172 - h}
+                            width="34"
+                            height={h}
+                            rx="5"
+                            fill={d.color}
+                        />
+                        <text
+                            x={x}
+                            y="190"
+                            textAnchor="middle"
+                            fontSize="10"
+                            fill="#7A8CA0"
+                        >
                             {d.label.replace('Faculty of ', '')}
                         </text>
                     </g>

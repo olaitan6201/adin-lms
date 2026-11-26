@@ -33,7 +33,9 @@ export function useAcademicUnits({
         }
 
         const parent = val(data, 'Parent faculty');
-        if (!faculties.some((f) => f.name === parent)) return 'Select an existing faculty.';
+        if (!faculties.some((f) => f.name === parent)) {
+            return 'Select an existing faculty.';
+        }
 
         if (faculties.some((f) => f.departments.some((d) => d.code.toLowerCase() === unit.code.toLowerCase())))
             return 'Department codes must be unique.';
@@ -49,7 +51,9 @@ export function useAcademicUnits({
     function saveProgramme(data: FormData) {
         const department = val(data, 'Department');
         const faculty = faculties.find((unit) => unit.departments.some((child) => child.code === department));
-        if (!faculty) return 'Select an existing department.';
+        if (!faculty) {
+            return 'Select an existing department.';
+        }
 
         const programme = {
             id: crypto.randomUUID(),

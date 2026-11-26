@@ -23,9 +23,19 @@ export function SegmentedRing({ size, strokeWidth, label, segments }: RingProps)
     }
 
     return (
-        <svg viewBox={`0 0 ${size} ${size}`} className="size-full" role="img" aria-label={label}>
+        <svg
+            viewBox={`0 0 ${size} ${size}`}
+            className="size-full"
+            role="img"
+            aria-label={label}
+        >
             <g fill="none" strokeWidth={strokeWidth}>
-                <circle cx={center} cy={center} r={radius} stroke="#E7ECF1" />
+                <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke="#E7ECF1"
+                />
                 {arcs.map(({ label, value, color, start }) => (
                     <circle
                         key={label}

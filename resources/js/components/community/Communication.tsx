@@ -38,7 +38,12 @@ export function Communication({ role, data }: {
             id: 'messages',
             label: 'Messages',
             count: inbox.unread,
-            panel: <Messages inbox={inbox} recipients={data.messages} composing={compose} close={() => setCompose(false)} />,
+            panel: <Messages
+                inbox={inbox}
+                recipients={data.messages}
+                composing={compose}
+                close={() => setCompose(false)}
+            />,
         },
     ];
     if (!student) {

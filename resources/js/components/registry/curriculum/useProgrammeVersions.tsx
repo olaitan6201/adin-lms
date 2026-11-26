@@ -38,10 +38,14 @@ export function useProgrammeVersions({
             ),
             save: (data) => {
                 const programme = versions.find((p) => p.id === val(data, 'Programme'));
-                if (!programme) return 'Select a programme.';
+                if (!programme) {
+                    return 'Select a programme.';
+                }
 
                 const latest = programme.revisions[programme.revisions.length - 1];
-                if (latest.state !== 'approved') return 'This programme already has a revision in progress.';
+                if (latest.state !== 'approved') {
+                    return 'This programme already has a revision in progress.';
+                }
 
                 update(programme.id, (history) => [
                     ...history,
@@ -74,7 +78,9 @@ export function useProgrammeVersions({
                     .split('\n')
                     .map((line) => line.trim())
                     .filter(Boolean);
-                if (!outcomes.length) return 'Enter at least one programme outcome.';
+                if (!outcomes.length) {
+                    return 'Enter at least one programme outcome.';
+                }
 
                 update(programme.id, (history) =>
                     history.map((r) =>

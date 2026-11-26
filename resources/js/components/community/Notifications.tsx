@@ -51,7 +51,12 @@ export function Notifications({ role, data }: {
                         <Badge tone={saved ? 'emerald' : 'slate'}>
                             {saved ? 'Preferences saved' : 'Changes are local until saved'}
                         </Badge>
-                        <Action icon="save" size="sm" variant="primary" onClick={save}>
+                        <Action
+                            icon="save"
+                            size="sm"
+                            variant="primary"
+                            onClick={save}
+                        >
                             Save preferences
                         </Action>
                     </>

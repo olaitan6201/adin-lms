@@ -60,7 +60,12 @@ export default function Classroom({
                 {!sessions.length ? (
                     <p className="course-pad">No classes scheduled.</p>
                 ) : (
-                    <div className="course-table-scroll" role="region" aria-label="Scheduled classes" tabIndex={0}>
+                    <div
+                        className="course-table-scroll"
+                        role="region"
+                        aria-label="Scheduled classes"
+                        tabIndex={0}
+                    >
                         <table className="course-table">
                             <thead>
                                 <tr>

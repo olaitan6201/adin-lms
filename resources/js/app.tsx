@@ -9,7 +9,7 @@ import WorkspaceLayout from './layouts/WorkspaceLayout';
 const pages = import.meta.glob<ComponentType>('./pages/**/*.tsx', { import: 'default' });
 
 void createInertiaApp({
-    layout: (name) => name.startsWith('Workspace/') ? WorkspaceLayout : PortalLayout,
+    layout: (_, page) => typeof page.props.screenKey === 'string' ? WorkspaceLayout : PortalLayout,
     resolve: (name) => resolvePageComponent<ComponentType>(`./pages/${name}.tsx`, pages),
     setup({ el, App, props }) {
         createRoot(el).render(<App {...props} />);

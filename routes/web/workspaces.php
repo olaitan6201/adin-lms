@@ -31,7 +31,7 @@ foreach ($screens as $role => $pages) {
                 default => $page,
             };
             $component = collect(explode('/', $screen))->map(fn (string $segment) => Str::studly($segment))->implode('/');
-            Route::inertia($path, "Workspace/$component", [
+            Route::inertia($path, $screen === 'guardian/progress' ? 'Guardian/ApprovedProgress' : $component, [
                 'screenKey' => $screen,
                 'branding' => null,
                 'portalIdentity' => null,

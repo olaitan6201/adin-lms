@@ -2,16 +2,18 @@ import { OfferingSettings } from './OfferingSettings';
 import { useState } from 'react';
 import type { Desk } from '@/components/registry/Desk';
 import { val } from '@/components/registry/Records';
-import type { Offering } from '@/types/registry/delivery';
+import type { FixtureStructure, Offering } from '@/types/registry/delivery';
 
 export function useOfferingManagement({
     initialOfferings,
     previousSessions,
+    structureSources,
     staff,
     desk,
 }: {
     initialOfferings: Offering[];
     previousSessions: string[];
+    structureSources: FixtureStructure[];
     staff: {
         name: string;
         role: string;
@@ -45,13 +47,19 @@ export function useOfferingManagement({
             subtitle: `${offering.term.replace('S1', 'First Semester')} · ${offering.mode}`,
             submit: 'Save offering',
             message: 'Offering saved',
-            body: <OfferingSettings offering={offering} {...{ staff, previousSessions, unpublish }} />,
-            save: (data) =>
+            body: <OfferingSettings {...{ offering, staff, previousSessions, structureSources, unpublish }} />,
+            save: (data) => {
+                const copiedStructure = structureSources.find(
+                    (source) => source.code === offering.code && source.term === data.get('structureSource'),
+                );
+
                 updateOffering(offering.id, {
+                    ...(copiedStructure && { copiedStructure: structuredClone(copiedStructure) }),
                     instructor: val(data, 'Lead instructor'),
                     assistants: val(data, 'Teaching assistants'),
                     scope: val(data, 'Access scope'),
-                }),
+                });
+            },
         });
     }
 

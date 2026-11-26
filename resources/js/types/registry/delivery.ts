@@ -1,4 +1,12 @@
+export type FixtureStructure = {
+    code: string;
+    term: string;
+    modules: string[];
+    resources: string[];
+};
+
 export type Offering = {
+    copiedStructure?: FixtureStructure;
     id: string;
     code: string;
     title: string;
@@ -22,6 +30,7 @@ export type RosterStudent = {
 };
 
 export type DeliveryRegisterInputs = {
+    structureSources: FixtureStructure[];
     stages: readonly (readonly [string, number, string])[];
     rosterMetrics: [string, string, string?][];
     formats: string[][];

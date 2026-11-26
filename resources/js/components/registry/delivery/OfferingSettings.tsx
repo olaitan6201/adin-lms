@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import type { Offering } from '@/types/registry/delivery';
+import { ReusableStructure } from './ReusableStructure';
+import type { FixtureStructure, Offering } from '@/types/registry/delivery';
 import { Field } from '@/components/registry/Desk';
 import { Details, status } from '@/components/registry/Records';
 import { Action } from '@/components/ui/controls/Action';
@@ -8,6 +8,7 @@ export function OfferingSettings({
     offering,
     staff,
     previousSessions,
+    structureSources,
     unpublish,
 }: {
     offering: Offering;
@@ -16,10 +17,9 @@ export function OfferingSettings({
         name: string;
     }[];
     previousSessions: string[];
+    structureSources: FixtureStructure[];
     unpublish: (record: Offering) => void;
 }) {
-    const [source, selectSource] = useState(previousSessions[0] ?? '');
-
     return (
         <>
             <Card title="Instructor allocation">
@@ -46,28 +46,7 @@ export function OfferingSettings({
                     />
                 </div>
             </Card>
-            <Card title="Reusable structure" subtitle="Copy a previous session without grades or registrations">
-                <select
-                    className="select"
-                    aria-label="Previous session"
-                    value={source}
-                    onChange={(event) => selectSource(event.target.value)}
-                >
-                    {previousSessions.map((term) => (
-                        <option key={term} value={term}>
-                            {offering.code} · {term}
-                        </option>
-                    ))}
-                </select>
-                <Action size="sm" disabled>
-                    Copy structure
-                </Action>
-                <p className="mt-2 text-xs">
-                    {source
-                        ? `No reusable structure is available for ${offering.code} · ${source}.`
-                        : 'No previous session is available.'}
-                </p>
-            </Card>
+            <ReusableStructure {...{ offering, previousSessions, structureSources }} />
             <Card title="Publication">
                 <Details
                     entries={[

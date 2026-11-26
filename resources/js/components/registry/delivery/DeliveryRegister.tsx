@@ -14,6 +14,7 @@ export function DeliveryRegister({
     rosterMetrics,
     formats,
     previousSessions,
+    structureSources,
     initialOfferings,
     currentTerm,
     offeringTotal,
@@ -29,6 +30,7 @@ export function DeliveryRegister({
     const { list, append, unpublish, manage } = useOfferingManagement({
         initialOfferings,
         previousSessions,
+        structureSources,
         staff,
         desk,
     });

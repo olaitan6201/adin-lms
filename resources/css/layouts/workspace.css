@@ -15,3 +15,19 @@
 @media (prefers-reduced-motion: reduce) {
     .workspace-shell *, .ws-detail-drawer, .ws-confirm { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+.ws-command-palette[data-slot="dialog-content"] {
+    --radius: 0.5rem;
+    top: 12vh;
+    translate: -50% 0;
+    width: min(36rem, calc(100vw - 2rem));
+    max-width: none;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+    border-color: var(--color-ink-100);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-lift);
+}
+[data-slot="dialog-overlay"]:has(+ .ws-command-palette) {
+    background: transparent;
+}

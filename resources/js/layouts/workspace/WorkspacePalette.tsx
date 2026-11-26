@@ -19,7 +19,8 @@ export function WorkspacePalette() {
         function shortcut(event: KeyboardEvent) {
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
                 event.preventDefault();
-                toggle(true);
+                setOpen(previous => !previous);
+                setQuery('');
             }
         }
         window.addEventListener('keydown', shortcut);
@@ -29,7 +30,7 @@ export function WorkspacePalette() {
         <DialogTrigger className="ws-search flex items-center gap-2 rounded-[8px] border border-transparent px-2.5 py-1.5 text-left text-[13px] text-ink-500 hover:bg-ink-100 md:h-9 md:w-56 md:border-ink-200 md:bg-white md:px-3 md:py-0 md:text-ink-400 md:hover:border-ink-300"
             aria-label="Search"><Icon name="search" className="size-5 shrink-0 md:size-4" /><span className="hidden flex-1 truncate md:block">Search</span>
             <kbd className="kbd max-md:hidden">Ctrl K</kbd></DialogTrigger>
-        <DialogContent className="portal-palette" showCloseButton={false} onOpenAutoFocus={event => {
+        <DialogContent className="ws-command-palette" showCloseButton={false} onOpenAutoFocus={event => {
             event.preventDefault();
             input.current?.focus();
         }} onKeyDown={event => {
@@ -46,17 +47,25 @@ export function WorkspacePalette() {
             }
         }}>
             <DialogTitle className="sr-only">Search workspace screens</DialogTitle>
-            <div className="portal-palette-input"><Icon name="search" className="size-4" />
+            <div className="flex items-center gap-3 border-b border-ink-100 px-4"><Icon name="search" className="size-4 text-ink-400" />
                 <input autoComplete="off" ref={input} aria-label="Search screens" placeholder="Search screens, courses, students..."
+                    className="min-w-0 flex-1 border-0 bg-transparent py-4 text-sm text-ink-800 placeholder:text-ink-400 focus:outline-none focus:ring-0"
                     value={query} onChange={event => setQuery(event.target.value)} />
-                <DialogClose aria-label="Close search"><kbd>Esc</kbd></DialogClose>
+                <DialogClose aria-label="Close search"><kbd className="kbd">Esc</kbd></DialogClose>
             </div>
-            <ul data-scroll ref={list}>{matches.map(({ key, role, label, icon }) => <li key={key}>
-                <Link href={workspaceUrl(key)} onClick={() => setOpen(false)}><Icon name={icon} className="size-4" /><span>{label}<small>{roles[role].label}</small></span></Link>
+            <ul className="max-h-[52vh] overflow-y-auto p-2" data-scroll ref={list}>{matches.map(({ key, role, label, icon }) => <li key={key}>
+                <Link href={workspaceUrl(key)} onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-ink-50">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-ink-50 text-ink-500"><Icon name={icon} className="size-4" /></span>
+                    <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[13.5px] font-medium text-ink-800">{label}</span>
+                        <span className="block text-[11px] text-ink-400">{roles[role].label}</span>
+                    </span>
+                </Link>
             </li>)}
-                {!matches.length && <li className="portal-no-results" role="status">No screen matches that search.</li>}
+                {!matches.length && <li className="px-3 py-8 text-center text-[13px] text-ink-400" role="status">No screen matches that search.</li>}
             </ul>
-            <DialogDescription className="portal-palette-help flex justify-between gap-2">
+            <DialogDescription className="flex items-center justify-between gap-2 border-t border-ink-100 bg-ink-50/60 px-4 py-2.5 text-[11px] text-ink-400">
                 <span>Enter to open · Up and Down to move</span><span>Prototype navigation</span>
             </DialogDescription>
         </DialogContent>

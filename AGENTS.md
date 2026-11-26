@@ -40,11 +40,20 @@ it rather than substituting another copy or claiming compliance.
 - Keep page components in their functional or role directory under
   `resources/js/pages/`, and shared SVGs in `resources/js/components/icons/`.
 
+### React component readability
+
+- Use `resources/js/components/assessments/AttendanceDesk.tsx` as the reference for authored TSX, including pages, layouts, and shared controls.
+- Write one statement per line. Expand control-flow and callback bodies; put the condition and its action on separate lines. Give multi-step actions such as saving a register a named handler rather than embedding the workflow in JSX.
+- Wrap multiline JSX returns in parentheses. Put nested elements and sibling controls on separate, indented lines. For an element with four or more props, put each prop on its own line.
+- Split by responsibility: keep the committed record with its owner and unsaved inputs with the editor. Meeting the line limit does not make compressed or mixed-purpose code readable.
+
 ## Commands
 
 Keep agent-only work (scratch files, implementation logs, test evidence and screenshots) under `.agent-work/`, which is gitignored. Keep deliverable code, tests and developer documentation in their normal project paths.
 
 See `README.md` for local setup. Run `php artisan test`, `vendor/bin/pint --test`, `npm run typecheck` and `npm run build` for a cross-stack change. Verify locking and production-specific migrations on PostgreSQL.
+
+Run `npm run lint` for frontend changes. It includes the TSX layout check (`npm run lint:components`); review component ownership separately.
 
 ## Non-negotiables
 

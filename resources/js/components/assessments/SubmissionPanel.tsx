@@ -8,6 +8,7 @@ import { inputClass, submitClass } from './Editor';
 export function SubmissionPanel({
     row,
     revision,
+    previous,
     close,
     save,
     sizeLimit,
@@ -15,10 +16,12 @@ export function SubmissionPanel({
     sizeLimit: number;
     row: Assignment;
     revision?: StudentRevision;
+    previous: StudentRevision[];
     close: () => void;
     save: (r: Receipt) => void;
 }) {
     const receipt = revision?.receipt;
+    const accepting = row.state === 'open';
     const [file, setFile] = useState<File>();
     const [note, setNote] = useState(receipt?.note ?? '');
     const [error, setError] = useState('');
@@ -29,7 +32,7 @@ export function SubmissionPanel({
 
     function submit(e: React.FormEvent) {
         e.preventDefault();
-        if (row.state === 'closed') {
+        if (!accepting) {
             return;
         }
 
@@ -55,8 +58,11 @@ export function SubmissionPanel({
                         `Submit your ${row.course} work for “${row.title}” in an accepted format.`}
                 </p>
             </Card>
+            {!accepting && (
+                <p>{row.state === 'scheduled' ? 'Not open yet. Submissions are unavailable.' : 'Submissions are closed.'}</p>
+            )}
             <form className="space-y-4" onSubmit={submit}>
-                {row.state !== 'closed' && (
+                {accepting && (
                     <label
                         className="block rounded-xl border-2 border-dashed border-ink-200 p-5 text-sm font-medium"
                         onDragOver={(e) => e.preventDefault()}
@@ -90,7 +96,17 @@ export function SubmissionPanel({
                         </p>
                     </Card>
                 )}
-                {row.state !== 'closed' && (
+                {previous.length > 0 && (
+                    <details>
+                        <summary>Previous receipts ({previous.length})</summary>
+                        <ul>
+                            {previous.map(({ receipt: prior }) => (
+                                <li key={prior.number}>{prior.file} · {prior.time} · {prior.number}</li>
+                            ))}
+                        </ul>
+                    </details>
+                )}
+                {accepting && (
                     <>
                         <label className="block text-sm">
                             <span className="text-[11px] font-semibold uppercase tracking-wider">

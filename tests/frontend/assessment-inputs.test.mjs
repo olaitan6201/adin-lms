@@ -68,10 +68,11 @@ test('only open work without a receipt counts as outstanding; closure alone is n
     const { default: View } = await server.ssrLoadModule('/resources/js/components/assessments/StudentAssignments.tsx');
     const { studentAssignments } = await server.ssrLoadModule('/resources/js/data/assessments/studentAssignments.ts');
     const [first, second, third] = studentAssignments.work;
-    const work = [{ ...first, current: undefined }, second, { ...third, current: undefined }];
+    const work = [first, second, third].map(record => ({ ...record, current: undefined }));
     const html = renderToStaticMarkup(createElement(View, { ...studentAssignments, work }));
     assert.match(html, />1 outstanding</);
     assert.match(html, />Closed</);
+    assert.match(html, />Not open yet</);
     assert.match(html, />Not submitted</);
     assert.doesNotMatch(html, />Graded</);
 });

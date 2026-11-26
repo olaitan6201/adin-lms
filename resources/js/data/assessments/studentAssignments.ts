@@ -10,8 +10,16 @@ const receipts: Record<string, Receipt> = {
     'as-4': { number: 'RCP-2026-11-06-0412-298', file: 'narrative-voice.pdf', size: '2.3 MB', time: '06 Nov 2026, 14:30', note: '' },
 };
 const feedback: Record<string, Feedback> = {
-    'as-3': { score: 74, text: 'Your diagram of the metaphase plate is clear. Link the observation to the cell cycle stage in the summary, which is where marks were lost.' },
-    'as-5': { score: 81, text: 'Well handled. Show the calculation of the concentration from the raw readings rather than only the final value.' },
+    'as-3': {
+        score: 74,
+        excerpt: 'Observation: the chromosomes lie across the centre of the cell.',
+        text: 'Your diagram of the metaphase plate is clear. Link the observation to the cell cycle stage in the summary, which is where marks were lost.',
+    },
+    'as-5': {
+        score: 81,
+        excerpt: 'Conclusion: the concentration of the sample is 0.10 mol/L.',
+        text: 'Well handled. Show the calculation of the concentration from the raw readings rather than only the final value.',
+    },
 };
 const rules: [string, string][] = [['Accepted formats', 'PDF, DOCX, XLSX'], ['Maximum file size', '25 MB'], ['Late submissions', 'Accepted, 10% penalty'], ['Revision', 'Until the closing time'], ['Individual or group', 'Individual']];
 

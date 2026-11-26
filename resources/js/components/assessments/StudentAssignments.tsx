@@ -26,7 +26,7 @@ export default function StudentAssignments({
     const [message, setMessage] = useState('');
     const selected = records.find((record) => record.assignment.id === selectedId);
     const outstanding = records.filter(
-        ({ assignment, current }) => assignment.state !== 'closed' && !current,
+        ({ assignment, current }) => assignment.state === 'open' && !current,
     ).length;
 
     function openAssignment(assignment: Assignment) {
@@ -34,7 +34,7 @@ export default function StudentAssignments({
     }
 
     function recordSubmission(receipt: Receipt) {
-        if (!selected || selected.assignment.state === 'closed') {
+        if (!selected || selected.assignment.state !== 'open') {
             return;
         }
 
@@ -58,7 +58,7 @@ export default function StudentAssignments({
             <PageHeader
                 eyebrow="Assessment"
                 title="Assignments"
-                description="Upload your work before the closing time. Every upload issues a receipt that records the time and the file."
+                description="Choose a file while the assignment is open. This sample records file details and a receipt on this page; it does not upload the file."
                 actions={
                     <Action icon="calendar" href={workspaceUrl('student/calendar')}>
                         Academic calendar
@@ -93,7 +93,7 @@ export default function StudentAssignments({
                                       ? 'Awaiting marking'
                                       : a.state === 'closed'
                                         ? 'Closed'
-                                        : 'Not submitted'
+                                        : a.state === 'scheduled' ? 'Not open yet' : 'Not submitted'
                             }
                         />,
                         current?.feedback ? (
@@ -128,6 +128,7 @@ export default function StudentAssignments({
                     key={selected.assignment.id}
                     row={selected.assignment}
                     revision={selected.current}
+                    previous={selected.previous}
                     close={() => selectAssignment(undefined)}
                     save={recordSubmission}
                 />

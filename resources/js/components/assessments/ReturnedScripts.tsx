@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import type { StudentWork } from '@/types/assessments/assignments';
 import { Drawer } from './Drawer';
+import { download } from '@/lib/download';
 
 export function ReturnedScripts({ records }: { records: StudentWork[] }) {
     const [receiptNumber, selectReceipt] = useState<string>();
@@ -23,6 +24,20 @@ export function ReturnedScripts({ records }: { records: StudentWork[] }) {
         );
     });
     const selected = results.find((result) => result.receipt.number === receiptNumber);
+
+    function downloadScript() {
+        if (!selected) {
+            return;
+        }
+
+        const { assignment, receipt, feedback } = selected;
+        const content = [
+            'Sample marked script (annotated extract)', assignment.title, receipt.file,
+            `Receipt: ${receipt.number}`, `Score: ${feedback.score} / 100`, '',
+            feedback.excerpt, '', `Marker annotation: ${feedback.text}`,
+        ].join('\n');
+        download(`${receipt.number}-marked.txt`, content, 'text/plain;charset=utf-8');
+    }
 
     return (
         <>
@@ -61,7 +76,9 @@ export function ReturnedScripts({ records }: { records: StudentWork[] }) {
                         <p>Receipt no. {selected.receipt.number}</p>
                         <Badge tone="emerald">{selected.feedback.score} / 100</Badge>
                     </Card>
+                    <Card title="Sample script extract">{selected.feedback.excerpt}</Card>
                     <Card title="Marker feedback">{selected.feedback.text}</Card>
+                    <Action onClick={downloadScript}>Download marked extract (.txt)</Action>
                 </Drawer>
             )}
         </>

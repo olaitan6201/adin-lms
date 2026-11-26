@@ -46,6 +46,7 @@ export type Receipt = {
 };
 
 export type Feedback = {
+    excerpt: string;
     score: number;
     text: string;
 };

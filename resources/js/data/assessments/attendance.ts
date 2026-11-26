@@ -16,7 +16,12 @@ export const learners = [
     { name: 'Ngozi Obi', matric: 'AOU/2025/0044', percent: 0, mark: '' },
 ];
 
-const bands = [['90% and above', 48, 'bg-emerald-500'], ['70 to 89%', 62, 'bg-blue-500'], ['50 to 69%', 31, 'bg-amber-500'], ['Below 50%', 17, 'bg-rose-500']] as const;
+const bands = [
+    { label: '90% and above', count: 48, color: 'bg-emerald-500', upperExclusive: null },
+    { label: '70 to 89%', count: 62, color: 'bg-blue-500', upperExclusive: 90 },
+    { label: '50 to 69%', count: 31, color: 'bg-amber-500', upperExclusive: 70 },
+    { label: 'Below 50%', count: 17, color: 'bg-rose-500', upperExclusive: 50 },
+] as const;
 
 export const attendanceDesk = {
     attendanceSessions, learners, bands, sessionCount: 12, codeSuffix: '1209',

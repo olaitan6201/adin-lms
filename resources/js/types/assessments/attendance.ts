@@ -3,4 +3,9 @@ export interface Session {
     present: number; absent: number; late: number;
 }
 export interface Learner { name: string; matric: string; percent: number; mark: string }
-export type AttendanceBand = readonly [label: string, count: number, color: string];
+export type AttendanceBand = {
+    label: string;
+    count: number;
+    color: string;
+    upperExclusive: number | null;
+};

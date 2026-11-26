@@ -13,13 +13,13 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Note } from '@/components/learning/Parts';
 
 export default function Course() {
-    const panels: Record<string, React.ReactNode> = {
-        overview: <TeachingOverview health={health} />,
-        content: <ContentPanel courseModules={courseModules} outline={chapterOutline} />,
-        resources: <ResourcesPanel resources={resources} />,
-        assignments: <AssignmentsPanel assignments={assignments} />,
-        gradebook: <GradebookPanel gradeRows={gradeRows.slice(0, 5)} />,
-        attendance: (
+    const items = [
+        { id: 'overview', label: 'Overview', content: <TeachingOverview health={health} /> },
+        { id: 'content', label: 'Content', count: teachingCourse.modules, content: <ContentPanel courseModules={courseModules} outline={chapterOutline} /> },
+        { id: 'resources', label: 'Resources', count: teachingCourse.resources, content: <ResourcesPanel resources={resources} /> },
+        { id: 'assignments', label: 'Assignments', count: teachingCourse.assignments, content: <AssignmentsPanel assignments={assignments} /> },
+        { id: 'gradebook', label: 'Gradebook', content: <GradebookPanel gradeRows={gradeRows.slice(0, 5)} /> },
+        { id: 'attendance', label: 'Attendance', content: (
             <div className="rounded-xl border border-ink-100 bg-white p-8 text-center">
                 <p className="text-sm font-semibold text-ink-800">Attendance for this course</p>
                 <p className="mt-1 text-[13px] text-ink-500">The register for each scheduled class is managed from the Attendance module.</p>
@@ -27,8 +27,8 @@ export default function Course() {
                     Open attendance
                 </Action>
             </div>
-        ),
-        discussions: (
+        ) },
+        { id: 'discussions', label: 'Discussions', content: (
             <div className="rounded-xl border border-ink-100 bg-white p-8 text-center">
                 <p className="text-sm font-semibold text-ink-800">Course forum</p>
                 <p className="mt-1 text-[13px] text-ink-500">
@@ -38,8 +38,8 @@ export default function Course() {
                     Open communication
                 </Action>
             </div>
-        ),
-    };
+        ) },
+    ];
 
     return (
         <div className="learning-surface">
@@ -62,15 +62,7 @@ export default function Course() {
             <div className="learning-tabs space-y-5">
                 <Tabs
                     label="Course workspace"
-                    items={[
-                        { id: 'overview', label: 'Overview' },
-                        { id: 'content', label: 'Content', count: teachingCourse.modules },
-                        { id: 'resources', label: 'Resources', count: teachingCourse.resources },
-                        { id: 'assignments', label: 'Assignments', count: teachingCourse.assignments },
-                        { id: 'gradebook', label: 'Gradebook' },
-                        { id: 'attendance', label: 'Attendance' },
-                        { id: 'discussions', label: 'Discussions' },
-                    ].map((item) => ({ ...item, content: <div className="mt-5 space-y-5">{panels[item.id]}</div> }))}
+                    items={items.map(item => ({ ...item, content: <div className="mt-5 space-y-5">{item.content}</div> }))}
                 />
 
                 <Note tone="sky">

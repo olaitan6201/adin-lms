@@ -1,5 +1,5 @@
-import type { InstitutionData, ReportsData, ReportSheet, ReportTableData } from '@/types/reports/analytics';
-import { useState } from 'react';
+import type { InstitutionData, ReportsData, ReportScopeId, ReportSheet, ReportTableData } from '@/types/reports/analytics';
+import { useState, type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -33,33 +33,43 @@ function DataTable({ data }: { data: ReportTableData }) {
 
 export function Reports({ data }: { data: ReportsData }) {
     const { institution, scopes, faculty, heatmap, course, attention, progress, courseProgress } = data;
-    const [scope, setScope] = useState(scopes[0]);
+    const [selectedId, setSelectedId] = useState<ReportScopeId>(scopes[0].id);
+    const selected = scopes.find(scope => scope.id === selectedId) ?? scopes[0];
     const [error, setError] = useState('');
+    const panels: Record<ReportScopeId, ReactNode> = {
+        institution: <Institution {...institution}/>,
+        faculty: <>
+            <Card title={heatmap.title} subtitle={heatmap.subtitle}><DepartmentHeatmap heatmap={heatmap}/></Card>
+            <DataTable data={faculty}/>
+        </>,
+        course: <><DataTable data={course}/><DataTable data={attention}/></>,
+        student: <>
+            <DataTable data={progress}/>
+            <Card title="Progress by course" subtitle="Completed lessons against the published total"><Bars items={courseProgress}/></Card>
+        </>,
+    };
+    const items = scopes.map(({ id, label }) => ({ id, label, panel: panels[id] }));
+
     function exportReport(format: 'PDF' | 'Excel') {
         const key = 'adin:sample-report-audit';
         try {
             const audit = JSON.parse(sessionStorage.getItem(key) ?? '[]');
-            sessionStorage.setItem(key, JSON.stringify([...(Array.isArray(audit) ? audit.slice(-99) : []), { screen: location.pathname, scope, format, at: new Date().toISOString() }]));
+            const entry = { screen: location.pathname, scope: selected.label, scopeId: selected.id, format, at: new Date().toISOString() };
+            sessionStorage.setItem(key, JSON.stringify([...(Array.isArray(audit) ? audit.slice(-99) : []), entry]));
         } catch {
             setError('The export could not be recorded. Allow browser storage and try again.');
             return;
         }
         setError('');
         if (format === 'PDF') window.print();
-        else exportSheet(scope, data.exports[scope]);
+        else exportSheet(selected.label, selected.sheets);
     }
     return <div className="engagement-workspace space-y-5"><PageHeader eyebrow="Reporting and analytics" title="Reports and analytics"
         description="The same measures read at four scopes, from the institution down to one student."
         actions={<><Badge>Figures refresh nightly</Badge><Action icon="document" size="sm" onClick={() => exportReport('PDF')}>PDF</Action>
             <Action icon="sheet" size="sm" onClick={() => exportReport('Excel')}>Excel</Action></>}/>
         {error && <p role="alert">{error}</p>}
-        <Sections names={scopes} active={scope} change={setScope} panels={[
-            <Institution {...institution}/>, <><Card title={heatmap.title} subtitle={heatmap.subtitle}>
-            <DepartmentHeatmap heatmap={heatmap}/>
-        </Card><DataTable data={faculty}/></>,
-            <><DataTable data={course}/><DataTable data={attention}/></>,
-            <><DataTable data={progress}/><Card title="Progress by course" subtitle="Completed lessons against the published total"><Bars items={courseProgress}/></Card></>,
-        ]}/>
+        <Sections items={items} active={selected.id} change={setSelectedId}/>
         <Note>Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written to the audit log.</Note>
     </div>;
 }

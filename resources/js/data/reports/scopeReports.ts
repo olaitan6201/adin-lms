@@ -1,7 +1,7 @@
 import { completionByFaculty, engagementMix, enrolmentTrend, examPerformance } from '@/data/reports/analytics';
 import { students } from '@/data/reports/students';
+import type { ReportsData } from '@/types/reports/analytics';
 
-export const scopes = ['Institution','Faculty and department','Course','Student'];
 export const departments = ['Biological Sciences','Chemistry','Mathematics and Statistics','English and Linguistics','Educational Management','Accounting and Finance','Economics'];
 export const participation = departments.map((label,i) => ({ label, value: [71,68,63,48,42,58,51][i], color: ['#10B981','#10B981','#3B82F6','#F59E0B','#F59E0B','#3B82F6','#F43F5E'][i] }));
 export const faculty = {
@@ -38,13 +38,27 @@ export const progress = {
 };
 export const courseProgress = course.rows.map((r,i) => ({ label: `${r[0]} ${r[1]}`, value: parseInt(String(r[6])), color: ['#10B981','#3B82F6','#F59E0B','#10B981','#F43F5E'][i] }));
 
-type Sheet = { title: string; columns: string[]; rows: (string | number)[][] };
-export function sheets(scope: string): Sheet[] {
-    const breakdown = (title: string, unit: string, data: typeof participation) => ({ title, columns: ['Category',unit], rows: data.map(d => [d.label,d.value]) });
-    const trend = (title: string, data: typeof enrolmentTrend) => ({ title, columns: ['Period / course', ...data.series.map(s => s.name)], rows: data.labels.map((l,i) => [l, ...data.series.map(s => s.values[i])]) });
-    if (scope === scopes[1]) return [heatmap, faculty];
-    if (scope === scopes[2]) return [course, attention];
-    if (scope === scopes[3]) return [progress, breakdown('Progress by course','Completion (%)',courseProgress)];
-    return [trend('Enrolment and delivery',enrolmentTrend), breakdown('Engagement mix','Actions',engagementMix), trend('Examination performance',examPerformance),
-        breakdown('Departmental participation','Completed (%)',participation), breakdown('Completion by faculty','Completed (%)',completionByFaculty)];
+function breakdown(title: string, unit: string, data: typeof participation) {
+    return { title, columns: ['Category', unit], rows: data.map(item => [item.label, item.value]) };
 }
+
+function trend(title: string, data: typeof enrolmentTrend) {
+    return {
+        title,
+        columns: ['Period / course', ...data.series.map(series => series.name)],
+        rows: data.labels.map((label, index) => [label, ...data.series.map(series => series.values[index])]),
+    };
+}
+
+export const scopes: ReportsData['scopes'] = [
+    { id: 'institution', label: 'Institution', sheets: [
+        trend('Enrolment and delivery', enrolmentTrend),
+        breakdown('Engagement mix', 'Actions', engagementMix),
+        trend('Examination performance', examPerformance),
+        breakdown('Departmental participation', 'Completed (%)', participation),
+        breakdown('Completion by faculty', 'Completed (%)', completionByFaculty),
+    ] },
+    { id: 'faculty', label: 'Faculty and department', sheets: [heatmap, faculty] },
+    { id: 'course', label: 'Course', sheets: [course, attention] },
+    { id: 'student', label: 'Student', sheets: [progress, breakdown('Progress by course', 'Completion (%)', courseProgress)] },
+];

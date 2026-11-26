@@ -10,24 +10,25 @@ export type CourseDefinition = {
     level: number;
     semester: number;
 };
+export type CurriculumRevision = {
+    number: number;
+    state: 'approved' | 'draft' | 'awaiting approval';
+    approved: string | null;
+    outcomes: string[];
+    mapping?: { columns: string[]; matrix: { outcome: string; weights: number[] }[] };
+};
 export type ProgrammeVersion = {
     id: string;
     code: string;
     title: string;
-    version: string;
-    approved: string;
-    revision: number;
+    revisions: CurriculumRevision[];
     level: number;
     units: number;
 };
 export type CurriculumCatalogueInputs = {
-    programmeOutcomes: string[];
-    matrix: { outcome: string; weights: number[] }[];
-    columns: string[];
     catalogueEntries: CourseDefinition[];
     programmeVersions: ProgrammeVersion[];
     prerequisite: { code: string; title: string };
     selectedCourse: { definition: { code: string } };
     accountingOutcomes: string[];
-    programmes: { title: string }[];
 };

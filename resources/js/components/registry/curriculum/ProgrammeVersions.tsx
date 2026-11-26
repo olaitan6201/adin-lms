@@ -15,17 +15,23 @@ export function ProgrammeVersions({
             title="Curriculum versions"
             subtitle="Approved versions are retained; changes create a new version rather than overwriting"
             columns={['Code', 'Programme', 'Level', 'Units', 'Version', 'Approved', '']}
-            rows={versions.map((p) => [
-                p.code,
-                p.title,
-                status(`L${p.level}`),
-                p.units,
-                status(p.version, p.version === 'v2 approved' ? 'emerald' : 'amber'),
-                p.approved,
-                <Action size="sm" onClick={() => mapOutcomes(p)}>
-                    Map outcomes
-                </Action>,
-            ])}
+            rows={versions.map((p) => {
+                const revision = p.revisions[p.revisions.length - 1];
+                return [
+                    p.code,
+                    p.title,
+                    status(`L${p.level}`),
+                    p.units,
+                    status(
+                        `v${revision.number} ${revision.state}`,
+                        revision.state === 'approved' ? 'emerald' : 'amber',
+                    ),
+                    revision.approved ?? '—',
+                    <Action size="sm" onClick={() => mapOutcomes(p)}>
+                        Map outcomes
+                    </Action>,
+                ];
+            })}
         />
     );
 }

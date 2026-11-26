@@ -1,9 +1,8 @@
+import { ApprovedMapping } from './ApprovedMapping';
+import { download } from '@/lib/download';
 import { useState } from 'react';
-import { useDesk, Register, exportRecords } from '@/components/registry/Desk';
-import { status } from '@/components/registry/Records';
+import { useDesk, Register } from '@/components/registry/Desk';
 import { Action } from '@/components/ui/controls/Action';
-import { Card } from '@/components/ui/layout/Card';
-import { OutcomeMatrix } from '@/components/registry/OutcomeMatrix';
 import { useCourseDefinitions } from './useCourseDefinitions';
 import { useProgrammeVersions } from './useProgrammeVersions';
 import { DefinitionRegister } from './DefinitionRegister';
@@ -11,15 +10,11 @@ import { ProgrammeVersions } from './ProgrammeVersions';
 import type { CurriculumCatalogueInputs } from '@/types/registry/curriculum';
 
 export function CurriculumCatalogue({
-    programmeOutcomes,
-    matrix,
-    columns,
     catalogueEntries,
     programmeVersions,
     prerequisite,
     selectedCourse,
     accountingOutcomes,
-    programmes,
 }: CurriculumCatalogueInputs) {
     const [tab, setTab] = useState(0);
     const desk = useDesk();
@@ -32,12 +27,18 @@ export function CurriculumCatalogue({
     });
     const { versions, newVersion, mapOutcomes } = useProgrammeVersions({
         programmeVersions,
-        programmes,
-        programmeOutcomes,
+
         desk,
         setTab,
     });
 
+    function exportCurriculum() {
+        download(
+            'curriculum.json',
+            JSON.stringify({ courses, programmes: versions }, null, 2),
+            'application/json',
+        );
+    }
     return (
         <Register
             title="Curriculum catalogue"
@@ -45,7 +46,7 @@ export function CurriculumCatalogue({
             description="Course definitions, programme versions and the outcome mapping that QA reports against."
             actions={
                 <>
-                    <Action icon="download" onClick={() => exportRecords('curriculum', courses)}>
+                    <Action icon="download" onClick={exportCurriculum}>
                         Export curriculum
                     </Action>
                     <Action icon="plus" variant="primary" onClick={newVersion}>
@@ -64,26 +65,7 @@ export function CurriculumCatalogue({
         >
             {tab === 0 && <DefinitionRegister {...{ courses, courseForm }} />}
             {tab === 1 && <ProgrammeVersions {...{ versions, mapOutcomes }} />}
-            {tab === 2 && (
-                <Card
-                    title="Course outcome to programme outcome mapping"
-                    subtitle="Weight: 0 none, 1 introduced, 2 reinforced, 3 mastered"
-                    actions={
-                        <>
-                            {status('NUC CCMAS format', 'emerald')}
-                            <Action
-                                size="sm"
-                                icon="download"
-                                onClick={() => exportRecords('outcome-matrix', matrix)}
-                            >
-                                Export matrix
-                            </Action>
-                        </>
-                    }
-                >
-                    <OutcomeMatrix {...{ matrix, columns }} />
-                </Card>
-            )}
+            {tab === 2 && <ApprovedMapping programmes={versions} />}
         </Register>
     );
 }

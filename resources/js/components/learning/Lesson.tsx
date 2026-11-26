@@ -2,7 +2,7 @@ import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { LessonResources } from './LessonResources';
 import { AccountingLesson } from './AccountingLesson';
 import { Card, Action } from '@/components/workspace/Elements';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { StudyIcon } from '@/components/learning/Parts';
 
 export function Lesson() {
     const { notify } = useWorkspaceOverlays();

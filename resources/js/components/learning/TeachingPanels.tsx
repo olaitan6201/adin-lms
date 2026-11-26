@@ -1,7 +1,7 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { courseModules, offerings, resources } from '@/components/study-workspace/fixtures';
+import { courseModules, offerings, resources } from '@/components/learning/fixtures';
 import { Badge, Card, Action, Table } from '@/components/workspace/Elements';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { StudyIcon } from '@/components/learning/Parts';
 
 export { course };
 const course = offerings[0];

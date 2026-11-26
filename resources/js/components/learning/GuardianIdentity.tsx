@@ -1,5 +1,5 @@
 import { StudyIcon } from './Parts';
-import { Timeline } from '@/components/study-workspace/Parts';
+import { Timeline } from '@/components/learning/Parts';
 import { Badge, Card } from '@/components/workspace/Elements';
 
 const LINKED_STUDENT = {

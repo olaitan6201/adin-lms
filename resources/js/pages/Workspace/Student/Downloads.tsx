@@ -1,7 +1,7 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { offlineDownloads } from '@/components/study-workspace/fixtures';
+import { offlineDownloads } from '@/components/learning/fixtures';
 import { StatTile, Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Note } from '@/components/study-workspace/Parts';
+import { Note } from '@/components/learning/Parts';
 
 export default function Downloads() {
     const { notify } = useWorkspaceOverlays();

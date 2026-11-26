@@ -1,7 +1,7 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Drawer } from '@/components/workspace/Panels';
 import { Card } from '@/components/workspace/Elements';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { StudyIcon } from '@/components/learning/Parts';
 
 export function SessionDrawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
     const { notify } = useWorkspaceOverlays();

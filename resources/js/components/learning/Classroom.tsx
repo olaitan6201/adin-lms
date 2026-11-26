@@ -1,10 +1,10 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { SessionDrawer } from '@/components/study-workspace/SessionDrawer';
-import { LiveRoom, Recordings } from '@/components/study-workspace/LiveRoom';
+import { SessionDrawer } from '@/components/learning/SessionDrawer';
+import { LiveRoom, Recordings } from '@/components/learning/LiveRoom';
 import { useState } from 'react';
-import { liveClasses } from '@/components/study-workspace/fixtures';
+import { liveClasses } from '@/components/learning/fixtures';
 import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Note } from '@/components/study-workspace/Parts';
+import { Note } from '@/components/learning/Parts';
 
 function SessionTable({ openSession }: { openSession: () => void }) {
     const { notify } = useWorkspaceOverlays();

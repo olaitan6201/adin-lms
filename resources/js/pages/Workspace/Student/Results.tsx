@@ -1,6 +1,6 @@
-import { studentResults as releasedResults } from '@/components/study-workspace/fixtures';
+import { studentResults as releasedResults } from '@/components/learning/fixtures';
 import { StatTile, Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Note, StudyIcon } from '@/components/study-workspace/Parts';
+import { Note, StudyIcon } from '@/components/learning/Parts';
 
 export default function Results() {
     const rows = releasedResults.map((result) => [

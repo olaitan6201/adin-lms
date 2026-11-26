@@ -1,6 +1,6 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Card, Table } from '@/components/workspace/Elements';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { StudyIcon } from '@/components/learning/Parts';
 
 export function LiveRoom() {
     return (

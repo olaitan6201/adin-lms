@@ -1,4 +1,4 @@
-import { assignments, gradeRows } from '@/components/study-workspace/fixtures';
+import { assignments, gradeRows } from '@/components/learning/fixtures';
 
 import { Badge, Card, Action, Table } from '@/components/workspace/Elements';
 

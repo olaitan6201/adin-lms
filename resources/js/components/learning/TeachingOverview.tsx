@@ -1,6 +1,6 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { Card } from '@/components/workspace/Elements';
-import { Meter, StudyIcon } from '@/components/study-workspace/Parts';
+import { Meter, StudyIcon } from '@/components/learning/Parts';
 
 export function TeachingOverview() {
     const { notify } = useWorkspaceOverlays();

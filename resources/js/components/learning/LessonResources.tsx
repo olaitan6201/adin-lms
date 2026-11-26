@@ -1,5 +1,5 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { StudyIcon } from '@/components/learning/Parts';
 
 export function LessonResources() {
     const { notify } = useWorkspaceOverlays();

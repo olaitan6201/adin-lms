@@ -1,6 +1,6 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { studentModules } from '@/components/study-workspace/fixtures';
-import { StudyIcon } from '@/components/study-workspace/Parts';
+import { studentModules } from '@/components/learning/fixtures';
+import { StudyIcon } from '@/components/learning/Parts';
 
 const stateIcon: Record<string, string> = {
     complete: 'check',

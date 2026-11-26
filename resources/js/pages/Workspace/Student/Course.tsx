@@ -1,7 +1,7 @@
-import { LessonMenu } from '@/components/study-workspace/LessonMenu';
-import { Lesson } from '@/components/study-workspace/Lesson';
+import { LessonMenu } from '@/components/learning/LessonMenu';
+import { Lesson } from '@/components/learning/Lesson';
 import { Card, Action, PageHeader } from '@/components/workspace/Elements';
-import { Meter, Note } from '@/components/study-workspace/Parts';
+import { Meter, Note } from '@/components/learning/Parts';
 
 export default function Course() {
     return (

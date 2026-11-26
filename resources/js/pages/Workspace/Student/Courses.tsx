@@ -1,7 +1,7 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { studentModules } from '@/components/study-workspace/fixtures';
+import { studentModules } from '@/components/learning/fixtures';
 import { Badge, Card, Action, PageHeader } from '@/components/workspace/Elements';
-import { Meter, Note, StudyIcon } from '@/components/study-workspace/Parts';
+import { Meter, Note, StudyIcon } from '@/components/learning/Parts';
 
 export default function Courses() {
     const courses = [

@@ -1,7 +1,7 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { offerings } from '@/components/study-workspace/fixtures';
+import { offerings } from '@/components/learning/fixtures';
 import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
-import { Meter, Note } from '@/components/study-workspace/Parts';
+import { Meter, Note } from '@/components/learning/Parts';
 
 export default function Courses() {
     const rows = offerings.slice(0, 4).map((offering) => [

@@ -1,1 +1,1 @@
-export { default } from '@/components/study-workspace/Classroom';
+export { default } from '@/components/learning/Classroom';

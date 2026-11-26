@@ -1,12 +1,12 @@
-import { TeachingOverview } from '@/components/study-workspace/TeachingOverview';
+import { TeachingOverview } from '@/components/learning/TeachingOverview';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
-import { ContentPanel, ResourcesPanel } from '@/components/study-workspace/TeachingPanels';
-import { AssignmentsPanel, GradebookPanel } from '@/components/study-workspace/TeachingAssessment';
-import { course } from '@/components/study-workspace/TeachingPanels';
+import { ContentPanel, ResourcesPanel } from '@/components/learning/TeachingPanels';
+import { AssignmentsPanel, GradebookPanel } from '@/components/learning/TeachingAssessment';
+import { course } from '@/components/learning/TeachingPanels';
 import { Tabs } from '@/components/workspace/Panels';
 import { Action, PageHeader } from '@/components/workspace/Elements';
-import { Note } from '@/components/study-workspace/Parts';
+import { Note } from '@/components/learning/Parts';
 
 export default function Course() {
     const panels: Record<string, React.ReactNode> = {

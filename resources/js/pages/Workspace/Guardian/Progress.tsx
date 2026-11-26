@@ -1,6 +1,6 @@
-import { GuardianIdentity, Withheld } from '@/components/study-workspace/GuardianIdentity';
-import { Meter, Note, StudyIcon } from '@/components/study-workspace/Parts';
-import { studentResults, offlineDownloads } from '@/components/study-workspace/fixtures';
+import { GuardianIdentity, Withheld } from '@/components/learning/GuardianIdentity';
+import { Meter, Note, StudyIcon } from '@/components/learning/Parts';
+import { studentResults, offlineDownloads } from '@/components/learning/fixtures';
 import { Badge, Card, Action, Table, PageHeader } from '@/components/workspace/Elements';
 
 function PublishedResults() {

@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 import { CourseDraftForm, type CourseDraft, type DraftKind } from './CourseDraftForm';
 
-type Entry = CourseDraft & { id: string; kind: DraftKind };
+type Entry = CourseDraft & {
+    id: string;
+    kind: DraftKind;
+};
 
 export function useCourseDrafts() {
     const [drafts, setDrafts] = useState<Entry[]>([]);

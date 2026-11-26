@@ -4,7 +4,10 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import type { ReactNode } from 'react';
 
 export function SelectedCourseSummary({ course, back, description, children }: {
-    course?: { code: string; title: string };
+    course?: {
+        code: string;
+        title: string;
+    };
     back: string;
     description: string;
     children?: ReactNode;

@@ -30,14 +30,16 @@ export async function storeFile(file: StudyFile) {
         return cached.blob();
     }
 
-    const response = await fetch(file.href, { credentials: 'omit' });
+    const response = await fetch(file.href, { credentials: 'omit', redirect: 'error' });
     if (!response.ok) {
         throw new Error('File unavailable');
     }
+
     const blob = await response.blob();
     if (blob.size !== file.bytes) {
         throw new Error('Incomplete sample file');
     }
+
     await cache.put(file.href, new Response(blob, {
         headers: { 'Content-Type': blob.type, 'X-Sample-Saved': new Date().toISOString() },
     }));

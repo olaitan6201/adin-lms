@@ -1,7 +1,10 @@
 import { useState, type FormEvent } from 'react';
 
 export type DraftKind = 'Module' | 'Chapter' | 'Resource' | 'Allocation request';
-export type CourseDraft = { title: string; detail: string };
+export type CourseDraft = {
+    title: string;
+    detail: string;
+};
 
 export function CourseDraftForm({ kind, initial, save }: {
     kind: DraftKind;
@@ -20,6 +23,7 @@ export function CourseDraftForm({ kind, initial, save }: {
             setError('Enter a title and details before saving.');
             return;
         }
+
         save({ title, detail });
     }
 

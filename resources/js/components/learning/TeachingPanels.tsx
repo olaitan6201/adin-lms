@@ -82,7 +82,10 @@ export function ContentPanel({ courseModules, outline, edit }: {
     );
 }
 
-export function ResourcesPanel({ resources, upload }: { resources: TeachingResources; upload: () => void }) {
+export function ResourcesPanel({ resources, upload }: {
+    resources: TeachingResources;
+    upload: () => void;
+}) {
     const { openDrawer } = useWorkspaceOverlays();
     function showResource(resource: TeachingResources[number]) {
         openDrawer({

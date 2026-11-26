@@ -1,7 +1,9 @@
+import { restoreDrillDate } from '@/data/registry/recoverySchedule';
+
 export const institution = {
     session: '2025/2026',
     description: 'Delivery, compliance and service health across every faculty for the 2025/2026 first semester.',
-    backup: 'Last run 26 Nov 02:00, 41.2 GB written, verification passed. Restore drill due 12 Dec.',
+    backup: `Last run 26 Nov 02:00, 41.2 GB written, verification passed. Restore drill due ${restoreDrillDate}.`,
     weakestCoverage: 'Faculty of Arts and Education trails the institution by 8 points, driven by Week 4-6 content in ENG210 and EDM505 still in draft.',
     examSubtitle: 'Objective bank coverage for the two upcoming examinations',
     exams: [

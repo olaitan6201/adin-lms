@@ -1,7 +1,10 @@
 import { type ReactNode } from 'react';
 import { Badge } from '@/components/ui/data-display/Badge';
 
-export function RecordName({ name, meta }: { name: string; meta: string }) {
+export function RecordName({ name, meta }: {
+    name: string;
+    meta: string;
+}) {
     return (
         <div className="min-w-0">
             <p className="truncate font-medium text-ink-800">{name}</p>

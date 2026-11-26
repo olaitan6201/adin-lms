@@ -22,6 +22,7 @@ export function Weights({
             setMessage('Weights must add up to 100%.');
             return;
         }
+
         save(weights);
         setMessage('Policy saved locally.');
     }

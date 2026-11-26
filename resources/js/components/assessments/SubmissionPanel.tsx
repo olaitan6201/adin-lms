@@ -32,10 +32,12 @@ export function SubmissionPanel({
         if (row.state === 'closed') {
             return;
         }
+
         if (!file || !/\.(pdf|docx|xlsx)$/i.test(file.name) || file.size > sizeLimit * 1024 * 1024) {
             setError(`Choose a PDF, DOCX or XLSX file no larger than ${sizeLimit} MB.`);
             return;
         }
+
         save({
             number: `RCP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
             file: file.name,

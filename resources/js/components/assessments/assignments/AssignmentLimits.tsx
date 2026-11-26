@@ -13,6 +13,7 @@ function uploadLimit(bytes: number) {
     if (bytes < 1024) {
         return exact;
     }
+
     const mib = bytes >= 1024 ** 2;
     const amount = bytes / (mib ? 1024 ** 2 : 1024);
     const value = amount.toLocaleString(undefined, { maximumFractionDigits: 2 });

@@ -8,9 +8,11 @@ function standing(percent: number) {
     if (percent < 50) {
         return <Badge tone="rose">Below threshold</Badge>;
     }
+
     if (percent < 75) {
         return <Badge tone="amber">Watch</Badge>;
     }
+
     return <Badge tone="emerald">Good</Badge>;
 }
 

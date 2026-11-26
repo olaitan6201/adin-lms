@@ -52,6 +52,7 @@ export function MarkingPanel({
         if (!maySave || (status === 'feedback returned' && !mayReturn)) {
             return;
         }
+
         const marks = values?.map(Number);
         const calculate = complete && marks && (editingMarks || row.score === null);
         const score = calculate
@@ -59,6 +60,7 @@ export function MarkingPanel({
             : row.score;
         save({ ...row, marks, feedback, score, status });
     }
+
     return (
         <Drawer title={row.student} subtitle={`${row.matric} · submitted ${row.submitted}`} close={close}>
             <div className="flex flex-wrap gap-2">

@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import type { GradePolicy, GradeRow, Metric, ScoreChange } from '@/types/assessments/gradebook';
 
-type Book = { rows: GradeRow[]; history: ScoreChange[] };
-type Revision = { rows: GradeRow[]; change: string; reason: string };
+type Book = {
+    rows: GradeRow[];
+    history: ScoreChange[];
+};
+type Revision = {
+    rows: GradeRow[];
+    change: string;
+    reason: string;
+};
 export type MarkerDecision = 'Approve' | 'Send for moderation';
 
 export function gradeForTotal(total: number, boundaries: GradePolicy['boundaries']) {
@@ -21,6 +28,7 @@ export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boole
             if (!revision) {
                 return current;
             }
+
             const { rows, change, reason } = revision;
             return { rows, history: [{ when, who, change, reason }, ...current.history] };
         });
@@ -32,9 +40,11 @@ export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boole
             if (!row || row.state === 'published' || value === row[key]) {
                 return;
             }
+
             if (!Number.isInteger(value) || value < 0 || value > maximum) {
                 return;
             }
+
             const total = row.total - row[key] + value;
             const grade = gradeForTotal(total, policy.boundaries);
             return {
@@ -53,9 +63,11 @@ export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boole
             if (!row || row.state === 'published' || !reason.trim()) {
                 return;
             }
+
             if (lecturer && decision === 'Approve') {
                 return;
             }
+
             const state = decision === 'Approve' ? 'approved' : 'moderation';
             return {
                 rows: rows.map((result) => (result === row ? { ...row, state } : result)),
@@ -71,6 +83,7 @@ export function useGradebook(initial: Book, policy: GradePolicy, lecturer: boole
             if (lecturer || !count) {
                 return;
             }
+
             return {
                 rows: rows.map((row) => (row.state === 'approved' ? { ...row, state: 'published' } : row)),
                 change: `${count} result(s) published`,

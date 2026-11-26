@@ -48,6 +48,7 @@ export function SubmittedWorkList({
                     if (!current) {
                         return null;
                     }
+
                     return (
                         <SubmittedWork
                             key={assignment.id}

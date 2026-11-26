@@ -115,6 +115,7 @@ export function Checks({
     function toggle(label: string, checked: boolean) {
         change(checked ? [...selected, label] : selected.filter((value) => value !== label));
     }
+
     return (
         <div className="space-y-2">
             {labels.map((label) => (

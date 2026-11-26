@@ -2,7 +2,10 @@ import type { BankDraft } from '@/types/assessments/cbt';
 import { Drawer } from '../Drawer';
 import { type Values, Editor } from '../Editor';
 
-export function NewBankPanel({ close, save }: { close: () => void; save: (draft: BankDraft) => void }) {
+export function NewBankPanel({ close, save }: {
+    close: () => void;
+    save: (draft: BankDraft) => void;
+}) {
     function submit(values: Values) {
         save({
             name: values['Bank name'],

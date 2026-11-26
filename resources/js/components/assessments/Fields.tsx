@@ -43,6 +43,7 @@ export function Check({ name, label }: CheckProps) {
         </Label>
     );
 }
+
 export type Member = {
     id: string;
     name: string;

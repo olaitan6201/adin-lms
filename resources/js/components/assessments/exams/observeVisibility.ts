@@ -1,4 +1,7 @@
-type Pending = { id: string; sends: number };
+type Pending = {
+    id: string;
+    sends: number;
+};
 const maxSends = 4;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -16,6 +19,7 @@ function restore(key: string): Pending | null {
     } catch {
         /* Storage is optional. */
     }
+
     return null;
 }
 
@@ -46,14 +50,17 @@ export function observeVisibility(attempt: string, unconfirmed: () => void) {
         if (!pending || sending || stopped || terminal || timer !== undefined) {
             return;
         }
+
         if (pending.sends >= maxSends) {
             remember(null);
             unconfirmed();
             return;
         }
+
         if (!navigator.onLine) {
             return;
         }
+
         sending = true;
         const receipt = { id: pending.id, sends: pending.sends + 1 };
         let retryDelay = 2000 * 2 ** (receipt.sends - 1);
@@ -75,6 +82,7 @@ export function observeVisibility(attempt: string, unconfirmed: () => void) {
             if (stopped) {
                 return;
             }
+
             if (response.status === 204) {
                 remember(null);
             } else if (response.status === 429) {
@@ -109,11 +117,14 @@ export function observeVisibility(attempt: string, unconfirmed: () => void) {
         if (terminal) {
             return;
         }
+
         if (document.hidden && !pending) {
             remember({ id: crypto.randomUUID(), sends: 0 });
         }
+
         void deliver();
     };
+
     document.addEventListener('visibilitychange', changed);
     window.addEventListener('online', deliver);
     void deliver();

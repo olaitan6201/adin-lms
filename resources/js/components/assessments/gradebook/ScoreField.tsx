@@ -22,6 +22,7 @@ export function ScoreField({ row, metric, adjust }: Props) {
                     input.value = String(row[key]);
                     return;
                 }
+
                 adjust(row.matric, metric, input.valueAsNumber);
             }}
         />

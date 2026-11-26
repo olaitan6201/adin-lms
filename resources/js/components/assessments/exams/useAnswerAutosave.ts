@@ -75,5 +75,6 @@ export function useAnswerAutosave({
         setFailed(false);
         setRetry((current) => current + 1);
     }
+
     return { value, edit, message, failed, retrySave };
 }

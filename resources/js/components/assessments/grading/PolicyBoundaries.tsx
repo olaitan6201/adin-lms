@@ -13,6 +13,7 @@ export function PolicyBoundaries({
     function updateBoundary(index: number, patch: Partial<PolicyDefinition['boundaries'][number]>) {
         change(boundaries.map((boundary, i) => (i === index ? { ...boundary, ...patch } : boundary)));
     }
+
     return (
         <>
             {' '}

@@ -16,6 +16,7 @@ export function useAssignmentRecords(
         if (!edit) {
             return;
         }
+
         const base =
             edit === 'new'
                 ? {

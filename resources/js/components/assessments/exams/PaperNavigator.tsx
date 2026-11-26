@@ -5,7 +5,10 @@ type Props = {
     expires: string;
     active: boolean;
     questions: Question[];
-    progress: Record<string, { answered: boolean; dirty: boolean }>;
+    progress: Record<string, {
+        answered: boolean;
+        dirty: boolean;
+    }>;
 };
 
 function RemainingTime({ expires }: { expires: string }) {

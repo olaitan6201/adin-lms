@@ -19,7 +19,10 @@ type Props = {
     integrity: IntegrityPolicy;
 };
 export default function Paper({ attempt, questions, title, integrity }: Props) {
-    const [progress, setProgress] = useState<Record<string, { dirty: boolean; answered: boolean }>>({});
+    const [progress, setProgress] = useState<Record<string, {
+        dirty: boolean;
+        answered: boolean;
+    }>>({});
     const change = useCallback((id: string, dirty: boolean, answered: boolean) => {
         setProgress((previous) =>
             previous[id]?.dirty === dirty && previous[id]?.answered === answered

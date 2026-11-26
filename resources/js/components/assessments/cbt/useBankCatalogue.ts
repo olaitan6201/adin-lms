@@ -30,6 +30,7 @@ export function useBankCatalogue(
         if (!bank) {
             return;
         }
+
         const id = bank.id;
         setCatalogue((current) => ({
             items: { ...current.items, [id]: [...(current.items[id] ?? []), question] },

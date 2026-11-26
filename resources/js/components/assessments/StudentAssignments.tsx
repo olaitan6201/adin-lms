@@ -37,6 +37,7 @@ export default function StudentAssignments({
         if (!selected || selected.assignment.state === 'closed') {
             return;
         }
+
         setRecords((records) =>
             records.map((record) =>
                 record.assignment.id === selectedId

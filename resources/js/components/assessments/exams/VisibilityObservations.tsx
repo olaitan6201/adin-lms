@@ -17,7 +17,10 @@ export type VisibilitySignals = {
     next_page_url: string | null;
 };
 
-export function VisibilityObservations({ signals, url }: { signals: VisibilitySignals; url: string }) {
+export function VisibilityObservations({ signals, url }: {
+    signals: VisibilitySignals;
+    url: string;
+}) {
     return (
         <section className="assessment-panel space-y-3">
             <h2 className="text-xl font-semibold tracking-tight">Visibility observations</h2>

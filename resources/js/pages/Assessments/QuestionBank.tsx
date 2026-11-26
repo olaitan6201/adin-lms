@@ -5,7 +5,10 @@ import type { BankQuestion } from '@/components/assessments/contracts';
 import { BankFilters, type BankFilterProps } from '@/components/assessments/questions/BankFilters';
 import { QuestionRevisions } from '@/components/assessments/questions/QuestionRevisions';
 
-type Props = Omit<BankFilterProps, 'base'> & { offering: string; questions: BankQuestion[] };
+type Props = Omit<BankFilterProps, 'base'> & {
+    offering: string;
+    questions: BankQuestion[];
+};
 export default function QuestionBank({ offering, filters, topics, questions, kinds }: Props) {
     const base = `/courses/${offering}/question-banks`;
     return (

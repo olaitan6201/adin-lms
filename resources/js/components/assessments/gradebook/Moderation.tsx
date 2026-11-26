@@ -8,7 +8,10 @@ export const stages = [
     ['published', 'Published', 'Visible to students'],
 ];
 
-export function Moderation({ rows, filter }: { rows: GradeRow[]; filter: (value: string) => void }) {
+export function Moderation({ rows, filter }: {
+    rows: GradeRow[];
+    filter: (value: string) => void;
+}) {
     return (
         <div className="space-y-5">
             <Card

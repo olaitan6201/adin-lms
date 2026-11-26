@@ -39,6 +39,7 @@ export default function CbtDesk({
         if (!exam) {
             return;
         }
+
         const base =
             exam === 'new'
                 ? {

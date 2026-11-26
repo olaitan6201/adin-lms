@@ -12,7 +12,13 @@ import {
 import { router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
-type Props = { attempt: string; expires: string; answered: number; total: number; pending: boolean };
+type Props = {
+    attempt: string;
+    expires: string;
+    answered: number;
+    total: number;
+    pending: boolean;
+};
 
 export function FinalReview({ attempt, expires, answered, total, pending }: Props) {
     const deadline = Date.parse(expires);
@@ -46,9 +52,11 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
         if (Date.now() >= deadline) {
             setExpired(true);
         }
+
         if (reason || !navigator.onLine || Date.now() >= deadline || lock.current) {
             return;
         }
+
         lock.current = true;
         setSending(true);
         setError('');
@@ -56,6 +64,7 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
             setError('Submission could not be confirmed. Reload to check your attempt before trying again.');
             return false;
         };
+
         router.post(
             `/attempts/${attempt}/finish`,
             {},
@@ -70,6 +79,7 @@ export function FinalReview({ attempt, expires, answered, total, pending }: Prop
             },
         );
     }
+
     return (
         <Dialog
             open={open}

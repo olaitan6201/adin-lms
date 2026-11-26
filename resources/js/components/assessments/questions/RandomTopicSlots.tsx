@@ -9,7 +9,10 @@ export function RandomTopicSlots({
     draws,
     setDraws,
 }: {
-    topics: { id: string; topic: string }[];
+    topics: {
+        id: string;
+        topic: string;
+    }[];
     draws: string[];
     setDraws: (values: string[]) => void;
 }) {
@@ -18,6 +21,7 @@ export function RandomTopicSlots({
         if (draws.length === 1) {
             addSlot.current?.focus();
         }
+
         setDraws(draws.slice(0, -1));
     }
 

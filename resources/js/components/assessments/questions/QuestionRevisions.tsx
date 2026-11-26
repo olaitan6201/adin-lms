@@ -1,7 +1,10 @@
 import { Link } from '@inertiajs/react';
 import type { BankQuestion } from '@/components/assessments/contracts';
 
-export function QuestionRevisions({ offering, questions }: { offering: string; questions: BankQuestion[] }) {
+export function QuestionRevisions({ offering, questions }: {
+    offering: string;
+    questions: BankQuestion[];
+}) {
     const groups = questions.reduce<Record<string, BankQuestion[]>>((result, question) => {
         (result[question.topic] ??= []).push(question);
         return result;

@@ -2,7 +2,10 @@ import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
 import { type Item } from '@/components/assessments/grading/AssessmentItemPanel';
 import { SetupBook, type PolicyDefinition } from '@/components/assessments/grading/SetupBook';
 
-export type ApprovedPolicy = Omit<PolicyDefinition, 'items'> & { id: string; version: number };
+export type ApprovedPolicy = Omit<PolicyDefinition, 'items'> & {
+    id: string;
+    version: number;
+};
 export function AmendPolicy({
     offering,
     items,

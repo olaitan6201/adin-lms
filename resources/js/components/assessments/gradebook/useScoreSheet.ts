@@ -25,5 +25,6 @@ export function useScoreSheet(rows: GradeRow[], metrics: readonly Metric[], cour
             ]),
         );
     }
+
     return { visible, filters: { state, tool, search, filter, setTool, find }, download };
 }

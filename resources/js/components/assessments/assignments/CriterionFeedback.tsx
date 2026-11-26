@@ -19,6 +19,7 @@ export function CriterionFeedback({ scores }: { scores: CriterionScore[] }) {
     if (!scores.length) {
         return null;
     }
+
     return (
         <Table aria-label="Criterion marks">
             <TableCaption>Criterion marks and feedback</TableCaption>

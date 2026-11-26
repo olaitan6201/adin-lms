@@ -52,13 +52,16 @@ export function Announcements({
         >
             <Table
                 columns={['Notice', 'Audience', 'Date', 'Channels', 'Status', '']}
+                rowKeys={list.map((notice) => notice.id)}
                 rows={list.map((n) => [
                     n.title,
-                    <Badge>{n.audience}</Badge>,
+                    <Badge key="audience">{n.audience}</Badge>,
                     n.date,
                     n.channels.join(' and '),
-                    <Badge tone={n.status === 'Sent' ? 'emerald' : 'amber'}>{n.status}</Badge>,
-                    <Action size="sm" onClick={() => select(n.id)}>
+                    <Badge key="status" tone={n.status === 'Sent' ? 'emerald' : 'amber'}>
+                        {n.status}
+                    </Badge>,
+                    <Action key="actions" size="sm" onClick={() => select(n.id)}>
                         Edit
                     </Action>,
                 ])}
@@ -71,7 +74,13 @@ export function Announcements({
                 >
                     <form className="space-y-4" onSubmit={saveAnnouncement}>
                         <Field label="Title">
-                            <input className="input" name="title" defaultValue={item?.title} required pattern=".*\S.*" />
+                            <input
+                                className="input"
+                                name="title"
+                                defaultValue={item?.title}
+                                required
+                                pattern=".*\S.*"
+                            />
                         </Field>
                         <Field label="Audience">
                             <select className="select" name="audience" defaultValue={item?.audience}>
@@ -92,7 +101,9 @@ export function Announcements({
                                         name="channel"
                                         value={o}
                                         disabled={o === 'In-platform'}
-                                        defaultChecked={o === 'In-platform' || (item?.channels ?? ['Email']).includes(o)}
+                                        defaultChecked={
+                                            o === 'In-platform' || (item?.channels ?? ['Email']).includes(o)
+                                        }
                                     />{' '}
                                     {o}
                                 </label>

@@ -1,11 +1,11 @@
+import { MessageComposer } from './MessageComposer';
+
 import type { FormEvent } from 'react';
 import type { useConversations } from './useConversations';
 import { Send } from 'lucide-react';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import type { Conversation } from '@/types/community/communication';
-import { Drawer } from '@/components/ui/overlays/DialogDrawer';
-import { Field } from '@/components/ui/controls/Field';
 
 type MessagesProps = {
     inbox: ReturnType<typeof useConversations>;
@@ -16,8 +16,6 @@ type MessagesProps = {
 
 export function Messages({ inbox, recipients, composing, close }: MessagesProps) {
     const { messages, thread, open, send, reply } = inbox;
-    const available = recipients.filter((recipient) => recipient.name?.trim());
-
     function submitReply(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!thread) return;
@@ -25,16 +23,6 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
         if (!body) return;
         reply(thread.id, body);
         event.currentTarget.reset();
-    }
-
-    function submitMessage(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const fields = new FormData(event.currentTarget);
-        const recipient = available.find((option) => option.id === fields.get('recipient'));
-        const body = String(fields.get('body') ?? '').trim();
-        if (!recipient || !body) return;
-        send(recipient.name, String(fields.get('subject')), body);
-        close();
     }
 
     return (
@@ -99,31 +87,7 @@ export function Messages({ inbox, recipients, composing, close }: MessagesProps)
                     <p className="p-5 text-sm">No conversations yet.</p>
                 )}
             </div>
-            {composing && (
-                <Drawer title="New message" close={close}>
-                    <form className="space-y-4" onSubmit={submitMessage}>
-                        <Field label="Recipient">
-                            <select name="recipient" className="select" required disabled={!available.length}>
-                                {available.map((m) => (
-                                    <option key={m.id} value={m.id}>
-                                        {m.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </Field>
-                        {!available.length && <p role="status">No recipients available.</p>}
-                        <Field label="Subject">
-                            <input name="subject" className="input" required pattern=".*\S.*" />
-                        </Field>
-                        <Field label="Message">
-                            <textarea name="body" className="input min-h-24" required />
-                        </Field>
-                        <button className="btn btn-primary" disabled={!available.length}>
-                            Send message
-                        </button>
-                    </form>
-                </Drawer>
-            )}
+            {composing && <MessageComposer {...{ recipients, close, send }} />}
         </Card>
     );
 }

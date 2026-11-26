@@ -4,8 +4,16 @@ import type { Group } from '@/types/community/communication';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 
-export function GroupEditor({ groups, courses, create, close }: {
-    groups: Group[]; courses: string[]; create: (group: Group) => void; close: () => void;
+export function GroupEditor({
+    groups,
+    courses,
+    create,
+    close,
+}: {
+    groups: Group[];
+    courses: string[];
+    create: (group: Group) => void;
+    close: () => void;
 }) {
     const [courseError, setCourseError] = useState('');
     function createGroup(e: FormEvent<HTMLFormElement>) {
@@ -59,7 +67,9 @@ export function GroupEditor({ groups, courses, create, close }: {
                     <textarea name="task" className="input" required />
                 </Field>
                 {courseError && <p role="alert">{courseError}</p>}
-                <button className="btn btn-primary" disabled={!courses.length}>Create group</button>
+                <button className="btn btn-primary" disabled={!courses.length}>
+                    Create group
+                </button>
             </form>
         </Drawer>
     );

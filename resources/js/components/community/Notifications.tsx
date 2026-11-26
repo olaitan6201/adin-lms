@@ -1,5 +1,5 @@
 import type { NotificationPreferences } from '@/types/community/notifications';
-import { useState } from 'react';
+import { useNotificationPreferences } from './useNotificationPreferences';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
@@ -10,38 +10,9 @@ import { PreferenceFieldset } from './PreferenceFieldset';
 import { Note } from '@/components/ui/feedback/Note';
 import { type WorkspaceRole } from '@/types/identity/roles';
 
-type Settings = Record<string, boolean>;
-function readPrefs(key: string): Settings {
-    try {
-        const parsed: unknown = JSON.parse(sessionStorage.getItem(key) ?? '{}');
-        return parsed && typeof parsed === 'object'
-            ? Object.fromEntries(Object.entries(parsed).filter(([, v]) => typeof v === 'boolean'))
-            : {};
-    } catch {
-        return {};
-    }
-}
-
 export function Notifications({ role, data }: { role: WorkspaceRole; data: NotificationPreferences }) {
     const { categories, devices, switches, quietHours, escalation } = data;
-    const key = `adin:workspace:${role}:notification-fixture`;
-    const [settings, setSettings] = useState(() => readPrefs(key));
-    const [saved, setSaved] = useState(false);
-    const [status, setStatus] = useState('');
-    function toggle(id: string, checked: boolean) {
-        setSettings({ ...settings, [id]: checked });
-        setSaved(false);
-        setStatus('');
-    }
-    function save() {
-        try {
-            sessionStorage.setItem(key, JSON.stringify(settings));
-            setSaved(true);
-            setStatus('Preferences saved in this browser session.');
-        } catch {
-            setStatus('Browser storage is unavailable. Your changes are still on this page.');
-        }
-    }
+    const { settings, saved, status, toggle, save, setStatus } = useNotificationPreferences(role);
     const saveButton = (
         <Action icon="save" variant="primary" onClick={save}>
             Save preferences
@@ -85,7 +56,12 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
             >
                 <div className="divide-y">
                     {categories.map((category) => (
-                        <PreferenceFieldset key={category.title} category={category} settings={settings} toggle={toggle} />
+                        <PreferenceFieldset
+                            key={category.title}
+                            category={category}
+                            settings={settings}
+                            toggle={toggle}
+                        />
                     ))}
                 </div>
             </Card>
@@ -96,9 +72,13 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
                             <p className="text-[13px] font-semibold">Quiet hours</p>
                             <p className="mt-1 text-[12.5px] leading-relaxed text-ink-500">{quietHours.description}</p>
                             <div className="mt-3 flex items-center gap-2 text-xs leading-[18px] text-ink-700">
-                                <span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">{quietHours.start}</span>
+                                <span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">
+                                    {quietHours.start}
+                                </span>
                                 <span className="text-ink-400">to</span>
-                                <span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">{quietHours.end}</span>
+                                <span className="rounded-lg border border-ink-200 px-2.5 py-1 font-mono">
+                                    {quietHours.end}
+                                </span>
                             </div>
                         </div>
                         <div className="rounded-xl border p-4">
@@ -115,7 +95,9 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
                             <label key={name} className="flex items-start justify-between gap-6 py-3">
                                 <span>
                                     <span className="block text-[13.5px] font-medium">{name}</span>
-                                    <small className="mt-0.5 block text-xs leading-relaxed text-ink-500">{description}</small>
+                                    <small className="mt-0.5 block text-xs leading-relaxed text-ink-500">
+                                        {description}
+                                    </small>
                                 </span>
                                 <span className="relative inline-flex shrink-0 items-center">
                                     <input
@@ -133,7 +115,10 @@ export function Notifications({ role, data }: { role: WorkspaceRole; data: Notif
                         ))}
                     </div>
                 </Card>
-                <SignedInDevices devices={devices} onRevoke={() => setStatus('Other devices signed out in this local preview.')} />
+                <SignedInDevices
+                    devices={devices}
+                    onRevoke={() => setStatus('Other devices signed out in this local preview.')}
+                />
             </div>
         </div>
     );

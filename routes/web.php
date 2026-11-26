@@ -5,7 +5,7 @@ use App\Http\Controllers\StudentHistoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/admin/overview')->name('home');
-Route::inertia('/portal', 'Home')->name('portal.home');
+Route::inertia('/portal', 'Portal/Home')->name('portal.home');
 foreach (glob(__DIR__.'/web/*.php') as $moduleRoutes) {
     require $moduleRoutes;
 }

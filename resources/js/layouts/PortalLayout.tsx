@@ -3,10 +3,10 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTri
 import { usePage } from '@inertiajs/react';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ConnectionStatus } from './ConnectionStatus';
-import { PortalRail, type PortalBrand } from './PortalRail';
-import { PortalTopbar } from './PortalTopbar';
-import type { Destination } from './SidebarNavigation';
+import { ConnectionStatus } from './portal/ConnectionStatus';
+import { PortalRail, type PortalBrand } from './portal/PortalRail';
+import { PortalTopbar } from './portal/PortalTopbar';
+import type { Destination } from './portal/SidebarNavigation';
 
 type Shared = {
     signedIn: boolean; branding: PortalBrand; academicLinks?: Destination[];
@@ -21,7 +21,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     const close = useRef<HTMLButtonElement>(null);
     const navigated = useRef(false);
     const [open, setOpen] = useState(false);
-    const bare = ['Login', 'ForgotPassword', 'ResetPassword'].includes(component);
+    const bare = ['Auth/Login', 'Auth/ForgotPassword', 'Auth/ResetPassword'].includes(component);
     const dashboard = component === 'Insights/Dashboard';
     const name = props.portalIdentity?.name || (dashboard && props.name) || 'My account';
     const role = props.portalIdentity?.role || (dashboard && props.audience) || 'Academic workspace';

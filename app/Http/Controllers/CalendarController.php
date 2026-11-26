@@ -38,7 +38,7 @@ final class CalendarController extends Controller
                 ->concat($snapshot['exams']->map(fn ($row) => $row + ['kind' => 'Exam opens']))->concat($classes);
         }
 
-        return Inertia::render('Calendar', [
+        return Inertia::render('Calendar/Index', [
             'events' => $events->map(fn ($row) => collect($row)->only('title', 'context', 'at', 'kind', 'href'))->values(),
             'terms' => $terms,
         ]);

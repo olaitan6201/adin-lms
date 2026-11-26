@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
 
 const outcomeLabels = {
     'password.failed': 'Password rejected',
@@ -29,39 +30,39 @@ type LoginHistoryProps = {
 
 export default function LoginHistory({ events, sessionsUrl, previous, next }: LoginHistoryProps) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="grid min-w-0 gap-5 wrap-anywhere">
             <Head title="Sign-in history" />
-            <header className="min-w-0 space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Institutional security</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Sign-in history</h1>
-                <p>Review password checks, authenticator activity and session changes across accounts.</p>
-                {sessionsUrl && (
-                    <Link className="font-medium text-primary underline underline-offset-4" href={sessionsUrl}>
-                        Manage active sessions
-                    </Link>
-                )}
-            </header>
-            <section aria-labelledby="activity-heading" className="min-w-0 rounded-lg border p-4 sm:p-6 mt-6">
-                <h2 id="activity-heading" className="text-xl font-semibold tracking-tight">
-                    Authentication events
-                </h2>
+            <RecordHeading
+                area="Institutional security"
+                title="Sign-in history"
+                description="Review password checks, authenticator activity and session changes across accounts."
+                actions={
+                    sessionsUrl && (
+                        <Link className="btn btn-outline" href={sessionsUrl}>
+                            Manage active sessions
+                        </Link>
+                    )
+                }
+            />
+            <RecordPanel title="Authentication events" description="Newest first. Times are shown in your local time zone.">
                 {!events.length ? (
                     <p className="py-4 text-sm text-muted-foreground">No authentication events recorded on this page.</p>
                 ) : (
                     <>
-                        <p className="text-sm text-muted-foreground">Newest first. Times are shown in your local time zone.</p>
-                        <ol className="mt-4 divide-y border-y border-border">
+                        <ol className="relative space-y-5 border-l border-ink-200 pl-5">
                             {events.map((event) => (
-                                <li className="grid gap-1 py-4 sm:grid-cols-[1fr_auto]" key={event.id}>
+                                <li className="relative grid gap-1 text-sm sm:grid-cols-[1fr_auto]" key={event.id}>
+                                    <span
+                                        aria-hidden="true"
+                                        className="absolute -left-[25px] top-1.5 size-2 rounded-full bg-brand-600"
+                                    />
                                     <div>
                                         <strong>{outcomeLabels[event.outcome] ?? event.outcome}</strong>
                                         <p className="text-sm text-muted-foreground break-all">
                                             {event.account_name ?? 'Account not identified'}
                                         </p>
                                     </div>
-                                    <time dateTime={event.occurred_at}>
-                                        {new Date(event.occurred_at).toLocaleString()}
-                                    </time>
+                                    <time dateTime={event.occurred_at}>{new Date(event.occurred_at).toLocaleString()}</time>
                                 </li>
                             ))}
                         </ol>
@@ -81,7 +82,7 @@ export default function LoginHistory({ events, sessionsUrl, previous, next }: Lo
                         )}
                     </nav>
                 )}
-            </section>
+            </RecordPanel>
         </main>
     );
 }

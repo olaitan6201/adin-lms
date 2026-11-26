@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
 import { Link } from '@inertiajs/react';
+import { RecordPanel } from '../../components/identity/WorkspaceRecord';
 import { GroupManager, type Group, type Registration } from '../../components/community/GroupManager';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
@@ -30,20 +31,24 @@ export default function Board({ offering, canManage, forums, groups, registratio
 
     return (
         <CommunityPage title={`${offering.external_offering_id ?? 'Course'} community`}>
-            <Announcements entries={announcements} />
-            <section>
-                <h2 className="text-xl font-semibold">Discussions</h2>
-                {!forums.length && <p>No discussions yet.</p>}
-                <ul>
-                    {forums.map((forum) => (
-                        <li key={forum.id}>
-                            <Link className="underline" href={`/community/forums/${forum.id}`}>
-                                {forum.title}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+            <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                <RecordPanel title="Discussions" description="Course forums and group discussions.">
+                    {!forums.length && <p>No discussions yet.</p>}
+                    <ul>
+                        {forums.map((forum) => (
+                            <li key={forum.id} className="border-b border-ink-100 last:border-0">
+                                <Link
+                                    className="block py-3 text-sm font-semibold text-brand-700 hover:underline"
+                                    href={`/community/forums/${forum.id}`}
+                                >
+                                    {forum.title}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </RecordPanel>
+                <Announcements entries={announcements} />
+            </div>
             {members.length > 0 && (
                 <EntryForm action={`${base}/messages`} title="Send private message">
                     <Label className="grid gap-2">

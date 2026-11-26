@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import { DeskHeading } from '../../components/academics/DeskHeading';
+import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
 
 type Session = {
     id: string;
@@ -19,34 +19,42 @@ export default function Sessions({
     next: string | null;
 }) {
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="grid min-w-0 gap-5 wrap-anywhere">
             <Head title="Active sessions" />
-            <DeskHeading title="Active sessions" area="ICT operations">
-                Check the account and last active time before revoking a session. That device must then sign in again.
-            </DeskHeading>
-            {!sessions.length && <p>No active sessions.</p>}
-            <ol className="divide-y">
-                {sessions.map((s) => (
-                    <li key={s.id} className="space-y-2 py-3">
-                        <strong>{s.full_name}</strong> · {s.email} · Session {s.id.slice(-8)}
-                        <p>
-                            Last active {new Date(s.last_seen).toLocaleString()} · expires{' '}
-                            {new Date(s.expires_at).toLocaleString()}
-                        </p>
-                        <Form method="delete" action={`/security/sessions/${s.id}`}>
-                            {({ processing }) => (
-                                <Button variant="destructive"
-                                    disabled={processing}
-                                    aria-label={`Revoke session ${s.id.slice(-8)} for ${s.full_name}`}
-                                >
-                                    Revoke session
-                                </Button>
-                            )}
-                        </Form>
-                    </li>
-                ))}
-            </ol>
-            {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
+            <RecordHeading
+                title="Active sessions"
+                area="ICT operations"
+                description="Check the account and last active time before revoking a session. That device must then sign in again."
+            />
+            <RecordPanel title="Session register">
+                {!sessions.length && <p>No active sessions.</p>}
+                <ol className="divide-y">
+                    {sessions.map((s) => (
+                        <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                            <div>
+                                <strong>{s.full_name}</strong> · {s.email}
+                                <p className="font-mono text-xs text-ink-600">Session {s.id.slice(-8)}</p>
+                                <p className="mt-1 text-[13px] text-ink-600">
+                                    Last active {new Date(s.last_seen).toLocaleString()} · expires{' '}
+                                    {new Date(s.expires_at).toLocaleString()}
+                                </p>
+                            </div>
+                            <Form method="delete" action={`/security/sessions/${s.id}`}>
+                                {({ processing }) => (
+                                    <Button
+                                        variant="destructive"
+                                        disabled={processing}
+                                        aria-label={`Revoke session ${s.id.slice(-8)} for ${s.full_name}`}
+                                    >
+                                        Revoke session
+                                    </Button>
+                                )}
+                            </Form>
+                        </li>
+                    ))}
+                </ol>
+                {previous && <Link href={previous}>Previous page</Link>} {next && <Link href={next}>Next page</Link>}
+            </RecordPanel>
         </main>
     );
 }

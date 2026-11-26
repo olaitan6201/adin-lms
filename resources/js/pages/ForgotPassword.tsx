@@ -5,6 +5,7 @@ import { AccountTask } from '../components/identity/AccountTask';
 export default function ForgotPassword({ requested }: { requested: boolean }) {
     return (
         <AccountTask
+            recovery
             context="Account recovery"
             title="Forgot your password?"
             introduction="Request a reset link using the email address you use to sign in."

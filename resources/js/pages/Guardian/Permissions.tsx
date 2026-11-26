@@ -1,6 +1,6 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,38 +22,47 @@ type Props = {
 
 export default function Permissions({ entries, previous, next }: Props) {
     return (
-        <main className="mx-auto grid w-full max-w-5xl gap-6 p-4 md:p-8">
+        <main className="grid min-w-0 gap-5">
             <Head title="Guardian permissions" />
-            <header className="space-y-2">
-                <p className="text-sm text-muted-foreground">Access administration</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Guardian permissions</h1>
-                <p>Manage who can see a student's completed lesson count.</p>
-            </header>
+            <RecordHeading
+                area="Access administration"
+                title="Guardian permissions"
+                description="Manage who can see a student's completed lesson count."
+            />
             <div className="grid items-start gap-6 lg:grid-cols-2">
-                <section>
-                    <h2 className="text-xl font-semibold">Permission register</h2>
+                <RecordPanel title="Permission register">
                     {entries.length ? (
                         <ul className="mt-4 divide-y">
                             {entries.map((e) => (
                                 <li className="py-4 break-words" key={e.id}>
-                                    <p className="text-sm text-muted-foreground">{e.revoked ? 'Revoked' : 'Active'}</p>
+                                    <span
+                                        className={
+                                            e.revoked
+                                                ? 'badge bg-ink-100 text-ink-700'
+                                                : 'badge bg-emerald-50 text-emerald-800'
+                                        }
+                                    >
+                                        {e.revoked ? 'Revoked' : 'Active'}
+                                    </span>
                                     <h3 className="font-semibold">{e.guardian}</h3>
                                     <p>Student reference: {e.student}</p>
                                     <p>Fields: {e.fields.join(', ').replaceAll('_', ' ')}</p>
                                     {!e.revoked && (
                                         <Collapsible>
-                                            <CollapsibleTrigger asChild><Button variant="outline" type="button">
-                                                Revoke access
-                                            </Button></CollapsibleTrigger>
+                                            <CollapsibleTrigger asChild>
+                                                <Button variant="outline" type="button">
+                                                    Revoke access
+                                                </Button>
+                                            </CollapsibleTrigger>
                                             <CollapsibleContent className="py-2">
-                                            <Form method="delete" action={`/guardian/permissions/${e.id}`}>
-                                                {({ processing }) => (
-                                                    <Button variant="destructive" disabled={processing}>
-                                                        Confirm revocation
-                                                    </Button>
-                                                )}
-                                            </Form>
-                                        </CollapsibleContent>
+                                                <Form method="delete" action={`/guardian/permissions/${e.id}`}>
+                                                    {({ processing }) => (
+                                                        <Button variant="destructive" disabled={processing}>
+                                                            Confirm revocation
+                                                        </Button>
+                                                    )}
+                                                </Form>
+                                            </CollapsibleContent>
                                         </Collapsible>
                                     )}
                                 </li>
@@ -74,40 +83,33 @@ export default function Permissions({ entries, previous, next }: Props) {
                             </Link>
                         )}
                     </nav>
-                </section>
-                <Card><CardContent>
-                    <h2 className="text-xl font-semibold">Approve sharing</h2>
+                </RecordPanel>
+                <RecordPanel title="Approve sharing">
                     <Form action="/guardian/permissions" method="post" resetOnSuccess className="mt-4 grid gap-4">
                         {({ errors, processing, recentlySuccessful }) => (
                             <FormFeedback errors={errors}>
                                 <Label className="grid gap-2">
                                     Guardian account email
-                                    <Input
-                                        type="email"
-                                        name="guardian_email"
-                                        required
-                                    />
+                                    <Input type="email" name="guardian_email" required />
                                 </Label>
                                 <Label className="grid gap-2">
                                     Upstream student reference
                                     <Input name="student_reference" required />
                                 </Label>
                                 <p className="text-sm text-muted-foreground">
-                                    The account must already hold the guardian role. Only lesson completion totals will
-                                    be shared.
+                                    The account must already hold the guardian role. Only lesson completion totals will be
+                                    shared.
                                 </p>
                                 <Label className="grid gap-2">
-                                    <Checkbox name="confirmed" value="1" required /> I verified
-                                    authorization to share this student's progress with this guardian.
+                                    <Checkbox name="confirmed" value="1" required /> I verified authorization to share this
+                                    student's progress with this guardian.
                                 </Label>
-                                <Button disabled={processing}>
-                                    Approve progress access
-                                </Button>
+                                <Button disabled={processing}>Approve progress access</Button>
                                 {recentlySuccessful && <p role="status">Permission saved.</p>}
                             </FormFeedback>
                         )}
                     </Form>
-                </CardContent></Card>
+                </RecordPanel>
             </div>
         </main>
     );

@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { RecordHeading, RecordPanel } from '../identity/WorkspaceRecord';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,21 +9,32 @@ import type { ReactNode } from 'react';
 type CommunityPageProps = {
     title: string;
     children: ReactNode;
+    description?: string;
 };
 
-export function CommunityPage({ title, children }: CommunityPageProps) {
+export function CommunityPage({
+    title,
+    children,
+    description = 'Course discussions, private messages and announcements for your learning community.',
+}: CommunityPageProps) {
     return (
-        <main className="mx-auto grid w-full max-w-3xl gap-6 p-4 md:p-8">
+        <main className="grid min-w-0 gap-5 wrap-anywhere">
             <Head title={title} />
-            <nav className="flex gap-5" aria-label="Learning community">
-                <Link className="underline" href="/courses">
-                    My courses
-                </Link>
-                <Link className="underline" href="/community">
-                    Inbox
-                </Link>
-            </nav>
-            <h1 className="break-words text-3xl font-semibold">{title}</h1>
+            <RecordHeading
+                area="Communication"
+                title={title}
+                description={description}
+                actions={
+                    <nav className="flex flex-wrap gap-2" aria-label="Learning community">
+                        <Link className="btn btn-outline btn-sm" href="/courses">
+                            My courses
+                        </Link>
+                        <Link className="btn btn-outline btn-sm" href="/community">
+                            Inbox
+                        </Link>
+                    </nav>
+                }
+            />
             {children}
         </main>
     );
@@ -43,29 +54,25 @@ export function EntryForm({
     resetOnSuccess?: boolean;
 }) {
     return (
-        <Card><CardContent><Form action={action} method="post" resetOnSuccess={resetOnSuccess} className="grid gap-3">
-            {({ processing, errors, recentlySuccessful }) => (
-                <FormFeedback errors={errors}>
-                    <h2 className="text-xl font-semibold">{title}</h2>
-                    {children}
-                    {body && (
-                        <Label className="grid gap-2">
-                            Message
-                            <Textarea
-                                name="body"
-                                required
-                                maxLength={10000}
-                                rows={3}
-                            />
-                        </Label>
-                    )}
-                    <Button disabled={processing}>
-                        {title}
-                    </Button>
-                    {recentlySuccessful && <p role="status">Saved.</p>}
-                </FormFeedback>
-            )}
-        </Form></CardContent></Card>
+        <RecordPanel title={title}>
+            <Form action={action} method="post" resetOnSuccess={resetOnSuccess} className="grid gap-3">
+                {({ processing, errors, recentlySuccessful }) => (
+                    <FormFeedback errors={errors}>
+                        {children}
+                        {body && (
+                            <Label className="grid gap-2">
+                                Message
+                                <Textarea name="body" required maxLength={10000} rows={3} />
+                            </Label>
+                        )}
+                        <Button className="justify-self-start" disabled={processing}>
+                            {title}
+                        </Button>
+                        {recentlySuccessful && <p role="status">Saved.</p>}
+                    </FormFeedback>
+                )}
+            </Form>
+        </RecordPanel>
     );
 }
 
@@ -75,8 +82,7 @@ export type Entry = {
 };
 export function Announcements({ entries }: { entries: Entry[] }) {
     return (
-        <section>
-            <h2 className="text-xl font-semibold">Announcements</h2>
+        <RecordPanel title="Announcements" description="Notices published for your audience.">
             {!entries.length && <p>No announcements yet.</p>}
             <ul>
                 {entries.map((entry) => (
@@ -85,6 +91,6 @@ export function Announcements({ entries }: { entries: Entry[] }) {
                     </li>
                 ))}
             </ul>
-        </section>
+        </RecordPanel>
     );
 }

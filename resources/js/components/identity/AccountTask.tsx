@@ -1,21 +1,31 @@
 import type { ReactNode } from 'react';
+import { IdentityAside, IdentityMark } from './IdentityAside';
 
 type AccountTaskProps = {
     context: string;
     title: string;
     introduction: string;
     children: ReactNode;
+    recovery?: boolean;
 };
 
-export function AccountTask({ context, title, introduction, children }: AccountTaskProps) {
+export function AccountTask({ context, title, introduction, children, recovery = false }: AccountTaskProps) {
     return (
-        <main className="mx-auto grid w-full max-w-xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
-            <header className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">{context}</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">{title}</h1>
-                <p>{introduction}</p>
-            </header>
-            <div className="grid min-w-0 gap-4 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">{children}</div>
+        <main className="auth-shell bg-white">
+            <IdentityAside recovery={recovery} />
+            <section className="flex min-w-0 flex-col justify-center px-5 py-10 sm:px-10 lg:px-14">
+                <div className="mx-auto w-full max-w-[420px]">
+                    <div className="mb-8 lg:hidden">
+                        <IdentityMark compact />
+                    </div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-700">{context}</p>
+                    <h1 className="mt-1.5 text-2xl font-semibold tracking-[-0.02em] text-ink-900">{title}</h1>
+                    <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink-600">{introduction}</p>
+                    <div className="mt-7 grid min-w-0 gap-4 [&_input]:rounded-lg [&_button[type=submit]]:w-full">
+                        {children}
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }

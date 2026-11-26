@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useRef, useState, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '../components/PortalForm';
+import { AccountTask } from '../components/identity/AccountTask';
 
 interface LoginProps {
     passwordReset: boolean;
@@ -16,20 +17,17 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
     const password = useRef<HTMLInputElement>(null);
     const [submittedIdentifier, setSubmittedIdentifier] = useState('');
     return (
-        <main className="mx-auto grid w-full max-w-xl gap-6 px-4 py-8 sm:px-6 sm:py-12">
+        <AccountTask
+            context="Institutional sign in"
+            title="Sign in to your learning record"
+            introduction="Use the identifier issued to you. The portal accepts a matric number, staff ID or institutional email address."
+        >
             <Head title="Sign in" />
-            <header className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Learning portal</p>
-                <h1 className="break-words text-3xl font-semibold tracking-tight">Sign in</h1>
-                <p>Use your institutional account to open your academic workspace.</p>
-            </header>
-            <section aria-label="Account details" className="min-w-0 rounded-lg border bg-card p-4 text-card-foreground sm:p-6">
+            <section aria-label="Account details">
                 {institutionSignIn && (
                     <p className="mb-5">
                         <Button asChild className="h-auto min-h-9 max-w-full whitespace-normal">
-                            <a href={institutionSignIn}>
-                                Continue with institutional sign-in
-                            </a>
+                            <a href={institutionSignIn}>Continue with institutional sign-in</a>
                         </Button>
                     </p>
                 )}
@@ -43,10 +41,12 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                     onError={(errors) => {
                         const firstInvalid = errors.email ? identifier : password;
                         // Publish the description before moving focus, then clear the previous field.
-                        requestAnimationFrame(() => requestAnimationFrame(() => {
-                            firstInvalid.current?.focus();
-                            form.current?.reset('password');
-                        }));
+                        requestAnimationFrame(() =>
+                            requestAnimationFrame(() => {
+                                firstInvalid.current?.focus();
+                                form.current?.reset('password');
+                            }),
+                        );
                     }}
                 >
                     {({ errors, processing }) => (
@@ -57,6 +57,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 ref={identifier}
                                 defaultValue={submittedIdentifier}
                                 label="Email, matric number or staff ID"
+                                placeholder="AOU/2023/0412"
                                 name="email"
                                 autoComplete="username"
                                 autoCapitalize="none"
@@ -71,6 +72,7 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 type="password"
                                 name="password"
                                 autoComplete="current-password"
+                                placeholder="Enter your password"
                                 error={errors.password}
                                 announceError={false}
                                 required
@@ -79,10 +81,19 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                         </>
                     )}
                 </Form>
-                <Link className="mt-4 inline-block underline" href="/forgot-password">
+                <Link
+                    className="mt-4 inline-block text-[13px] font-medium text-brand-700 hover:underline"
+                    href="/forgot-password"
+                >
                     Forgot your password?
                 </Link>
             </section>
-        </main>
+            <p className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-[13px] text-sky-900">
+                If you need an institutional account, contact your university’s ICT office.
+            </p>
+            <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+                Some roles require an authenticator code after the password check. Have your authenticator app ready.
+            </p>
+        </AccountTask>
     );
 }

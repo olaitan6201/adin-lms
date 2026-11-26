@@ -12,6 +12,7 @@ type ResetPasswordProps = {
 export default function ResetPassword({ email, token }: ResetPasswordProps) {
     return (
         <AccountTask
+            recovery
             context="Account recovery"
             title="Set your password"
             introduction="Use the email address that received the reset link."

@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
+import { FileQuestionMark, ShieldAlert } from 'lucide-react';
+import { RecordHeading } from '../components/identity/WorkspaceRecord';
 
 type AccessErrorProps = {
     status: 403 | 404;
@@ -19,17 +21,17 @@ const explanations = {
 
 export default function AccessError({ status, returnTo }: AccessErrorProps) {
     const message = explanations[status];
+    const Icon = status === 403 ? ShieldAlert : FileQuestionMark;
 
     return (
-        <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 wrap-anywhere px-4 py-6 sm:px-6 lg:px-8">
+        <main className="card card-pad mx-auto grid w-full max-w-2xl justify-items-start gap-5 wrap-anywhere">
             <Head title={message.title} />
-            <p className="text-sm font-medium text-muted-foreground">Learning portal · {status}</p>
-            <h1 className="break-words text-3xl font-semibold tracking-tight">{message.title}</h1>
-            <p className="my-6 max-w-prose">{message.detail}</p>
+            <span className="rounded-lg bg-amber-50 p-3 text-amber-800">
+                <Icon aria-hidden="true" size={24} />
+            </span>
+            <RecordHeading area={`Learning portal · ${status}`} title={message.title} description={message.detail} />
             <Button asChild>
-                <Link href={returnTo}>
-                    Return to the portal
-                </Link>
+                <Link href={returnTo}>Return to the portal</Link>
             </Button>
         </main>
     );

@@ -1,7 +1,6 @@
 import type { FieldSpec } from '@/types/assessments/fields';
 import { useId, type ReactNode } from 'react';
-import { useMountedDialog } from '@/components/ui/overlays/useMountedDialog';
-import { Action } from '@/components/ui/controls/Action';
+import { MountedDialog } from '@/components/ui/overlays/MountedDialog';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
@@ -30,13 +29,12 @@ export function Note({ children, amber = false }: { children: ReactNode; amber?:
 }
 
 export function Drawer({ title, subtitle, close, children }: { title: string; subtitle?: string; close: () => void; children: ReactNode }) {
-    const ref = useMountedDialog();
     const id = useId();
     const contents = <><header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-ink-100 bg-white px-5 py-4">
         <div><h2 id={id} className="text-[15px] font-semibold">{title}</h2><p className="mt-0.5 text-[13px] text-ink-500">{subtitle}</p></div>
         <button type="button" className="btn btn-ghost btn-sm" aria-label="Close panel" onClick={close}><Icon name="close" className="size-4"/></button>
     </header><div className="space-y-4 p-5">{children}</div></>;
-    return <dialog ref={ref} aria-labelledby={id} onCancel={close} className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-full max-w-xl overflow-auto bg-white p-0 text-slate-800 shadow-xl backdrop:bg-slate-900/45">{contents}</dialog>;
+    return <MountedDialog labelledBy={id} close={close} className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-full max-w-xl overflow-auto bg-white p-0 text-slate-800 shadow-xl backdrop:bg-slate-900/45">{contents}</MountedDialog>;
 }
 
 export type { FieldSpec } from '@/types/assessments/fields';
@@ -59,15 +57,4 @@ export function Details({ items }: { items: [string, ReactNode][] }) {
     </div>)}</dl>;
 }
 
-export function exportSheet(name: string, columns: string[], rows: (string | number | null)[][]) {
-    const csv = [columns, ...rows].map(row => row.map(v => {
-        const text = String(v ?? '');
-        return `"${(/^\s*[=+@\-\t\r]/.test(text) ? "'" : '') + text.replaceAll('"', '""')}"`;
-    }).join(',')).join('\r\n');
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${name}.csv`;
-    anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+export { exportSheet } from '@/lib/csv';

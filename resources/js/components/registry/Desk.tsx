@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { MountedDialog } from '@/components/ui/overlays/MountedDialog';
+import { download } from '@/lib/download';
 import { Tabs } from 'radix-ui';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
@@ -18,22 +20,7 @@ export type Panel = {
 };
 
 function PanelForm({ panel, close }: { panel: Panel; close: () => void }) {
-    const ref = useRef<HTMLDialogElement>(null);
-    useEffect(() => {
-        const dialog = ref.current;
-        const opener = document.activeElement;
-        dialog?.showModal();
-        return () => {
-            dialog?.close();
-            if (opener instanceof HTMLElement && opener.isConnected) {
-                opener.focus({ preventScroll: true });
-            }
-        };
-    }, []);
-    return <dialog ref={ref} aria-labelledby="registry-panel-title" onCancel={event => {
-        event.preventDefault();
-        close();
-    }}
+    return <MountedDialog labelledBy="registry-panel-title" close={close}
         className={panel.confirm ? 'm-auto w-[min(92vw,460px)] rounded-xl p-0 shadow-xl backdrop:bg-ink-950/45' : 'fixed inset-y-0 right-0 ml-auto mr-0 h-dvh max-h-none w-full max-w-[560px] border-l border-ink-100 bg-white p-0 shadow-xl backdrop:bg-ink-950/45 backdrop:backdrop-blur-[2px]'}>
         <form className="flex max-h-dvh h-full flex-col" onSubmit={e => {
             e.preventDefault();
@@ -47,7 +34,7 @@ function PanelForm({ panel, close }: { panel: Panel; close: () => void }) {
             <div className="flex justify-end gap-2 border-t border-ink-100 p-4"><Action onClick={close} variant="outline">{panel.cancel ?? (panel.confirm ? 'Cancel' : 'Close')}</Action>
                 {panel.submit && <button className="btn btn-primary" type="submit">{panel.submit}</button>}</div>
         </form>
-    </dialog>;
+    </MountedDialog>;
 }
 
 export function useDesk() {
@@ -94,11 +81,5 @@ export function Note({ children, amber }: { children: ReactNode; amber?: boolean
 }
 
 export function exportRecords(name: string, records: object[]) {
-    const file = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(file);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${name}.json`;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    download(`${name}.json`, JSON.stringify(records, null, 2), 'application/json');
 }

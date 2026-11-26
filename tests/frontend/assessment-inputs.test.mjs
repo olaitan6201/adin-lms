@@ -64,6 +64,18 @@ test('an empty exam paper shows no answer controls or attempt receipt', async ()
     assert.doesNotMatch(html, /Submit examination|Examination submitted|role="timer"/);
 });
 
+test('only open work without a receipt counts as outstanding; closure alone is not a grade', async () => {
+    const { default: View } = await server.ssrLoadModule('/resources/js/components/assessments/StudentAssignments.tsx');
+    const { studentAssignments } = await server.ssrLoadModule('/resources/js/data/assessments/studentAssignments.ts');
+    const [first, second, third] = studentAssignments.work;
+    const work = [{ assignment: first.assignment }, second, { assignment: third.assignment }];
+    const html = renderToStaticMarkup(createElement(View, { ...studentAssignments, work }));
+    assert.match(html, />1 outstanding</);
+    assert.match(html, />Closed</);
+    assert.match(html, />Not submitted</);
+    assert.doesNotMatch(html, />Graded</);
+});
+
 test('returning the non-first same-title script counts precisely one assignment, even after a draft', async () => {
     const { recordMark } = await server.ssrLoadModule('/resources/js/components/assessments/assignmentRecords.ts');
     const records = {

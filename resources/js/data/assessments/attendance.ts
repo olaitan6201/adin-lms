@@ -1,3 +1,5 @@
+import type { Learner } from '@/types/assessments/attendance';
+
 // Illustrative records for the local assessment workspace.
 export const attendanceSessions = [
   { id: 'at-1', course: 'ACC302', title: 'Week 3: journals and ledgers', date: '12 Nov 2026', time: '09:00 - 10:30', present: 61, absent: 5, late: 2, state: 'closed', method: 'Manual + QR' },
@@ -6,7 +8,7 @@ export const attendanceSessions = [
   { id: 'at-4', course: 'BSC205', title: 'Practical session: slide preparation', date: '16 Nov 2026', time: '08:00 - 11:00', present: 0, absent: 0, late: 0, state: 'scheduled', method: 'QR' }
 ];
 
-export const learners = [
+export const learners: Learner[] = [
     { name: 'Blessing Okonkwo', matric: 'AOU/2023/0412', percent: 92, mark: 'present' },
     { name: 'Chinedu Okafor', matric: 'AOU/2024/1187', percent: 78, mark: 'late' },
     { name: 'Aisha Bello', matric: 'AOU/2023/0288', percent: 96, mark: 'present' },

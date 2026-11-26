@@ -1,6 +1,6 @@
-import type { Learner, Session } from '@/types/assessments/attendance';
+import type { Learner, RegisterMark, Session } from '@/types/assessments/attendance';
 
-export type Marks = Record<string, string>;
+export type Marks = Record<string, RegisterMark>;
 
 export function initialMarks(session: Session, roster: Learner[]): Marks {
     return Object.fromEntries(roster.map(learner => [

@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { MeasureBars } from './InsightPanel';
+import { MeasureBars } from '@/components/overview/InsightPanel';
 
 type Props = {
     title: string;

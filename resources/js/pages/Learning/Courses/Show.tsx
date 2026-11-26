@@ -1,25 +1,11 @@
-import { NextCourseActivity } from '../NextCourseActivity';
-import { CourseTools } from '../CourseTools';
+import type { Activity, CourseSummary } from '@/components/learning/contracts';
+import { NextCourseActivity } from '@/components/learning/NextCourseActivity';
+import { CourseTools } from '@/components/learning/CourseTools';
 import { CourseActivityList } from '@/components/learning/CourseActivityList';
 import { Head, Link } from '@inertiajs/react';
-import type { CourseSummary } from './Index';
-import { TeachingOutline } from '../TeachingOutline';
-import { CourseHeader } from '../CourseHeader';
+import { TeachingOutline } from '@/components/learning/TeachingOutline';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 import { Eye, MessageSquare, Plus } from 'lucide-react';
-
-export interface Activity {
-    id: string;
-    type: string;
-    title: string;
-    detail: string;
-    href: string;
-    at?: string | null;
-    dateLabel?: string;
-    complete?: boolean;
-    actionable?: boolean;
-    locked?: boolean;
-    readingPreview?: string | null;
-}
 
 interface Props {
     course: CourseSummary & {

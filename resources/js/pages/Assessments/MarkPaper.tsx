@@ -1,9 +1,9 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
-import { ValidatedInput } from '../../assessment/ValidatedFields';
+import { ValidatedInput } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head } from '@inertiajs/react';
-import { Post, Field, Check } from '../../assessment/Fields';
+import { Post, Field, Check } from '@/components/assessments/Fields';
 
 type Question = {
     id: string;

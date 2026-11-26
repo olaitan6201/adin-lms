@@ -1,10 +1,10 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { emptyItem, emptyPolicy, type PolicyDefinition } from './policyDefaults';
 import { useState } from 'react';
-import { Post } from './Fields';
+import { Post } from '@/components/assessments/Fields';
 import { PolicyItemFields, type PolicyItem } from './PolicyItemFields';
 
 export type { PolicyDefinition } from './policyDefaults';

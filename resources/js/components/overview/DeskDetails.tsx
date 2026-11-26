@@ -1,4 +1,4 @@
-import { Disclosure } from './Disclosure';
+import { Disclosure } from '@/components/ui/controls/Disclosure';
 import { InsightPanel, RatioRing } from './InsightPanel';
 import { Link } from '@inertiajs/react';
 import { LearnerTime } from '@/components/calendar/LearnerTime';

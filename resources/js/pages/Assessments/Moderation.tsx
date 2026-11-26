@@ -1,11 +1,11 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
-import { ValidatedSelect } from '../../assessment/ValidatedFields';
+import { ValidatedSelect } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Head, Link } from '@inertiajs/react';
-import { Field, Post } from '../../assessment/Fields';
-import type { Grade } from '../../assessment/ResultRevisions';
+import { Field, Post } from '@/components/assessments/Fields';
+import type { Grade } from '@/components/assessments/grading/ResultRevisions';
 
 type Input = {
     item: string;

@@ -1,7 +1,7 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { Head, Link } from '@inertiajs/react';
-import { QuestionPicker } from '../../assessment/QuestionPicker';
-import type { BankQuestion } from '../../assessment/contracts';
+import { QuestionPicker } from '@/components/assessments/questions/QuestionPicker';
+import type { BankQuestion } from '@/components/assessments/contracts';
 
 type Props = {
     item: string;

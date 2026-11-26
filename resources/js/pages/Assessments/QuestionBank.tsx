@@ -1,12 +1,12 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { NativeSelectOption } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
-import { QuestionForm } from '../../assessment/QuestionForm';
-import type { BankQuestion } from '../../assessment/contracts';
+import { QuestionForm } from '@/components/assessments/questions/QuestionForm';
+import type { BankQuestion } from '@/components/assessments/contracts';
 
 type Props = {
     offering: string;

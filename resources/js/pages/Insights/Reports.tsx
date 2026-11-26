@@ -1,9 +1,9 @@
-import { Disclosure } from '../../insights/Disclosure';
-import { ReportTable } from '../../insights/ReportTable';
+import { Disclosure } from '@/components/ui/controls/Disclosure';
+import { ReportTable } from '@/components/reports/ReportTable';
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
-import { ReportFilters, type Filters, type Options } from '../../insights/ReportFilters';
-import { UsageMeasures } from '../../insights/UsageMeasures';
+import { ReportFilters, type Filters, type Options } from '@/components/reports/ReportFilters';
+import { UsageMeasures } from '@/components/reports/UsageMeasures';
 
 const names = {
     'institution-usage': 'Institution usage',

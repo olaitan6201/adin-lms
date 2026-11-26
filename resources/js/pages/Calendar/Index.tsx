@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeskHeading } from '@/components/academics/DeskHeading';
-import { InsightPanel } from '@/insights/InsightPanel';
+import { InsightPanel } from '@/components/overview/InsightPanel';
 import { MonthGrid } from '@/components/calendar/MonthGrid';
 import { DateList } from '@/components/calendar/DateList';
 import { eventGroup, localDate, termDates, type AgendaDate, type CalendarTerm } from '@/components/calendar/dates';

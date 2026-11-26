@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import { Download } from 'lucide-react';
 import { DeskHeading } from '@/components/academics/DeskHeading';
 import { Button } from '@/components/ui/button';
-import { InsightPanel } from '@/insights/InsightPanel';
+import { InsightPanel } from '@/components/overview/InsightPanel';
 
 type Material = { id: string; title: string; course: string; filename: string; bytes: number; download: string };
 

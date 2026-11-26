@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { saveAnswer } from './saveAnswer';
 import { useEffect, useRef, useState } from 'react';
-import type { MatchingItem, QuestionKind } from './contracts';
+import type { MatchingItem, QuestionKind } from '@/components/assessments/contracts';
 
 export type AnswerValue = string | Record<string, string>;
 export type Question = {

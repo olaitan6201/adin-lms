@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Link } from '@inertiajs/react';
-import type { Activity } from './Courses/Show';
+import type { Activity } from './contracts';
 
 export function NextCourseActivity({ activities }: { activities: Activity[] }) {
     const lessons = activities.filter((a) => a.type === 'Lesson');

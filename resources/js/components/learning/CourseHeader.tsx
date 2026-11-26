@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import './course-workspace.css';
 
 type Props = {
     eyebrow: string;

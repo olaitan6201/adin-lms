@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import { CourseMeta, PerformanceNote, Totals } from './ClassMetrics';
 import { TermSelector } from './TermSelector';
 import type { WorkloadData } from './contracts';
-import { CourseHeader } from '@/pages/Learning/CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
 export function WorkloadIndex({ workload }: { workload: WorkloadData }) {
     return (

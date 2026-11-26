@@ -1,10 +1,10 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
-import { AssessmentItemPanel, type Item } from '../../assessment/AssessmentItemPanel';
+import { AssessmentItemPanel, type Item } from '@/components/assessments/grading/AssessmentItemPanel';
 import { Head, Link } from '@inertiajs/react';
-import { SetupBook, type PolicyDefinition } from '../../assessment/SetupBook';
-import { Post, type Member } from '../../assessment/Fields';
-import { ResultRevisions, type Grade } from '../../assessment/ResultRevisions';
+import { SetupBook, type PolicyDefinition } from '@/components/assessments/grading/SetupBook';
+import { Post, type Member } from '@/components/assessments/Fields';
+import { ResultRevisions, type Grade } from '@/components/assessments/grading/ResultRevisions';
 
 type Props = {
     offering: string;

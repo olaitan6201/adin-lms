@@ -1,11 +1,11 @@
-import { Counts, StudyDetails, TeachingDetails, type Teaching, type Study } from '../../insights/DeskDetails';
-import { ManagementPeriod, ActivitySummary, type Period, type Activity } from '../../insights/ManagementPeriod';
-import { workspaceCopy } from '../../insights/workspaceCopy';
+import { Counts, StudyDetails, TeachingDetails, type Teaching, type Study } from '@/components/overview/DeskDetails';
+import { ManagementPeriod, ActivitySummary, type Period, type Activity } from '@/components/overview/ManagementPeriod';
+import { workspaceCopy } from '@/components/overview/workspaceCopy';
 import { Head, Link } from '@inertiajs/react';
-import { ActionQueue, type AgendaItem } from '../../insights/ActionQueue';
+import { ActionQueue, type AgendaItem } from '@/components/overview/ActionQueue';
 import { Button } from '@/components/ui/button';
-import type { Release } from '../../insights/ReleasedWork';
-import { StudyWeek, type DeskCourse } from '../../insights/StudyWeek';
+import type { Release } from '@/components/overview/ReleasedWork';
+import { StudyWeek, type DeskCourse } from '@/components/overview/StudyWeek';
 import { DeskHeading } from '@/components/academics/DeskHeading';
 import { RegistryFigures, RegistryPanel } from '@/components/academics/RegistryPanel';
 

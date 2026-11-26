@@ -1,16 +1,7 @@
+import type { CourseSummary } from '@/components/learning/contracts';
 import { ArrowRight } from 'lucide-react';
-import { CourseHeader } from '../CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 import { Head, Link } from '@inertiajs/react';
-
-export type CourseSummary = {
-    id: string;
-    external_offering_id: string;
-    title: string | null;
-    code: string | null;
-    status: string;
-    section: string | null;
-    delivery_mode: string | null;
-};
 
 type CoursesProps = {
     courses: CourseSummary[];

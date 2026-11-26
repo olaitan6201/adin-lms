@@ -1,5 +1,5 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { FormFeedback } from '@/components/forms/FormFeedback';

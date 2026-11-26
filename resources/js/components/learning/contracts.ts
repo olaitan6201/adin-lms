@@ -58,3 +58,54 @@ export interface Choice {
     id: string;
     title: string;
 }
+
+export type CourseSummary = {
+    id: string;
+    external_offering_id: string;
+    title: string | null;
+    code: string | null;
+    status: string;
+    section: string | null;
+    delivery_mode: string | null;
+};
+
+export interface Activity {
+    id: string;
+    type: string;
+    title: string;
+    detail: string;
+    href: string;
+    at?: string | null;
+    dateLabel?: string;
+    complete?: boolean;
+    actionable?: boolean;
+    locked?: boolean;
+    readingPreview?: string | null;
+}
+
+type Week = {
+    title: string;
+    body: string;
+};
+type Snapshot = {
+    title: string;
+    introduction: string;
+    weeks: Week[];
+    shell: {
+        external_offering_id: string;
+        section: string | null;
+        delivery_mode: string | null;
+    };
+};
+export type Plan = {
+    id: string;
+    revision: number;
+    snapshot: Snapshot;
+    author: string;
+    reviewer: string | null;
+    reason: string | null;
+    status: string;
+    submitted_at: string;
+    reviewed_at: string | null;
+    canDecide: boolean;
+};

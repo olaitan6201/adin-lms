@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, Head, Link } from '@inertiajs/react';
-import { CourseHeader } from '../CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
 type CourseMatch = {
     id: string;

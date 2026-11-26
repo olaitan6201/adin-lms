@@ -1,13 +1,13 @@
-import { LessonNavigation } from './LessonNavigation';
-import { CourseHeader } from './CourseHeader';
+import { LessonNavigation } from '@/components/learning/LessonNavigation';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 import { Badge } from '@/components/ui/badge';
 import { Head, Link } from '@inertiajs/react';
-import { LessonForm } from './LessonForm';
-import { ResourceForm } from './ResourceForm';
-import { EntryForm } from './EntryForm';
-import { Manuscript } from './Manuscript';
-import { ResourceReader } from './ResourceReader';
-import type { Workspace, Lesson, Choice } from './contracts';
+import { LessonForm } from '@/components/learning/LessonForm';
+import { ResourceForm } from '@/components/learning/ResourceForm';
+import { EntryForm } from '@/components/learning/EntryForm';
+import { Manuscript } from '@/components/learning/Manuscript';
+import { ResourceReader } from '@/components/learning/ResourceReader';
+import type { Workspace, Lesson, Choice } from '@/components/learning/contracts';
 
 interface ContentProps extends Workspace {
     lessons: Lesson[];

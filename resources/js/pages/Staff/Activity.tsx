@@ -3,7 +3,7 @@ import { FormFeedback } from '@/components/forms/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { TeachingFigures, type Activity } from '@/components/workload/TeachingFigures';
-import { CourseHeader } from '../Learning/CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
 type Props = {
     staff: {

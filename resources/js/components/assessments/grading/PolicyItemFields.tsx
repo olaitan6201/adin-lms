@@ -1,9 +1,9 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { ValidatedInput, ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { itemKinds, type ItemKind } from './contracts';
-import { RubricEditor, type RubricCriteria } from './RubricEditor';
+import { itemKinds, type ItemKind } from '@/components/assessments/contracts';
+import { RubricEditor, type RubricCriteria } from '@/components/assessments/assignments/RubricEditor';
 
 export type PolicyItem = {
     id?: string;

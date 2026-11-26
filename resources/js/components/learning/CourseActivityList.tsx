@@ -1,6 +1,6 @@
 import { Check, FileText, LockKeyhole } from 'lucide-react';
 import { Link } from '@inertiajs/react';
-import type { Activity } from '../../pages/Learning/Courses/Show';
+import type { Activity } from './contracts';
 import { LearnerTime } from '@/components/calendar/LearnerTime';
 
 export function CourseActivityList({ activities }: { activities: Activity[] }) {

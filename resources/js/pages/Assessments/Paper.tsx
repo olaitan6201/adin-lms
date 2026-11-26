@@ -1,12 +1,12 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { Head } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 
-import { FinalReview } from '../../assessment/FinalReview';
-import { PaperNavigator } from '../../assessment/PaperNavigator';
-import { Answer, type Question } from '../../assessment/Answer';
-import type { AttemptState } from '../../assessment/contracts';
-import { IntegrityNotice, type IntegrityPolicy } from '../../assessment/IntegrityNotice';
+import { FinalReview } from '@/components/assessments/exams/FinalReview';
+import { PaperNavigator } from '@/components/assessments/exams/PaperNavigator';
+import { Answer, type Question } from '@/components/assessments/exams/Answer';
+import type { AttemptState } from '@/components/assessments/contracts';
+import { IntegrityNotice, type IntegrityPolicy } from '@/components/assessments/exams/IntegrityNotice';
 
 type Props = {
     attempt: {

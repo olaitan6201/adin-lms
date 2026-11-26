@@ -1,3 +1,4 @@
+import type { Plan } from '@/components/learning/contracts';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -5,35 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { TeachingProposalForm } from './TeachingProposalForm';
-import { CourseHeader } from './CourseHeader';
+import { TeachingProposalForm } from '@/components/learning/TeachingProposalForm';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
-type Week = {
-    title: string;
-    body: string;
-};
-type Snapshot = {
-    title: string;
-    introduction: string;
-    weeks: Week[];
-    shell: {
-        external_offering_id: string;
-        section: string | null;
-        delivery_mode: string | null;
-    };
-};
-export type Plan = {
-    id: string;
-    revision: number;
-    snapshot: Snapshot;
-    author: string;
-    reviewer: string | null;
-    reason: string | null;
-    status: string;
-    submitted_at: string;
-    reviewed_at: string | null;
-    canDecide: boolean;
-};
 type Props = {
     shell: string;
     base: string;

@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import type { Activity } from './Courses/Show';
+import type { Activity } from './contracts';
 import { SequenceEditor } from './SequenceEditor';
 
 const categories = { Lesson: 'Lessons', Class: 'Classes', Assignment: 'Assignments', Discussion: 'Discussions' };

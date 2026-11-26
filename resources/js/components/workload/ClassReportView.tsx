@@ -2,7 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { CourseMeta, PerformanceNote, Totals } from './ClassMetrics';
 import type { ClassReport } from './contracts';
 import { TeachingFigures } from './TeachingFigures';
-import { CourseHeader } from '@/pages/Learning/CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
 export function ClassReportView({ report }: { report: ClassReport }) {
     return (

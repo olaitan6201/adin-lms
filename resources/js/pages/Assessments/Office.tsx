@@ -1,4 +1,4 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { Head, Link } from '@inertiajs/react';
 
 type Offerings = {

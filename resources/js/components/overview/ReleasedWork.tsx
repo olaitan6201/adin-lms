@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ResultSheetDownloads } from '../assessment/ResultSheetDownloads';
+import { ResultSheetDownloads } from '@/components/assessments/grading/ResultSheetDownloads';
 import { InsightPanel } from './InsightPanel';
 
 export type Release = {

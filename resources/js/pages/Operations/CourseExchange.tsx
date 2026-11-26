@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useCourseTransfer, type Format } from '@/components/operations/useCourseTransfer';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-import { CourseHeader } from '../Learning/CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 
 type Offering = {
     id: string;

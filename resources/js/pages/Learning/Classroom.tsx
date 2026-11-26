@@ -1,8 +1,8 @@
-import { CourseHeader } from './CourseHeader';
+import { CourseHeader } from '@/components/learning/CourseHeader';
 import { Head, Link } from '@inertiajs/react';
-import { ClassScheduleForm } from './ClassScheduleForm';
-import { AttendanceForm } from './AttendanceForm';
-import type { Choice, Workspace, Session, Participant } from './contracts';
+import { ClassScheduleForm } from '@/components/learning/ClassScheduleForm';
+import { AttendanceForm } from '@/components/learning/AttendanceForm';
+import type { Choice, Workspace, Session, Participant } from '@/components/learning/contracts';
 
 interface ClassroomProps extends Workspace {
     overview: string;

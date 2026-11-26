@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { EntryForm } from './EntryForm';
-import type { Plan } from './TeachingPlan';
+import type { Plan } from './contracts';
 
 type ProposalFormProps = {
     base: string;

@@ -1,11 +1,11 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { ValidatedSelect, ValidatedTextarea } from './ValidatedFields';
+import { ValidatedSelect, ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ExamWindow } from './ExamWindow';
 import { useState } from 'react';
-import { Check, Field, Post } from './Fields';
-import { questionKinds } from './contracts';
+import { Check, Field, Post } from '@/components/assessments/Fields';
+import { questionKinds } from '@/components/assessments/contracts';
 
 export function SetupExam({ id }: { id: string }) {
     const [count, setCount] = useState(1);

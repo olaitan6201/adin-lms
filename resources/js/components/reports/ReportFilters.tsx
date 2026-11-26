@@ -1,5 +1,5 @@
 import { NativeSelectOption } from '@/components/ui/native-select';
-import { Disclosure } from './Disclosure';
+import { Disclosure } from '@/components/ui/controls/Disclosure';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Button } from '@/components/ui/button';
 import { Link, router } from '@inertiajs/react';

@@ -1,10 +1,10 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { CourseDisclosure } from '@/components/learning/CourseDisclosure';
-import { CriterionFeedback, type CriterionScore } from '../../assessment/CriterionFeedback';
+import { CriterionFeedback, type CriterionScore } from '@/components/assessments/assignments/CriterionFeedback';
 import { Head } from '@inertiajs/react';
-import { AssignmentLimits } from '../../assessment/AssignmentLimits';
-import { SubmissionEntry } from '../../assessment/SubmissionEntry';
-import { SubmissionMarkForm, type Rubric } from '../../assessment/SubmissionMarkForm';
+import { AssignmentLimits } from '@/components/assessments/assignments/AssignmentLimits';
+import { SubmissionEntry } from '@/components/assessments/assignments/SubmissionEntry';
+import { SubmissionMarkForm, type Rubric } from '@/components/assessments/assignments/SubmissionMarkForm';
 
 type Row = {
     recipients: string[];

@@ -1,10 +1,10 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
-import { ValidatedTextarea } from '../../assessment/ValidatedFields';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
+import { ValidatedTextarea } from '@/components/assessments/ValidatedFields';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Head, Link } from '@inertiajs/react';
-import { Post } from '../../assessment/Fields';
-import type { IntegrityPolicy } from '../../assessment/IntegrityNotice';
+import { Post } from '@/components/assessments/Fields';
+import type { IntegrityPolicy } from '@/components/assessments/exams/IntegrityNotice';
 
 type Signal = {
     id: string;

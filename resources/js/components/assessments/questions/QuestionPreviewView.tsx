@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import type { QuestionDetail } from './contracts';
+import type { QuestionDetail } from '@/components/assessments/contracts';
 
 export function QuestionPreviewView({ question }: { question: QuestionDetail }) {
     const matching = question.marking_key.matching;

@@ -1,7 +1,7 @@
-import { AssessmentWorkspace } from '../../assessment/AssessmentWorkspace';
+import { AssessmentWorkspace } from '@/components/assessments/AssessmentWorkspace';
 import { Head, Link } from '@inertiajs/react';
-import { QuestionPreviewView } from '../../assessment/QuestionPreviewView';
-import type { QuestionDetail } from '../../assessment/contracts';
+import { QuestionPreviewView } from '@/components/assessments/questions/QuestionPreviewView';
+import type { QuestionDetail } from '@/components/assessments/contracts';
 
 type QuestionPreviewProps = {
     offering: string;

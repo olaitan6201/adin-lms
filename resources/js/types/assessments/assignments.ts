@@ -11,4 +11,5 @@ export interface MarkingGuide { scriptPreview: string; rubric: string[]; maximum
 export type AssignmentDraft = Pick<Assignment, 'title' | 'course' | 'due' | 'settings' | 'instructions' | 'attachments'>;
 export type Receipt = { number: string; file: string; size: string; time: string; note: string };
 export type Feedback = { score: number; text: string };
-export interface StudentWork { assignment: Assignment; receipt?: Receipt; feedback?: Feedback }
+export interface StudentRevision { receipt: Receipt; feedback?: Feedback }
+export interface StudentWork { assignment: Assignment; current?: StudentRevision; previous: StudentRevision[] }

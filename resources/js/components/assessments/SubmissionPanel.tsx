@@ -1,23 +1,24 @@
 import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
-import type { Assignment, Receipt } from '@/types/assessments/assignments';
+import type { Assignment, Receipt, StudentRevision } from '@/types/assessments/assignments';
 import { Drawer } from './Controls';
 import { inputClass, submitClass } from './Editor';
 
 export function SubmissionPanel({
     row,
-    receipt,
+    revision,
     close,
     save,
     sizeLimit,
 }: {
     sizeLimit: number;
     row: Assignment;
-    receipt?: Receipt;
+    revision?: StudentRevision;
     close: () => void;
     save: (r: Receipt) => void;
 }) {
+    const receipt = revision?.receipt;
     const [file, setFile] = useState<File>();
     const [note, setNote] = useState(receipt?.note ?? '');
     const [error, setError] = useState('');
@@ -73,6 +74,7 @@ export function SubmissionPanel({
                             {receipt.file} · {receipt.size} · uploaded {receipt.time}
                         </p>
                         <p className="mt-2 font-mono text-xs">Receipt no. {receipt.number}</p>
+                        <p>{revision?.feedback ? `Graded ${revision.feedback.score} / 100` : 'Awaiting marking'}</p>
                     </Card>
                 )}
                 {row.state !== 'closed' && (

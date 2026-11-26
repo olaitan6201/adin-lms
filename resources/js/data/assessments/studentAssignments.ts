@@ -17,8 +17,8 @@ const rules: [string, string][] = [['Accepted formats', 'PDF, DOCX, XLSX'], ['Ma
 
 const work: StudentWork[] = assignments.map(assignment => ({
     assignment,
-    receipt: receipts[assignment.id],
-    feedback: feedback[assignment.id],
+    current: { receipt: receipts[assignment.id], feedback: feedback[assignment.id] },
+    previous: [],
 }));
 
 export const studentAssignments = { work, rules, sizeLimit: 25 };

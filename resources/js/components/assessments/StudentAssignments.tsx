@@ -7,9 +7,10 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import type { Assignment, Receipt, StudentWork } from '@/types/assessments/assignments';
-import { Details, Drawer, RecordName, Status } from './Controls';
+import { Details, RecordName, Status } from './Controls';
 import { Note } from '@/components/ui/feedback/Note';
 import { SubmissionPanel } from './SubmissionPanel';
+import { ReturnedScripts } from './ReturnedScripts';
 
 const displayTitle = (a?: Assignment) => a?.shortTitle ?? a?.title;
 
@@ -42,11 +43,9 @@ export default function StudentAssignments({
 }) {
     const [records, setRecords] = useState(work);
     const [selectedId, selectAssignment] = useState<string>();
-    const [scriptId, selectScript] = useState<string>();
     const [message, setMessage] = useState('');
     const selected = records.find(record => record.assignment.id === selectedId);
-    const script = records.find(record => record.assignment.id === scriptId);
-    const outstanding = records.filter(({ assignment, receipt }) => assignment.state !== 'closed' && !receipt).length;
+    const outstanding = records.filter(({ assignment, current }) => assignment.state !== 'closed' && !current).length;
 
     function openAssignment(assignment: Assignment) {
         selectAssignment(assignment.id);
@@ -54,7 +53,11 @@ export default function StudentAssignments({
 
     function recordSubmission(receipt: Receipt) {
         if (!selected || selected.assignment.state === 'closed') return;
-        setRecords(current => current.map(record => record.assignment.id === selectedId ? { ...record, receipt } : record));
+        setRecords(records => records.map(record => record.assignment.id === selectedId ? {
+            ...record,
+            previous: record.current ? [record.current, ...record.previous] : record.previous,
+            current: { receipt },
+        } : record));
         setMessage(`Work recorded locally. Receipt ${receipt.number} issued for ${receipt.file}.`);
         selectAssignment(undefined);
     }
@@ -85,18 +88,18 @@ export default function StudentAssignments({
                 <Table
                     columns={['Assignment', 'Due', 'Status', 'Score', '']}
                     rowKeys={records.map(({ assignment }) => assignment.id)}
-                    rows={records.map(({ assignment: a, receipt, feedback }) => [
+                    rows={records.map(({ assignment: a, current }) => [
                         <RecordName name={a.title} meta={a.course} />,
                         <span className="text-[13px] text-ink-600">{a.due}</span>,
-                        <Status value={feedback ? 'Graded' : receipt ? 'Submitted' : a.state === 'closed' ? 'Closed' : 'Not submitted'} />,
-                        feedback ? (
-                            <span className="tnum text-[13px] font-semibold">{feedback.score} / 100</span>
+                        <Status value={current?.feedback ? 'Graded' : current ? 'Awaiting marking' : a.state === 'closed' ? 'Closed' : 'Not submitted'} />,
+                        current?.feedback ? (
+                            <span className="tnum text-[13px] font-semibold">{current.feedback.score} / 100</span>
                         ) : (
                             <span className="text-[12.5px] text-ink-400">-</span>
                         ),
                         <div className="flex justify-end">
                             <Action size="sm" onClick={() => openAssignment(a)}>
-                                {receipt ? 'View receipt' : 'View assignment'}
+                                {current ? 'View receipt' : 'View assignment'}
                             </Action>
                         </div>,
                     ])}
@@ -108,29 +111,14 @@ export default function StudentAssignments({
                 </Card>
                 <Card title="Submitted work" subtitle="Your uploads and their receipts">
                     <ul className="divide-y divide-ink-100">
-                        {records.map(({ assignment, receipt, feedback }) => {
-                            if (!receipt) return null;
-                            return <SubmittedWork key={assignment.id} assignment={assignment} receipt={receipt}
-                                grade={feedback?.score} open={openAssignment} />;
+                        {records.map(({ assignment, current }) => {
+                            if (!current) return null;
+                            return <SubmittedWork key={assignment.id} assignment={assignment} receipt={current.receipt}
+                                grade={current.feedback?.score} open={openAssignment} />;
                         })}
                     </ul>
                 </Card>
-                <Card title="Feedback waiting" subtitle="Marked work returned to you">
-                    <div className="space-y-3">
-                        {records.map(({ assignment, feedback: f }) => f && (
-                            <article key={assignment.id} className="rounded-xl border border-ink-100 p-3.5">
-                                <p className="text-[13px] font-medium text-ink-800">{displayTitle(assignment)}</p>
-                                <p className="mt-1 text-[13px] leading-relaxed text-ink-600">{f.text}</p>
-                                <div className="mt-2 flex items-center gap-2">
-                                    <Badge tone="emerald">{f.score} / 100</Badge>
-                                    <Action size="sm" onClick={() => selectScript(assignment.id)}>
-                                        Script
-                                    </Action>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </Card>
+                <ReturnedScripts records={records} />
             </div>
             <Note>
                 A submitted file can be replaced until the closing time. Your score and any written feedback appear here once the
@@ -141,16 +129,10 @@ export default function StudentAssignments({
                     sizeLimit={sizeLimit}
                     key={selected.assignment.id}
                     row={selected.assignment}
-                    receipt={selected.receipt}
+                    revision={selected.current}
                     close={() => selectAssignment(undefined)}
                     save={recordSubmission}
                 />
-            )}
-            {script?.feedback && (
-                <Drawer title="Marked script" subtitle={script.assignment.title} close={() => selectScript(undefined)}>
-                    <Badge tone="emerald">{script.feedback.score} / 100</Badge>
-                    <Card title="Marker feedback">{script.feedback.text}</Card>
-                </Drawer>
             )}
         </div>
     );

@@ -1,5 +1,34 @@
 import { expect, test } from '@playwright/test';
 
+test('replacing a returned script keeps its grade only on the previous receipt', async ({ page }) => {
+    await page.goto('/student/assignments');
+    const chemistry = page.getByRole('row').filter({ hasText: 'CHM401' });
+    const dialog = page.getByRole('dialog');
+    await expect(chemistry).toContainText('81 / 100');
+    await chemistry.getByRole('button').click();
+    await dialog.locator('input[type=file]').setInputFiles({
+        name: 'unmarked-revision.pdf', mimeType: 'application/pdf', buffer: Buffer.from('revision'),
+    });
+    await dialog.getByRole('button', { name: 'Submit work' }).click();
+    await expect(chemistry).toContainText('Awaiting marking');
+    await expect(chemistry.getByRole('cell').nth(3)).toHaveText('-');
+    const upload = page.getByRole('listitem').filter({ hasText: 'Practical: titration' });
+    await expect(upload).toContainText('Awaiting marking');
+    await upload.getByRole('button').click();
+    await expect(dialog).toContainText('unmarked-revision.pdf');
+    await expect(dialog).toContainText('Awaiting marking');
+    await expect(dialog).not.toContainText('81 / 100');
+    await page.keyboard.press('Escape');
+    const result = page.locator('article').filter({ hasText: 'Practical: titration' });
+    await expect(result).toContainText('Previous result');
+    await expect(result).toContainText('titration.pdf');
+    await result.getByRole('button', { name: 'Script' }).click();
+    await expect(dialog).toContainText('81 / 100');
+    await expect(dialog).toContainText('RCP-2026-11-08-0412-516');
+    await expect(dialog).toContainText('Well handled.');
+    await expect(dialog).not.toContainText('unmarked-revision.pdf');
+});
+
 test('a replacement receipt stays with its assignment; closed work remains read-only', async ({ page }) => {
     await page.goto('/student/assignments');
     const dialog = page.getByRole('dialog');

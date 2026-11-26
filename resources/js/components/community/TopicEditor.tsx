@@ -81,8 +81,7 @@ export function TopicEditor({ topic, forums, student, close, save }: Props) {
                                 className="input min-h-24"
                                 name="reply"
                                 required={student}
-                                placeholder="Write a reply"
-                                defaultValue={student ? undefined : topic.suggestedReply}
+                                placeholder={student ? 'Write a reply' : topic.suggestedReply ?? 'Write a reply'}
                             />
                         </Field>
                         {!student && (

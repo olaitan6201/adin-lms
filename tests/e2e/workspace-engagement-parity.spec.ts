@@ -54,3 +54,28 @@ test('printed student report contains the selected measures without workspace co
     await expect(page.locator('.workspace-shell > div > header')).toBeHidden();
     await expect(page.getByLabel('Primary navigation')).toBeHidden();
 });
+
+test('moderating the first topic never posts its suggested reply', async ({ page }) => {
+    await page.goto('/lecturer/communication');
+    const topic = page.getByRole('row', { name: /Why is depreciation/ });
+    const source = page.getByRole('row', { name: /Journal entries: where/ });
+    const destination = page.getByRole('row', { name: /Mid-term revision clinic/ });
+    await topic.getByRole('button', { name: 'Open' }).click();
+    const dialog = page.getByRole('dialog');
+    const reply = dialog.getByRole('textbox', { name: 'Reply' });
+    await expect(reply).toHaveAttribute('placeholder', /Historical cost/);
+    await expect(reply).toHaveValue('');
+    await dialog.getByLabel(/Pin this thread/).check();
+    await dialog.getByLabel('Allow student replies').uncheck();
+    await dialog.getByLabel('Move thread').selectOption({ label: 'Mid-term revision clinic' });
+    await dialog.getByRole('button', { name: 'Post reply' }).click();
+
+    await expect(topic).toContainText('Pinned');
+    await expect(topic.getByRole('cell').nth(2)).toHaveText('8');
+    await expect(source.getByRole('cell').nth(2)).toHaveText('318');
+    await expect(destination.getByRole('cell').nth(2)).toHaveText('96');
+    await destination.getByRole('button', { name: 'Moderate' }).click();
+    await expect(dialog.getByRole('heading', { name: /Why is depreciation/ })).toBeVisible();
+    await expect(dialog.getByLabel('Allow student replies')).not.toBeChecked();
+    await expect(dialog.getByText(/Historical cost/)).toHaveCount(0);
+});

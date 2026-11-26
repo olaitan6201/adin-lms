@@ -4,8 +4,8 @@ import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { exportRecords, Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { cap, Details, Metrics, Records, status, val } from '@/components/registry/Records';
-import { roleMatrix, permissionMatrix } from '@/components/registry/fixtures/institution';
-import * as source from '@/components/registry/fixtures/people';
+import { roleMatrix, permissionMatrix } from '@/data/registry/institution';
+import * as source from '@/data/registry/people';
 
 function Person({ name, id }: { name: string; id: string }) {
     const initials = name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();

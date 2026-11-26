@@ -8,7 +8,7 @@ import { Messages } from './Messages';
 import { Announcements } from './Announcements';
 import { Note } from '@/components/ui/feedback/Note';
 import { Sections } from '@/components/ui/navigation/Sections';
-import { type TeachingRole } from '@/components/identity/roles';
+import { type TeachingRole } from '@/types/identity/roles';
 
 export function Communication({ role }: { role: TeachingRole }) {
     const student = role === 'student';

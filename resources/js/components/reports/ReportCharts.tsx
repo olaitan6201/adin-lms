@@ -1,5 +1,5 @@
-import { enrolmentTrend, engagementMix, completionByFaculty } from './analyticsFixtures';
-import { heatmap } from './reportData';
+import { enrolmentTrend, engagementMix, completionByFaculty } from '@/data/reports/analytics';
+import { heatmap } from '@/data/reports/scopeReports';
 export { HorizontalBars as Bars } from '@/components/overview/Charts';
 
 export function Trend({ data, label, height = 240 }: { data: typeof enrolmentTrend; label: string; height?: number }) {

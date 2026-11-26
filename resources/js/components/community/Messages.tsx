@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
-import { messages } from './engagementFixtures';
+import { messages } from '@/data/community/engagement';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 

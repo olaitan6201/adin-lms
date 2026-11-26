@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
-import { examBlueprint, exams, invigilationLog, questionBanks, questions } from './cbtData';
+import { examBlueprint, exams, invigilationLog, questionBanks, questions } from '@/data/assessments/cbt';
 import { Drawer, Note, Status, exportSheet, type Values } from './Controls';
 import { Checks, Editor } from './Editor';
 

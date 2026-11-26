@@ -1,5 +1,5 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { studentModules } from '@/components/learning/fixtures';
+import { studentModules } from '@/data/learning/courseWorkspace';
 import { StudyIcon } from '@/components/learning/Parts';
 
 const stateIcon: Record<string, string> = {

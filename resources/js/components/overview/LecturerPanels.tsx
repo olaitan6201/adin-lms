@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import { AreaChart, HorizontalBars } from './Charts';
 import { CourseProgress, Go, RecordName } from './OverviewParts';
-import { offerings, submissions } from './lecturerFixtures';
+import { offerings, submissions } from '@/data/overview/lecturer';
 
 export function Courses() {
     return <Card title="My courses" subtitle="Allocated to you for this semester" actions={<Go to="lecturer/courses" icon="external">All courses</Go>}>

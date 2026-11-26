@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { Note } from './Desk';
 import { Metrics, Records, status } from './Records';
-import { verified, targets } from './fixtures/accessibility';
+import { verified, targets } from '@/data/registry/accessibility';
 
 export function AccessibilityPanel() {
     return <><Note amber>This is a self-check against the build harness, not a WCAG conformance report. A conformance claim needs a documented test with assistive technology and a published report; neither exists for this artefact.</Note>

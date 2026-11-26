@@ -2,7 +2,7 @@ import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Courses, Marking, Performance } from '@/components/overview/LecturerPanels';
 import { Columns, ComingUp, Note, Tiles } from '@/components/overview/OverviewParts';
-import { schedule, tiles } from '@/components/overview/lecturerFixtures';
+import { schedule, tiles } from '@/data/overview/lecturer';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Overview() {

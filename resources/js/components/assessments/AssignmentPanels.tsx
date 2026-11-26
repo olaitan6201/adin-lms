@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
-import { assignments, submissions } from './assignmentData';
+import { assignments, submissions } from '@/data/assessments/assignments';
 import { Drawer, Fields, inputClass, type FieldSpec, type Values } from './Controls';
 import { submitClass } from './Editor';
 

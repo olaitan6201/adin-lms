@@ -3,7 +3,7 @@ import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { Field, Note } from './Desk';
 import { Records, status } from './Records';
-import { retentionRules } from './fixtures/governance';
+import { retentionRules } from '@/data/registry/governance';
 
 const policy = [
     ['Require multi-factor authentication for privileged roles','Super admin, ICT, dean, head of department and examination officers',true],

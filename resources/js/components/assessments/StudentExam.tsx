@@ -5,8 +5,8 @@ import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Details, Drawer, Note, Status, inputClass } from './Controls';
-import { paper } from './paper';
-import { useExamAttempt } from './useExamAttempt';
+import { paper } from '@/data/assessments/examPaper';
+import { useExamAttempt } from '@/hooks/assessments/useExamAttempt';
 
 export default function StudentExam() {
     const { attempt, remaining, stored, jump, flag, answer, submit } = useExamAttempt();

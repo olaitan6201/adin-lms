@@ -3,8 +3,8 @@ import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { Field, Register, useDesk, exportRecords } from '@/components/registry/Desk';
 import { Details, Metrics, Progress, Records, status, val } from '@/components/registry/Records';
-import { offerings, courses } from '@/components/registry/fixtures/academics';
-import { students, staff } from '@/components/registry/fixtures/people';
+import { offerings, courses } from '@/data/registry/academics';
+import { students, staff } from '@/data/registry/people';
 
 const stages = [['Draft',11,'Awaiting academic approval'],['Approved',9,'Ready for instructor and roster'],['Published',56,'Visible to enrolled students'],['Archived',3,'Closed, results retained']] as const;
 export default function Delivery() {

@@ -3,7 +3,7 @@ import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
-import { exams, questionBanks, questions } from './cbtData';
+import { exams, questionBanks, questions } from '@/data/assessments/cbt';
 import { Drawer, Note, RecordName, Sections, Status, exportSheet } from './Controls';
 import { Editor } from './Editor';
 import { BankPanel, Blueprint, SecurityPanel, guards, type Exam, type Question } from './CbtPanels';

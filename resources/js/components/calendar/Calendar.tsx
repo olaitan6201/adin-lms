@@ -4,11 +4,11 @@ import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
-import { academicCalendar, calendarEvents, calendarKinds } from './calendarFixtures';
+import { academicCalendar, calendarEvents, calendarKinds } from '@/data/calendar/academicCalendar';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 import { download } from '@/lib/download';
-import { type TeachingRole } from '@/components/identity/roles';
+import { type TeachingRole } from '@/types/identity/roles';
 
 const today = academicCalendar.today;
 const colors: Record<string, string> = { Institution: 'bg-brand-50 text-brand-800', Examination: 'bg-rose-50 text-rose-800', Deadline: 'bg-amber-50 text-amber-800', Teaching: 'bg-sky-50 text-sky-800', 'Live class': 'bg-sky-50 text-sky-800' };

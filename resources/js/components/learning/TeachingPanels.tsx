@@ -1,5 +1,5 @@
 import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
-import { courseModules, offerings, resources } from '@/components/learning/fixtures';
+import { courseModules, offerings, resources } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';

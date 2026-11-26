@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { paper } from './paper';
+import { paper } from '@/data/assessments/examPaper';
 
 type Attempt = {
     index: number;

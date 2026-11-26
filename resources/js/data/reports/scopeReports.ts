@@ -1,5 +1,5 @@
-import { completionByFaculty, engagementMix, enrolmentTrend, examPerformance } from './analyticsFixtures';
-import { students } from './peopleFixtures';
+import { completionByFaculty, engagementMix, enrolmentTrend, examPerformance } from '@/data/reports/analytics';
+import { students } from '@/data/reports/students';
 
 export const scopes = ['Institution','Faculty and department','Course','Student'];
 export const departments = ['Biological Sciences','Chemistry','Mathematics and Statistics','English and Linguistics','Educational Management','Accounting and Finance','Economics'];

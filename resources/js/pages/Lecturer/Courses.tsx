@@ -1,5 +1,5 @@
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { offerings } from '@/components/learning/fixtures';
+import { offerings } from '@/data/learning/courseWorkspace';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Action } from '@/components/ui/controls/Action';

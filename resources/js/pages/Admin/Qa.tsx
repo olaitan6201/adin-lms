@@ -5,7 +5,7 @@ import { Ring } from '@/components/ui/data-display/Ring';
 import { Icon } from '@/components/icons/Icon';
 import { exportRecords, Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { cap, Records, status, val } from '@/components/registry/Records';
-import { qaChecks, qaFindings, qaReviewQueue, qaSummary as s } from '@/components/registry/fixtures/quality';
+import { qaChecks, qaFindings, qaReviewQueue, qaSummary as s } from '@/data/registry/quality';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Qa() {

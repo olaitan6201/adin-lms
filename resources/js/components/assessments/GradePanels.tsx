@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
-import { gradeRows, gradeWeights } from './gradeData';
+import { gradeRows, gradeWeights } from '@/data/assessments/gradebook';
 import { Details } from './Controls';
 
 export const boundaries: [string, number][] = [['A', 70], ['B', 60], ['C', 50], ['D', 45], ['E', 40], ['F', 0]];

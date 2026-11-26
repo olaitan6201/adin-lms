@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
-import { attendanceSessions, learners } from './attendanceData';
+import { attendanceSessions, learners } from '@/data/assessments/attendance';
 import { Drawer, RecordName, Sections, Status, exportSheet } from './Controls';
 
 type Session = typeof attendanceSessions[number];

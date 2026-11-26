@@ -4,8 +4,8 @@ import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import { exportRecords, Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { cap, Records, status, val } from '@/components/registry/Records';
-import { courses as catalogue } from '@/components/registry/fixtures/academics';
-import { programmes } from '@/components/registry/fixtures/institution';
+import { courses as catalogue } from '@/data/registry/academics';
+import { programmes } from '@/data/registry/institution';
 
 const outcomes = ['Accounting equation','Journal entries','Trial balance','Asset recognition','Inventory valuation','Depreciation'];
 const weights = [[3,2,0,1,0],[3,3,1,2,1],[2,3,2,1,0],[1,2,3,2,1],[0,1,3,2,2],[1,1,2,3,1]];

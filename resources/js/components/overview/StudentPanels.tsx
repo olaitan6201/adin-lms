@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import { Go, RecordName } from './OverviewParts';
-import { courses, notifications, pending, studentResults } from './studentFixtures';
+import { courses, notifications, pending, studentResults } from '@/data/overview/student';
 
 function CompletionRing() {
     return <div className="relative inline-flex size-24 shrink-0" role="img" aria-label="Progress 46 percent">

@@ -3,7 +3,7 @@ import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
-import { assignments, submissions } from './assignmentData';
+import { assignments, submissions } from '@/data/assessments/assignments';
 import { AssignmentEditor, MarkingPanel, feedbackChecks, ruleFields, type Assignment, type Submission } from './AssignmentPanels';
 import { Checks } from './Editor';
 import { Fields, Note, RecordName, Sections, Status, exportSheet, type Values } from './Controls';

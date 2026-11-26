@@ -4,8 +4,8 @@ import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { Details, Progress, Records, status, val, cap } from '@/components/registry/Records';
-import { courseOverviews, courseModules, offerings } from '@/components/registry/fixtures/academics';
-import { gradeWeights } from '@/components/registry/fixtures/assessment';
+import { courseOverviews, courseModules, offerings } from '@/data/registry/academics';
+import { gradeWeights } from '@/data/registry/assessment';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Course() {

@@ -5,7 +5,7 @@ import { Icon } from '@/components/icons/Icon';
 import { exportRecords, Field, Note, Register, useDesk } from '@/components/registry/Desk';
 import { Checklist, ContentPolicy } from '@/components/registry/ContentPolicy';
 import { cap, Progress, Records, status, val } from '@/components/registry/Records';
-import { courseModules, resources } from '@/components/registry/fixtures/academics';
+import { courseModules, resources } from '@/data/registry/academics';
 
 const contents = ['Chapter manuscript','Worked example: sales on credit','Illustration: journal to ledger flow','Exercise set 3.1','Revision questions','Quiz: 10 objective items','Summary','References and further reading','Discussion prompt'];
 const allowed = 'pdf docx odt rtf txt pptx xlsx csv png jpg jpeg svg webp mp3 m4a wav ogg mp4 webm mov zip tar gz'.split(' ');

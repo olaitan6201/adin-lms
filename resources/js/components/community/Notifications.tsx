@@ -6,7 +6,7 @@ import { Icon } from '@/components/icons/Icon';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { Note } from '@/components/ui/feedback/Note';
-import { type WorkspaceRole } from '@/components/identity/roles';
+import { type WorkspaceRole } from '@/types/identity/roles';
 
 const categories = [
     ['Assignments and submissions', 'New assignments, deadline reminders and submission receipts.', 'Daily'],

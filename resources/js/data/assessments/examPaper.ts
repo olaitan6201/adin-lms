@@ -1,10 +1,4 @@
-export interface PaperQuestion {
-    id: string;
-    type: string;
-    marks: number;
-    stem: string;
-    options: string[];
-}
+import type { PaperQuestion } from '@/types/assessments/examPaper';
 
 export const paper: PaperQuestion[] = [
   {

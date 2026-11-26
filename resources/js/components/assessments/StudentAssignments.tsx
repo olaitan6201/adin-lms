@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { assignments } from './assignmentData';
+import { assignments } from '@/data/assessments/assignments';
 import { Details, Drawer, Note, RecordName, Status, inputClass } from './Controls';
 import { instructions, type Assignment } from './AssignmentPanels';
 import { submitClass } from './Editor';

@@ -5,7 +5,7 @@ import { exportRecords, Field, Register, useDesk } from '@/components/registry/D
 import { cap, Details, Metrics, Records, status, val } from '@/components/registry/Records';
 import { InstitutionSettings, Privacy } from '@/components/registry/InstitutionSettings';
 import { AccessibilityPanel } from '@/components/registry/AccessibilityPanel';
-import { auditLog, integrations, performanceMetrics, portability, securityEvents } from '@/components/registry/fixtures/governance';
+import { auditLog, integrations, performanceMetrics, portability, securityEvents } from '@/data/registry/governance';
 
 const initialBackups = [
     ['Nightly full','26 Nov 2026, 02:00','41.2 GB','Passed','24 hours'],

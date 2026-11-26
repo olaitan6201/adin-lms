@@ -3,7 +3,7 @@ import { Action } from '@/components/ui/controls/Action';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
-import { forums, threads } from './engagementFixtures';
+import { forums, threads } from '@/data/community/engagement';
 import { Drawer } from '@/components/ui/overlays/DialogDrawer';
 import { Field } from '@/components/ui/controls/Field';
 

@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { Table } from '@/components/ui/data-display/Table';
 import { Drawer, Note, RecordName, Sections, Status, exportSheet, inputClass } from './Controls';
 import { Editor } from './Editor';
-import { gradeRows, gradeWeights, scoreHistory } from './gradeData';
+import { gradeRows, gradeWeights, scoreHistory } from '@/data/assessments/gradebook';
 import { boundaries, Moderation, stages, Weights } from './GradePanels';
 
 const metrics = [['ca', 'Assign. /20', 20], ['participation', 'Particip. /10', 10], ['mid', 'Mid /20', 20], ['practical', 'Prac /10', 10], ['final', 'Final /40', 40]] as const;

@@ -14,7 +14,7 @@ export default function Overview() {
             description={institution.description}
             actions={<><Action icon="download" variant="outline" href={workspaceUrl('admin/reports')}>Export report</Action>
                 <Action icon="plus" variant="primary" href={workspaceUrl('admin/delivery')}>New course offering</Action></>}/>
-        <div className="space-y-5">
+        <div className="role-overview space-y-5">
             <Tiles items={tiles}/>
             <Columns left={<Enrolment session={institution.session} labels={enrolmentTrend.labels} series={enrolmentTrend.series[0]}/>} right={<ServiceHealth performanceMetrics={performanceMetrics} backup={institution.backup}/>}/>
             <Columns left={<ApprovalQueue approvals={approvals} review={() => notify('Approval opened for review')}/>} right={<ExamReadiness bank={institution.bank} exams={institution.exams} subtitle={institution.examSubtitle}/>}/>

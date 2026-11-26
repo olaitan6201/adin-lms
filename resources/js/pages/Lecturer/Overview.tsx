@@ -12,7 +12,7 @@ export default function Overview() {
             description={teaching.description}
             actions={<><Action icon="upload" variant="outline" href={workspaceUrl('lecturer/course')}>Upload material</Action>
                 <Action icon="plus" variant="primary" href={workspaceUrl('lecturer/assignments')}>Create assignment</Action></>}/>
-        <div className="space-y-5">
+        <div className="role-overview space-y-5">
             <Tiles items={tiles}/>
             <Columns left={<Courses offerings={offerings}/>} right={<ComingUp events={schedule}/>}/>
             <Columns left={<Marking submissions={submissions}/>} right={<Performance scores={teaching.scores} performance={teaching.performance}/>}/>

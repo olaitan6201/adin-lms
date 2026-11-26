@@ -13,7 +13,7 @@ export default function Overview() {
             description={study.description}
             actions={<><Action variant="outline" icon="download" href={workspaceUrl('student/downloads')}>Download for offline</Action>
                 <Action variant="primary" icon="play" href={workspaceUrl('student/course')}>Resume {study.lesson.code}</Action></>}/>
-        <div className="space-y-5">
+        <div className="role-overview space-y-5">
             <Tiles items={tiles}/>
             <Columns left={<ContinueLearning lesson={study.lesson} save={() => notify('Material saved for offline use')}/>} right={<ComingUp student events={schedule}/>}/>
             <Columns seven left={<Courses courses={courses.map(c => ({ ...c, lessons: study.lessonCount }))} subtitle={study.coursesSubtitle}/>} right={<Pending pending={pending}/>}/>

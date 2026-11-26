@@ -27,7 +27,7 @@ export function ServiceHealth({ performanceMetrics, backup }: { performanceMetri
 }
 
 export function ApprovalQueue({ approvals, review }: { approvals: readonly Approval[]; review: () => void }) {
-    return <Card title="Approval queue" subtitle="Items waiting on a decision from an authorised role" actions={<Badge tone="amber">{approvals.length} open</Badge>}>
+    return <Card className="overview-actions-wide" title="Approval queue" subtitle="Items waiting on a decision from an authorised role" actions={<Badge tone="amber">{approvals.length} open</Badge>}>
         <Table columns={['Item', 'Type', 'Requested by', 'Waiting', 'Action']} empty="Nothing is waiting for approval." rows={approvals.map(a => [
             <div className="flex items-center gap-2"><span className={`size-1.5 shrink-0 rounded-full ${a.level === 'high' ? 'bg-rose-500' : 'bg-amber-500'}`}/>
                 <span className="font-medium text-ink-800">{a.item}</span></div>,

@@ -1,0 +1,12 @@
+.role-overview .tbl,
+.role-overview .btn-sm {
+    line-height: 1.25rem;
+}
+
+.overview-actions .tbl th:last-child {
+    width: 90px;
+}
+
+.overview-actions-wide .tbl th:last-child {
+    width: 110px;
+}

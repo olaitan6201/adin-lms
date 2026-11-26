@@ -16,7 +16,7 @@ class SessionController extends Controller
 {
     public function create(Request $request): Response
     {
-        return Inertia::render('Login', [
+        return Inertia::render('Auth/Login', [
             'passwordReset' => $request->session()->get('password_reset', false),
             'institutionSignIn' => filled(config('integrations.oidc')) && filled(config('integrations.oidc_secret'))
                 ? route('integrations.oidc.login', absolute: false)

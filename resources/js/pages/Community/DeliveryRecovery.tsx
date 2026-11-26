@@ -2,7 +2,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Form, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { CommunityPage } from '../../components/community/Elements';
 
 type Failure = { id: string; attempt_count: number; last_error_code: string };

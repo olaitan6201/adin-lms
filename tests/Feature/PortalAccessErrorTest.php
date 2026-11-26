@@ -21,7 +21,7 @@ final class PortalAccessErrorTest extends TestCase
         $this->get($url, ['Accept' => 'text/html'])
             ->assertNotFound()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('AccessError')
+                ->component('Errors/AccessError')
                 ->where('status', 404)
                 ->where('returnTo', '/courses')
                 ->missing('course'))

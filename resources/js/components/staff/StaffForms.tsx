@@ -1,4 +1,4 @@
-import { VerifiedRecord } from '../identity/VerifiedRecord';
+import { VerifiedRecord } from '@/components/shared/records/VerifiedRecord';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { PortalField } from '../PortalForm';

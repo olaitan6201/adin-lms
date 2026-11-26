@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { CommunityPage } from '../../components/community/Elements';
-import { RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 type Props = { email: string; profileUrl: string; sessionsUrl: string | null };
 

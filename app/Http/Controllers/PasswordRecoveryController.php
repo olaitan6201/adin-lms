@@ -24,12 +24,12 @@ class PasswordRecoveryController extends Controller
 
     public function requestLink(Request $request): Response
     {
-        return Inertia::render('ForgotPassword', ['requested' => $request->session()->get('link_requested', false)]);
+        return Inertia::render('Auth/ForgotPassword', ['requested' => $request->session()->get('link_requested', false)]);
     }
 
     public function edit(Request $request, string $token): Response
     {
-        return Inertia::render('ResetPassword', ['email' => $request->string('email', '', true)->toString(), 'token' => $token]);
+        return Inertia::render('Auth/ResetPassword', ['email' => $request->string('email', '', true)->toString(), 'token' => $token]);
     }
 
     public function update(ResetPasswordRequest $request, PasswordRecovery $recovery): RedirectResponse

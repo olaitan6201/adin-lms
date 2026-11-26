@@ -15,7 +15,7 @@ class ProfileController extends Controller
 {
     public function edit(Request $request, ScopedAuthority $authority): Response
     {
-        return Inertia::render('Profile', [
+        return Inertia::render('Account/Profile', [
             'profile' => ProfileResource::make($request->user())->resolve($request),
             'sharedProgressUrl' => $authority->institutionAllows($request->user(), PermissionCode::ProgressReadApproved)
                 ? route('guardian.index', [], false) : null,

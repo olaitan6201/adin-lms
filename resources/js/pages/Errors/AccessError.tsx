@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { FileQuestionMark, ShieldAlert } from 'lucide-react';
-import { RecordHeading } from '../components/identity/WorkspaceRecord';
+import { RecordHeading } from '@/components/shared/records/WorkspaceRecord';
 
 type AccessErrorProps = {
     status: 403 | 404;

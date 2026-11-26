@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
 type Person = { full_name: string };

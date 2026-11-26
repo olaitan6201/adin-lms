@@ -1,4 +1,4 @@
-import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { ShieldCheck } from 'lucide-react';
 import { Head, Link } from '@inertiajs/react';
 

@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { FormFeedback } from '@/components/FormFeedback';
-import { PortalField } from '../../components/PortalForm';
+import { PortalField } from '@/components/PortalForm';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { DeskHeading } from '../../components/academics/DeskHeading';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 import { RegistryPanel } from '@/components/academics/RegistryPanel';
 
 type Grant = {

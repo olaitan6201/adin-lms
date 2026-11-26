@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/identity/AccessFrame';
+import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 
 export default function Signin() {

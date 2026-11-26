@@ -1,4 +1,4 @@
-import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/identity/AccessFrame';
+import { AccessField, AccessFrame, AccessNote, useAccessNotice } from '@/components/auth/AccessFrame';
 
 export default function Recover() {
     const { notify, feedback } = useAccessNotice();

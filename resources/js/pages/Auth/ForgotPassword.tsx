@@ -1,6 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { PortalField, SubmitButton } from '../components/PortalForm';
-import { AccountTask } from '../components/identity/AccountTask';
+import { PortalField, SubmitButton } from '@/components/PortalForm';
+import { AccountTask } from '@/components/auth/AccountTask';
 
 export default function ForgotPassword({ requested }: { requested: boolean }) {
     return (

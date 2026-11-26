@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
 import { Link } from '@inertiajs/react';
-import { RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { GroupManager, type Group, type Registration } from '../../components/community/GroupManager';
 import { Announcements, CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 

@@ -2,7 +2,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { PortalField, SubmitButton } from '../../components/PortalForm';
-import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 export default function Challenge() {
     return (

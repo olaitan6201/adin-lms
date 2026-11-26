@@ -25,7 +25,7 @@ final class PortalAccessError
             return $original;
         }
 
-        $response = Inertia::render('AccessError', [
+        $response = Inertia::render('Errors/AccessError', [
             'status' => $status,
             'returnTo' => $request->user() ? route('courses.index', absolute: false) : route('home', absolute: false),
         ])->toResponse($request);

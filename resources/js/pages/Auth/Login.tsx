@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
 import { Info, TriangleAlert } from 'lucide-react';
 import { useRef, useState, type ComponentRef } from 'react';
-import { PortalField, SubmitButton } from '../components/PortalForm';
-import { AccountTask } from '../components/identity/AccountTask';
+import { PortalField, SubmitButton } from '@/components/PortalForm';
+import { AccountTask } from '@/components/auth/AccountTask';
 
 interface LoginProps {
     passwordReset: boolean;

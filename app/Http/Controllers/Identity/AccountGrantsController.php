@@ -31,7 +31,7 @@ class AccountGrantsController extends Controller
         $permissions = DB::table('role_permissions')->join('permissions', 'permission_id', '=', 'permissions.id')
             ->orderBy('permissions.code')->get(['role_id', 'permissions.code'])->groupBy('role_id');
 
-        return Inertia::render('Identity/Access', [
+        return Inertia::render('Admin/Accounts/Access', [
             'account' => $account->only('id', 'full_name', 'email'),
             'editable' => $request->user()->id !== $account->id,
             'roles' => array_map(fn (RoleCode $role) => ['code' => $role->value, 'scope' => $role->scope()->value], RoleCode::cases()),

@@ -2,8 +2,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import RecordForm, { field } from '../../components/academics/RecordForm';
-import { DeskHeading } from '../../components/academics/DeskHeading';
+import RecordForm, { field } from '@/components/academics/RecordForm';
+import { DeskHeading } from '@/components/academics/DeskHeading';
 import { RegistryPanel, RegistryTable } from '@/components/academics/RegistryPanel';
 
 type Account = {

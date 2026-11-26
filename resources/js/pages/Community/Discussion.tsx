@@ -4,7 +4,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/native-select';
 import { Link } from '@inertiajs/react';
 import { useRef, useState } from 'react';
-import { RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { CommunityPage, EntryForm, type Entry } from '../../components/community/Elements';
 
 type Props = {

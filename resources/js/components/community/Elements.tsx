@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { RecordHeading, RecordPanel } from '../identity/WorkspaceRecord';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 import { FormFeedback } from '@/components/FormFeedback';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';

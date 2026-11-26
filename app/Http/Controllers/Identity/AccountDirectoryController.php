@@ -26,7 +26,7 @@ class AccountDirectoryController extends Controller
             ->whereLike('full_name', "%$search%")->orWhereLike('email', "%$search%")))
             ->orderBy('email')->simplePaginate(40, ['id', 'email', 'full_name', 'status'])->withQueryString();
 
-        return Inertia::render('Identity/Accounts', ['accounts' => $accounts->items(), 'q' => $search,
+        return Inertia::render('Admin/Accounts/Index', ['accounts' => $accounts->items(), 'q' => $search,
             'next' => $accounts->nextPageUrl(), 'previous' => $accounts->previousPageUrl(),
             'self' => $request->user()->id, 'grant' => $this->authority->institutionAllows($request->user(), 'grants.manage')]);
     }

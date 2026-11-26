@@ -1,6 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { PortalField, SubmitButton } from '../components/PortalForm';
-import { RecordHeading, RecordPanel } from '../components/identity/WorkspaceRecord';
+import { PortalField, SubmitButton } from '@/components/PortalForm';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 type ProfileProps = {
     sharedProgressUrl: string | null;

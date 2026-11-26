@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 type Session = {
     id: string;

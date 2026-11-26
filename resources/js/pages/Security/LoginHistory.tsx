@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { RecordHeading, RecordPanel } from '../../components/identity/WorkspaceRecord';
+import { RecordHeading, RecordPanel } from '@/components/shared/records/WorkspaceRecord';
 
 const outcomeLabels = {
     'password.failed': 'Password rejected',

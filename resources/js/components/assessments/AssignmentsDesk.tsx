@@ -25,7 +25,9 @@ export default function AssignmentsDesk({ lecturer = false, assignments, submiss
         <Sections labels={['Assignments', `${lecturer ? 'Marking' : 'Submission'} queue`, 'Rules and feedback']} counts={[rows.length, awaiting]} active={tab} change={v => { setTab(v); setFilter(''); }}/>
         {tab === 0 && <Card className="assignment-list" title="Assignments" subtitle="Instructions, attachments, opening and closing dates, late rules and group work" actions={<><Badge>{rows.length} assignments</Badge><Action size="sm" variant="primary" icon="plus" onClick={() => setEdit('new')}>New assignment</Action></>}>
             <Table columns={['Assignment', 'State', 'Submitted', 'Late', 'Marked', '']} rows={rows.map(r => [
-                <RecordName name={r.title} meta={`${r.course} · due ${r.due}`}/>, <Status value={r.state}/>, `${r.submissions} / ${r.total}`, r.late,
+                <RecordName name={r.title} meta={`${r.course} · due ${r.due}`}/>, <Status value={r.state}/>,
+                <span className="tnum text-[13px]">{r.submissions} / {r.total}</span>,
+                <span className={`tnum text-[13px] ${r.late ? 'text-amber-700' : 'text-ink-500'}`}>{r.late}</span>,
                 <div className="flex w-28 items-center gap-2"><div className="prog-track"><div className={`prog-fill ${r.marked === r.total ? 'bg-brand-500' : 'bg-amber-500'}`} style={{ width: `${100 * r.marked / (r.total || 1)}%` }}/></div><span className="tnum text-[11px] font-medium text-ink-600">{Math.round(100 * r.marked / (r.total || 1))}%</span></div>,
                 <div className="flex justify-end gap-1.5"><Action size="sm" onClick={() => setEdit(r)}>Edit</Action><Action size="sm" onClick={() => { const candidate = queue.find(s => s.assignment === r.title); if (candidate) setMark(candidate); else { setFilter(r.title); setTab(1); } }}>Mark</Action></div>,
             ])}/>

@@ -21,5 +21,30 @@
 .assessment-view .exam-facts dl > div {
     padding-block: .5rem;
     font-size: 13px;
-    line-height: 1.25rem;
+    line-height: 1.5;
+}
+
+.assessment-view .exam-facts dt {
+    color: var(--color-ink-500);
+}
+
+.assessment-view .grade-sheet input[type='number'] {
+    appearance: textfield;
+}
+
+.assessment-view .grade-sheet input[type='number']::-webkit-inner-spin-button,
+.assessment-view .grade-sheet input[type='number']::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+.assessment-view .attendance-distribution {
+    --color-emerald-500: var(--color-brand-500);
+    --color-blue-500: #3b82f6;
+    --color-rose-500: #f43f5e;
+    --color-amber-800: #92400e;
+}
+
+.assessment-view {
+    --color-amber-400: #fbbf24;
 }

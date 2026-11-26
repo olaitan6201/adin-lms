@@ -42,15 +42,16 @@ export default function StudentAssignments({ assignments, work, initial, courseR
     return <div className="assessment-view space-y-5"><PageHeader eyebrow="Assessment" title="Assignments" description="Upload your work before the closing time. Every upload issues a receipt that records the time and the file." actions={<Action icon="calendar" href={workspaceUrl('student/calendar')}>Academic calendar</Action>}/>
         {message && <p role="status" className="rounded-lg bg-brand-50 p-3">{message}</p>}
         <Card className="student-assignments" title="Your assignments" subtitle="Across all registered courses" actions={<Badge tone="amber">{work.filter(a => a.state !== 'closed').length} outstanding</Badge>}><Table columns={['Assignment', 'Due', 'Status', 'Score', '']} rows={work.map(a => [
-            <RecordName name={a.title} meta={a.course}/>, a.due, <Status value={a.state === 'closed' ? 'Graded' : 'Submitted'}/>,
-            a.publishedScore != null ? `${a.publishedScore} / 100` : '-', <div className="flex justify-end"><Action size="sm" onClick={() => setRow(a)}>View receipt</Action></div>,
+            <RecordName name={a.title} meta={a.course}/>, <span className="text-[13px] text-ink-600">{a.due}</span>, <Status value={a.state === 'closed' ? 'Graded' : receipts[a.id] || courseReceipts[a.id] ? 'Submitted' : 'Not submitted'}/>,
+            a.publishedScore != null ? <span className="tnum text-[13px] font-semibold">{a.publishedScore} / 100</span> : <span className="text-[12.5px] text-ink-400">-</span>,
+            <div className="flex justify-end"><Action size="sm" onClick={() => setRow(a)}>{receipts[a.id] || courseReceipts[a.id] ? 'View receipt' : 'View assignment'}</Action></div>,
         ])}/></Card><div className="grid gap-5 xl:grid-cols-3">
             <Card title="Submission rules" subtitle="Applied to the open assignment"><Details items={rules}/></Card>
             <Card title="Submitted work" subtitle="Your uploads and their receipts"><ul className="divide-y divide-ink-100">{assignments.filter(a => receipts[a.id]).map(a => <li key={a.id} className="flex items-start gap-3 py-3">
                 <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500"><Icon name="document" className="size-4"/></span>
                 <button className="min-w-0 flex-1 text-left" onClick={() => setRow(a)}><span className="block truncate text-[13px] font-medium text-ink-800">{displayTitle(a)}</span><small className="mt-0.5 block text-[11.5px] text-ink-400">{receipts[a.id].time} · {receipts[a.id].size}</small></button>
                 <Status value={feedback.some(f => f.id === a.id) ? `Graded ${feedback.find(f => f.id === a.id)?.score}` : 'Awaiting marking'}/></li>)}</ul></Card>
-            <Card title="Feedback waiting" subtitle="Marked work returned to you"><div className="space-y-3">{feedback.map(f => <article key={f.id} className="rounded-xl border border-ink-100 p-3.5 text-sm">
+            <Card title="Feedback waiting" subtitle="Marked work returned to you"><div className="space-y-3">{feedback.map(f => <article key={f.id} className="rounded-xl border border-ink-100 p-3.5">
                 <p className="text-[13px] font-medium text-ink-800">{displayTitle(assignments.find(a => a.id === f.id))}</p><p className="mt-1 text-[13px] leading-relaxed text-ink-600">{f.text}</p><div className="mt-2 flex items-center gap-2"><Badge tone="emerald">{f.score} / 100</Badge><Action size="sm" onClick={() => setScript(f)}>Script</Action></div></article>)}</div></Card>
         </div><Note>A submitted file can be replaced until the closing time. Your score and any written feedback appear here once the lecturer has marked the work.</Note>
         {row && <SubmissionPanel sizeLimit={sizeLimit} key={row.id} row={row} receipt={receipts[row.id] ?? courseReceipts[row.id]} close={() => setRow(undefined)} save={r => {

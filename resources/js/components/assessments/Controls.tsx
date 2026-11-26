@@ -18,7 +18,7 @@ export function RecordName({ name, meta }: { name: string; meta: string }) {
 
 export function Status({ value }: { value: string }) {
     const tone = /open|approved|published|closed register|returned|marked|graded|present|Easy/i.test(value) ? 'emerald'
-        : /late|moderation|awaiting|pending|restricted|flagged|Medium/i.test(value) ? 'amber'
+        : /late|moderation|awaiting|pending|restricted|flagged|not submitted|Medium/i.test(value) ? 'amber'
         : /scheduled|submitted|MCQ/i.test(value) ? 'sky' : 'slate';
     return <Badge tone={tone}>{value === 'moderation' ? 'In moderation' : value.charAt(0).toUpperCase() + value.slice(1)}</Badge>;
 }
@@ -58,8 +58,8 @@ export function Fields({ fields, values, change }: { fields: FieldSpec[]; values
 }
 
 export function Details({ items }: { items: [string, ReactNode][] }) {
-    return <dl className="divide-y divide-slate-100">{items.map(([label, value]) => <div key={label} className="flex items-start justify-between gap-3 py-2.5 text-sm">
-        <dt className="text-slate-600">{label}</dt><dd className="text-right font-medium">{value}</dd>
+    return <dl className="divide-y divide-ink-100">{items.map(([label, value]) => <div key={label} className="flex items-center justify-between gap-3 py-2.5 text-[13px]">
+        <dt className="text-ink-600">{label}</dt><dd className="text-right font-medium text-ink-800">{value}</dd>
     </div>)}</dl>;
 }
 

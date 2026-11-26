@@ -25,7 +25,9 @@ export default function CbtDesk({ exams, questionBanks, total, bankItems, bluepr
         <Sections counts={[banks.length, sittings.length]} labels={['Question banks', 'Examinations', 'Security and invigilation']} active={tab} change={setTab}/>
         {tab === 0 && <Card className="bank-list" title="Question banks" subtitle="Objective, short answer, essay and programming items kept per course" actions={<><Badge tone="emerald">{questionTotal} questions</Badge><Action size="sm" icon="plus" variant="primary" onClick={() => setBankId('new')}>New bank</Action></>}>
             <Table columns={['Bank', 'Items', 'Types', 'Access', '']} rows={banks.map(b => [
-                <RecordName name={b.name} meta={`${b.course} · updated ${b.updated}`}/>, b.questions, b.types, <Badge tone={b.security === 'restricted' ? 'amber' : 'slate'}>{b.security === 'restricted' ? 'Restricted to officers' : 'Open to lecturer'}</Badge>, <Action size="sm" onClick={() => setBankId(b.id)}>Open bank</Action>,
+                <RecordName name={b.name} meta={`${b.course} · updated ${b.updated}`}/>, <span className="tnum text-[13px]">{b.questions}</span>, <span className="text-[13px] text-ink-500">{b.types}</span>,
+                <Badge tone={b.security === 'restricted' ? 'amber' : 'slate'}>{b.security === 'restricted' ? 'Restricted to officers' : 'Open to lecturer'}</Badge>,
+                <div className="flex justify-end"><Action size="sm" onClick={() => setBankId(b.id)}>Open bank</Action></div>,
             ])}/>
         </Card>}
         {tab === 1 && <Card title="Examinations" subtitle="Access window, attempt limit, accommodations and result release control" actions={<><Badge tone="sky">{sittings.filter(e => e.state === 'scheduled').length} scheduled</Badge>{schedule}</>}>

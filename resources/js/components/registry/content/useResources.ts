@@ -10,7 +10,8 @@ type ResourceOptions = {
 };
 
 function extension(name: string) {
-    return name.split('.').at(-1)?.toLowerCase() ?? '';
+    const separator = name.lastIndexOf('.');
+    return separator > 0 ? name.slice(separator + 1).toLowerCase() : '';
 }
 
 function uploadedResource(file: File): LibraryResource {

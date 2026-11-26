@@ -69,7 +69,7 @@ function ResourceDropZone({ browse, upload }: Pick<Props, 'browse' | 'upload'>) 
             </span>
             <span className="text-sm font-medium text-ink-700">Drop files to upload</span>
             <span className="text-xs text-ink-400">
-                PDF, DOCX, PPTX, XLSX, images, audio, video, ZIP and source code up to 200 MB
+                File types permitted by the upload allow-list, up to 200 MB
             </span>
         </button>
     );

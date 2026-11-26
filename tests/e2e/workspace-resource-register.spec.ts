@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('restoring a version commits immediately but access changes wait for Save', async ({ page }) => {
     await page.goto('/admin/content');
@@ -29,6 +30,15 @@ test('restoring a version commits immediately but access changes wait for Save',
     await versions.click();
     await expect(downloads).toBeChecked();
     await expect(dialog.getByText('v3 · current')).toBeVisible();
+    await page.keyboard.press('Escape');
+    const downloaded = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Content report' }).click();
+    const records = JSON.parse(await readFile((await (await downloaded).path())!, 'utf8'));
+    expect(records.find((record: { name: string }) => record.name === 'Trial balance template')).toMatchObject({
+        version: 'v3',
+        download: true,
+        from: originalDate,
+    });
 });
 
 test('picker rejects a mixed batch; picker and drop each add an independent resource', async ({ page }) => {
@@ -47,7 +57,9 @@ test('picker rejects a mixed batch; picker and drop each add an independent reso
         data.items.add(new File(['notes'], 'dropped.pdf', { type: 'application/pdf' }));
         return data;
     });
-    await page.getByRole('button', { name: /Drop files to upload/ }).dispatchEvent('drop', { dataTransfer: transfer });
+    await page
+        .getByRole('button', { name: /Drop files to upload/ })
+        .dispatchEvent('drop', { dataTransfer: transfer });
     await transfer.dispose();
     for (const name of ['picked.txt', 'dropped.pdf']) {
         const row = page.getByRole('row').filter({ hasText: name });
@@ -57,4 +69,41 @@ test('picker rejects a mixed batch; picker and drop each add an independent reso
         await expect(dialog.getByRole('listitem')).toHaveCount(1);
         await dialog.getByRole('button', { name: 'Close', exact: true }).click();
     }
+});
+
+test('saved policy controls the picker, drops and report across tabs and reload', async ({ page }) => {
+    await page.goto('/admin/content');
+    const tab = page.getByRole('tab', { name: 'Resource register' });
+    await tab.click();
+    await page.getByRole('button', { name: 'Edit allow-list' }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('Documents').fill('PDF, EXE');
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(dialog.getByRole('alert')).toContainText('not a supported file type');
+    await dialog.getByLabel('Documents').fill('PDF');
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.getByRole('tab', { name: 'Modules and resources' }).click();
+    await tab.click();
+    await expect(page.getByRole('row').filter({ hasText: 'Documents' }).getByRole('cell').nth(1)).toHaveText(
+        'PDF',
+    );
+    await page.reload();
+    const picker = page.getByLabel('Select resources');
+    await expect(picker).not.toHaveAttribute('accept', /\.txt/);
+    const file = (name: string) => ({ name, mimeType: 'text/plain', buffer: Buffer.from('test') });
+    await picker.setInputFiles([file('mixed.pdf'), file('removed.txt')]);
+    await expect(page.getByRole('status').filter({ hasText: 'Upload rejected' })).toBeVisible();
+    const data = await page.evaluateHandle(() => {
+        const transfer = new DataTransfer();
+        transfer.items.add(new File(['test'], 'dropped.txt'));
+        return transfer;
+    });
+    await page.getByRole('button', { name: /Drop files/ }).dispatchEvent('drop', { dataTransfer: data });
+    await picker.setInputFiles(file('kept.pdf'));
+    const downloaded = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Content report' }).click();
+    const records = JSON.parse(await readFile((await (await downloaded).path())!, 'utf8'));
+    const names = records.map((r: { name: string }) => r.name);
+    expect(names).toContain('kept.pdf');
+    for (const rejected of ['mixed.pdf', 'removed.txt', 'dropped.txt']) expect(names).not.toContain(rejected);
 });

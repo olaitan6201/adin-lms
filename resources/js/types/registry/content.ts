@@ -1,3 +1,10 @@
+export type UploadGroup = {
+    id: string;
+    label: string;
+    extensions?: string[];
+    description?: string;
+    validation: string;
+};
 export type LibraryModule = {
     id: string;
     week: string;
@@ -34,10 +41,9 @@ export type ContentLibraryInputs = {
     contentSummary: ContentSummary;
     initialResources: LibraryResource[];
     initialModules: LibraryModule[];
-    groups: string[][];
+    groups: UploadGroup[];
     items: string[][];
     contents: string[];
-    allowed: string[];
     resourceAuthor: string;
     versionHistory: { date: string; size: string }[];
     attachedResourceId: string | undefined;

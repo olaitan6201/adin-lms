@@ -5,7 +5,6 @@ import {
     groups,
     items,
     contents,
-    allowed,
     resourceAuthor,
     versionHistory,
 } from '@/data/registry/contentLibrary';
@@ -21,7 +20,6 @@ export default function Content() {
                 groups,
                 items,
                 contents,
-                allowed,
                 resourceAuthor,
                 versionHistory,
                 attachedResourceId: initialResources[0]?.id,

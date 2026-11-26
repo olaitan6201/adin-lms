@@ -1,3 +1,4 @@
+import { useUploadPolicy } from './useUploadPolicy';
 import { useState } from 'react';
 import { useDesk, Register, exportRecords } from '@/components/registry/Desk';
 import { Note } from '@/components/ui/feedback/Note';
@@ -16,12 +17,12 @@ export function ContentLibrary({
     groups,
     items,
     contents,
-    allowed,
     resourceAuthor,
     versionHistory,
     attachedResourceId,
 }: ContentLibraryInputs) {
     const desk = useDesk();
+    const { selection, allowed, save } = useUploadPolicy(groups);
     const [tab, setTab] = useState(0);
     const { files, selected, selectResource, restore, saveAccess, close, browse, upload, pickFiles, picker } =
         useResources({
@@ -78,7 +79,7 @@ export function ContentLibrary({
                 <ResourceRegister files={files} browse={browse} upload={upload} onSelect={selectResource} />
             )}
             {tab === 2 && <Checklist items={items} />}
-            {tab !== 0 && <ContentPolicy desk={desk} groups={groups} />}
+            {tab !== 0 && <ContentPolicy desk={desk} groups={groups} selection={selection} save={save} />}
             <Note>
                 Resource access can be scheduled by week and restricted by delivery mode. Replacing a file keeps
                 the previous version available for audit and for students who downloaded it.

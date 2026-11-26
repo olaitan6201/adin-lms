@@ -1,18 +1,30 @@
-import { useState } from 'react';
+import type { UploadGroup } from '@/types/registry/content';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import { Field, type Desk } from './Desk';
-import { Records, status, val } from './Records';
+import { Records, status } from './Records';
 
-export function ContentPolicy({ desk, groups }: { desk: Desk; groups: string[][] }) {
-    const [rules, setRules] = useState(groups);
+export function ContentPolicy({
+    desk,
+    groups,
+    selection,
+    save,
+}: {
+    desk: Desk;
+    groups: UploadGroup[];
+    selection: Record<string, string[]>;
+    save: (data: FormData) => void | string;
+}) {
+    const labels = (id: string) => selection[id].map((ext) => ext.toUpperCase()).join(', ');
     function editRules() {
         desk.show({
             title: 'Edit allow-list',
             submit: 'Save',
-            body: rules.map(([name, types]) => <Field key={name} label={name} value={types} required />),
-            save: (d) => setRules((rs) => rs.map(([name, , validation]) => [name, val(d, name), validation])),
+            body: groups
+                .filter((group) => group.extensions)
+                .map((group) => <Field key={group.id} label={group.label} value={labels(group.id)} />),
+            save,
         });
     }
 
@@ -21,8 +33,8 @@ export function ContentPolicy({ desk, groups }: { desk: Desk; groups: string[][]
             <Records
                 footer={
                     <p className="mt-3 text-xs leading-relaxed text-ink-500">
-                        A file outside the allow-list is rejected before it is written to storage, and the
-                        rejection is recorded as a security event. Executable types are never accepted.
+                        This browser’s upload policy applies to file selection and drag and drop. Source code is
+                        accepted only in permitted archives. Links are not file types.
                     </p>
                 }
                 title="Upload allow-list"
@@ -36,9 +48,9 @@ export function ContentPolicy({ desk, groups }: { desk: Desk; groups: string[][]
                     </>
                 }
                 columns={['Group', 'Accepted types', 'Validation']}
-                rows={rules.map(([name, types, validation]) => [
-                    name,
-                    types,
+                rows={groups.map(({ id, label, extensions, description, validation }) => [
+                    label,
+                    extensions ? labels(id) || 'None' : description,
                     status(
                         validation,
                         validation === 'Media probed'

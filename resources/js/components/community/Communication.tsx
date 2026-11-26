@@ -21,17 +21,37 @@ export function Communication({ role, data }: { data: CommunicationData; role: T
     const [notice, setNotice] = useState('');
     const inbox = useConversations(data.messages);
     const items: SectionItem<Section>[] = [
-        { id: 'forums', label: student ? 'Course forums' : 'Forums and threads',
-            panel: <Forums forums={data.forums} threads={data.threads} student={student}/> },
-        { id: 'groups', label: student ? 'My groups' : 'Group discussions',
-            panel: <Groups discussionGroups={data.groups} groupPosts={data.posts} student={student}/> },
-        { id: 'messages', label: 'Messages', count: inbox.unread,
-            panel: <Messages inbox={inbox} recipients={data.messages} composing={compose} close={() => setCompose(false)}/> },
+        {
+            id: 'forums',
+            label: student ? 'Course forums' : 'Forums and threads',
+            panel: <Forums forums={data.forums} threads={data.threads} student={student} />,
+        },
+        {
+            id: 'groups',
+            label: student ? 'My groups' : 'Group discussions',
+            panel: <Groups discussionGroups={data.groups} groupPosts={data.posts} student={student} />,
+        },
+        {
+            id: 'messages',
+            label: 'Messages',
+            count: inbox.unread,
+            panel: <Messages inbox={inbox} recipients={data.messages} composing={compose} close={() => setCompose(false)} />,
+        },
     ];
     if (!student) {
-        items.push({ id: 'announcements', label: 'Announcements', panel: <Announcements
-            notices={data.announcements} publicationDate={data.publicationDate} audiences={data.audiences}
-            selected={notice} select={setNotice}/> });
+        items.push({
+            id: 'announcements',
+            label: 'Announcements',
+            panel: (
+                <Announcements
+                    notices={data.announcements}
+                    publicationDate={data.publicationDate}
+                    audiences={data.audiences}
+                    selected={notice}
+                    select={setNotice}
+                />
+            ),
+        });
     }
 
     function composeNew() {
@@ -44,11 +64,32 @@ export function Communication({ role, data }: { data: CommunicationData; role: T
         }
     }
 
-    return <div className="engagement-workspace space-y-5 [&_[role=tab]>span]:text-ink-600"><PageHeader eyebrow="Communication" title="Communication"
-        description={student ? 'Ask questions in course forums, message your lecturers directly, and read the notices published for your cohort.' : 'Moderated course forums, private messages, and announcements to cohorts and to the whole institution.'}
-        actions={<><Action icon="bell" href={workspaceUrl(`${role}/settings/notifications`)}>Notification settings</Action>
-            <Action variant="primary" icon="send" onClick={composeNew}>{student ? 'New message' : 'New announcement'}</Action></>}/>
-        <Sections items={items} active={tab} change={setTab}/>
-        <Note>Messages and forum posts are scoped to the writer and the intended audience. Guardians see only progress that has been explicitly approved for them.</Note>
-    </div>;
+    return (
+        <div className="engagement-workspace space-y-5 [&_[role=tab]>span]:text-ink-600">
+            <PageHeader
+                eyebrow="Communication"
+                title="Communication"
+                description={
+                    student
+                        ? 'Ask questions in course forums, message your lecturers directly, and read the notices published for your cohort.'
+                        : 'Moderated course forums, private messages, and announcements to cohorts and to the whole institution.'
+                }
+                actions={
+                    <>
+                        <Action icon="bell" href={workspaceUrl(`${role}/settings/notifications`)}>
+                            Notification settings
+                        </Action>
+                        <Action variant="primary" icon="send" onClick={composeNew}>
+                            {student ? 'New message' : 'New announcement'}
+                        </Action>
+                    </>
+                }
+            />
+            <Sections items={items} active={tab} change={setTab} />
+            <Note>
+                Messages and forum posts are scoped to the writer and the intended audience. Guardians see only progress that has been
+                explicitly approved for them.
+            </Note>
+        </div>
+    );
 }

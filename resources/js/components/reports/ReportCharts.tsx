@@ -1,4 +1,5 @@
 import type { Breakdown, ReportSeries, ReportTableData } from '@/types/reports/analytics';
+import { SegmentedRing } from '@/components/icons/SegmentedRing';
 export { HorizontalBars as Bars } from '@/components/overview/Charts';
 
 export function Trend({ data, label, height = 240 }: { data: ReportSeries; label: string; height?: number }) {
@@ -22,11 +23,9 @@ export function Trend({ data, label, height = 240 }: { data: ReportSeries; label
 
 export function Mix({ items: engagementMix }: { items: Breakdown }) {
     const total = engagementMix.reduce((sum,d) => sum+d.value,0);
-    return <div className="flex items-center gap-6"><div className="relative size-[150px] shrink-0"><svg viewBox="0 0 150 150" className="size-full" role="img" aria-label="Engagement breakdown">
-        <circle cx="75" cy="75" r="65" fill="none" stroke="#E7ECF1" strokeWidth="20"/>
-        {engagementMix.map((d,i) => <circle key={d.label} cx="75" cy="75" r="65" transform="rotate(-90 75 75)" fill="none" stroke={d.color} strokeWidth="20" pathLength={total || 1}
-            strokeDasharray={`${d.value} ${total-d.value}`} strokeDashoffset={-engagementMix.slice(0,i).reduce((n,s) => n+s.value,0)}><title>{d.label}: {d.value}</title></circle>)}
-    </svg><span className="absolute inset-0 flex flex-col items-center justify-center"><strong className="text-xl font-semibold text-ink-900 tnum">{(total / 1000).toFixed(1)}k</strong><small className="text-[10px] font-medium tracking-wide text-ink-400 uppercase">Actions</small></span></div>
+    return <div className="flex items-center gap-6"><div className="relative size-[150px] shrink-0">
+        <SegmentedRing size={150} strokeWidth={20} segments={engagementMix} label="Learning actions by engagement type" />
+        <span className="absolute inset-0 flex flex-col items-center justify-center"><strong className="text-xl font-semibold text-ink-900 tnum">{(total / 1000).toFixed(1)}k</strong><small className="text-[10px] font-medium tracking-wide text-ink-400 uppercase">Actions</small></span></div>
         <ul className="min-w-0 flex-1 space-y-2">{engagementMix.map(d => <li key={d.label} className="flex items-center gap-2 text-[13px]">
             <span className="size-2.5 shrink-0 rounded-sm" style={{ background: d.color }}/><span className="min-w-0 flex-1 truncate text-ink-600" title={d.label}>{d.label}</span><strong className="font-semibold tnum">{d.value}</strong></li>)}</ul>
     </div>;

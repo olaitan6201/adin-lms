@@ -1,19 +1,13 @@
 import type { Exam, MetricBar } from './panelTypes';
 import { Badge } from '@/components/ui/data-display/Badge';
+import { SegmentedRing } from '@/components/icons/SegmentedRing';
 import { Card } from '@/components/ui/layout/Card';
 
 function Coverage({ bank }: { bank: readonly MetricBar[] }) {
     const total = bank.reduce((sum, b) => sum + b.value, 0);
-    const circumference = 2 * Math.PI * 46;
-    const arc = (value: number) => circumference * value / Math.max(1, total);
     return <div className="flex items-center gap-6">
         <div className="relative size-[108px] shrink-0">
-            <svg viewBox="0 0 108 108" className="size-full" role="img" aria-label="Breakdown">
-                <circle cx="54" cy="54" r="46" fill="none" stroke="#E7ECF1" strokeWidth="16"/>
-                {bank.map((b, i) => <circle key={b.label} cx="54" cy="54" r="46" fill="none" stroke={b.color} strokeWidth="16"
-                    strokeDasharray={`${arc(b.value)} ${circumference - arc(b.value)}`} strokeDashoffset={-arc(bank.slice(0, i).reduce((n, s) => n + s.value, 0))}
-                    transform="rotate(-90 54 54)"><title>{b.label}: {b.value}</title></circle>)}
-            </svg>
+            <SegmentedRing size={108} strokeWidth={16} segments={bank} label="Exam bank questions by question type" />
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-xl font-semibold text-ink-900 tnum">{total}</span>
                 <span className="text-[10px] font-medium uppercase tracking-wide text-ink-400">Questions</span></div>

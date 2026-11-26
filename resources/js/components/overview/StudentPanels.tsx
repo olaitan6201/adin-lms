@@ -1,16 +1,14 @@
 import type { StudentCourse, PendingWork, Lesson, Result, Notice } from './panelTypes';
 import { Action } from '@/components/ui/controls/Action';
+import { ProgressRing } from '@/components/icons/ProgressRing';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { Table } from '@/components/ui/data-display/Table';
 import { Go, RecordName } from './OverviewParts';
 
 function CompletionRing({ progress, code }: Pick<Lesson, 'progress' | 'code'>) {
-    const circumference = 2 * Math.PI * 43.5;
-    return <div className="relative inline-flex size-24 shrink-0" role="img" aria-label={`Progress ${progress} percent`}>
-        <svg viewBox="0 0 96 96" className="size-full -rotate-90"><circle cx="48" cy="48" r="43.5" fill="none" stroke="#E7ECF1" strokeWidth="9"/>
-            <circle cx="48" cy="48" r="43.5" fill="none" stroke="#10B981" strokeWidth="9" strokeLinecap="round" strokeDasharray={circumference}
-                strokeDashoffset={circumference * (1 - progress / 100)}/></svg>
+    return <div className="relative inline-flex size-24 shrink-0" role="img" aria-label={`${code} lesson progress: ${progress} percent`}>
+        <ProgressRing percent={progress} />
         <span className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-lg font-semibold text-ink-900 tnum">{progress}%</span><span className="text-[10px] font-medium uppercase tracking-wide text-ink-400">{code}</span></span>
     </div>;

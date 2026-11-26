@@ -2,14 +2,22 @@ import type { AriaAttributes, MouseEventHandler, ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { Icon } from '@/components/icons/Icon';
 
-type ActionProps = AriaAttributes & {
+type Behavior = {
+    href?: string;
+    onClick?: MouseEventHandler<Element>;
+    disabled?: boolean;
+} & (
+    | { href: string }
+    | { onClick: MouseEventHandler<Element> }
+    | { disabled: true }
+    | { href: string | undefined; disabled: boolean }
+);
+
+type ActionProps = AriaAttributes & Behavior & {
     children: ReactNode;
     icon?: string;
     variant?: string;
     size?: string;
-    href?: string;
-    onClick?: MouseEventHandler<Element>;
-    disabled?: boolean;
 };
 
 const variants = new Map([

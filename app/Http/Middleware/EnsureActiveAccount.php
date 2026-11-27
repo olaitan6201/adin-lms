@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\AccountStatus;
 use Closure;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +20,13 @@ class EnsureActiveAccount
             return $next($request);
         }
 
+        /** @var SessionGuard $guard */
+        $guard = Auth::guard('web');
         $account = $user->fresh();
-        $persisted = $request->session()->has(Auth::guard('web')->getName());
-        if ($account?->status !== 'active' || ($persisted && $request->session()->get(self::VERSION) !== $account->auth_version)) {
-            Auth::guard('web')->logoutCurrentDevice();
+        $persisted = $request->session()->has($guard->getName());
+
+        if ($account?->status !== AccountStatus::Active || ($persisted && $request->session()->get(self::VERSION) !== $account->auth_version)) {
+            $guard->logoutCurrentDevice();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 

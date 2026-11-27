@@ -35,6 +35,12 @@ class CurriculumVersioning
     {
         return DB::transaction(function () use ($id, $action, $data, $actor) {
             $version = Curriculum::lockForUpdate()->findOrFail($id);
+            if ($version->academic_pathway_id !== null) {
+                throw ValidationException::withMessages([
+                    'status' => 'This version is linked to a pathway and cannot be changed here.',
+                ]);
+            }
+
             $expected = match ($action) {
                 'approve' => CurriculumStatus::Reviewed,
                 'fork' => CurriculumStatus::Approved,

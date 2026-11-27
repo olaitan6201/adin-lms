@@ -65,9 +65,10 @@ export function Marking({ submissions }: { submissions: readonly Submission[] })
                     <div key="actions" className="flex justify-end">
                         <a
                             className="btn btn-outline btn-sm"
+                            aria-label="Marking desk"
                             href={workspaceUrl('lecturer/assignments') + selectionFragment('submission', s.id)}
                         >
-                            Marking desk
+                            Mark
                         </a>
                     </div>,
                 ])}

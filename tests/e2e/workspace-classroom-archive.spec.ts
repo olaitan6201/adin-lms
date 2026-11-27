@@ -13,9 +13,13 @@ for (const role of ['admin', 'lecturer']) {
             ['ENG210', 'Workshop: narrative voice', 'narrator makes an inference'],
         ]) {
             const row = rows.filter({ hasText: course });
-            for (const name of ['View recording record', 'Transcript', 'Attach']) {
+            for (const name of [title, 'Transcript', 'Attach']) {
                 await expect(row.getByRole('button', { name, exact: true })).toHaveCount(1);
             }
+            await row.getByRole('button', { name: title, exact: true }).click();
+            await expect(dialog.getByRole('heading')).toHaveText(title);
+            await expect(dialog).toContainText(course);
+            await page.keyboard.press('Escape');
             await row.getByRole('button', { name: 'Transcript', exact: true }).click();
             await expect(dialog.getByRole('heading')).toHaveText(`Transcript: ${title}`);
             await expect(dialog).toContainText(course);

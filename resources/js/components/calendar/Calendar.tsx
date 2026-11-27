@@ -61,7 +61,7 @@ export function Calendar({ role, data }: {
             <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
                 <Card
                     title={month}
-                    subtitle={`${term} - dates published by the Registrar and the Examinations Office. All times in West Africa Time (WAT, UTC+01:00).`}
+                    subtitle={`${term} - dates published by the Registrar and the Examinations Office`}
                     bodyClassName="p-0"
                     actions={
                         <>
@@ -79,35 +79,40 @@ export function Calendar({ role, data }: {
                         </>
                     }
                 >
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 px-5 py-3">
                         <div className="flex items-center gap-2">
                             <button
                                 className="btn btn-ghost btn-sm"
+                                type="button"
                                 aria-label="Previous month"
                                 onClick={() => setOffset(offset - 1)}
                             >
                                 <Icon name="chevronLeft" className="size-4" />
                             </button>
-                            <span className="text-[13px] font-semibold">{month}</span>
+                            <span className="text-[13px] font-semibold text-ink-800">{month}</span>
                             <button
                                 className="btn btn-ghost btn-sm"
+                                type="button"
                                 aria-label="Next month"
                                 onClick={() => setOffset(offset + 1)}
                             >
                                 <Icon name="chevronRight" className="size-4" />
                             </button>
                         </div>
-                        <div className="flex max-w-full gap-0.5 overflow-x-auto rounded-lg bg-ink-100 p-0.5">
-                            {['All', 'Examination', 'Deadline', 'Teaching'].map((kind) => (
-                                <button
-                                    key={kind}
-                                    aria-pressed={filter === kind}
-                                    onClick={() => setFilter(kind)}
-                                    className={`rounded-md px-2.5 py-1 text-xs font-semibold ${filter === kind ? 'bg-white text-ink-900 shadow-sm' : 'text-ink-500 hover:text-ink-800'}`}
-                                >
-                                    {kind === 'Deadline' || kind === 'Examination' ? `${kind}s` : kind}
-                                </button>
-                            ))}
+                        <div className="max-w-full min-w-0 overflow-x-auto" data-scroll>
+                            <div className="inline-flex items-center gap-0.5 rounded-lg bg-ink-100 p-0.5">
+                                {['All', 'Examination', 'Deadline', 'Teaching'].map((kind) => (
+                                    <button
+                                        key={kind}
+                                        type="button"
+                                        aria-pressed={filter === kind}
+                                        onClick={() => setFilter(kind)}
+                                        className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${filter === kind ? 'bg-white text-ink-900 shadow-sm' : 'text-ink-500 hover:text-ink-800'}`}
+                                    >
+                                        {kind === 'Deadline' || kind === 'Examination' ? `${kind}s` : kind}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <WorkspaceMonthGrid
@@ -138,7 +143,7 @@ export function Calendar({ role, data }: {
                         <>
                             <Badge>{selected.kind}</Badge>
                             <p>
-                                {selected.date} · {selected.time}
+                                {selected.date} · {selected.time} WAT
                             </p>
                             <p>
                                 {selected.course} · {selected.owner}

@@ -75,7 +75,7 @@ export default function StudentAssignments({
             <PageHeader
                 eyebrow="Assessment"
                 title="Assignments"
-                description="Choose a file while the assignment is open. This sample records file details and a receipt on this page; it does not upload the file."
+                description="Choose a file before closing. This sample records its details and gives you a receipt without uploading the file."
                 actions={
                     <Action icon="calendar" href={workspaceUrl('student/calendar')}>
                         Academic calendar
@@ -90,7 +90,7 @@ export default function StudentAssignments({
             <Card
                 className="student-assignments"
                 title="Your assignments"
-                subtitle={`Sample clock: ${formatInstitutionalTime(sampleTime)} WAT · all deadlines in West Africa Time`}
+                subtitle="Across all registered courses"
                 actions={<Badge tone="amber">{outstanding} outstanding</Badge>}
             >
                 <Table
@@ -128,8 +128,8 @@ export default function StudentAssignments({
                 <ReturnedScripts records={records} />
             </div>
             <Note>
-                A submitted file can be replaced until the closing time. Your score and any written feedback
-                appear here once the lecturer has marked the work.
+                Sample clock: {formatInstitutionalTime(sampleTime)} WAT. You can replace an open submission before
+                closing. Scores and feedback appear after marking.
             </Note>
             {selected && (
                 <SubmissionPanel

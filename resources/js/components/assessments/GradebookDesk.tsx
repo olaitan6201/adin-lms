@@ -109,10 +109,6 @@ export default function GradebookDesk({
                     }
                 >
                     <ScoreFilters {...filters} />
-                    <p className="mb-3 text-sm">
-                        The sheet shows recorded grades. Changing a score recalculates that row’s grade using
-                        the boundaries under Weights and rubric.
-                    </p>
                     <ScoreTable visible={visible} metrics={metrics} adjustScore={adjustScore} />
                 </Card>
             )}

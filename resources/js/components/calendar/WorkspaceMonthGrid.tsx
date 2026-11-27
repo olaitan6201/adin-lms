@@ -19,7 +19,7 @@ type GridProps = {
 export function WorkspaceMonthGrid({ today, days, events, onSelect }: GridProps) {
     return (
         <>
-            <div className="grid grid-cols-7 border-b bg-ink-50/60">
+            <div className="grid grid-cols-7 border-b border-ink-100 bg-ink-50/60">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
                     <span
                         key={day}
@@ -29,13 +29,13 @@ export function WorkspaceMonthGrid({ today, days, events, onSelect }: GridProps)
                     </span>
                 ))}
             </div>
-            <div className="grid grid-cols-7 border-l">
+            <div className="grid grid-cols-7 border-l border-ink-100">
                 {days.map(({ iso, day, inMonth }) => {
                     const isToday = iso === today;
                     return (
                         <div
                             key={iso}
-                            className={`min-h-[74px] min-w-0 border-b border-r p-1.5 ${inMonth ? 'text-ink-700' : 'bg-ink-50/60 text-ink-300'}`}
+                            className={`min-h-[74px] min-w-0 border-b border-r border-ink-100 p-1.5 ${inMonth ? 'text-ink-700' : 'bg-ink-50/60 text-ink-300'}`}
                         >
                             <div className="flex items-center justify-between">
                                 <span

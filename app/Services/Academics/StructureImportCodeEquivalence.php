@@ -13,12 +13,16 @@ final class StructureImportCodeEquivalence
 
     public function key(StructureUnit $type, string $code): string
     {
+        return $this->keyForTable($type->table(), $code);
+    }
+
+    public function keyForTable(string $table, string $code): string
+    {
         $connection = DB::connection();
         if ($connection->getDriverName() !== 'mysql') {
             return 'code:'.$code;
         }
 
-        $table = $type->table();
         if (! isset($this->collations[$table])) {
             $column = $connection->selectOne(
                 'select collation_name as code_collation from information_schema.columns where table_schema = database() and table_name = ? and column_name = ?',

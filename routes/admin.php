@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StructureImportController;
 use App\Http\Controllers\Admin\StructureRegisterController;
+use App\Http\Controllers\Admin\StructureRegisterImportController;
 use App\Models\User;
 use App\Services\Academics\HierarchyChanges;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,16 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
         Route::prefix('structure/import')
             ->name('admin.structure.import.')
             ->controller(StructureImportController::class)
+            ->middleware(['can:manage-academic-structure', 'throttle:30,1', 'cache.headers:private;no_store'])
+            ->group(function (): void {
+                Route::get('template', 'template')->name('template');
+                Route::post('columns', 'columns')->name('columns');
+                Route::post('preview', 'preview')->name('preview');
+                Route::post('/', 'store')->name('store');
+            });
+        Route::prefix('structure/register/import')
+            ->name('admin.structure.register.import.')
+            ->controller(StructureRegisterImportController::class)
             ->middleware(['can:manage-academic-structure', 'throttle:30,1', 'cache.headers:private;no_store'])
             ->group(function (): void {
                 Route::get('template', 'template')->name('template');

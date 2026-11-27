@@ -24,7 +24,7 @@ final class StructureImportPreviewResource extends JsonResource
             if (! $existing) {
                 $created++;
             }
-            $rows[] = [
+            $row = [
                 'line' => $item['line'],
                 'kind' => $item['kind'],
                 'code' => $item['code'],
@@ -32,6 +32,10 @@ final class StructureImportPreviewResource extends JsonResource
                 'parent' => $item['parent'],
                 'existing' => $existing,
             ];
+            if (isset($item['position'])) {
+                $row['position'] = $item['position'];
+            }
+            $rows[] = $row;
         }
 
         return [

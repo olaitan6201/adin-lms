@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->prefix('guardian')->name('guardian.')->group(function (): void {
     Route::get('/', [GuardianProgressController::class, 'index'])->name('index');
+    Route::get('students/{student}/progress', GuardianProgressController::class)
+        ->whereUuid('student')->name('progress');
+
     Route::prefix('permissions')->controller(GuardianPermissionController::class)->group(function (): void {
         Route::get('/', 'index')->name('permissions.index');
         Route::post('/', 'store')->name('permissions.store');

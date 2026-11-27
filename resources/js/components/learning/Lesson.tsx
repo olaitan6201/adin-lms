@@ -4,25 +4,29 @@ import { LessonResources } from './LessonResources';
 import { AccountingLesson } from './AccountingLesson';
 import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
+import type { ReactNode } from 'react';
 
-export function Lesson({ manuscript, chapter, practice, materials, openPractice }: {
+export function Lesson({ manuscript, chapter, practice, materials, openPractice, actions, navigation }: {
     manuscript: Manuscript;
     chapter: Chapter;
     practice: Practice;
     materials: readonly StudyFile[];
     openPractice: () => void;
+    actions: ReactNode;
+    navigation: ReactNode;
 }) {
     return (
         <div className="space-y-5">
             <Card
                 title={manuscript.title}
                 subtitle={manuscript.subtitle}
+                actions={actions}
             >
                 <div className="prose-none max-w-3xl space-y-5">
                     <AccountingLesson chapter={chapter} />
 
                     <section>
-                        <h3 className="text-[14px] font-semibold text-ink-900">Lecture preview</h3>
+                        <h3 className="text-[14px] font-semibold text-ink-900">Embedded lecture</h3>
                         <div className="mt-2 overflow-hidden rounded-xl border border-ink-200 bg-ink-900">
                             <div className="flex aspect-video items-center justify-center">
                                 <div className="text-center">
@@ -59,6 +63,7 @@ export function Lesson({ manuscript, chapter, practice, materials, openPractice 
                         </div>
                     </section>
                 </div>
+                {navigation}
             </Card>
         </div>
     );

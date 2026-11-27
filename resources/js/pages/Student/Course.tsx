@@ -53,16 +53,39 @@ export default function Course() {
         });
     }
 
+    const actions = (
+        <>
+            {material && <SampleDownload file={material} label="Save offline" appearance="labelled" />}
+            <Action
+                icon="check"
+                variant="primary"
+                size="sm"
+                disabled={current.state === 'complete'}
+                onClick={() => setCompleted([...completed, current.id])}
+            >
+                {current.state === 'complete' ? 'Complete' : 'Mark complete for this visit'}
+            </Action>
+        </>
+    );
+    const navigation = (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-5">
+            <Action disabled={!previous} onClick={() => select(previous.id)}>Previous lesson</Action>
+            <Action variant="primary" disabled={!next || next.state === 'locked'} onClick={() => select(next.id)}>
+                {next?.state === 'locked' ? 'Next lesson locked' : 'Next lesson'}
+            </Action>
+        </div>
+    );
+
     return (
-        <div className="learning-surface space-y-5">
+        <div className="learning-surface">
             <PageHeader
                 eyebrow={`${code} · ${current.week}`}
                 title={course.title}
-                description={`${course.mode} delivery · ${course.lecturer}`}
+                description={studyCourse.summary}
                 actions={
                     <>
-                        <Action href={workspaceUrl('student/communication')}>Ask a question</Action>
-                        <Action onClick={showOutline}>Course outline</Action>
+                        <Action icon="chat" href={workspaceUrl('student/communication')}>Ask a question</Action>
+                        <Action icon="list" onClick={showOutline}>Course outline</Action>
                     </>
                 }
             />
@@ -74,21 +97,25 @@ export default function Course() {
                         selected={selected}
                         select={select}
                     />
-                    <Card title="Course progress" subtitle="Registered course snapshot">
+                    <Card title="Course progress">
                         <div className="space-y-3">
                             <Meter value={studyCourse.completion} label="Content completed" showValue />
-                            <Meter value={studyCourse.submissionRate} label="Assignments submitted" showValue />
-                            <Meter value={studyCourse.attendance} label="Attendance" showValue />
+                            <Meter
+                                value={studyCourse.submissionRate}
+                                label="Assignments submitted"
+                                showValue
+                                tone="sky"
+                            />
+                            <Meter
+                                value={studyCourse.attendance}
+                                label="Attendance"
+                                showValue
+                                tone="sky"
+                            />
                         </div>
                     </Card>
                 </div>
-                <div className="space-y-4 xl:col-span-8">
-                    <div className="flex flex-wrap gap-2">
-                        {material && <SampleDownload file={material} label="Save offline" />}
-                        <Action disabled={current.state === 'complete'} onClick={() => setCompleted([...completed, current.id])}>
-                            {current.state === 'complete' ? 'Complete' : 'Mark complete for this visit'}
-                        </Action>
-                    </div>
+                <div className="xl:col-span-8">
                     {isManuscript ? (
                         <Lesson
                             manuscript={manuscript}
@@ -96,18 +123,15 @@ export default function Course() {
                             practice={practice}
                             materials={studyFiles.slice(0, 3)}
                             openPractice={() => select('sm-4')}
+                            actions={actions}
+                            navigation={navigation}
                         />
                     ) : (
-                        <Card title={current.title} subtitle={`${current.week} · ${current.type}`}>
+                        <Card title={current.title} subtitle={`${current.week} · ${current.type}`} actions={actions}>
                             <p className="whitespace-pre-line">{lessonExcerpts[current.id]}</p>
+                            {navigation}
                         </Card>
                     )}
-                    <div className="flex justify-between">
-                        <Action disabled={!previous} onClick={() => select(previous.id)}>Previous lesson</Action>
-                        <Action disabled={!next || next.state === 'locked'} onClick={() => select(next.id)}>
-                            {next?.state === 'locked' ? 'Next lesson locked' : 'Next lesson'}
-                        </Action>
-                    </div>
                 </div>
             </div>
             <Note tone="sky">Saved materials can be opened offline. Submitting work requires a connection.</Note>

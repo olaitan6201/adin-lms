@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { Action } from '@/components/ui/controls/Action';
-import { Badge } from '@/components/ui/data-display/Badge';
 import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
-import { Table } from '@/components/ui/data-display/Table';
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { formatInstitutionalTime, submissionWindow } from '@/lib/submissionWindow';
+import { submissionWindow } from '@/lib/submissionWindow';
 import type { Assignment, Receipt, StudentWork } from '@/types/assessments/assignments';
-import { Details, RecordName, Status } from './RecordDetails';
+import { Details } from './RecordDetails';
 import { Note } from '@/components/ui/feedback/Note';
 import { SubmissionPanel } from './SubmissionPanel';
 import { ReturnedScripts } from './ReturnedScripts';
 import { SubmittedWorkList } from './assignments/SubmittedWorkList';
+import { StudentAssignmentTable, type AssignmentPreview } from './assignments/StudentAssignmentTable';
 
 export default function StudentAssignments({
     work,
@@ -19,12 +18,18 @@ export default function StudentAssignments({
     sizeLimit,
     sampleTime,
     initialAssignmentId,
+    preview,
 }: {
     work: StudentWork[];
     rules: [string, string][];
     sizeLimit: number;
     sampleTime: number;
     initialAssignmentId?: string;
+    preview?: {
+        rows: readonly AssignmentPreview[];
+        receipts: readonly string[];
+        outstanding: number;
+    };
 }) {
     const [records, setRecords] = useState(work);
     const [selectedId, selectAssignment] = useState(() => work.find(({ assignment }) =>
@@ -60,22 +65,12 @@ export default function StudentAssignments({
         selectAssignment(undefined);
     }
 
-    function rowStatus({ assignment, current }: StudentWork) {
-        const window = submissionWindow(assignment, sampleTime);
-        if (current) {
-            const result = current.feedback ? 'Graded' : 'Awaiting marking';
-            return window === 'Open' ? result : `${result} · ${window}`;
-        }
-
-        return window === 'Open' ? 'Not submitted' : window;
-    }
-
     return (
         <div className="assessment-view space-y-5">
             <PageHeader
                 eyebrow="Assessment"
                 title="Assignments"
-                description="Choose a file before closing. Your receipt records the time and the file."
+                description="Upload your work before the closing time. Every upload issues a receipt that records the time and the file."
                 actions={
                     <Action icon="calendar" href={workspaceUrl('student/calendar')}>
                         Academic calendar
@@ -87,52 +82,23 @@ export default function StudentAssignments({
                     {message}
                 </p>
             )}
-            <Card
-                className="student-assignments"
-                title="Your assignments"
-                subtitle="Across all registered courses"
-                actions={<Badge tone="amber">{outstanding} outstanding</Badge>}
-            >
-                <Table
-                    columns={['Assignment', 'Due', 'Status', 'Score', '']}
-                    rowKeys={records.map(({ assignment }) => assignment.id)}
-                    rows={records.map((record) => {
-                        const { assignment: a, current } = record;
-                        const window = submissionWindow(a, sampleTime);
-                        const action = current ? 'View receipt' : window === 'Open' ? 'Submit' : 'View assignment';
-
-                        return [
-                            <RecordName key="assignment" name={a.title} meta={a.course} />,
-                            <span key="due" className="text-[13px] text-ink-600">
-                                {a.due}
-                            </span>,
-                            <Status key="status" value={rowStatus(record)} />,
-                            current?.feedback ? (
-                                <span className="tnum text-[13px] font-semibold">
-                                    {current.feedback.score} / 100
-                                </span>
-                            ) : (
-                                <span className="text-[12.5px] text-ink-400">-</span>
-                            ),
-                            <div key="actions" className="flex justify-end">
-                                <Action size="sm" onClick={() => openAssignment(a)}>
-                                    {action}
-                                </Action>
-                            </div>,
-                        ];
-                    })}
-                />
-            </Card>
+            <StudentAssignmentTable
+                records={records}
+                sampleTime={sampleTime}
+                preview={preview?.rows}
+                outstanding={message ? outstanding : preview?.outstanding ?? outstanding}
+                open={openAssignment}
+            />
             <div className="grid gap-5 xl:grid-cols-3">
                 <Card title="Submission rules" subtitle="Applied to the open assignment">
                     <Details items={rules} />
                 </Card>
-                <SubmittedWorkList records={records} openAssignment={openAssignment} />
+                <SubmittedWorkList records={records} preview={preview?.receipts} openAssignment={openAssignment} />
                 <ReturnedScripts records={records} />
             </div>
             <Note>
-                Sample clock: {formatInstitutionalTime(sampleTime)} WAT. Files are not uploaded in this sample.
-                You can replace a submission until closing. Scores and feedback appear after marking.
+                A submitted file can be replaced until the closing time. Your score and any written feedback appear
+                here once the lecturer has marked the work.
             </Note>
             {selected && (
                 <SubmissionPanel

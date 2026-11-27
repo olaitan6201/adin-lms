@@ -66,6 +66,9 @@ export function SubmissionPanel({
             {!accepting && (
                 <p>{window === 'Not open yet' ? 'Not open yet. Submissions are unavailable.' : 'Submissions are closed.'}</p>
             )}
+            <p className="text-xs text-ink-500">
+                Sample clock: {formatInstitutionalTime(sampleTime)} WAT. Files are not uploaded in this sample.
+            </p>
             <form className="space-y-4" onSubmit={submit}>
                 {accepting && (
                     <label

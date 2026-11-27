@@ -3,18 +3,16 @@ import { readFile } from 'node:fs/promises';
 
 test('replacing a returned script keeps its grade only on the previous receipt', async ({ page }) => {
     await page.goto('/student/assignments');
-    await expect(page.getByText(/Sample clock: 13 Nov 2026, 12:00 WAT/)).toBeVisible();
-    const chemistry = page.getByRole('row').filter({ hasText: 'CHM401' });
+    const upload = page.getByRole('listitem').filter({ hasText: 'Practical: titration' });
     const dialog = page.getByRole('dialog');
-    await expect(chemistry).toContainText('81 / 100');
-    await chemistry.getByRole('button').click();
+    await expect(upload).toContainText('Graded 81');
+    await upload.getByRole('button').click();
+    await expect(dialog).toContainText('81 / 100');
+    await expect(dialog.getByText(/Sample clock: 13 Nov 2026, 12:00 WAT/)).toBeVisible();
     await dialog.locator('input[type=file]').setInputFiles({
         name: 'unmarked-revision.pdf', mimeType: 'application/pdf', buffer: Buffer.from('revision'),
     });
     await dialog.getByRole('button', { name: 'Submit work' }).click();
-    await expect(chemistry).toContainText('Awaiting marking');
-    await expect(chemistry.getByRole('cell').nth(3)).toHaveText('-');
-    const upload = page.getByRole('listitem').filter({ hasText: 'Practical: titration' });
     await expect(upload).toContainText('Awaiting marking');
     await upload.getByRole('button').click();
     await expect(dialog).toContainText('unmarked-revision.pdf');

@@ -26,7 +26,7 @@ function SubmittedWork({
                     {displayTitle(assignment)}
                 </span>
                 <small className="mt-0.5 block text-[11.5px] text-ink-400">
-                    {receipt.time} · {receipt.size}
+                    {receipt.time.replace(/ WAT$/, '')} · {receipt.size}
                 </small>
             </button>
             <Badge tone={grade === undefined ? 'amber' : 'emerald'}>
@@ -38,16 +38,18 @@ function SubmittedWork({
 
 export function SubmittedWorkList({
     records,
+    preview,
     openAssignment,
 }: {
     records: StudentWork[];
+    preview?: readonly string[];
     openAssignment: (assignment: Assignment) => void;
 }) {
     return (
         <Card title="Submitted work" subtitle="Your uploads and their receipts">
             <ul className="divide-y divide-ink-100">
-                {records.map(({ assignment, current }) => {
-                    if (!current) {
+                {records.map(({ assignment, current, previous }) => {
+                    if (!current || (preview && !preview.includes(assignment.id) && !previous.length)) {
                         return null;
                     }
 

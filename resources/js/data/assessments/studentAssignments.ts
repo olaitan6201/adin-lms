@@ -39,3 +39,14 @@ const work: StudentWork[] = assignments.map(assignment => {
 const sampleTime = Date.parse('2026-11-13T12:00:00+01:00');
 
 export const studentAssignments = { work, rules, sizeLimit: 25, sampleTime };
+
+export const assignmentPreview = {
+    rows: [
+        { id: 'as-1', status: 'Submitted', tone: 'sky', action: 'View receipt' },
+        { id: 'as-2', status: 'Submitted', tone: 'sky', action: 'View receipt' },
+        { id: 'as-3', status: 'Graded', tone: 'emerald', score: 72, action: 'View receipt' },
+        { id: 'as-4', status: 'Submitted', tone: 'sky', action: 'View receipt' },
+    ],
+    receipts: ['as-1', 'as-3', 'as-5'],
+    outstanding: 3,
+} as const;

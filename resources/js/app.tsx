@@ -3,13 +3,12 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import type { ComponentType } from 'react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { PortalLayout } from './layouts/PortalLayout';
-import RoleShell from './app/RoleShell';
+import { resolvePortalLayout } from './app/resolvePortalLayout';
 
 const pages = import.meta.glob<ComponentType>('./pages/**/*.tsx', { import: 'default' });
 
 void createInertiaApp({
-    layout: (_, page) => (typeof page.props.screenKey === 'string' ? RoleShell : PortalLayout),
+    layout: resolvePortalLayout,
     resolve: name => resolvePageComponent<ComponentType>(`./pages/${name}.tsx`, pages),
     setup({ el, App, props }) {
         createRoot(el).render(<App {...props} />);

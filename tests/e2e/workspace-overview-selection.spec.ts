@@ -28,29 +28,21 @@ for (const offline of [false, true]) {
     });
 }
 
-test.describe('controlled outstanding work', () => {
-    test.use({ serviceWorkers: 'block' });
-
-    test('an open ENG210 assignment without a receipt opens its detail directly', async ({ page }) => {
-        // Remove only the receipt lookup key from the test browser's copy of the public fixture module.
-        await page.route(/\/assets\/studentAssignments-[\w-]+\.js$/, async (route) => {
-            const response = await route.fetch();
-            const original = await response.text();
-            const body = original.replace('"as-4":', '"omitted-receipt":');
-            expect(body).not.toBe(original);
-            await route.fulfill({ response, body });
-        });
+test('each prototype assignment opens its own native record', async ({ page }) => {
+    for (const [id, title, course, detail] of [
+        ['as-1', 'Journal entry and trial balance problem set', 'ACC302', 'Existing submission'],
+        ['as-2', 'Case analysis: IFRS 15 revenue recognition', 'ACC302', 'Not open yet'],
+        ['as-4', 'Group presentation: narrative voice', 'ENG210', 'Existing submission'],
+    ]) {
         await page.goto('/student/overview');
-        const row = page.getByRole('row').filter({ hasText: 'Group presentation: narrative voice' });
-        const link = row.getByRole('link', { name: 'Open', exact: true });
-        await expect(link).toHaveAttribute('href', '/student/assignments#assignment=as-4');
+        const link = page.getByRole('row').filter({ hasText: title }).getByRole('link', { name: 'Open', exact: true });
+        await expect(link).toHaveAttribute('href', `/student/assignments#assignment=${id}`);
         await link.click();
         const drawer = page.getByRole('dialog');
-        await expect(drawer.getByRole('heading', { name: 'Group presentation: narrative voice' })).toBeVisible();
-        await expect(drawer).toContainText('ENG210');
-        await expect(drawer).not.toContainText('Existing submission');
-        await expect(drawer).not.toContainText('ACC302');
-    });
+        await expect(drawer.getByRole('heading', { name: title })).toBeVisible();
+        await expect(drawer).toContainText(course);
+        await expect(drawer).toContainText(detail);
+    }
 });
 
 test('unknown, ambiguous and wrong-role selections stay on the unselected desk', async ({ page }) => {

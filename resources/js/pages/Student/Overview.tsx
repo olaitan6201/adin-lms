@@ -2,11 +2,10 @@ import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { ContinueLearning, Courses, Notices, Pending, Results } from '@/components/overview/StudentPanels';
 import { Columns, ComingUp, Note, Tiles } from '@/components/overview/OverviewParts';
-import { notifications, pending, schedule, studentResults, tiles } from '@/data/overview/student';
+import { courses, notifications, pending, sampleResults, schedule, tiles } from '@/data/overview/student';
 import { study } from '@/data/overview/dashboardDetails';
 import { workspaceUrl } from '@/lib/workspaceUrl';
 import { studyFiles } from '@/data/learning/studyFiles';
-import { registration } from '@/data/learning/studentStudy';
 
 export default function Overview() {
     return (
@@ -38,14 +37,14 @@ export default function Overview() {
                     seven
                     left={
                         <Courses
-                            courses={registration.courses}
+                            courses={courses}
                             subtitle={study.coursesSubtitle}
                         />
                     }
                     right={<Pending pending={pending} />}
                 />
                 <Columns
-                    left={<Results studentResults={studentResults} />}
+                    left={<Results studentResults={sampleResults} />}
                     right={<Notices notifications={notifications} />}
                 />
                 <Note>

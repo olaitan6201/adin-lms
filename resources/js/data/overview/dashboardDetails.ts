@@ -31,7 +31,7 @@ export const teaching = {
 
 export const study = {
     title: 'Welcome back, Blessing',
-    description: 'Four courses are running this semester. The journal entry assignment is due on 14 November and your ACC302 mid-term opens on 18 November.',
+    description: 'Four courses are running this semester. One assignment is due in two days and your ACC302 mid-term opens on 18 November.',
     coursesSubtitle: 'Four registered courses this semester',
     lesson: {
         code: 'ACC302', progress: 46, title: 'Week 3 · Journals and ledgers',
@@ -39,7 +39,7 @@ export const study = {
         summary: [
             { label: 'Lessons completed this week', value: '4', hint: '22 min studied' },
             { label: 'Next quiz', value: 'Friday', hint: '10 objective items' },
-            { label: 'Feedback waiting', value: '1', hint: 'View returned work' },
+            { label: 'Feedback waiting', value: '1', hint: 'Lab report, 74%' },
         ],
     },
 } as const;

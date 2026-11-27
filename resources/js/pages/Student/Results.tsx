@@ -43,7 +43,7 @@ export default function Results() {
         ]));
     }
 
-    const rows = releasedResults.map((result) => [
+    const rows = studentResults.map((result) => [
         <span key="course" className="font-mono text-[12px] font-medium text-ink-700">
             {result.course}
         </span>,
@@ -62,7 +62,7 @@ export default function Results() {
         <span key="total" className="text-[13px] font-semibold tnum">
             {result.total}
         </span>,
-        <Badge key="grade" tone={result.grade === 'A' ? 'emerald' : 'slate'}>
+        <Badge key="grade" tone={result.state !== 'released' ? 'amber' : result.grade === 'A' ? 'emerald' : 'slate'}>
             {result.grade}
         </Badge>,
     ]);

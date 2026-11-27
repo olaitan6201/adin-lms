@@ -67,11 +67,13 @@ test('device copies persist, remove individually, and the ZIP still contains all
     expect(execFileSync('unzip', ['-p', zip, workbook.suggestedFilename()])).toEqual(bytes);
 });
 
-test('selected approval and released-only dashboard rows', async ({ page }) => {
+test('the public student dashboard shows the prototype scores and admin opens the selected approval', async ({ page }) => {
     await page.goto('/student/overview');
     const results = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Released results' }) });
-    await expect(results.locator('tbody tr')).toHaveCount(3);
-    await expect(results).not.toContainText('ACC302');
+    await expect(results.locator('tbody tr')).toHaveCount(4);
+    const sample = results.getByRole('row').filter({ hasText: 'ACC302' });
+    await expect(sample).toContainText('Pending');
+    await expect(sample.getByRole('cell', { name: '43', exact: true })).toBeVisible();
     await page.goto('/admin/overview');
     const row = page.getByRole('row').filter({ hasText: 'Assessment weight change: CHM401' });
     await row.getByRole('button', { name: 'Review' }).click();

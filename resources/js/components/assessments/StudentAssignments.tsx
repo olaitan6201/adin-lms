@@ -27,8 +27,8 @@ export default function StudentAssignments({
     initialAssignmentId?: string;
 }) {
     const [records, setRecords] = useState(work);
-    const [selectedId, selectAssignment] = useState(() => work.find(({ assignment, current }) =>
-        assignment.id === initialAssignmentId && !current && submissionWindow(assignment, sampleTime) === 'Open',
+    const [selectedId, selectAssignment] = useState(() => work.find(({ assignment }) =>
+        assignment.id === initialAssignmentId && submissionWindow(assignment, sampleTime) !== 'Closed',
     )?.assignment.id);
     const [message, setMessage] = useState('');
     const selected = records.find((record) => record.assignment.id === selectedId);

@@ -34,7 +34,7 @@ export function StatTile({ label, value, delta, deltaLabel, deltaTone, icon, chi
                         {delta}
                     </span>
                 )}
-                {deltaLabel && <span className="text-xs text-ink-500">{deltaLabel}</span>}
+                {deltaLabel && <span className="text-xs text-ink-400">{deltaLabel}</span>}
             </div>
             {children && <div className="mt-3">{children}</div>}
         </article>

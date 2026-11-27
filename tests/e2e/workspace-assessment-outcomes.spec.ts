@@ -42,7 +42,9 @@ test('Results retrieves the submitted receipt and exports only released rows', a
     await page.reload();
     await expect(page.getByText('Submitted by candidate')).toBeVisible();
     await expect(page.getByText('1 of 7', { exact: true })).toBeVisible();
-    await expect(page.getByRole('table')).not.toContainText('ACC302');
+    const sample = page.getByRole('row').filter({ hasText: 'ACC302' });
+    await expect(sample).toContainText('Pending');
+    await expect(sample.getByRole('cell', { name: '43', exact: true })).toBeVisible();
     const pending = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Download result sheet' }).click();
     const file = await pending;

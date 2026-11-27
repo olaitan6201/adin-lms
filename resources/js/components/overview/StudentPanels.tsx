@@ -97,7 +97,7 @@ export function Results({ studentResults }: { studentResults: readonly Result[] 
         >
             <Table
                 columns={['Code', 'Course', 'CA', 'Mid', 'Total', 'Grade']}
-                rows={studentResults.filter((result) => result.state === 'released').map((r) => [
+                rows={studentResults.map((r) => [
                     <span key="course" className="font-mono text-[12px] font-medium text-ink-700">
                         {r.course}
                     </span>,

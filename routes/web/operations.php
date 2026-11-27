@@ -6,13 +6,10 @@ use App\Http\Controllers\Operations\OperationsController;
 use App\Http\Controllers\Operations\PortabilityController;
 use App\Http\Controllers\Operations\PrivacyCaseFileController;
 use App\Http\Controllers\Operations\PrivacyController;
-use App\Http\Controllers\QualityController;
 use App\Http\Middleware\OperationsPermission;
 use Illuminate\Support\Facades\Route;
 
 Route::get('branding/logo/{id}', [BrandingController::class, 'image'])->whereUuid('id')->name('branding.logo');
-
-Route::get('admin/qa', QualityController::class)->middleware('auth')->name('quality.index');
 
 Route::middleware(['auth', 'throttle:60,1,operations'])->prefix('operations')->name('operations.')->group(function (): void {
     Route::get('consent', [PrivacyController::class, 'show'])->name('consent.show');

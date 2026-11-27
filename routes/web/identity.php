@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Identity\AccountDirectoryController;
-use App\Http\Controllers\Identity\AccountGrantsController;
 use App\Http\Controllers\PasswordRecoveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Security\ActiveSessionController;
@@ -27,20 +25,6 @@ Route::middleware('auth')->group(function (): void {
     Route::prefix('profile')->controller(ProfileController::class)->name('profile.')->group(function (): void {
         Route::get('/', 'edit')->name('edit');
         Route::patch('/', 'update')->name('update');
-    });
-
-    Route::prefix('accounts')->name('accounts.')->group(function (): void {
-        Route::controller(AccountDirectoryController::class)->group(function (): void {
-            Route::get('/', 'index')->name('index');
-            Route::post('/', 'store')->middleware('throttle:20,1')->name('store');
-            Route::patch('{account}', 'update')->whereUuid('account')->name('status');
-        });
-
-        Route::prefix('{account}/access')->controller(AccountGrantsController::class)->group(function (): void {
-            Route::get('/', 'show')->whereUuid('account')->name('access');
-            Route::post('/', 'store')->whereUuid('account')->name('access.grant');
-            Route::delete('{grant}', 'destroy')->whereUuid(['account', 'grant'])->name('access.revoke');
-        });
     });
 
     Route::prefix('security')->name('security.')->group(function (): void {

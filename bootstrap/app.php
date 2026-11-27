@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureActiveAccount;
+use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureSessionSecurity;
 use App\Http\Responses\PortalAccessError;
 use Illuminate\Foundation\Application;
@@ -12,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: [
             __DIR__.'/../routes/web.php',
+            __DIR__.'/../routes/admin.php',
             __DIR__.'/../routes/web/academics.php',
             __DIR__.'/../routes/web/assessments.php',
             __DIR__.'/../routes/web/community.php',
@@ -28,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias(['admin' => EnsureAdminAccess::class]);
         $middleware->web(append: [EnsureActiveAccount::class, EnsureSessionSecurity::class, Inertia\Middleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

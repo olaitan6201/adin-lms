@@ -72,7 +72,12 @@ final class NativeAssessmentSnapshot
     private function assignment(Assignment $assignment, array &$entries): array
     {
         $references = [];
-        foreach (AssignmentReference::where('assignment_id', $assignment->id)->orderBy('id')->limit(11)->cursor() as $i => $ref) {
+        $records = AssignmentReference::with('file')
+            ->where('assignment_id', $assignment->id)
+            ->orderBy('id')
+            ->limit(11)
+            ->get();
+        foreach ($records as $i => $ref) {
             NativeRules::check($i < 10 && ! SubmissionFile::where('file_id', $ref->file_id)->exists()
                 && ! AssessmentScore::where('marked_file_id', $ref->file_id)->exists()
                 && ! AssignmentReference::where('file_id', $ref->file_id)->where('assignment_id', '!=', $assignment->id)->exists(), 'Not an exclusively owned assignment reference.');

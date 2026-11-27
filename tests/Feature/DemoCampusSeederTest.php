@@ -28,7 +28,7 @@ class DemoCampusSeederTest extends TestCase
         $this->assertDatabaseHas('teaching_allocations', ['offering_id' => $nextTerm->id]);
         $this->assertDatabaseMissing('enrolments', ['offering_id' => $nextTerm->id]);
         $this->assertDatabaseCount('material_versions', 2);
-        foreach (MaterialVersion::all() as $version) {
+        foreach (MaterialVersion::with(['material.module.offering', 'createdBy'])->get() as $version) {
             $this->assertTrue($version->material->module->offering->exists);
             $this->assertSame('lecturer@demo.example.test', $version->createdBy->email);
         }

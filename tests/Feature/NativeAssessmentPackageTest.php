@@ -124,7 +124,7 @@ class NativeAssessmentPackageTest extends AssessmentCase
         $source = Assignment::whereKeyNot($assignment->id)->sole();
         $this->assertEquals($source->due_at, $assignment->due_at);
         $exam = Examination::where('item_id', AssessmentItem::where('gradebook_id', $book->id)->where('kind', 'exam')->sole()->id)->sole();
-        $slots = ExamSlot::where('exam_id', $exam->id)->orderBy('position')->get();
+        $slots = ExamSlot::with('fixedVersion.question.bank')->where('exam_id', $exam->id)->orderBy('position')->get();
         $this->assertSame($target->curriculumCourse->course_id, $slots[0]->fixedVersion->question->bank->course_id);
         $this->assertSame(['PRIVATE_KEY'], $slots[0]->fixedVersion->marking_key['accepted']);
         $this->assertSame($slots[0]->fixedVersion->question->bank_id, $slots[1]->draw_from_bank_id);

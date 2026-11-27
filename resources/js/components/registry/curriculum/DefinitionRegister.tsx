@@ -45,7 +45,7 @@ export function DefinitionRegister({
                 <span key="prerequisites" className="text-[13px] text-ink-500">
                     {course.prereq}
                 </span>,
-                status(`v${course.revision} ${course.state}`, {
+                status(course.revision > 1 ? `v${course.revision} ${course.state}` : course.state, {
                     approved: 'emerald',
                     draft: 'amber',
                     published: 'sky',

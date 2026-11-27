@@ -15,7 +15,7 @@ export function ScoreTable({
 }) {
     return (
         <Table
-            columns={['Student', ...metrics.map(([, label]) => label), 'Total', 'Recorded grade', 'State']}
+            columns={['Student', ...metrics.map(([, label]) => label), 'Total', 'Grade', 'State']}
             rowKeys={visible.map((r) => r.matric)}
             rows={visible.map((r) => [
                 <RecordName key="student" name={r.student} meta={r.matric} />,

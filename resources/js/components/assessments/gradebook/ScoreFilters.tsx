@@ -50,7 +50,7 @@ export function ScoreFilters({
                 />
             )}
             <small className="ml-auto text-xs text-ink-400">
-                Score changes are saved locally and recalculate the recorded grade
+                Changes are saved automatically and recorded in the score history
             </small>
         </div>
     );

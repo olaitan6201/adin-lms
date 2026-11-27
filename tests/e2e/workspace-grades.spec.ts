@@ -26,7 +26,7 @@ test('score edits validate, regrade and enter moderation with one history entry'
     await page.goto('/admin/gradebook');
     const row = page.getByRole('row').filter({ hasText: 'AOU/2023/0901' });
     const score = row.getByRole('spinbutton').first();
-    await expect(page.getByRole('columnheader', { name: 'Recorded grade' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Grade', exact: true })).toBeVisible();
     await expect(row.getByRole('cell', { name: '75', exact: true })).toBeVisible();
     await expect(row.getByRole('cell', { name: 'B', exact: true })).toBeVisible();
     await expect(row).toContainText('Approved');

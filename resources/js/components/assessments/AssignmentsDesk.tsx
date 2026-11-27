@@ -25,6 +25,7 @@ export default function AssignmentsDesk({
     enrolment,
     timing,
     ruleFields,
+    sampleSubmissionCounts,
 }: {
     timing: FieldSpec[];
     ruleFields: FieldSpec[];
@@ -36,6 +37,7 @@ export default function AssignmentsDesk({
     guide: MarkingGuide;
     opens: string;
     enrolment: number;
+    sampleSubmissionCounts?: Readonly<Record<string, number>>;
 }) {
     const initialScript = submissions.find((script) => script.id === initialSubmissionId
         && assignments.some((assignment) => assignment.id === script.assignmentId));
@@ -108,7 +110,14 @@ export default function AssignmentsDesk({
                 active={tab}
                 change={changeTab}
             />
-            {tab === 0 && <AssignmentList rows={rows} edit={setEdit} openMarking={openMarking} />}
+            {tab === 0 && (
+                <AssignmentList
+                    rows={rows}
+                    edit={setEdit}
+                    openMarking={openMarking}
+                    sampleSubmissionCounts={sampleSubmissionCounts}
+                />
+            )}
             {tab === 1 && (
                 <MarkingQueue
                     rows={filteredQueue}
@@ -131,8 +140,7 @@ export default function AssignmentsDesk({
                 </div>
             )}
             <Note>
-                Institutional policy requires a reason and author for score changes. Marks entered here
-                update this sample only; they do not create an institutional audit record.
+                A submission receipt is issued on upload and every score change is retained with the reason and the author.
             </Note>
             {edit && (
                 <AssignmentEditor

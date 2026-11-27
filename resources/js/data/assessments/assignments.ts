@@ -34,5 +34,6 @@ export const submissions: Submission[] = [
 
 export const assignmentDesk = {
     assignments, submissions, ruleFields, timing, awaiting: 34, opens: '2026-11-07', enrolment: 68,
+    sampleSubmissionCounts: { 'as-2': 22 },
     guide: { scriptPreview: 'Sample script · Journal entries, ledger postings and trial balance.', rubric: ['Correct journal entry', 'Correct ledger posting', 'Trial balance extracted and balanced'], maximum: [10, 6, 4] },
 };

@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 test('an approved definition stays intact while its separate draft survives reload', async ({ page, context }) => {
     await page.goto('/admin/curriculum');
     const rows = page.getByRole('row').filter({ hasText: 'Intermediate Financial Accounting' });
-    const approved = rows.filter({ hasText: 'v1 approved' });
+    const approved = rows.filter({ has: page.getByRole('cell', { name: 'approved', exact: true }) });
     const draft = rows.filter({ hasText: 'v2 draft' });
     const dialog = page.getByRole('dialog');
     await approved.getByRole('button', { name: 'Open' }).click();

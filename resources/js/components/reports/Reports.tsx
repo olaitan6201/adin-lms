@@ -84,7 +84,7 @@ export function Reports({ data }: { data: ReportsData }) {
             <Sections items={items} active={selected.id} change={setSelectedId} />
             <div className="print:hidden">
                 <Note>
-                    Export the selected sample report as PDF or Excel. Export activity is recorded in this browser session.
+                    Every figure can be exported as PDF or Excel. Exports respect the requesting role scope and are written to the audit log.
                 </Note>
             </div>
         </div>

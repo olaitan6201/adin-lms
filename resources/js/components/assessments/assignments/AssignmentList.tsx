@@ -9,10 +9,12 @@ export function AssignmentList({
     rows,
     edit,
     openMarking,
+    sampleSubmissionCounts,
 }: {
     rows: Assignment[];
     edit: (row: Assignment | 'new') => void;
     openMarking: (row: Assignment) => void;
+    sampleSubmissionCounts?: Readonly<Record<string, number>>;
 }) {
     return (
         <Card
@@ -40,7 +42,7 @@ export function AssignmentList({
                     <RecordName key="assignment" name={r.title} meta={`${r.course} · due ${r.due}`} />,
                     <Status key="state" value={r.state} />,
                     <span key="submitted" className="tnum text-[13px]">
-                        {r.submissions} / {r.total}
+                        {sampleSubmissionCounts?.[r.id] ?? r.submissions} / {r.total}
                     </span>,
                     <span
                         key="late"

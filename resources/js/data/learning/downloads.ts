@@ -1,3 +1,23 @@
+export const libraryPreview = {
+    dates: {
+        'week-3-manuscript': '2026-11-12T12:00:00.000Z',
+        'practice-set': '2026-11-11T12:00:00.000Z',
+        'trial-balance': '2026-11-09T12:00:00.000Z',
+        'revenue-notes': '2026-11-07T12:00:00.000Z',
+    },
+    sizes: {
+        'week-3-manuscript': '3.2 MB',
+        'practice-set': '860 KB',
+        'trial-balance': '124 KB',
+        'revenue-notes': '11.4 MB',
+    },
+    metrics: [
+        { label: 'Saved on this device', value: '4 files', hint: '15.6 MB used' },
+        { label: 'Available to save', value: '11 files', hint: 'Across 4 courses' },
+        { label: 'Last sync', value: 'Today, 09:14', hint: 'All up to date' },
+    ],
+} as const;
+
 export const deviceStudy = {
     mobileFeatures: [
         {

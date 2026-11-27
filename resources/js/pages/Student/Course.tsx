@@ -72,7 +72,7 @@ export default function Course() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-5">
             <Action disabled={!previous} onClick={() => select(previous.id)}>Previous lesson</Action>
             <Action variant="primary" disabled={!next || next.state === 'locked'} onClick={() => select(next.id)}>
-                {next?.state === 'locked' ? 'Next lesson locked' : 'Next lesson'}
+                {isManuscript ? manuscript.next : next?.state === 'locked' ? 'Next lesson locked' : 'Next lesson'}
             </Action>
         </div>
     );
@@ -135,7 +135,9 @@ export default function Course() {
                     )}
                 </div>
             </div>
-            <Note tone="sky">Saved materials can be opened offline. Submitting work requires a connection.</Note>
+            <Note tone="sky">
+                Downloaded resources stay available offline. Uploaded work and examination responses always need a connection.
+            </Note>
         </div>
     );
 }

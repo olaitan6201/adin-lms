@@ -6,7 +6,7 @@ export function SampleDownload({ file, label, onSaved, appearance = 'plain' }: {
     file: StudyFile;
     label: string;
     onSaved?: () => void;
-    appearance?: 'plain' | 'labelled' | 'icon';
+    appearance?: 'plain' | 'labelled' | 'icon' | 'title';
 }) {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState(false);
@@ -27,14 +27,16 @@ export function SampleDownload({ file, label, onSaved, appearance = 'plain' }: {
     return (
         <span>
             <button
-                className={`btn btn-sm ${appearance === 'icon' ? 'btn-ghost' : 'btn-outline'}`}
+                className={appearance === 'title'
+                    ? 'block max-w-full truncate text-left font-medium text-ink-800 hover:underline'
+                    : `btn btn-sm ${appearance === 'icon' ? 'btn-ghost' : 'btn-outline'}`}
                 type="button"
                 disabled={busy}
                 onClick={download}
-                aria-label={appearance === 'icon' ? label : undefined}
+                aria-label={appearance === 'icon' || appearance === 'title' ? label : undefined}
             >
-                {appearance !== 'plain' && <Icon name="download" className="size-4" />}
-                {appearance !== 'icon' && <span>{label}</span>}
+                {(appearance === 'labelled' || appearance === 'icon') && <Icon name="download" className="size-4" />}
+                {appearance !== 'icon' && <span>{appearance === 'title' ? file.title : label}</span>}
             </button>
             {error && (
                 <span role="alert">

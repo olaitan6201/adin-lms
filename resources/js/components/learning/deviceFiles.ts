@@ -9,6 +9,21 @@ export type StudyFile = {
 };
 
 const cacheName = 'adin-sample-study-library-v1';
+const initializedKey = `${cacheName}-initialized`;
+let initialization: Promise<void> | undefined;
+
+export function prepareLibrary(files: readonly StudyFile[], dates: Readonly<Record<string, string>>) {
+    initialization ??= (async () => {
+        if (localStorage.getItem(initializedKey)) {
+            return;
+        }
+
+        await Promise.allSettled(files.map(file => storeFile(file, dates[file.id])));
+        localStorage.setItem(initializedKey, 'yes');
+    })();
+
+    return initialization;
+}
 
 export async function savedDates(files: readonly StudyFile[]) {
     const cache = await caches.open(cacheName);
@@ -23,7 +38,7 @@ export async function savedDates(files: readonly StudyFile[]) {
     return dates;
 }
 
-export async function storeFile(file: StudyFile) {
+export async function storeFile(file: StudyFile, savedAt = new Date().toISOString()) {
     const cache = await caches.open(cacheName);
     const cached = await cache.match(file.href);
     if (cached) {
@@ -41,7 +56,7 @@ export async function storeFile(file: StudyFile) {
     }
 
     await cache.put(file.href, new Response(blob, {
-        headers: { 'Content-Type': blob.type, 'X-Sample-Saved': new Date().toISOString() },
+        headers: { 'Content-Type': blob.type, 'X-Sample-Saved': savedAt },
     }));
     return blob;
 }

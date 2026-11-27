@@ -36,7 +36,8 @@ function ExternalReading({ practice }: { practice: Practice }) {
         <section>
             <h3 className="text-[14px] font-semibold text-ink-900">Embedded external reading</h3>
             <p className="mt-1 text-[13px] leading-relaxed text-ink-500">
-                Read the lesson summary here. The live standard opens in a new tab.
+                An external resource is embedded in the lesson and opens with the lesson rather
+                than sending the student away from the course.
             </p>
             <div className="mt-3 overflow-hidden rounded-xl border border-ink-100">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/70 px-4 py-2.5">
@@ -64,7 +65,7 @@ function ExternalReading({ practice }: { practice: Practice }) {
                             onClick={() => download('ias-2-reading-note.txt', practice.readingSummary, 'text/plain')}
                         >
                             <Icon name="download" className="size-4" />
-                            <span>Save reading note</span>
+                            <span>Save offline</span>
                         </button>
                     </div>
                 </div>
@@ -92,7 +93,7 @@ function WeeklyResources({ resources, materials }: {
                             <span className="min-w-0 flex-1">
                                 <span className="block truncate text-[13px] font-medium text-ink-800">{resource.name}</span>
                                 <span className="mt-0.5 block text-[11.5px] text-ink-400">
-                                    {resource.type} · {file ? `${Math.ceil(file.bytes / 1024)} KB` : reading ? resource.size : 'Unavailable in this sample'}
+                                    {resource.type} · {resource.size}
                                 </span>
                             </span>
                             {file && <SampleDownload file={file} label={`Download ${resource.name}`} appearance="icon" />}
@@ -102,10 +103,20 @@ function WeeklyResources({ resources, materials }: {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn btn-ghost btn-sm"
-                                    aria-label={`Open ${resource.name}`}
+                                        aria-label={`Open ${resource.name}`}
+                                    >
+                                        <Icon name="download" className="size-4" />
+                                    </a>
+                            )}
+                            {!file && !reading && (
+                                <button
+                                    type="button"
+                                    className="btn btn-ghost btn-sm disabled:opacity-100"
+                                    aria-label={`${resource.name}: sample recording unavailable`}
+                                    disabled
                                 >
-                                    <Icon name="external" className="size-4" />
-                                </a>
+                                    <Icon name="download" className="size-4" />
+                                </button>
                             )}
                         </li>
                     );
@@ -146,13 +157,13 @@ export function LessonResources({ practice, materials, openPractice }: {
                     <PracticeTile
                         icon="clipboard"
                         title={practice.exercise}
-                        detail="Practice with worked solutions"
+                        detail={practice.exerciseMeta}
                         open={openPractice}
                     />
                     <PracticeTile
                         icon="timer"
                         title={practice.quiz}
-                        detail="Sample question"
+                        detail={practice.quizMeta}
                         open={openQuiz}
                     />
                 </div>

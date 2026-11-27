@@ -74,7 +74,7 @@ function AccountingWorkspace() {
             count: teachingCourse.modules,
             content: <ContentPanel courseModules={courseModules} outline={chapterOutline} edit={edit} />,
         },
-        { id: 'resources', label: 'Resources', count: resources.length, content: <ResourcesPanel resources={resources} upload={() => edit('Resource')} /> },
+        { id: 'resources', label: 'Resources', count: teachingCourse.resources, content: <ResourcesPanel resources={resources} upload={() => edit('Resource')} /> },
         {
             id: 'assignments',
             label: 'Assignments',
@@ -116,10 +116,10 @@ function AccountingWorkspace() {
                 description={teachingCourse.summary}
                 actions={
                     <>
-                        <Action href={workspaceUrl('student/course?course=ACC302')}>
+                        <Action icon="eye" href={workspaceUrl('student/course?course=ACC302')}>
                             Preview as student
                         </Action>
-                        <Action variant="primary" onClick={() => edit('Module')}>
+                        <Action icon="plus" variant="primary" onClick={() => edit('Module')}>
                             Add content
                         </Action>
                     </>

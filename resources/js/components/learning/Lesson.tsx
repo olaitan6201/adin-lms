@@ -34,7 +34,7 @@ export function Lesson({ manuscript, chapter, practice, materials, openPractice,
                                         <StudyIcon name="play" className="w-6 h-6" />
                                     </span>
                                     <p className="mt-3 text-[13px] font-medium text-white">{manuscript.recording}</p>
-                                    <p className="mt-1 text-[11.5px] text-ink-400">Recording unavailable in this sample</p>
+                                    <p className="mt-1 text-[11.5px] text-ink-400">{manuscript.duration}</p>
                                 </div>
                             </div>
                         </div>

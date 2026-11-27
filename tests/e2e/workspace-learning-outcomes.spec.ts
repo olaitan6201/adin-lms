@@ -27,7 +27,7 @@ test('reader switches content, respects the locked boundary and downloads select
     await expect(page.getByRole('button', { name: /Recognition and measurement of assets/ })).toBeDisabled();
     await page.getByRole('button', { name: 'Mark complete for this visit' }).click();
     await expect(page.getByRole('button', { name: 'Complete', exact: true })).toBeDisabled();
-    await page.getByRole('button', { name: 'Next lesson', exact: true }).click();
+    await page.getByRole('button', { name: 'Next lesson · Week 4', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Practice set with worked solutions' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Next lesson locked' })).toBeDisabled();
     const download = page.waitForEvent('download');
@@ -43,6 +43,8 @@ test('reader switches content, respects the locked boundary and downloads select
 test('device copies persist, remove individually, and the ZIP still contains all four originals', async ({ page, context }) => {
     await page.goto('/student/offline-downloads');
     const row = page.getByRole('row').filter({ hasText: 'Trial balance template' });
+    await expect(row).toContainText('09 Nov 2026');
+    await row.getByRole('button', { name: 'Remove' }).click();
     await expect(row).toContainText('Available to save');
     const individual = page.waitForEvent('download');
     await row.getByRole('button', { name: 'Download XLSX' }).click();
@@ -83,8 +85,12 @@ test('the public student dashboard shows the prototype scores and admin opens th
 
 test('course drafts validate, survive tab switches and stay outside student preview', async ({ page }) => {
     await page.goto('/lecturer/course');
-    await page.getByRole('tab', { name: /Content/ }).click();
     const dialog = page.getByRole('dialog');
+    await page.getByRole('button', { name: 'Open full roster' }).click();
+    await expect(dialog.getByRole('heading', { name: 'Class roster' })).toBeVisible();
+    await expect(dialog).toContainText('Showing 5 sample records');
+    await page.keyboard.press('Escape');
+    await page.getByRole('tab', { name: /Content/ }).click();
     const secondModule = page.getByRole('row').filter({ hasText: 'Accounting equation and double-entry bookkeeping' });
     await secondModule.getByRole('button', { name: 'Edit' }).click();
     await dialog.getByLabel('Title').fill('Revised equation');
@@ -106,14 +112,20 @@ test('course drafts validate, survive tab switches and stay outside student prev
     await expect(page.locator('main')).not.toContainText('Local inventory chapter');
 });
 
-test('a failed individual file never becomes available offline', async ({ page }) => {
-    await page.goto('/student/offline-downloads');
-    const row = page.getByRole('row').filter({ hasText: 'Practice set (DOCX)' });
-    await page.route('**/assets/acc302-practice-set-*.docx', (route) => route.abort());
-    await row.getByRole('button', { name: 'Download DOCX' }).click();
-    await expect(row.getByRole('alert')).toContainText('Could not save');
-    await expect(row).toContainText('Available to save');
-    await expect(row.getByRole('button', { name: 'Remove' })).toHaveCount(0);
+test.describe('sample file network failures', () => {
+    test.use({ serviceWorkers: 'block' });
+
+    test('a failed individual file never becomes available offline', async ({ page }) => {
+        await page.goto('/student/offline-downloads');
+        const row = page.getByRole('row').filter({ hasText: 'Practice set (DOCX)' });
+        await row.getByRole('button', { name: 'Remove' }).click();
+        await expect(row).toContainText('Available to save');
+        await page.route('**/assets/acc302-practice-set-*.docx', (route) => route.abort());
+        await row.getByRole('button', { name: 'Download DOCX' }).click();
+        await expect(row.getByRole('alert')).toContainText('Could not save');
+        await expect(row).toContainText('Available to save');
+        await expect(row.getByRole('button', { name: 'Remove' })).toHaveCount(0);
+    });
 });
 
 test('allocation request and uploaded file remain identifiable local drafts', async ({ page }) => {

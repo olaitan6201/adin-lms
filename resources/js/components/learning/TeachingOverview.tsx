@@ -1,6 +1,7 @@
 import type { Health } from '@/types/learning/study';
 import { Card } from '@/components/ui/layout/Card';
 import { Meter, StudyIcon } from '@/components/learning/Parts';
+import { useWorkspaceOverlays } from '@/layouts/workspace/WorkspaceOverlays';
 
 export function TeachingOverview({ health, select, settings, change }: {
     health: Health;
@@ -9,6 +10,24 @@ export function TeachingOverview({ health, select, settings, change }: {
     change: (key: string, value: string) => void;
 }) {
     const tiles = health.tiles;
+    const { openDrawer } = useWorkspaceOverlays();
+
+    function showRoster() {
+        openDrawer({
+            title: 'Class roster',
+            description: `${health.rosterLabel} · Showing ${health.classmates.length} sample records`,
+            content: (
+                <ul className="divide-y divide-ink-100">
+                    {health.classmates.map(({ name, attendance }) => (
+                        <li key={name} className="flex justify-between gap-3 py-2.5">
+                            <span>{name}</span>
+                            <span>{attendance}%</span>
+                        </li>
+                    ))}
+                </ul>
+            ),
+        });
+    }
 
     return (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
@@ -128,7 +147,13 @@ export function TeachingOverview({ health, select, settings, change }: {
                                 </li>
                             ))}
                         </ul>
-                        <p className="mt-3 text-xs">Showing the {health.classmates.length} sample roster entries.</p>
+                        <button
+                            type="button"
+                            className="btn btn-outline btn-sm mt-3 w-full"
+                            onClick={showRoster}
+                        >
+                            Open full roster
+                        </button>
                     </>
                 </Card>
             </div>

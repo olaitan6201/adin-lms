@@ -10,7 +10,6 @@ use App\Models\Student;
 use App\Models\TeachingAllocation;
 use App\Models\User;
 use App\Services\Authority\ChangeRoleGrant;
-use App\Services\Security\TotpEnrollment;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\DB;
 
@@ -41,7 +40,7 @@ foreach (['desktop', 'phone'] as $project) {
     seedWorkspaceFixtures($offering, $project, $run);
     $qa = User::factory()->create(['email' => "quality-desk-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($qa->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
-    file_put_contents($run."/quality-desk-{$project}.factor", app(TotpEnrollment::class)->issue($qa), LOCK_EX);
+    file_put_contents($run."/quality-desk-{$project}.factor", enrollFixtureAuthenticator($qa), LOCK_EX);
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);
@@ -52,17 +51,17 @@ foreach (['desktop', 'phone'] as $project) {
     $lecturer = Lecturer::factory()->create(['user_id' => $author->id]);
     TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $source->id]);
     app(ChangeRoleGrant::class)->apply($author->id, RoleCode::InstitutionalAdmin, 'institution', false);
-    $factor = app(TotpEnrollment::class)->issue($author);
+    $factor = enrollFixtureAuthenticator($author);
     file_put_contents("$run/$exchange.json", json_encode(['source' => $source->id, 'target' => $target->id, 'factor' => $factor], JSON_THROW_ON_ERROR), LOCK_EX);
 
     $guardian = User::factory()->create(['email' => "guardian-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($guardian->id, RoleCode::Guardian, 'institution', false);
     $operator = User::factory()->create(['email' => "privacy-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($operator->id, RoleCode::SuperAdmin, 'institution', false);
-    file_put_contents($run."/privacy-{$project}.factor", app(TotpEnrollment::class)->issue($operator), LOCK_EX);
+    file_put_contents($run."/privacy-{$project}.factor", enrollFixtureAuthenticator($operator), LOCK_EX);
     $executor = User::factory()->create(['email' => "privacy-executor-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($executor->id, RoleCode::SuperAdmin, 'institution', false);
-    file_put_contents($run."/privacy-executor-{$project}.factor", app(TotpEnrollment::class)->issue($executor), LOCK_EX);
+    file_put_contents($run."/privacy-executor-{$project}.factor", enrollFixtureAuthenticator($executor), LOCK_EX);
     file_put_contents($run."/privacy-subject-{$project}", $guardian->id, LOCK_EX);
     foreach (Student::orderBy('id')->limit(2)->get() as $linked) {
         GuardianAccess::forceCreate([
@@ -96,7 +95,7 @@ foreach (['brand-desktop', 'brand-phone'] as $login) {
 
 foreach (['lecturer', 'officer', 'exam-office', 'report-qa', 'brand-desktop', 'brand-phone', ...$authors] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
-    $secret = app(TotpEnrollment::class)->issue($account);
+    $secret = enrollFixtureAuthenticator($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);
 }
 

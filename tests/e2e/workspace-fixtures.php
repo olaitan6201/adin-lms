@@ -17,6 +17,22 @@ use App\Models\TeachingAllocation;
 use App\Models\User;
 use App\Services\Authority\ChangeRoleGrant;
 use App\Services\Security\TotpEnrollment;
+use PragmaRX\Google2FA\Google2FA;
+
+/** Complete enrollment during setup, so a long run does not outlive pending enrollment. */
+function enrollFixtureAuthenticator(User $user): string
+{
+    $enrollment = app(TotpEnrollment::class);
+    $secret = $enrollment->issue($user);
+    $authenticator = app(Google2FA::class);
+    // Leave the current step available for the first interactive sign-in.
+    $code = $authenticator->oathTotp($secret, $authenticator->getTimestamp() - 1);
+    if (! $enrollment->verify($user, $code)) {
+        throw new LogicException('Could not enroll the disposable browser fixture.');
+    }
+
+    return $secret;
+}
 
 /** Called only after enroll-test-staff validates the disposable database. */
 function seedWorkspaceFixtures(Offering $source, string $project, string $run): void
@@ -53,13 +69,13 @@ function seedWorkspaceFixtures(Offering $source, string $project, string $run): 
             $lecturer = Lecturer::factory()->create(['user_id' => $author->id]);
             TeachingAllocation::factory()->create(['lecturer_id' => $lecturer->id, 'offering_id' => $course->id]);
             app(ChangeRoleGrant::class)->apply($author->id, RoleCode::Lecturer, 'offering:'.$course->id, false);
-            file_put_contents("$run/dashboard-lecturer-$project.factor", app(TotpEnrollment::class)->issue($author), LOCK_EX);
+            file_put_contents("$run/dashboard-lecturer-$project.factor", enrollFixtureAuthenticator($author), LOCK_EX);
         }
     }
     foreach (['dashboard', 'report'] as $scenario) {
         $login = "$scenario-officer-$project";
         $officer = User::factory()->create(['email' => "$login@demo.example.test"]);
         app(ChangeRoleGrant::class)->apply($officer->id, RoleCode::InstitutionalAdmin, 'institution', false);
-        file_put_contents("$run/$login.factor", app(TotpEnrollment::class)->issue($officer), LOCK_EX);
+        file_put_contents("$run/$login.factor", enrollFixtureAuthenticator($officer), LOCK_EX);
     }
 }

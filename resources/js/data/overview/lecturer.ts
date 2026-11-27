@@ -8,7 +8,7 @@ export const submissions = [
 ] as const;
 
 export const tiles = [
-      { label: 'Allocated courses', value: '4', delta: '245', deltaLabel: 'students total', icon: 'book', spark: { values: [2, 2, 2, 3, 3, 4], color: '#10B981' } },
+      { label: 'Allocated courses', value: '3', delta: '68', deltaLabel: 'students total', icon: 'book', spark: { values: [2, 2, 2, 3, 3, 3], color: '#10B981' } },
       { label: 'Awaiting marking', value: '34', delta: '2', deltaLabel: 'new since yesterday', icon: 'clipboard', spark: { values: [18, 24, 22, 31, 29, 34], color: '#F59E0B' } },
       { label: 'Live classes this week', value: '4', delta: '2', deltaLabel: 'recordings to publish', icon: 'video', spark: { values: [1, 3, 2, 4, 4, 4], color: '#3B82F6' } },
       { label: 'Mean score, ACC302', value: '72', delta: '+4', deltaLabel: 'vs mid-term 2024/2025', icon: 'chart', spark: { values: [64, 63, 66, 69, 71, 72], color: '#33475F' } }

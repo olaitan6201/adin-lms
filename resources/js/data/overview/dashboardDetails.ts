@@ -19,7 +19,7 @@ export const institution = {
 
 export const teaching = {
     title: 'Good afternoon, Dr. Adeyemi',
-    description: 'Four courses are running this semester. Review upcoming classes and examinations and mark the submissions in your queue.',
+    description: 'Three courses are running this semester. Two submissions arrived after the deadline and one is waiting for a second marker.',
     scores: [64, 61, 66, 63, 69, 68, 71, 70, 74, 72],
     performance: [
         { label: 'ACC302 submission rate', value: 75, color: '#10B981' },

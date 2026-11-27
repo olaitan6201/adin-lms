@@ -27,7 +27,7 @@ final class AccountAccessResource extends JsonResource
 
             return ['grant' => $grant, 'permissions' => $permissions->pluck('code')];
         });
-        
+
         $records = AccountGrantResource::collection($grants);
 
         return [

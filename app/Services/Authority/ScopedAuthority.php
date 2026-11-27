@@ -34,7 +34,7 @@ class ScopedAuthority
     {
         return RoleGrant::where('user_id', $user->id)
             ->whereHas('role', fn (Builder $roles) => $roles->whereNotIn('code', [
-                RoleCode::Student, RoleCode::Guardian
+                RoleCode::Student, RoleCode::Guardian,
             ]))
             ->exists();
     }
@@ -63,7 +63,7 @@ class ScopedAuthority
                     $query->where('user_id', $user->id);
                 })
                 ->exists();
-                
+
             if ($allocated) {
                 return true;
             }

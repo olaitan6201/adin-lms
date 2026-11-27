@@ -23,12 +23,13 @@ final class PortalIdentity
 
         return $request->attributes->get(self::class);
     }
- 
-    /** 
+
+    /**
      * TODO: This method is a temporary solution to display the user's role in the portal.
      * It should be replaced with a more robust implementation that retrieves the user's role from the database
      * and handles cases where the user has multiple roles or no role at all.
-     * @return array{name: string, role: string}|null 
+     *
+     * @return array{name: string, role: string}|null
      * */
     public function display(?User $user): ?array
     {
@@ -39,7 +40,7 @@ final class PortalIdentity
         $roles = DB::table('role_grants')->join('roles', 'roles.id', '=', 'role_grants.role_id')
             ->where('role_grants.user_id', $user->id)->distinct()->orderBy('roles.code')->pluck('roles.code')
             ->map(fn (string $code) => Str::headline($code));
-            
+
         $role = $roles->isNotEmpty() ? $roles->implode(', ') : match (true) {
             $user->lecturer()->exists() => 'Lecturer',
             $user->student()->exists() => 'Student',
@@ -47,8 +48,8 @@ final class PortalIdentity
         };
 
         return [
-            'name' => $user->full_name, 
-            'role' => $role
+            'name' => $user->full_name,
+            'role' => $role,
         ];
     }
 }

@@ -32,7 +32,7 @@ final class QualityEvidence
             ->selectSub($mapped->selectRaw('count(*)'), 'mapped')
             ->limit(12)
             ->get();
-            
+
         $queue = (clone $reviewed)
             ->limit(12)
             ->get();

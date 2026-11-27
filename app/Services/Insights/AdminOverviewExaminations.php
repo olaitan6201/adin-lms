@@ -58,7 +58,7 @@ final class AdminOverviewExaminations
             'Essay' => ['value' => 0, 'color' => '#F59E0B'],
             'Other' => ['value' => 0, 'color' => '#3B82F6'],
         ];
-        
+
         foreach ($counts as $kind => $count) {
             $questionKind = QuestionKind::tryFrom($kind);
             $label = match (true) {

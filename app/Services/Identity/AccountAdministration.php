@@ -26,7 +26,7 @@ class AccountAdministration
                 ->find($actorId);
             $this->authorize($actor);
             $accounts = $this->lookup->emailQuery($email);
-            
+
             if ($accounts->exists()) {
                 throw new DomainException('An account already uses this email.');
             }

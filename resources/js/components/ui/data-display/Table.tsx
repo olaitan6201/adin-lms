@@ -6,11 +6,18 @@ type TableProps = {
     empty?: ReactNode;
     caption?: string;
     rowKeys?: readonly (string | number)[];
+    scrollLabel?: string;
 };
 
-export function Table({ columns, rows, empty = 'No records to display.', caption, rowKeys }: TableProps) {
+export function Table({ columns, rows, empty = 'No records to display.', caption, rowKeys, scrollLabel }: TableProps) {
     return (
-        <div className="overflow-x-auto" data-scroll>
+        <div
+            className={scrollLabel ? 'overflow-x-auto table-scroll-region' : 'overflow-x-auto'}
+            data-scroll
+            role={scrollLabel ? 'region' : undefined}
+            aria-label={scrollLabel}
+            tabIndex={scrollLabel ? 0 : undefined}
+        >
             <table className="tbl">
                 {caption && <caption className="sr-only">{caption}</caption>}
                 <thead>

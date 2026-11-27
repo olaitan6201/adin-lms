@@ -146,6 +146,20 @@
     @apply whitespace-nowrap px-4 py-2.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-400;
   }
 
+  .structure-register-table .tbl thead th {
+    @apply text-ink-600;
+  }
+
+  @media (width < 40rem) {
+    .structure-register .card-head {
+      @apply flex-col items-start;
+    }
+
+    .structure-register-table .tbl :is(th, td) {
+      @apply px-2;
+    }
+  }
+
   .tbl tbody td {
     @apply border-t border-ink-100 px-4 py-3 align-middle text-ink-700;
   }

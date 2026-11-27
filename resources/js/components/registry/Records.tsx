@@ -46,6 +46,7 @@ export function Records({
     actions,
     children,
     tableClass,
+    keyboardScroll = false,
     footer,
     bodyClassName,
 }: {
@@ -57,6 +58,7 @@ export function Records({
     actions?: ReactNode;
     children?: ReactNode;
     tableClass?: string;
+    keyboardScroll?: boolean;
     footer?: ReactNode;
     bodyClassName?: string;
 }) {
@@ -78,6 +80,7 @@ export function Records({
                     rows={displayRows}
                     rowKeys={rowKeys}
                     empty="No matching records."
+                    scrollLabel={keyboardScroll ? title : undefined}
                 />
             </div>
             {footer}

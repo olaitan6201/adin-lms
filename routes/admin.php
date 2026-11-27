@@ -1,11 +1,13 @@
 <?php
 
+use App\Enums\StructureRegisterKind;
 use App\Http\Controllers\Admin\AccountDirectoryController;
 use App\Http\Controllers\Admin\AccountGrantsController;
 use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StructureImportController;
+use App\Http\Controllers\Admin\StructureRegisterController;
 use App\Models\User;
 use App\Services\Academics\HierarchyChanges;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +33,19 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
                     ->whereIn('kind', HierarchyChanges::KINDS)
                     ->whereUuid('record')
                     ->name('.update');
+            });
+        Route::prefix('structure/register')
+            ->name('admin.structure.register.')
+            ->controller(StructureRegisterController::class)
+            ->middleware(['can:manage-academic-structure', 'cache.headers:private;no_store'])
+            ->group(function (): void {
+                Route::post('{kind}', 'store')
+                    ->whereIn('kind', StructureRegisterKind::cases())
+                    ->name('store');
+                Route::patch('{kind}/{record}', 'update')
+                    ->whereIn('kind', [StructureRegisterKind::Programme, StructureRegisterKind::Level, StructureRegisterKind::Specialization])
+                    ->whereUuid('record')
+                    ->name('update');
             });
         Route::prefix('structure/import')
             ->name('admin.structure.import.')

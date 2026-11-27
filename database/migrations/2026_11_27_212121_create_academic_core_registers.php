@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->string('status')->default('active');
+            $table->bigInteger('revision_number')->default(1);
+            $table->timestampsTz();
         });
 
         Schema::create('programme_levels', function (Blueprint $table): void {
@@ -24,6 +26,8 @@ return new class extends Migration
             $table->string('code');
             $table->string('label');
             $table->integer('position');
+            $table->bigInteger('revision_number')->default(1);
+            $table->timestampsTz();
             $table->unique(['academic_programme_id', 'code'], 'prog_levels_code_uq');
             $table->unique(['id', 'academic_programme_id'], 'prog_levels_programme_fk_key');
         });
@@ -34,6 +38,8 @@ return new class extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('status')->default('active');
+            $table->bigInteger('revision_number')->default(1);
+            $table->timestampsTz();
             $table->unique(['department_id', 'code'], 'specializations_department_code_uq');
         });
 
@@ -42,6 +48,7 @@ return new class extends Migration
             $table->foreignUuid('specialization_id')->constrained();
             $table->foreignUuid('academic_programme_id')->constrained();
             $table->string('status')->default('active');
+            $table->timestampsTz();
             $table->unique(['specialization_id', 'academic_programme_id'], 'academic_pathways_track_programme_uq');
             $table->unique(['id', 'academic_programme_id'], 'academic_pathways_programme_fk_key');
         });

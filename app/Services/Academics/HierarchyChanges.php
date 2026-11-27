@@ -3,6 +3,7 @@
 namespace App\Services\Academics;
 
 use App\Enums\CurriculumStatus;
+use App\Enums\OrganisationAuditAction;
 use App\Models\AcademicLevel;
 use App\Models\AcademicSession;
 use App\Models\AuditLog;
@@ -42,7 +43,7 @@ final class HierarchyChanges
             AuditLog::forceCreate([
                 'actor_id' => $actor,
                 'subject_key' => $model->getTable().':'.$record,
-                'action' => 'organisation.corrected',
+                'action' => OrganisationAuditAction::Corrected,
                 'occurred_at' => now(),
                 'details' => ['before' => array_intersect_key($before, $data), 'after' => $data],
             ]);
@@ -75,8 +76,9 @@ final class HierarchyChanges
 
         if ($model instanceof Department && $before['faculty_id'] !== $data['faculty_id']
             && (Programme::query()->where('department_id', $record)->exists()
-                || Course::query()->where('department_id', $record)->exists())) {
-            throw ValidationException::withMessages(['faculty_id' => 'This department has linked programmes or courses. Preserve their faculty and create a successor department.']);
+                || Course::query()->where('department_id', $record)->exists()
+                || $model->specializations()->exists())) {
+            throw ValidationException::withMessages(['faculty_id' => 'This department has linked programmes, courses, or specializations. Preserve their faculty and create a successor department.']);
         }
 
         if ($model instanceof Semester && $before['session_id'] !== $data['session_id']

@@ -1,3 +1,5 @@
+import type { RegisterRecords } from './registerRecords';
+
 type AcademicUnit = { id: string; code: string; name: string };
 
 export type Faculty = AcademicUnit & { dean_names: string[] };
@@ -23,6 +25,7 @@ type Records = {
 
 export type StructureKind = keyof Records;
 export type StructureProps = Records & {
+    register: RegisterRecords;
     actions: Record<StructureKind, string>;
     import: Record<'template' | 'columns' | 'preview' | 'store', string>;
     student_count_session: Pick<Session, 'id' | 'label'> | null;

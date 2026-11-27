@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
+import { AcademicRegister } from '@/components/registry/structure/AcademicRegister';
+import { AcademicRegisterEditor } from '@/components/registry/structure/AcademicRegisterEditor';
 import { LiveHierarchy } from '@/components/registry/structure/LiveHierarchy';
 import { LiveRegisters } from '@/components/registry/structure/LiveRegisters';
 import { StructureHealthSummary } from '@/components/registry/structure/StructureHealthSummary';
 import { StructureEditor } from '@/components/registry/structure/StructureEditor';
 import { StructureImportDrawer } from '@/components/registry/structure/StructureImportDrawer';
 import type { Selection, StructureProps } from '@/components/registry/structure/liveRecords';
+import type { RegisterSelection } from '@/components/registry/structure/registerRecords';
 import { Action } from '@/components/ui/controls/Action';
 import { Note } from '@/components/ui/feedback/Note';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 
 export default function LiveStructure(props: StructureProps) {
     const [selection, select] = useState<Selection | 'import' | null>(null);
+    const [registerSelection, selectRegister] = useState<RegisterSelection | null>(null);
     const [notice, setNotice] = useState('');
 
     function open(next: Selection | 'import') {
@@ -21,6 +25,12 @@ export default function LiveStructure(props: StructureProps) {
 
     function close() {
         select(null);
+        selectRegister(null);
+    }
+
+    function editRegister(next: RegisterSelection) {
+        setNotice('');
+        selectRegister(next);
     }
 
     function saved() {
@@ -56,6 +66,7 @@ export default function LiveStructure(props: StructureProps) {
                     <LiveHierarchy records={props} edit={open} />
                     <StructureHealthSummary records={props} edit={open} />
                 </div>
+                <AcademicRegister records={props.register} departments={props.departments} edit={editRegister} />
                 <LiveRegisters records={props} edit={open} />
                 <Note>Faculty and department oversight follows assigned staff roles, not this structure register.</Note>
             </div>
@@ -66,6 +77,15 @@ export default function LiveStructure(props: StructureProps) {
                 <StructureEditor
                     selection={selection}
                     structure={props}
+                    close={close}
+                    saved={saved}
+                />
+            )}
+            {registerSelection && (
+                <AcademicRegisterEditor
+                    selection={registerSelection}
+                    records={props.register}
+                    departments={props.departments}
                     close={close}
                     saved={saved}
                 />

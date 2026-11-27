@@ -10,7 +10,7 @@ import type { Selection, StructureKind, StructureProps } from './liveRecords';
 const labels: Record<StructureKind, string> = {
     faculties: 'faculty',
     departments: 'department',
-    programmes: 'programme',
+    programmes: 'legacy programme',
     levels: 'academic level',
     sessions: 'session',
     semesters: 'semester',

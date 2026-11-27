@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { verifyNarrowHierarchy, verifyOversight } from './structure-layout-assertions';
+import { verifyAcademicRegister } from './structure-register-assertions';
 
 const structureUrl = '/admin/structure';
 
@@ -20,6 +21,7 @@ function spreadsheet(rows: string[][], xlsx: boolean) {
 }
 
 test('structure imports and manual changes persist after reload', async ({ page }, info) => {
+    test.setTimeout(65_000);
     const role = `structure-${info.project.name}`;
     const secret = join(process.env.PORTAL_E2E_RUN!, `${role}.factor`);
     const factor = execFileSync('php', [
@@ -89,12 +91,13 @@ test('structure imports and manual changes persist after reload', async ({ page 
     await expect(page.getByRole('heading', { name: new RegExp(title) })).toBeVisible();
     await expect(leadership).toContainText(`of ${previousDepartments + 1} departments`);
     await verifyOversight(page, title, suffix);
+    await verifyAcademicRegister(page, suffix, info.outputPath('academic-pathways.png'));
 
-    await page.getByRole('button', { name: 'Add programme' }).click();
+    await page.getByRole('button', { name: 'Add legacy programme', exact: true }).click();
     await dialog.getByLabel('Programme', { exact: true }).fill(`Engineering ${suffix}`);
     await dialog.getByLabel('Code', { exact: true }).fill(programme);
     await dialog.getByLabel('Department', { exact: true }).selectOption({ label: `Units ${suffix}` });
-    await dialog.getByRole('button', { name: 'Add programme' }).click();
+    await dialog.getByRole('button', { name: 'Add legacy programme', exact: true }).click();
     await expect(dialog).toHaveCount(0);
     await page.reload();
     await expect(page.getByRole('row').filter({ hasText: programme })).toContainText(`Units ${suffix}`);

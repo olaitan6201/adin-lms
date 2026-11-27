@@ -54,7 +54,7 @@ export function StructureHealthSummary({ records, edit }: {
                     empty="No departments to check."
                 />
                 <HealthCheck
-                    title="Curriculum approval"
+                    title="Legacy curriculum approval"
                     count={records.health.programmes_with_approved_curriculum}
                     total={records.programmes.length}
                     complete="programmes have an approved curriculum"
@@ -73,7 +73,7 @@ export function StructureHealthSummary({ records, edit }: {
                     </div>
                 </dl>
                 <div className="space-y-2 border-t border-ink-100 pt-3">
-                    <h3 className="text-sm font-semibold">Academic levels</h3>
+                    <h3 className="text-sm font-semibold">Legacy academic levels</h3>
                     {records.levels.length === 0 ? (
                         <p className="text-sm text-ink-600">No levels configured.</p>
                     ) : (

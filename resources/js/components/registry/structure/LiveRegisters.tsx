@@ -12,13 +12,14 @@ export function LiveRegisters({ records, edit }: {
     return (
         <>
             <Records
-                title="Programme register"
-                subtitle="Programmes and the departments responsible for them"
+                title="Legacy programme register"
+                subtitle="Department-owned programmes still used by existing roster and curriculum workflows"
                 columns={['Code', 'Programme', 'Department', 'Actions']}
+                keyboardScroll
                 rowKeys={records.programmes.map(({ id }) => id)}
                 actions={
                     <Action icon="plus" onClick={() => edit({ kind: 'programmes' })} disabled={!departments.size}>
-                        Add programme
+                        Add legacy programme
                     </Action>
                 }
                 rows={records.programmes.map(programme => [
@@ -35,6 +36,7 @@ export function LiveRegisters({ records, edit }: {
                 title="Academic sessions and semesters"
                 subtitle="Session windows drive roster scope, course delivery and reporting periods"
                 columns={['Session', 'Window', 'Semesters', 'Actions']}
+                keyboardScroll
                 rowKeys={records.sessions.map(({ id }) => id)}
                 actions={<Action icon="plus" onClick={() => edit({ kind: 'sessions' })}>Add session</Action>}
                 rows={records.sessions.map(session => [
@@ -50,6 +52,7 @@ export function LiveRegisters({ records, edit }: {
             <Records
                 title="Semester windows"
                 columns={['Session', 'Semester', 'Window', 'Actions']}
+                keyboardScroll
                 rowKeys={records.semesters.map(({ id }) => id)}
                 actions={
                     <Action icon="plus" onClick={() => edit({ kind: 'semesters' })} disabled={!sessions.size}>

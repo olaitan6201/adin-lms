@@ -10,6 +10,7 @@
 @import './layouts/workspace.css';
 @import './layouts/drawers.css';
 @import './layouts/overview.css';
+@import './layouts/structure-register.css';
 @import './learning/study.css';
 @import './learning/course.css';
 @import './assessments/desk.css';

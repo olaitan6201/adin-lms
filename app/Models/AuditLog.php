@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OrganisationAuditAction;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditLog extends DomainModel
@@ -26,5 +28,22 @@ class AuditLog extends DomainModel
     public function attempt(): BelongsTo
     {
         return $this->belongsTo(ExaminationAttempt::class, 'attempt_id');
+    }
+
+    protected function action(): Attribute
+    {
+        return Attribute::set(
+            fn (OrganisationAuditAction|string $value): string => $value instanceof OrganisationAuditAction ? $value->value : $value,
+        )->withoutObjectCaching();
+    }
+
+    /**
+     * Read organisation events as a closed set without changing the shared action string.
+     */
+    protected function organisationAction(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?OrganisationAuditAction => OrganisationAuditAction::tryFrom($this->action ?? ''),
+        )->withoutObjectCaching();
     }
 }

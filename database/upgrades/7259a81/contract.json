@@ -90,7 +90,7 @@
   "target": "4775efab714fe6e9a19bac69be4a2de9f115e252502e991954a4b85bac38eace",
   "migration_files": {
     "2026_11_25_000001_create_uuid_lms_schema.php": "12985e12e8e1eb6ee2854e847568fcdd2603ec60d1d3fd93a4d03652ccde0f04",
-    "2026_11_27_212121_create_academic_core_registers.php": "053398febd47e8abf82773882c7f3853cb8f4b67b366ab28a0c78e8e0daba965",
+    "2026_11_27_212121_create_academic_core_registers.php": "0480c5e0d93d37e17b516995cb5dc6f906d0ab8f5fe2d61c301d5b76e7e148d0",
     "2026_11_27_212122_expand_academic_core_references.php": "a1aabfa360a1f6cc4af4afd1a3bd858df034bb3afdd9bed6d6fc5133fc97aa5e",
     "2026_11_27_212123_link_academic_core_requirements.php": "3eab13b5a8c8b06cd0efd144e98948832232100e043e110ab23bc3bf47d94c68",
     "baseline/assessment_planning.php": "16f04ce5c9743770cbd4366c7d3c847709d6c1f3230402ef823cb326461c1429",

@@ -19,7 +19,7 @@ export function LiveHierarchy({ records, edit }: {
     return (
         <Card
             title="Institution hierarchy"
-            subtitle="Faculty, department and programme assignment"
+            subtitle="Faculties, departments and legacy programme assignments"
             className="@container [&>.card-head]:flex-col @2xl:[&>.card-head]:flex-row"
             actions={
                 <>

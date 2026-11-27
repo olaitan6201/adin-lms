@@ -33,9 +33,11 @@ export function ClassRegisters({ sessions, open }: ClassRegistersProps) {
             <Badge key="state" tone={tone}>
                 {state.charAt(0).toUpperCase() + state.slice(1)}
             </Badge>,
-            <Action key="actions" size="sm" onClick={() => open(session)}>
-                {state === 'scheduled' ? 'Plan' : 'Register'}
-            </Action>,
+            <div key="actions" className="flex justify-end gap-1.5">
+                <Action size="sm" onClick={() => open(session)}>
+                    {state === 'scheduled' ? 'Plan' : 'Register'}
+                </Action>
+            </div>,
         ];
     });
 
@@ -43,7 +45,7 @@ export function ClassRegisters({ sessions, open }: ClassRegistersProps) {
         <Card
             className="session-list"
             title="Class registers"
-            subtitle="Sample session methods. Use the register to mark attendance manually."
+            subtitle="One register per scheduled class. Open a register to record attendance manually."
             actions={
                 <>
                     <Badge>{sessions.length} sessions this week</Badge>

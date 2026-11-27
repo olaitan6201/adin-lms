@@ -57,20 +57,20 @@ export function WorkspaceRail({
             </nav>
             <footer className="portal-rail-footer">
                 <div>
-                    <Icon name="shield" className="size-4" />
-                    <span>
-                        {session.title}
-                        <small>{session.detail}</small>
-                    </span>
+                    <Icon name="shield" className="size-4 shrink-0" />
+                    <div className="min-w-0">
+                        <p className="truncate">{session.title}</p>
+                        <small className="truncate">{session.detail}</small>
+                    </div>
                 </div>
                 <WorkspaceInstall />
                 <Link
                     href={workspaceUrl('auth/signin')}
                     onClick={onNavigate}
-                    className="mt-1 rounded-lg hover:bg-white/10 hover:text-white"
+                    className="mt-1 rounded-lg transition-colors hover:bg-white/10 hover:text-white"
                 >
-                    <Icon name="logout" className="size-4" />
-                    Sign out of this session
+                    <Icon name="logout" className="size-4 shrink-0" />
+                    <span className="truncate">Sign out of this session</span>
                 </Link>
             </footer>
         </>

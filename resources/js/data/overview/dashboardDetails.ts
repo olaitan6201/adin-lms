@@ -19,7 +19,7 @@ export const institution = {
 
 export const teaching = {
     title: 'Good afternoon, Dr. Adeyemi',
-    description: 'Review the four course allocations, upcoming classes and new submissions for this semester.',
+    description: 'Four courses are running this semester. Review your upcoming classes and examinations, and mark the submissions waiting for you.',
     scores: [64, 61, 66, 63, 69, 68, 71, 70, 74, 72],
     performance: [
         { label: 'ACC302 submission rate', value: 75, color: '#10B981' },
@@ -31,7 +31,7 @@ export const teaching = {
 
 export const study = {
     title: 'Welcome back, Blessing',
-    description: 'Check your four registered courses, upcoming dates and released results.',
+    description: 'Four courses are running this semester. The journal entry assignment is due on 14 November and your ACC302 mid-term opens on 18 November.',
     coursesSubtitle: 'Four registered courses this semester',
     lesson: {
         code: 'ACC302', progress: 46, title: 'Week 3 · Journals and ledgers',

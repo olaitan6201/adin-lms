@@ -105,7 +105,7 @@ export default function Downloads() {
                 <Card
                     className="[&_th:last-child]:w-[100px]"
                     title="Saved materials"
-                    subtitle="Saved status applies to this browser library. The ZIP downloads separately."
+                    subtitle="Kept on this device until you remove them"
                 >
                     <Table columns={['Material', 'Size', 'Saved', 'Status', '']} rows={rows} />
                 </Card>

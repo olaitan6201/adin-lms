@@ -55,10 +55,12 @@ export function WorkspaceInstall({ inPage = false }: { inPage?: boolean }) {
         <button
             type="button"
             onClick={() => void install()}
-            className={inPage ? 'btn btn-outline' : undefined}
+            className={inPage ? 'btn btn-outline' : 'text-left transition-colors'}
         >
-            <Icon name={inPage ? 'smartphone' : 'download'} className="size-4" />
-            {inPage ? <span>Install app</span> : offer ? 'Install as an app' : 'Install this prototype as an app'}
+            <Icon name={inPage ? 'smartphone' : 'download'} className="size-4 shrink-0" />
+            <span className={inPage ? undefined : 'truncate'}>
+                {inPage ? 'Install app' : offer ? 'Install as an app' : 'Install this prototype as an app'}
+            </span>
         </button>
     );
 }

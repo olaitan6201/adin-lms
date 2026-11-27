@@ -55,7 +55,7 @@ export function TeachingOverview({ health, select, settings, change }: {
                 </Card>
             </div>
             <div className="xl:col-span-4 space-y-5">
-                <Card title="Offering settings" subtitle="Draft selections for this visit; no published policy changes">
+                <Card title="Offering settings">
                     <div className="space-y-3">
                         <label className="block">
                             <span className="label">Delivery mode</span>
@@ -103,6 +103,11 @@ export function TeachingOverview({ health, select, settings, change }: {
                                 <option>Closed</option>
                             </select>
                         </label>
+                        {Object.keys(settings).length > 0 && (
+                            <p role="status" className="text-xs text-ink-500">
+                                Draft selections for this visit; no published policy changes.
+                            </p>
+                        )}
                     </div>
                 </Card>
                 <Card title="Classmates" subtitle={health.rosterLabel}>

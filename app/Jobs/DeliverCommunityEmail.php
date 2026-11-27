@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\AccountStatus;
 use App\Enums\DeliveryStatus;
 use App\Mail\CommunityNoticeMail;
 use App\Models\NotificationDelivery;
@@ -37,7 +38,7 @@ class DeliverCommunityEmail implements ShouldBeUnique, ShouldQueue
 
             $recipient = $delivery->notification->recipient;
             $delivery->next_attempt_at = null;
-            if ($recipient->status === 'active') {
+            if ($recipient->status === AccountStatus::Active) {
                 $this->attempt($delivery, $recipient->email);
             } else {
                 $delivery->status = DeliveryStatus::Cancelled;

@@ -1,4 +1,5 @@
 import type { RegisterRecords } from './registerRecords';
+import type { ImportUrls } from './structureImportFields';
 
 type AcademicUnit = { id: string; code: string; name: string };
 
@@ -27,7 +28,8 @@ export type StructureKind = keyof Records;
 export type StructureProps = Records & {
     register: RegisterRecords;
     actions: Record<StructureKind, string>;
-    import: Record<'template' | 'columns' | 'preview' | 'store', string>;
+    import: ImportUrls;
+    registerImport: ImportUrls;
     student_count_session: Pick<Session, 'id' | 'label'> | null;
     health: {
         departments_with_active_hod: number;

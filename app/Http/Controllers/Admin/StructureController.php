@@ -27,6 +27,12 @@ final class StructureController
 
         return Inertia::render('Admin/LiveStructure', $structure->resolve($request) + [
             'register' => fn (): array => (new StructureRegisterResource($register->records()))->resolve($request),
+            'registerImport' => [
+                'template' => route('admin.structure.register.import.template', absolute: false),
+                'columns' => route('admin.structure.register.import.columns', absolute: false),
+                'preview' => route('admin.structure.register.import.preview', absolute: false),
+                'store' => route('admin.structure.register.import.store', absolute: false),
+            ],
         ]);
     }
 

@@ -6,7 +6,7 @@
     background-color: var(--color-brand-800);
 }
 
-.structure-register-drawer :is(.btn-outline, [data-slot="input"], [data-slot="native-select"]):not([aria-invalid="true"]) {
+.structure-register-drawer :is(.btn-outline, [data-slot="input"], [data-slot="native-select"], select, input[type="file"]):not([aria-invalid="true"]) {
     border-color: var(--color-ink-500);
 }
 

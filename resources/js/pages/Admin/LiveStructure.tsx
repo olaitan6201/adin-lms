@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { Head, router } from '@inertiajs/react';
 import { AcademicRegister } from '@/components/registry/structure/AcademicRegister';
 import { AcademicRegisterEditor } from '@/components/registry/structure/AcademicRegisterEditor';
@@ -9,23 +9,35 @@ import { StructureEditor } from '@/components/registry/structure/StructureEditor
 import { StructureImportDrawer } from '@/components/registry/structure/StructureImportDrawer';
 import type { Selection, StructureProps } from '@/components/registry/structure/liveRecords';
 import type { RegisterSelection } from '@/components/registry/structure/registerRecords';
+import type { ImportKind } from '@/components/registry/structure/structureImportFields';
 import { Action } from '@/components/ui/controls/Action';
 import { Note } from '@/components/ui/feedback/Note';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 
 export default function LiveStructure(props: StructureProps) {
-    const [selection, select] = useState<Selection | 'import' | null>(null);
+    const [selection, select] = useState<Selection | null>(null);
     const [registerSelection, selectRegister] = useState<RegisterSelection | null>(null);
+    const [importKind, setImportKind] = useState<ImportKind | null>(null);
     const [notice, setNotice] = useState('');
 
-    function open(next: Selection | 'import') {
+    function open(next: Selection) {
         setNotice('');
         select(next);
+    }
+
+    function openImport(kind: ImportKind, event: MouseEvent<Element>) {
+        if (event.currentTarget instanceof HTMLButtonElement) {
+            event.currentTarget.focus({ preventScroll: true });
+        }
+
+        setNotice('');
+        setImportKind(kind);
     }
 
     function close() {
         select(null);
         selectRegister(null);
+        setImportKind(null);
     }
 
     function editRegister(next: RegisterSelection) {
@@ -40,6 +52,12 @@ export default function LiveStructure(props: StructureProps) {
 
     function imported(count: number) {
         close();
+        if (importKind === 'register') {
+            setNotice(count === 0 ? 'No shared register records needed adding.' : `${count} shared register ${count === 1 ? 'record' : 'records'} added.`);
+            router.reload({ only: ['register'] });
+            return;
+        }
+
         setNotice(`${count} structure ${count === 1 ? 'record' : 'records'} added.`);
         router.reload({ only: ['faculties', 'departments', 'programmes', 'health', 'student_count_session'] });
     }
@@ -53,8 +71,17 @@ export default function LiveStructure(props: StructureProps) {
                 description="The hierarchy that scopes oversight, rosters, curricula and reporting."
                 actions={
                     <>
-                        <Action icon="upload" onClick={() => open('import')}>Import structure</Action>
-                        <Action icon="plus" variant="primary" onClick={() => open({ kind: 'unit' })}>
+                        <Action icon="upload" onClick={event => openImport('hierarchy', event)} aria-haspopup="dialog">
+                            Import structure
+                        </Action>
+                        <Action icon="upload" onClick={event => openImport('register', event)} aria-haspopup="dialog">
+                            Import shared register
+                        </Action>
+                        <Action
+                            icon="plus"
+                            variant="primary"
+                            onClick={() => open({ kind: 'unit' })}
+                        >
                             Add faculty or department
                         </Action>
                     </>
@@ -70,10 +97,15 @@ export default function LiveStructure(props: StructureProps) {
                 <LiveRegisters records={props} edit={open} />
                 <Note>Faculty and department oversight follows assigned staff roles, not this structure register.</Note>
             </div>
-            {selection === 'import' && (
-                <StructureImportDrawer urls={props.import} close={close} imported={imported} />
+            {importKind && (
+                <StructureImportDrawer
+                    kind={importKind}
+                    urls={importKind === 'register' ? props.registerImport : props.import}
+                    close={close}
+                    imported={imported}
+                />
             )}
-            {selection && selection !== 'import' && (
+            {selection && (
                 <StructureEditor
                     selection={selection}
                     structure={props}

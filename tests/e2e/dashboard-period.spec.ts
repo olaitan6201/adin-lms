@@ -24,8 +24,9 @@ for (const role of ['learner', 'officer', 'lecturer']) {
             await page.getByLabel('Authenticator code').fill(code);
             await page.getByRole('button', { name: /verify code/i }).press('Enter');
         }
-        await expect(page).toHaveURL(/dashboard$/);
         if (role === 'officer') {
+            await expect(page).toHaveURL(/\/admin\/overview$/);
+            await page.goto('/dashboard');
             await expect(page.getByText('Accounts with accepted credentials')).toBeVisible();
             await page.screenshot({ path: `.agent-work/usage-${info.project.name}.png`, fullPage: true });
             const select = page.getByRole('combobox', { name: 'Academic period' });
@@ -42,12 +43,14 @@ for (const role of ['learner', 'officer', 'lecturer']) {
                 await expect(page.getByText('Draft offering', { exact: true })).toHaveCount(drafts);
             }
         } else if (role === 'lecturer') {
+            await expect(page).toHaveURL(/\/dashboard$/);
             await expect(page.getByRole('heading', { name: 'Upcoming examinations' })).toBeVisible();
             await expect(page.getByRole('link', { name: 'Scheduled writing paper' })).toBeVisible();
             await page.getByText('Roster and recent uploads').press('Enter');
             await expect(page.getByRole('heading', { name: 'My recent file uploads' })).toBeVisible();
             await expect(page.getByText('Enrolled students', { exact: true })).toBeVisible();
         } else {
+            await expect(page).toHaveURL(/\/dashboard$/);
             await expect(page.getByRole('heading', { name: 'Available lecture materials' })).toBeVisible();
             await expect(page.getByRole('link', { name: 'First reading' }).first()).toBeVisible();
             await expect(page.getByRole('link', { name: 'Read the field guide before Friday.' })).toBeVisible();

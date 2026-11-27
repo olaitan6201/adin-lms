@@ -118,7 +118,7 @@ final class InstitutionLoginTest extends TestCase
         $this->seed(AuthoritySeeder::class);
         $this->artisan('authority:grant', ['user' => $this->account->id, 'role' => 'institutional_admin',
             'scope' => 'institution'])->assertSuccessful();
-        $this->get($this->simulate())->assertRedirect(route('insights.dashboard'))->assertSessionMissing('security.mfa_user');
-        $this->get(route('insights.dashboard'))->assertRedirect(route('security.challenge'));
+        $this->get($this->simulate())->assertRedirectToRoute('admin.overview')->assertSessionMissing('security.mfa_user');
+        $this->get(route('admin.overview'))->assertRedirect(route('security.challenge'));
     }
 }

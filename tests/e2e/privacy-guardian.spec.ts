@@ -14,7 +14,7 @@ async function signIn(page: Page, login: string) {
         await page.getByLabel('Authenticator code').fill(otp);
         await page.getByRole('button', { name: /verify code/i }).press('Enter');
     }
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(login.startsWith('privacy-') ? /\/admin\/overview$/ : /\/dashboard$/);
 }
 
 test('guardian can switch between two approved records using the displayed references', async ({ page }, info) => {

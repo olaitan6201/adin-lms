@@ -12,11 +12,11 @@ async function signIn(page: Page, account: string) {
     const code = execFileSync('php', ['-r', 'require "vendor/autoload.php"; echo (new PragmaRX\\Google2FA\\Google2FA)->getCurrentOtp(file_get_contents($argv[1]));', factor], { encoding: 'utf8' });
     await page.getByLabel('Authenticator code').fill(code);
     await page.getByLabel('Authenticator code').press('Enter');
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page).toHaveURL(account.startsWith('report-qa-') ? /\/dashboard$/ : /\/admin\/overview$/);
 }
 
-test('QA sees the scope explanation and a recovery action instead of student filters', async ({ page }) => {
-    await signIn(page, 'report-qa');
+test('QA sees the scope explanation and a recovery action instead of student filters', async ({ page }, info) => {
+    await signIn(page, `report-qa-${info.project.name}`);
     await page.goto('/reports?session=00000000-0000-4000-8000-000000000001');
     const main = page.getByRole('main');
     await expect(main.getByText('Quality assurance · Academic reports')).toBeVisible();

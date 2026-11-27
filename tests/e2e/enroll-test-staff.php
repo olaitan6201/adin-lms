@@ -41,6 +41,9 @@ foreach (['desktop', 'phone'] as $project) {
     $qa = User::factory()->create(['email' => "quality-desk-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($qa->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
     file_put_contents($run."/quality-desk-{$project}.factor", enrollFixtureAuthenticator($qa), LOCK_EX);
+    $reportQa = User::factory()->create(['email' => "report-qa-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($reportQa->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
+    file_put_contents($run."/report-qa-{$project}.factor", enrollFixtureAuthenticator($reportQa), LOCK_EX);
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);
@@ -85,15 +88,13 @@ foreach ($authors as $login) {
 
 $examOfficer = User::factory()->create(['email' => 'exam-office@demo.example.test']);
 app(ChangeRoleGrant::class)->apply($examOfficer->id, RoleCode::ExaminationOfficer, 'institution', false);
-$quality = User::factory()->create(['email' => 'report-qa@demo.example.test']);
-app(ChangeRoleGrant::class)->apply($quality->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
 
 foreach (['brand-desktop', 'brand-phone'] as $login) {
     $operator = User::factory()->create(['email' => $login.'@demo.example.test']);
     app(ChangeRoleGrant::class)->apply($operator->id, RoleCode::IctAdmin, 'institution', false);
 }
 
-foreach (['lecturer', 'officer', 'exam-office', 'report-qa', 'brand-desktop', 'brand-phone', ...$authors] as $role) {
+foreach (['lecturer', 'officer', 'exam-office', 'brand-desktop', 'brand-phone', ...$authors] as $role) {
     $account = User::where('email', $role.'@demo.example.test')->sole();
     $secret = enrollFixtureAuthenticator($account);
     file_put_contents($run.'/'.$role.'.factor', $secret, LOCK_EX);

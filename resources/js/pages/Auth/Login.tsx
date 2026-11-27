@@ -104,11 +104,6 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                 <TriangleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
                 Some roles require an authenticator code after the password check. Have your authenticator app ready.
             </p>
-            <div className="mt-4 border-t border-ink-100 pt-5">
-                <Link className="text-[12.5px] font-medium text-ink-600 hover:text-ink-900" href="/">
-                    Return to the learning portal
-                </Link>
-            </div>
         </AccountTask>
     );
 }

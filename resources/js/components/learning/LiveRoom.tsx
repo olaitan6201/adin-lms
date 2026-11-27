@@ -2,6 +2,8 @@ import type { Room } from '@/types/learning/study';
 import { Card } from '@/components/ui/layout/Card';
 import { StudyIcon } from '@/components/learning/Parts';
 
+const previewControl = 'btn btn-sm border-white/10 bg-white/10 text-white disabled:opacity-100';
+
 export function LiveRoom({ room }: { room: Room }) {
     return (
         <Card
@@ -51,7 +53,7 @@ export function LiveRoom({ room }: { room: Room }) {
                     <button
                         disabled
                         type="button"
-                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                        className={previewControl}
                     >
                         <StudyIcon name="mic" className="w-4 h-4" />
                         <span>Mute</span>
@@ -59,7 +61,7 @@ export function LiveRoom({ room }: { room: Room }) {
                     <button
                         disabled
                         type="button"
-                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                        className={previewControl}
                     >
                         <StudyIcon name="monitor" className="w-4 h-4" />
                         <span>Share screen</span>
@@ -67,7 +69,7 @@ export function LiveRoom({ room }: { room: Room }) {
                     <button
                         disabled
                         type="button"
-                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                        className={previewControl}
                     >
                         <StudyIcon name="chat" className="w-4 h-4" />
                         <span>Questions</span>
@@ -75,13 +77,13 @@ export function LiveRoom({ room }: { room: Room }) {
                     <button
                         disabled
                         type="button"
-                        className="btn btn-sm border-white/10 bg-white/10 text-white hover:bg-white/15"
+                        className={previewControl}
                     >
                         <StudyIcon name="camera" className="w-4 h-4" />
                         <span>Record</span>
                     </button>
                     <span className="ml-auto text-[11.5px] text-ink-400">
-                        Classroom preview only. Microphone, recording and screen sharing are unavailable.
+                        Attendance and participation are captured automatically
                     </span>
                 </div>
             </div>

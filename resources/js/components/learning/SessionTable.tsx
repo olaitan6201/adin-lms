@@ -38,7 +38,7 @@ export function SessionTable({
         <div key="actions" className="flex justify-end gap-1.5">
             {session.state === 'completed' ? (
                 <button type="button" className="btn btn-outline btn-sm" onClick={() => openDetails(session.id)}>
-                    Completed session
+                    Recording
                 </button>
             ) : (
                 <button type="button" className="btn btn-outline btn-sm" onClick={() => openDetails(session.id)}>
@@ -55,7 +55,7 @@ export function SessionTable({
             subtitle="Meeting links are issued per session; no conferencing vendor is mandated"
             actions={
                 <>
-                    <Badge tone="sky">{liveClasses.filter((row) => row.state === 'scheduled').length} scheduled</Badge>
+                    <Badge tone="sky">{liveClasses.length} scheduled</Badge>
                     <Action
                         icon="plus"
                         variant="primary"

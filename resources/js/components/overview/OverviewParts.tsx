@@ -2,31 +2,9 @@ import { type ReactNode } from 'react';
 import { Action } from '@/components/ui/controls/Action';
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
-import { StatTile } from '@/components/ui/data-display/StatTile';
 import { workspaceUrl } from '@/lib/workspaceUrl';
-import { Sparkline } from './Charts';
+export { Tiles } from './Tiles';
 export { useFeedback } from './useFeedback';
-
-type Tile = {
-    label: string;
-    value: string;
-    delta?: string;
-    deltaLabel: string;
-    icon: string;
-    spark?: Parameters<typeof Sparkline>[0];
-};
-
-export function Tiles({ items }: { items: readonly Tile[] }) {
-    return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {items.map(({ spark, ...tile }) => (
-                <StatTile key={tile.label} {...tile}>
-                    {spark && <Sparkline {...spark} />}
-                </StatTile>
-            ))}
-        </div>
-    );
-}
 
 type ColumnsProps = {
     left: ReactNode;

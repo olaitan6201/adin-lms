@@ -3,23 +3,6 @@ export type MetricBar = {
     value: number;
     color: string;
 };
-export type ServiceMetric = {
-    metric: string;
-    value: string;
-    state: string;
-};
-export type Approval = {
-    item: string;
-    kind: string;
-    requester: string;
-    age: string;
-    level: string;
-};
-export type ActivityEntry = {
-    who: string;
-    action: string;
-    when: string;
-};
 export type Exam = {
     title: string;
     meta: string;

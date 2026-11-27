@@ -1,22 +1,3 @@
-import { restoreDrillDate } from '@/data/registry/recoverySchedule';
-
-export const institution = {
-    session: '2025/2026',
-    description: 'Delivery, compliance and service health across every faculty for the 2025/2026 first semester.',
-    backup: `Last run 26 Nov 02:00, 41.2 GB written, verification passed. Restore drill due ${restoreDrillDate}.`,
-    weakestCoverage: 'Faculty of Arts and Education trails the institution by 8 points, driven by Week 4-6 content in ENG210 and EDM505 still in draft.',
-    examSubtitle: 'Objective bank coverage for the two upcoming examinations',
-    exams: [
-        { title: 'ACC302 mid-term', meta: '18 Nov 2026, 09:00 · 68 candidates', status: 'Scheduled' },
-        { title: 'BSC205 mid-term', meta: '21 Nov 2026, 13:00 · 54 candidates', status: 'Scheduled' },
-    ],
-    bank: [
-        { label: 'Objective', value: 118, color: '#10B981' },
-        { label: 'Short answer', value: 42, color: '#33475F' },
-        { label: 'Essay', value: 24, color: '#F59E0B' },
-    ],
-} as const;
-
 export const teaching = {
     title: 'Good afternoon, Dr. Adeyemi',
     description: 'Three courses are running this semester. Two submissions arrived after the deadline and one is waiting for a second marker.',

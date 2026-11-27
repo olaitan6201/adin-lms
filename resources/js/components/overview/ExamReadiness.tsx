@@ -1,4 +1,5 @@
-import type { Exam, MetricBar } from './panelTypes';
+import type { AdminOverviewData } from '@/types/insights/adminOverview';
+import type { MetricBar } from './panelTypes';
 import { Badge } from '@/components/ui/data-display/Badge';
 import { SegmentedRing } from '@/components/icons/SegmentedRing';
 import { Card } from '@/components/ui/layout/Card';
@@ -16,7 +17,7 @@ function Coverage({ bank }: { bank: readonly MetricBar[] }) {
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-xl font-semibold text-ink-900 tnum">{total}</span>
-                    <span className="text-[10px] font-medium uppercase tracking-wide text-ink-400">Questions</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wide text-ink-500">Questions</span>
                 </div>
             </div>
             <ul className="min-w-0 flex-1 space-y-2">
@@ -33,19 +34,25 @@ function Coverage({ bank }: { bank: readonly MetricBar[] }) {
 }
 
 export function ExamReadiness({
+    available,
     bank,
     exams,
     subtitle,
-}: {
-    bank: readonly MetricBar[];
-    exams: readonly Exam[];
-    subtitle: string;
-}) {
+}: AdminOverviewData['examinations']) {
+    if (!available) {
+        return (
+            <Card title="Examination readiness">
+                <p className="text-sm text-ink-600">{subtitle}</p>
+            </Card>
+        );
+    }
+
     return (
         <Card title="Examination readiness" subtitle={subtitle}>
             <div className="space-y-4">
-                {exams.map(({ title, meta, status }) => (
-                    <div key={title} className="flex items-center justify-between gap-3 rounded-xl bg-ink-50 p-3.5">
+                {exams.length === 0 && <p className="text-sm text-ink-600">No upcoming examinations in this scope.</p>}
+                {exams.map(({ id, title, meta, status }) => (
+                    <div key={id} className="flex items-center justify-between gap-3 rounded-xl bg-ink-50 p-3.5">
                         <div className="min-w-0">
                             <p className="text-[13px] font-semibold text-ink-800">{title}</p>
                             <p className="mt-0.5 text-xs text-ink-500">{meta}</p>

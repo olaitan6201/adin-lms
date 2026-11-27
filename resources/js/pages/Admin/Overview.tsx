@@ -1,82 +1,89 @@
+import { Head } from '@inertiajs/react';
 import { Action } from '@/components/ui/controls/Action';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
-import {
-    Activity,
-    ApprovalQueue,
-    Delivery,
-    Enrolment,
-    Participation,
-    ServiceHealth,
-} from '@/components/overview/AdminPanels';
+import { Section } from '@/components/overview/AdminOverviewSection';
+import { Approvals, RecentActivity, ServiceHealth } from '@/components/overview/AdminOverviewRecords';
 import { ExamReadiness } from '@/components/overview/ExamReadiness';
-import { Columns, Note, Tiles } from '@/components/overview/OverviewParts';
-import {
-    activityFeed,
-    approvals,
-    completionByFaculty,
-    enrolmentTrend,
-    performanceMetrics,
-    tiles,
-} from '@/data/overview/admin';
-import { institution } from '@/data/overview/dashboardDetails';
-import { workspaceUrl } from '@/lib/workspaceUrl';
+import { AreaChart, DeliveryColumns } from '@/components/overview/Charts';
+import { Columns, Tiles } from '@/components/overview/OverviewParts';
+import { PercentageBars } from '@/components/overview/PercentageBars';
+import type { AdminOverviewData } from '@/types/insights/adminOverview';
 
-export default function Overview() {
+export default function Overview({ overview }: { overview: AdminOverviewData }) {
+    const { links, enrolment, delivery, service, participation } = overview;
+
     return (
-        <>
+        <main>
+            <Head title="Institution overview" />
             <PageHeader
                 eyebrow="Institution"
                 title="Institution overview"
-                description={institution.description}
+                description={overview.description}
                 actions={
                     <>
-                        <Action icon="download" variant="outline" href={workspaceUrl('admin/reports')}>
-                            Reports
-                        </Action>
-                        <Action icon="plus" variant="primary" href={workspaceUrl('admin/delivery')}>
-                            Course offerings
-                        </Action>
+                        {links.reports && <Action icon="download" href={links.reports}>Reports</Action>}
+                        {links.offerings && (
+                            <Action icon="plus" variant="primary" href={links.offerings}>
+                                Course offerings
+                            </Action>
+                        )}
                     </>
                 }
             />
             <div className="role-overview space-y-5">
-                <Tiles items={tiles} />
+                <Tiles items={overview.tiles} />
                 <Columns
                     left={
-                        <Enrolment
-                            session={institution.session}
-                            labels={enrolmentTrend.labels}
-                            series={enrolmentTrend.series[0]}
-                        />
+                        <Section
+                            title="Enrolment over the session"
+                            subtitle={enrolment.session}
+                            labels={enrolment.labels}
+                            values={enrolment.values}
+                            actions={links.structure && (
+                                <Action
+                                    icon="external"
+                                    variant="ghost"
+                                    size="sm"
+                                    href={links.structure}
+                                >
+                                    Academic structure
+                                </Action>
+                            )}
+                        >
+                            <AreaChart
+                                labels={enrolment.labels}
+                                values={enrolment.values}
+                                color="#10B981"
+                                height={250}
+                                label="Recorded enrolment by period"
+                            />
+                        </Section>
                     }
-                    right={<ServiceHealth performanceMetrics={performanceMetrics} backup={institution.backup} />}
+                    right={<ServiceHealth service={service} />}
                 />
                 <Columns
-                    left={<ApprovalQueue approvals={approvals} />}
-                    right={
-                        <ExamReadiness
-                            bank={institution.bank}
-                            exams={institution.exams}
-                            subtitle={institution.examSubtitle}
-                        />
-                    }
+                    left={<Approvals approvals={overview.approvals} />}
+                    right={<ExamReadiness {...overview.examinations} />}
                 />
                 <Columns
                     seven
-                    left={<Delivery labels={enrolmentTrend.labels} values={enrolmentTrend.series[1].values} />}
+                    left={
+                        <Section
+                            title="Course delivery activity"
+                            labels={delivery.labels}
+                            values={delivery.values}
+                        >
+                            <DeliveryColumns labels={delivery.labels} values={delivery.values} />
+                        </Section>
+                    }
                     right={
-                        <Participation
-                            completionByFaculty={completionByFaculty}
-                            summary={institution.weakestCoverage}
-                        />
+                        <Section title="Completion by faculty" subtitle={participation.summary}>
+                            {participation.metrics.length > 0 && <PercentageBars items={participation.metrics} />}
+                        </Section>
                     }
                 />
-                <Activity activityFeed={activityFeed} />
-                <Note>
-                    Prototype data is illustrative. Counts, names and dates are fabricated for design review and do not
-                    describe institutional records.
-                </Note>
+                <RecentActivity activity={overview.activity} />
             </div>
-        </>
+        </main>
     );
 }

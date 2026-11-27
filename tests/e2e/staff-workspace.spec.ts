@@ -22,7 +22,7 @@ function fixtureCode(role: 'lecturer' | 'officer'): string {
 
 test('staff sign-in requires MFA and opens the appropriate workspace', async ({ page }, info) => {
     const role = info.project.name === 'desktop' ? 'lecturer' : 'officer';
-    const expectedHeading = role === 'lecturer' ? 'Teaching desk' : 'Academic operations';
+    const expectedHeading = role === 'lecturer' ? 'Teaching desk' : 'Institution overview';
 
     await page.goto('/login');
     await page.locator('input[name="email"]').fill(`${role}@demo.example.test`);
@@ -32,9 +32,21 @@ test('staff sign-in requires MFA and opens the appropriate workspace', async ({ 
 
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/security\/challenge$/);
+    await expect(page.locator('.workspace-shell')).toHaveCount(0);
     await page.getByLabel('Authenticator code').fill(fixtureCode(role));
     await page.getByRole('button', { name: /verify code/i }).click();
+    await expect(page).toHaveURL(role === 'officer' ? /\/admin\/overview$/ : /\/dashboard$/);
     await expect(page.getByRole('heading', { name: expectedHeading, exact: true })).toBeVisible();
+    if (role === 'officer') {
+        await expect(page.locator('nav a[href="/admin/overview"]')).toHaveAttribute('aria-current', 'page');
+        const readiness = page.locator('main section').filter({
+            has: page.getByRole('heading', { name: 'Examination readiness' }),
+        });
+        await expect(readiness.getByText('Examination management access is required.')).toBeVisible();
+        await expect(readiness.getByText('Bank coverage')).toHaveCount(0);
+    }
+    await expect(page.locator('.workspace-shell')).toHaveCount(1);
+    await expect(page.getByRole('main')).toHaveCount(1);
 
     await page.reload();
     await expect(page.getByRole('heading', { name: expectedHeading, exact: true })).toBeVisible();

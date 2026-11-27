@@ -70,7 +70,7 @@ test('lesson completion uses the supplied percentage for both its label and its 
 });
 
 for (const [module, name, props, label, size] of [
-    ['overview/ExamReadiness', 'ExamReadiness', bank => ({ bank, exams: [], subtitle: '' }), 'Exam bank questions by question type', 108],
+    ['overview/ExamReadiness', 'ExamReadiness', bank => ({ available: true, bank, exams: [], subtitle: '' }), 'Exam bank questions by question type', 108],
     ['reports/ReportCharts', 'Mix', items => ({ items }), 'Learning actions by engagement type', 150],
 ]) {
     test(`${name} preserves its label, size and segment proportions for normal and sparse data`, async () => {

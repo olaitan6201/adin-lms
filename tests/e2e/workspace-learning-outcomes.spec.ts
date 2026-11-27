@@ -69,18 +69,13 @@ test('device copies persist, remove individually, and the ZIP still contains all
     expect(execFileSync('unzip', ['-p', zip, workbook.suggestedFilename()])).toEqual(bytes);
 });
 
-test('the public student dashboard shows the prototype scores and admin opens the selected approval', async ({ page }) => {
+test('the public student dashboard shows the prototype scores', async ({ page }) => {
     await page.goto('/student/overview');
     const results = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Released results' }) });
     await expect(results.locator('tbody tr')).toHaveCount(4);
     const sample = results.getByRole('row').filter({ hasText: 'ACC302' });
     await expect(sample).toContainText('Pending');
     await expect(sample.getByRole('cell', { name: '43', exact: true })).toBeVisible();
-    await page.goto('/admin/overview');
-    const row = page.getByRole('row').filter({ hasText: 'Assessment weight change: CHM401' });
-    await row.getByRole('button', { name: 'Review' }).click();
-    await expect(page.getByRole('dialog')).toContainText('Dr. Grace Mbeki');
-    await expect(page.getByRole('dialog')).not.toContainText('ECN221');
 });
 
 test('course drafts validate, survive tab switches and stay outside student preview', async ({ page }) => {

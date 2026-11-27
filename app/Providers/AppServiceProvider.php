@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Gate::define('view-admin-overview', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::RosterRead));
         Gate::define('view-quality-assurance', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::ComplianceRead));
+        Gate::define('manage-academic-structure', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::AcademicsManage));
 
         Inertia::share('branding', Inertia::always(fn () => app(InstitutionBranding::class)->display()));
         View::composer('scorm-runtime.layout', fn ($view) => $view->with('branding', app(InstitutionBranding::class)->display()));

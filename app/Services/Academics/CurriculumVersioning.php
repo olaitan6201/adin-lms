@@ -53,6 +53,7 @@ class CurriculumVersioning
             if ($action === 'review') {
                 $version->forceFill(['status' => CurriculumStatus::Reviewed])->save();
             } elseif ($action === 'approve') {
+                Programme::lockForUpdate()->findOrFail($version->programme_id);
                 $version
                     ->forceFill([
                         'status' => CurriculumStatus::Approved,

@@ -10,6 +10,8 @@ class AcademicSession extends DomainModel
 
     protected $table = 'academic_sessions';
 
+    protected $dateFormat = 'Y-m-d';
+
     public $timestamps = false;
 
     protected function casts(): array

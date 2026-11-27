@@ -11,6 +11,8 @@ class Semester extends DomainModel
 
     protected $table = 'semesters';
 
+    protected $dateFormat = 'Y-m-d';
+
     public $timestamps = false;
 
     protected function casts(): array

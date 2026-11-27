@@ -28,7 +28,7 @@ if (typeof window !== 'undefined') {
     window.addEventListener('appinstalled', () => update(null));
 }
 
-export function WorkspaceInstall() {
+export function WorkspaceInstall({ inPage = false }: { inPage?: boolean }) {
     const offer = useSyncExternalStore(
         subscribe,
         () => pending,
@@ -52,9 +52,13 @@ export function WorkspaceInstall() {
     }
 
     return (
-        <button type="button" onClick={() => void install()}>
-            <Icon name="download" className="size-4" />
-            {offer ? 'Install as an app' : 'Install this prototype as an app'}
+        <button
+            type="button"
+            onClick={() => void install()}
+            className={inPage ? 'btn btn-outline' : undefined}
+        >
+            <Icon name={inPage ? 'smartphone' : 'download'} className="size-4" />
+            {inPage ? <span>Install app</span> : offer ? 'Install as an app' : 'Install this prototype as an app'}
         </button>
     );
 }

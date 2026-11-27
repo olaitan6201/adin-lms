@@ -61,7 +61,7 @@ export function Calendar({ role, data }: {
             <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
                 <Card
                     title={month}
-                    subtitle={`${term} - dates published by the Registrar and the Examinations Office. All times in West Africa Time (WAT, UTC+01:00).`}
+                    subtitle={`${term} · All times in West Africa Time (UTC+01:00)`}
                     bodyClassName="p-0"
                     actions={
                         <>

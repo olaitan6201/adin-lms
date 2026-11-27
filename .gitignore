@@ -3,6 +3,7 @@
 /docs/
 /scripts/
 /design-system/
+/test-results/
 *.log
 .DS_Store
 .env

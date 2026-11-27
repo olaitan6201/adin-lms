@@ -10,8 +10,10 @@ use Inertia\Response;
 
 final class InsightController extends Controller
 {
-    public function dashboard(InsightFilterRequest $request, DashboardWorkspace $workspace): Response|RedirectResponse
-    {
+    public function dashboard(
+        InsightFilterRequest $request,
+        DashboardWorkspace $workspace,
+    ): Response|RedirectResponse {
         $filters = $request->validated();
         if (isset($filters['offering']) || isset($filters['family'])) {
             return to_route('insights.reports', $filters);

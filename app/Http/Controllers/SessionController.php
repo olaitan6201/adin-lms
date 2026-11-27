@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AccountStatus;
 use App\Http\Middleware\EnsureActiveAccount;
 use App\Http\Requests\LoginRequest;
 use App\Services\Identity\AccountLookup;
+use App\Services\Identity\WorkspaceLanding;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,17 +26,21 @@ class SessionController extends Controller
         ]);
     }
 
-    public function store(LoginRequest $request, AccountLookup $lookup): RedirectResponse
+    public function store(LoginRequest $request, AccountLookup $lookup, WorkspaceLanding $landing): RedirectResponse
     {
         $id = $lookup->loginId($request->validated('email'));
-        if (! Auth::attempt(['id' => $id, 'status' => 'active', 'password' => $request->validated('password')])) {
+        if (! Auth::attempt([
+            'id' => $id,
+            'status' => AccountStatus::Active->value,
+            'password' => $request->validated('password'),
+        ])) {
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
         $request->session()->regenerate();
         $request->session()->put(EnsureActiveAccount::VERSION, Auth::user()->auth_version);
 
-        return redirect()->intended(route('insights.dashboard'));
+        return $landing->afterPassword($request);
     }
 
     public function destroy(Request $request): RedirectResponse

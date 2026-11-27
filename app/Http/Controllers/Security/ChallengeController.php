@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
+use App\Services\Identity\WorkspaceLanding;
 use App\Services\Security\TotpEnrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class ChallengeController extends Controller
         return Inertia::render('Security/Challenge');
     }
 
-    public function verify(Request $request, TotpEnrollment $enrollment): RedirectResponse
+    public function verify(Request $request, TotpEnrollment $enrollment, WorkspaceLanding $landing): RedirectResponse
     {
         $code = $request->input('code');
         if (! $enrollment->verify($request->user(), is_string($code) ? $code : '')) {
@@ -26,6 +27,6 @@ class ChallengeController extends Controller
         $request->session()->regenerate(true);
         $request->session()->put('security.mfa_user', $request->user()->id);
 
-        return to_route('insights.dashboard');
+        return to_route($landing->routeName($request->user()));
     }
 }

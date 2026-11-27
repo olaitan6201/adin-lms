@@ -38,6 +38,46 @@ test('a guest can reach sign-in by keyboard at either navigation width', async (
     await expect(page.locator('#portal-content')).toBeFocused();
 });
 
+test('the account forms reflow at narrow widths and preserve sign-in error recovery', async ({ page }, info) => {
+    if (info.project.name === 'phone') {
+        await page.setViewportSize({ width: 320, height: 720 });
+    }
+
+    for (const [path, heading] of [
+        ['/login', 'Sign in to your learning record'],
+        ['/forgot-password', 'Forgot your password?'],
+        ['/reset-password/example-token', 'Set your password'],
+    ]) {
+        await page.goto(path);
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Return to the learning portal' })).toHaveCount(0);
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        expect(overflow).toBeLessThanOrEqual(0);
+        const button = await page.locator('form button[type="submit"]').boundingBox();
+        expect(button?.height ?? 0).toBeGreaterThanOrEqual(44);
+        const field = page.locator('form input:not([type="hidden"])').first();
+        const fieldBox = await field.boundingBox();
+        expect(fieldBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+        await expect(field).toHaveCSS('border-top-color', 'rgb(122, 140, 160)');
+    }
+
+    await page.goto('/login');
+    const identifier = page.getByLabel('Email, matric number or staff ID');
+    const password = page.getByLabel('Password', { exact: true });
+    const submit = page.getByRole('button', { name: 'Sign in', exact: true });
+    for (const [palette, color] of [['navy', 'rgb(25, 56, 91)'], ['teal', 'rgb(19, 78, 74)']]) {
+        await page.evaluate(value => { document.body.dataset.palette = value; }, palette);
+        await expect(submit).toHaveCSS('background-color', color);
+    }
+    await identifier.fill('unknown-account@example.test');
+    await password.fill('invalid-password');
+    await submit.click();
+    await expect(identifier).toHaveAttribute('aria-invalid', 'true');
+    await expect(identifier).toBeFocused();
+    await expect(identifier).toHaveValue('unknown-account@example.test');
+    await expect(password).toHaveValue('');
+});
+
 test('offline navigation never replays a submission or displays a cached private page', async ({ page, context }) => {
     await page.goto('/login');
     await page.locator('input[name="email"]').fill('ada@demo.example.test');

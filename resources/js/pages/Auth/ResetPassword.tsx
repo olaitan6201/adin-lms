@@ -20,9 +20,6 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
             <Head title="Set your password">
                 <meta name="referrer" content="no-referrer" />
             </Head>
-            <p id="password-help" className="text-sm text-muted-foreground">
-                Choose a password with at least {minimumPasswordLength} characters.
-            </p>
             <Form
                 action="/reset-password"
                 method="post"
@@ -51,6 +48,9 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
                             error={errors.password}
                             required
                         />
+                        <p id="password-help" className="-mt-2 text-sm text-ink-600">
+                            Choose a password with at least {minimumPasswordLength} characters.
+                        </p>
                         <PortalField
                             label="Confirm new password"
                             name="password_confirmation"
@@ -60,12 +60,12 @@ export default function ResetPassword({ email, token }: ResetPasswordProps) {
                             error={errors.password_confirmation}
                             required
                         />
-                        {errors.token && <p role="alert">{errors.token}</p>}
-                        <SubmitButton processing={processing}>Set password</SubmitButton>
+                        {errors.token && <p className="auth-error" role="alert">{errors.token}</p>}
+                        <SubmitButton processing={processing}>{processing ? 'Setting password…' : 'Set password'}</SubmitButton>
                     </>
                 )}
             </Form>
-            <Link href="/forgot-password" className="font-medium text-primary underline underline-offset-4">
+            <Link href="/forgot-password" className="auth-link justify-self-start">
                 Request a new link
             </Link>
         </AccountTask>

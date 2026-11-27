@@ -214,14 +214,6 @@
     @apply pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-ink-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity;
   }
 
-  .auth-shell {
-    @apply grid min-h-[100dvh] lg:grid-cols-[1.1fr_1fr];
-  }
-
-  .auth-aside {
-    @apply hidden flex-col justify-between bg-ink-900 px-10 py-12 text-white lg:flex;
-  }
-
   .grid-paper {
     background-image: linear-gradient(rgba(15, 26, 42, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 26, 42, 0.045) 1px, transparent 1px);
     background-size: 28px 28px;

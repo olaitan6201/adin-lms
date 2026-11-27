@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Form, Head, Link } from '@inertiajs/react';
-import { Info, TriangleAlert } from 'lucide-react';
 import { useRef, useState, type ComponentRef } from 'react';
 import { PortalField, SubmitButton } from '@/components/forms/PortalForm';
 import { AccountTask } from '@/components/auth/AccountTask';
@@ -30,12 +29,16 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
             <section aria-label="Account details">
                 {institutionSignIn && (
                     <p className="mb-5">
-                        <Button asChild className="h-auto min-h-9 max-w-full whitespace-normal">
+                        <Button asChild variant="outline" className="h-auto min-h-11 w-full whitespace-normal">
                             <a href={institutionSignIn}>Continue with institutional sign-in</a>
                         </Button>
                     </p>
                 )}
-                {passwordReset && <p role="status">Your password has been set. Sign in with your new password.</p>}
+                {passwordReset && (
+                    <p role="status" className="auth-status">
+                        Your password has been set. Sign in with your new password.
+                    </p>
+                )}
                 <Form
                     ref={form}
                     action="/login"
@@ -86,24 +89,20 @@ export default function Login({ passwordReset, institutionSignIn }: LoginProps) 
                                 required
                             />
                             <Link
-                                className="justify-self-end text-[12.5px] font-medium text-brand-700 hover:underline"
+                                className="auth-link -my-2 justify-self-end"
                                 href="/forgot-password"
                             >
                                 Forgot your password?
                             </Link>
-                            <SubmitButton processing={processing}>Sign in</SubmitButton>
+                            <SubmitButton processing={processing}>{processing ? 'Signing in…' : 'Sign in'}</SubmitButton>
                         </>
                     )}
                 </Form>
             </section>
-            <p className="mt-2 flex items-start gap-2.5 rounded-xl border border-sky-200 bg-sky-50/70 px-3.5 py-3 text-[13px] leading-relaxed text-sky-900">
-                <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-                If you need an institutional account, contact your university’s ICT office.
-            </p>
-            <p className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-3 text-[13px] leading-relaxed text-amber-900">
-                <TriangleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-                Some roles require an authenticator code after the password check. Have your authenticator app ready.
-            </p>
+            <div className="auth-help">
+                <p>Need an account? Contact your university’s ICT office.</p>
+                <p>If your role requires an authenticator, have your app ready.</p>
+            </div>
         </AccountTask>
     );
 }

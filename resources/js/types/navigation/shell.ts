@@ -29,10 +29,6 @@ export type WorkspaceShellModel = {
         year: string;
         semester: string;
     };
-    session: {
-        title: string;
-        detail: string;
-    };
     identities: Record<WorkspaceRole, { name: string }>;
     notices: readonly ShellNotice[];
 };

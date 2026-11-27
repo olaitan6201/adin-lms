@@ -8,7 +8,6 @@ export const shell: WorkspaceShellModel = {
         crest: { kind: 'symbol', href: '/brand/adin/crest.svg#crest-art' },
     },
     academicPeriod: { year: '2025/2026', semester: 'First Semester' },
-    session: { title: 'Protected session', detail: 'MFA enforced for privileged roles' },
     identities: {
         admin: { name: 'Dr. Ifeoma Nwachukwu' },
         lecturer: { name: 'Dr. Peter Adeyemi' },

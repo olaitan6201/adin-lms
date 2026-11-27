@@ -36,7 +36,7 @@
 }
 
 /* Fixture portals mount on body. Live account screens keep only their local theme. */
-@scope (body:has(.workspace-shell, #access-content), .portal-bare .auth-shell) {
+@scope (body:has(.workspace-shell), .portal-bare .auth-shell) {
     :scope {
         --radius: 0.5rem;
         --color-sky-50: #f0f9ff;

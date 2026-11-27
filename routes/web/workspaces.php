@@ -18,7 +18,6 @@ $screens = [
         'communication', 'calendar', 'settings/notifications',
     ],
     'guardian' => ['progress', 'settings/notifications'],
-    'auth' => ['signin', 'recover'],
 ];
 
 foreach ($screens as $role => $pages) {

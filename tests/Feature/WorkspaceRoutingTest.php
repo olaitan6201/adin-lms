@@ -12,8 +12,8 @@ class WorkspaceRoutingTest extends TestCase
     {
         $routes = collect(Route::getRoutes()->getRoutesByName())
             ->filter(fn ($route, string $name) => str_starts_with($name, 'workspace.'));
-        $this->assertCount(44, $routes);
-        $this->assertCount(44, $routes->map(fn ($route) => $route->defaults['component'])->unique());
+        $this->assertCount(42, $routes);
+        $this->assertCount(42, $routes->map(fn ($route) => $route->defaults['component'])->unique());
         foreach ($routes as $name => $route) {
             $key = str_replace('.', '/', substr($name, strlen('workspace.')));
             $this->get(route($name))->assertInertia(fn (AssertableInertia $page) => $page
@@ -25,11 +25,17 @@ class WorkspaceRoutingTest extends TestCase
         }
     }
 
-    public function test_demo_identity_and_assessment_actions_have_no_persistence_endpoint(): void
+    public function test_demo_auth_routes_are_removed_and_account_routes_remain_available(): void
     {
-        foreach (['workspace.auth.signin', 'workspace.auth.recover', 'workspace.student.exam'] as $screen) {
-            $this->post(route($screen))->assertMethodNotAllowed();
-        }
+        $this->get('/auth/signin')->assertNotFound();
+        $this->get('/auth/recover')->assertNotFound();
+        $this->get(route('login'))->assertInertia(fn (AssertableInertia $page) => $page->component('Auth/Login', true));
+        $this->get(route('password.request'))->assertInertia(fn (AssertableInertia $page) => $page->component('Auth/ForgotPassword', true));
+    }
+
+    public function test_sample_exam_does_not_persist_and_private_pages_require_login(): void
+    {
+        $this->post(route('workspace.student.exam'))->assertMethodNotAllowed();
         $this->get('/admin/qa')->assertRedirectToRoute('login');
         $this->get('/student/downloads')->assertRedirectToRoute('login');
     }

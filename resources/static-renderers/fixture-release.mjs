@@ -7,7 +7,6 @@ const modules = {
     lecturer: 'overview courses course classroom assignments cbt gradebook attendance communication calendar reports settings.notifications',
     student: 'overview courses course assignments exam results downloads communication calendar settings.notifications',
     guardian: 'progress settings.notifications',
-    auth: 'signin recover',
 };
 const aliases = { 'admin/qa': 'admin/qa-review', 'student/downloads': 'student/offline-downloads' };
 const root = new URL('../../public/', import.meta.url);

@@ -19,7 +19,7 @@ export function WorkspaceRail({
     close?: ReactNode;
     onNavigate?: () => void;
 }) {
-    const { brand, session } = useWorkspaceShell();
+    const { brand } = useWorkspaceShell();
     return (
         <>
             <div className="portal-brand-row">
@@ -57,21 +57,21 @@ export function WorkspaceRail({
             </nav>
             <footer className="portal-rail-footer">
                 <div>
-                    <Icon name="shield" className="size-4 shrink-0" />
+                    <Icon name="info" className="size-4 shrink-0" />
                     <div className="min-w-0">
-                        <p className="truncate">{session.title}</p>
-                        <small className="truncate">{session.detail}</small>
+                        <p className="truncate">Public workspace</p>
+                        <small className="truncate">No account required</small>
                     </div>
                 </div>
                 <WorkspaceInstall />
-                <Link
-                    href={workspaceUrl('auth/signin')}
+                <a
+                    href="/login"
                     onClick={onNavigate}
                     className="mt-1 rounded-lg transition-colors hover:bg-white/10 hover:text-white"
                 >
-                    <Icon name="logout" className="size-4 shrink-0" />
-                    <span className="truncate">Sign out of this session</span>
-                </Link>
+                    <Icon name="lock" className="size-4 shrink-0" />
+                    <span className="truncate">Sign in</span>
+                </a>
             </footer>
         </>
     );

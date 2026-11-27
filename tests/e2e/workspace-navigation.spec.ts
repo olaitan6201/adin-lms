@@ -3,6 +3,22 @@ import { execFileSync } from 'node:child_process';
 
 type WorkspaceRoute = { uri: string; name: string };
 
+test('the public workspace links to real sign-in and email recovery', async ({ page }, info) => {
+    await page.goto('/admin/overview');
+    if (info.project.name === 'phone') {
+        await page.getByRole('button', { name: 'Open navigation' }).click();
+    }
+
+    const signIn = page.getByRole('link', { name: 'Sign in', exact: true });
+    await expect(signIn).toHaveAttribute('href', '/login');
+    await signIn.click();
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByRole('heading', { name: 'Sign in to your learning record' })).toBeVisible();
+    await page.getByRole('link', { name: 'Forgot your password?' }).click();
+    await expect(page).toHaveURL(/\/forgot-password$/);
+    await expect(page.getByRole('button', { name: 'Send reset link' })).toBeVisible();
+});
+
 test('each role menu links to its Laravel workspace routes', async ({ page }, info) => {
     const routes: WorkspaceRoute[] = JSON.parse(execFileSync('php', [
         'artisan', 'route:list', '--name=workspace.', '--json', '--no-interaction',

@@ -3,25 +3,13 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { verifyNarrowHierarchy, verifyOversight } from './structure-layout-assertions';
 import { verifyAcademicRegister } from './structure-register-assertions';
+import { verifySharedRegisterImport } from './structure-register-import-assertions';
+import { structureSpreadsheet } from './structure-spreadsheet';
 
 const structureUrl = '/admin/structure';
 
-function spreadsheet(rows: string[][], xlsx: boolean) {
-    if (!xlsx) {
-        return { name: 'structure.csv', mimeType: 'text/csv', buffer: Buffer.from(rows.map(row => row.join(',')).join('\n')) };
-    }
-
-    const buffer = execFileSync('php', [
-        '-r',
-        'require "vendor/autoload.php"; $book = new PhpOffice\\PhpSpreadsheet\\Spreadsheet; $book->getActiveSheet()->fromArray(json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR)); (new PhpOffice\\PhpSpreadsheet\\Writer\\Xlsx($book))->save("php://output");',
-        JSON.stringify(rows),
-    ]);
-
-    return { name: 'structure.xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', buffer };
-}
-
 test('structure imports and manual changes persist after reload', async ({ page }, info) => {
-    test.setTimeout(65_000);
+    test.setTimeout(95_000);
     const role = `structure-${info.project.name}`;
     const secret = join(process.env.PORTAL_E2E_RUN!, `${role}.factor`);
     const factor = execFileSync('php', [
@@ -77,7 +65,7 @@ test('structure imports and manual changes persist after reload', async ({ page 
     await dialog.getByRole('button', { name: 'Preview import' }).click();
     await expect(dialog.getByText('Row 4: Parent code was not found.')).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Confirm import' })).toHaveCount(0);
-    await file.setInputFiles(spreadsheet([
+    await file.setInputFiles(structureSpreadsheet([
         ['kind', 'code', 'name', 'parent_code'],
         ['faculty', faculty, title, ''],
         ['department', department, `Units ${suffix}`, faculty],
@@ -92,6 +80,7 @@ test('structure imports and manual changes persist after reload', async ({ page 
     await expect(leadership).toContainText(`of ${previousDepartments + 1} departments`);
     await verifyOversight(page, title, suffix);
     await verifyAcademicRegister(page, suffix, info.outputPath('academic-pathways.png'));
+    await verifySharedRegisterImport(page, suffix, department, info.outputPath('shared-register-preview.png'));
 
     await page.getByRole('button', { name: 'Add legacy programme', exact: true }).click();
     await dialog.getByLabel('Programme', { exact: true }).fill(`Engineering ${suffix}`);

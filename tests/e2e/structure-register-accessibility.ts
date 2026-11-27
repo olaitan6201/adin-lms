@@ -8,10 +8,9 @@ export async function verifyEmptyAcademicRegister(page: Page) {
     await expect(register.getByText('Add a shared programme before configuring its levels.')).toBeVisible();
 }
 
-export async function verifyRegisterDrawerContrast(dialog: Locator) {
-    const code = dialog.getByLabel('Code', { exact: true });
-    await code.focus();
-    const colors = await code.evaluate(input => {
+export async function verifyRegisterDrawerContrast(dialog: Locator, field = dialog.getByLabel('Code', { exact: true })) {
+    await field.focus();
+    const colors = await field.evaluate(input => {
         const submit = input.closest('form')!.querySelector('button[type="submit"]')!;
         const inputStyle = getComputedStyle(input);
         const submitStyle = getComputedStyle(submit);

@@ -14,11 +14,12 @@ export function LessonMenu({ studentModules, summary, selected, select }: {
     studentModules: StudyModules;
 }) {
     const items = studentModules.map((module) => (
-        <li key={module.title}>
+        <li key={module.id}>
             <button
                 type="button"
                 className={`flex w-full items-start gap-3 border-l-2 px-4 py-3 text-left transition-colors ${module.id === selected ? 'border-brand-500 bg-ink-50' : 'border-transparent hover:bg-ink-50/70'}`}
                 aria-current={module.id === selected ? 'step' : undefined}
+                aria-label={`${module.title}, ${module.state}`}
                 disabled={module.state === 'locked'}
                 onClick={() => select(module.id)}
             >
@@ -42,7 +43,7 @@ export function LessonMenu({ studentModules, summary, selected, select }: {
                         <StudyIcon name="clock" className="w-3.5 h-3.5" />
                         {module.duration}
                         <span className="text-ink-300">|</span>
-                        {module.type} · {module.state}
+                        {module.type}
                     </span>
                 </span>
             </button>
@@ -55,7 +56,7 @@ export function LessonMenu({ studentModules, summary, selected, select }: {
                 <p className="text-[13px] font-semibold text-ink-900">Course content</p>
                 <span className="text-[11.5px] text-ink-500">{summary}</span>
             </div>
-            <ul className="divide-y divide-ink-50">{items}</ul>
+            <ul className="divide-y divide-ink-50" data-scroll>{items}</ul>
         </div>
     );
 }

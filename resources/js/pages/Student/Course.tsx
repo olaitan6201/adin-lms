@@ -60,10 +60,11 @@ export default function Course() {
                 icon="check"
                 variant="primary"
                 size="sm"
+                aria-label={current.state === 'complete' ? 'Complete' : 'Mark complete for this visit'}
                 disabled={current.state === 'complete'}
                 onClick={() => setCompleted([...completed, current.id])}
             >
-                {current.state === 'complete' ? 'Complete' : 'Mark complete for this visit'}
+                {current.state === 'complete' ? 'Complete' : 'Mark complete'}
             </Action>
         </>
     );
@@ -93,7 +94,7 @@ export default function Course() {
                 <div className="space-y-5 xl:col-span-4">
                     <LessonMenu
                         studentModules={modules}
-                        summary={`${modules.filter((item) => item.state === 'complete').length} of ${modules.length} sample items complete`}
+                        summary={completed.length ? `${completed.length} marked complete this visit` : studyCourse.lessons}
                         selected={selected}
                         select={select}
                     />

@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/layout/Card';
 import { Icon } from '@/components/icons/Icon';
 import type { Assignment, Receipt, StudentWork } from '@/types/assessments/assignments';
-import { Status } from '../RecordDetails';
+import { Badge } from '@/components/ui/data-display/Badge';
 
 const displayTitle = (a?: Assignment) => a?.shortTitle ?? a?.title;
 
@@ -21,7 +21,7 @@ function SubmittedWork({
             <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-500">
                 <Icon name="document" className="size-4" />
             </span>
-            <button className="min-w-0 flex-1 text-left" onClick={() => open(assignment)}>
+            <button type="button" className="min-w-0 flex-1 text-left" onClick={() => open(assignment)}>
                 <span className="block truncate text-[13px] font-medium text-ink-800">
                     {displayTitle(assignment)}
                 </span>
@@ -29,7 +29,9 @@ function SubmittedWork({
                     {receipt.time} · {receipt.size}
                 </small>
             </button>
-            <Status value={grade === undefined ? 'Awaiting marking' : `Graded ${grade}`} />
+            <Badge tone={grade === undefined ? 'amber' : 'emerald'}>
+                {grade === undefined ? 'Awaiting marking' : `Graded ${grade}`}
+            </Badge>
         </li>
     );
 }

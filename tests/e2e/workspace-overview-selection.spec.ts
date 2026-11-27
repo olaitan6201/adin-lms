@@ -42,7 +42,7 @@ test.describe('controlled outstanding work', () => {
         });
         await page.goto('/student/overview');
         const row = page.getByRole('row').filter({ hasText: 'Group presentation: narrative voice' });
-        const link = row.getByRole('link', { name: 'Assignments', exact: true });
+        const link = row.getByRole('link', { name: 'Open', exact: true });
         await expect(link).toHaveAttribute('href', '/student/assignments#assignment=as-4');
         await link.click();
         const drawer = page.getByRole('dialog');

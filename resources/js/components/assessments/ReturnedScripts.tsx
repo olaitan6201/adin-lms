@@ -48,9 +48,9 @@ export function ReturnedScripts({ records }: { records: StudentWork[] }) {
                             <p className="text-[13px] font-medium text-ink-800">
                                 {assignment.shortTitle ?? assignment.title}
                             </p>
-                            <p className="text-xs text-ink-500">
-                                {previous ? 'Previous result' : 'Current result'} · {receipt.file}
-                            </p>
+                            {previous && (
+                                <p className="text-xs text-ink-500">Previous result · {receipt.file}</p>
+                            )}
                             <p className="mt-1 text-[13px] leading-relaxed text-ink-600">{feedback.text}</p>
                             <div className="mt-2 flex items-center gap-2">
                                 <Badge tone="emerald">{feedback.score} / 100</Badge>

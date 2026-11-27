@@ -37,7 +37,7 @@ export function Courses({ courses, subtitle }: CoursesProps) {
                         </div>
                     </div>,
                     <Badge key="lessons" tone="slate">
-                        {c.lessons}
+                        {c.lessons} lessons
                     </Badge>,
                     <div key="actions" className="flex justify-end">
                         <Go to={`student/course?course=${c.code}`}>Continue</Go>
@@ -75,7 +75,7 @@ export function Pending({ pending }: { pending: readonly PendingWork[] }) {
                             className="btn btn-outline btn-sm"
                             href={workspaceUrl('student/assignments') + selectionFragment('assignment', a.id)}
                         >
-                            Assignments
+                            Open
                         </a>
                     </div>,
                 ])}

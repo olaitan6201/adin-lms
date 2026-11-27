@@ -75,7 +75,7 @@ export default function StudentAssignments({
             <PageHeader
                 eyebrow="Assessment"
                 title="Assignments"
-                description="Choose a file before closing. This sample records its details and gives you a receipt without uploading the file."
+                description="Choose a file before closing. Your receipt records the time and the file."
                 actions={
                     <Action icon="calendar" href={workspaceUrl('student/calendar')}>
                         Academic calendar
@@ -98,6 +98,9 @@ export default function StudentAssignments({
                     rowKeys={records.map(({ assignment }) => assignment.id)}
                     rows={records.map((record) => {
                         const { assignment: a, current } = record;
+                        const window = submissionWindow(a, sampleTime);
+                        const action = current ? 'View receipt' : window === 'Open' ? 'Submit' : 'View assignment';
+
                         return [
                             <RecordName key="assignment" name={a.title} meta={a.course} />,
                             <span key="due" className="text-[13px] text-ink-600">
@@ -113,7 +116,7 @@ export default function StudentAssignments({
                             ),
                             <div key="actions" className="flex justify-end">
                                 <Action size="sm" onClick={() => openAssignment(a)}>
-                                    {current ? 'View receipt' : 'View assignment'}
+                                    {action}
                                 </Action>
                             </div>,
                         ];
@@ -128,8 +131,8 @@ export default function StudentAssignments({
                 <ReturnedScripts records={records} />
             </div>
             <Note>
-                Sample clock: {formatInstitutionalTime(sampleTime)} WAT. You can replace an open submission before
-                closing. Scores and feedback appear after marking.
+                Sample clock: {formatInstitutionalTime(sampleTime)} WAT. Files are not uploaded in this sample.
+                You can replace a submission until closing. Scores and feedback appear after marking.
             </Note>
             {selected && (
                 <SubmissionPanel

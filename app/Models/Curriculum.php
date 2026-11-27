@@ -27,6 +27,11 @@ class Curriculum extends DomainModel
         return $this->belongsTo(Programme::class, 'programme_id');
     }
 
+    public function academicPathway(): BelongsTo
+    {
+        return $this->belongsTo(AcademicPathway::class);
+    }
+
     public function approvedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');

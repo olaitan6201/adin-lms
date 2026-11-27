@@ -2,6 +2,7 @@
 
 namespace App\Services\Academics;
 
+use App\Enums\AccountStatus;
 use App\Models\User;
 use App\Services\Authority\RoleCatalogue;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ class AcademicNavigation
     /** @return list<array{label:string, href:string}> */
     public function forUser(?User $user): array
     {
-        if (! $user || $user->status !== 'active') {
+        if (! $user || $user->status !== AccountStatus::Active) {
             return [];
         }
 
@@ -23,12 +24,14 @@ class AcademicNavigation
             ->join('permissions', 'permissions.id', '=', 'role_permissions.permission_id')
             ->join('access_scopes', 'access_scopes.id', '=', 'role_grants.scope_id')
             ->get(['roles.code as role', 'permissions.code as ability', 'access_scopes.scope_key']);
+
         $institution = $permissions
             ->filter(
                 fn ($grant) => $grant->scope_key === 'institution' &&
                     RoleCatalogue::scopeType($grant->role) === 'institution',
             )
             ->pluck('ability');
+
         $oversight = $permissions->contains(
             fn ($grant) => $grant->ability === 'roster.read' &&
                 match ($grant->role) {
@@ -37,7 +40,11 @@ class AcademicNavigation
                     default => false,
                 },
         );
+
+        /** @var bool $student */
         $student = $user->student()->exists();
+
+        /** @var bool $calendar */
         $calendar = $student || $oversight || $institution->intersect([
             'courses.read_own', 'roster.read', 'academics.manage', 'offerings.manage',
             'examinations.manage', 'curriculum.edit', 'curriculum.approve', 'compliance.read', 'operations.manage',

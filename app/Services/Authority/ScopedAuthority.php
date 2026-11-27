@@ -13,10 +13,29 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ScopedAuthority
 {
+    public function canAccessAdminWorkspace(User $user): bool
+    {
+        return RoleGrant::where('user_id', $user->id)
+            ->whereHas('accessScope', function (Builder $scope): void {
+                $scope->where('scope_key', ScopeType::Institution->key());
+            })
+            ->whereHas('role', function (Builder $roles): void {
+                $roles->whereIn('code', [
+                    RoleCode::SuperAdmin,
+                    RoleCode::InstitutionalAdmin,
+                    RoleCode::IctAdmin,
+                    RoleCode::QualityAssuranceOfficer,
+                ]);
+            })
+            ->exists();
+    }
+
     public function requiresMfa(User $user): bool
     {
         return RoleGrant::where('user_id', $user->id)
-            ->whereHas('role', fn (Builder $roles) => $roles->whereNotIn('code', [RoleCode::Student, RoleCode::Guardian]))
+            ->whereHas('role', fn (Builder $roles) => $roles->whereNotIn('code', [
+                RoleCode::Student, RoleCode::Guardian
+            ]))
             ->exists();
     }
 
@@ -38,10 +57,16 @@ class ScopedAuthority
             return true;
         }
 
-        if ($this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Offering->key($offering->id), [RoleCode::Lecturer])
-            && TeachingAllocation::where('offering_id', $offering->id)
-                ->whereHas('lecturer', fn (Builder $query) => $query->where('user_id', $user->id))->exists()) {
-            return true;
+        if ($this->hasGrant($user, PermissionCode::RosterRead, ScopeType::Offering->key($offering->id), [RoleCode::Lecturer])) {
+            $allocated = TeachingAllocation::where('offering_id', $offering->id)
+                ->whereHas('lecturer', function (Builder $query) use ($user): void {
+                    $query->where('user_id', $user->id);
+                })
+                ->exists();
+                
+            if ($allocated) {
+                return true;
+            }
         }
 
         $department = $offering->curriculumCourse?->course?->department;
@@ -60,7 +85,9 @@ class ScopedAuthority
             ->join('role_permissions', 'role_permissions.role_id', '=', 'roles.id')
             ->join('permissions', 'permissions.id', '=', 'role_permissions.permission_id')
             ->join('access_scopes', 'access_scopes.id', '=', 'role_grants.scope_id')
-            ->whereIn('roles.code', $roles)->where('permissions.code', $permission)
-            ->where('access_scopes.scope_key', $scope)->exists();
+            ->whereIn('roles.code', $roles)
+            ->where('permissions.code', $permission)
+            ->where('access_scopes.scope_key', $scope)
+            ->exists();
     }
 }

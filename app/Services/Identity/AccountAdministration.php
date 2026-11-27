@@ -2,7 +2,9 @@
 
 namespace App\Services\Identity;
 
+use App\Enums\AccountStatus;
 use App\Enums\PermissionCode;
+use App\Enums\RoleCode;
 use App\Jobs\SendAccountResetLink;
 use App\Models\AuditLog;
 use App\Models\RoleGrant;
@@ -20,8 +22,12 @@ class AccountAdministration
     public function provision(string $actorId, string $email, string $name): User
     {
         $user = DB::transaction(function () use ($actorId, $email, $name): User {
-            $this->authorize($actorId);
-            if ($this->lookup->emailQuery($email)->exists()) {
+            $actor = User::lockForUpdate()
+                ->find($actorId);
+            $this->authorize($actor);
+            $accounts = $this->lookup->emailQuery($email);
+            
+            if ($accounts->exists()) {
                 throw new DomainException('An account already uses this email.');
             }
 
@@ -38,16 +44,26 @@ class AccountAdministration
     public function changeStatus(string $actorId, string $userId, bool $suspend): void
     {
         DB::transaction(function () use ($actorId, $userId, $suspend): void {
-            $this->authorize($actorId);
-            $user = User::lockForUpdate()->find($userId);
+            $accounts = User::whereKey([$actorId, $userId])
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->get();
+            $actor = $this->authorize($accounts->find($actorId));
+            $user = $accounts->find($userId);
             if (! $user) {
                 throw new DomainException('Unknown account.');
             }
 
-            $status = $suspend ? 'suspended' : 'active';
-            if ($userId === $actorId || (RoleGrant::where('user_id', $userId)->whereHas('role', fn ($q) => $q
-                ->whereIn('code', ['super_admin', 'ict_admin', 'institutional_admin']))->exists()
-                && ! $this->authority->institutionAllows(User::findOrFail($actorId), PermissionCode::GrantsManage))) {
+            $status = $suspend ? AccountStatus::Suspended : AccountStatus::Active;
+            $administrator = RoleGrant::where('user_id', $userId)
+                ->whereHas('role', fn ($query) => $query->whereIn('code', [
+                    RoleCode::SuperAdmin,
+                    RoleCode::IctAdmin,
+                    RoleCode::InstitutionalAdmin,
+                ]))
+                ->exists();
+            if ($userId === $actorId || ($administrator
+                && ! $this->authority->institutionAllows($actor, PermissionCode::GrantsManage))) {
                 throw new DomainException('You cannot change the status of this administrator account.');
             }
 
@@ -57,18 +73,19 @@ class AccountAdministration
                 $user->setRememberToken(null);
                 $user->save();
                 WebSessions::revokeAll($user);
-                Password::broker()->deleteToken($user);
+                Password::deleteToken($user);
                 $this->record($actorId, $user, $suspend ? 'account.suspended' : 'account.reactivated');
             }
         }, 3);
     }
 
-    private function authorize(string $actorId): void
+    private function authorize(?User $actor): User
     {
-        $actor = User::lockForUpdate()->find($actorId);
-        if ($actor?->status !== 'active' || ! $this->authority->institutionAllows($actor, PermissionCode::AccountsManage)) {
+        if ($actor?->status !== AccountStatus::Active || ! $this->authority->institutionAllows($actor, PermissionCode::AccountsManage)) {
             throw new DomainException('An active institutional account administrator is required.');
         }
+
+        return $actor;
     }
 
     private function record(string $actor, User $user, string $action): void

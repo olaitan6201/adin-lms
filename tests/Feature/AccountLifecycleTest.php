@@ -11,6 +11,7 @@ use Database\Seeders\AuthoritySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 class AccountLifecycleTest extends TestCase
@@ -41,9 +42,12 @@ class AccountLifecycleTest extends TestCase
         $admin = $this->administrator();
         $student = Student::factory()->create();
         $user = $student->user;
+        $token = Password::createToken($user);
         $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect(route('insights.dashboard'));
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $user->id])->assertFailed();
+        $this->assertTrue(Password::tokenExists($user, $token));
         $this->artisan('identity:account', ['action' => 'suspend', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();
+        $this->assertFalse(Password::tokenExists($user, $token));
         $this->assertDatabaseHas('users', ['id' => $user->id, 'status' => 'suspended']);
         $this->assertDatabaseMissing('auth_sessions', ['user_id' => $user->id, 'revoked_at' => null]);
         $this->artisan('identity:account', ['action' => 'reactivate', 'target' => $user->id, '--actor' => $admin->id])->assertSuccessful();

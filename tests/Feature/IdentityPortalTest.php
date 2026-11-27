@@ -2,13 +2,19 @@
 
 namespace Tests\Feature;
 
+use App\Enums\AccountStatus;
+use App\Enums\RoleCode;
 use App\Models\Department;
 use App\Models\RoleGrant;
 use App\Models\User;
 use App\Notifications\AccountResetLink;
+use App\Services\Authority\ChangeRoleGrant;
+use App\Services\Identity\AccountAccess;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\Support\AcademicAccess;
 use Tests\TestCase;
 
@@ -27,16 +33,25 @@ class IdentityPortalTest extends TestCase
         $this->post('/accounts', $data)->assertSessionHasNoErrors();
         $user = User::where('email', $data['email'])->sole();
         Notification::assertSentTo($user, AccountResetLink::class);
-        $this->get('/accounts?q=student@example.test')->assertInertia(fn (AssertableInertia $p) => $p
-            ->has('accounts', 1)->where('accounts.0.id', $user->id)->missing('accounts.0.password_hash'));
-        foreach (['suspended', 'active'] as $status) {
-            $this->patch("/accounts/$user->id", compact('status'))->assertSessionHasNoErrors();
+        $this->get('/accounts?q=student@example.test')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('accounts', 1)
+                ->where('accounts.0.id', $user->id)
+                ->where('accounts.0.status', 'active')
+                ->missing('accounts.0.password_hash'));
+        $this->patch("/accounts/$user->id", ['status' => 'unknown'])
+            ->assertSessionHasErrors('status');
+        $this->patch("/accounts/$user->id", ['status' => AccountStatus::Disabled->value])
+            ->assertSessionHasErrors('status');
+        foreach ([AccountStatus::Suspended, AccountStatus::Active] as $status) {
+            $this->patch("/accounts/$user->id", ['status' => $status->value])
+                ->assertSessionHasNoErrors();
             $this->assertSame($status, $user->fresh()->status);
         }
 
         foreach ([$admin, $super] as $protected) {
             $this->patch("/accounts/$protected->id", ['status' => 'suspended'])->assertSessionHasErrors('status');
-            $this->assertSame('active', $protected->fresh()->status);
+            $this->assertSame(AccountStatus::Active, $protected->fresh()->status);
         }
     }
 
@@ -59,5 +74,44 @@ class IdentityPortalTest extends TestCase
         $this->delete("$path/$grant->id")->assertRedirect();
         $this->assertDatabaseMissing('role_grants', ['id' => $grant->id]);
         $this->assertDatabaseHas('audit_logs', ['actor_id' => $super->id, 'subject_key' => "user:$user->id", 'action' => 'role.revoked']);
+    }
+
+    public function test_revoked_authority_is_rechecked_before_a_grant_is_written(): void
+    {
+        $admin = $this->academicUser('super_admin');
+        $actor = $admin->fresh();
+        $target = User::factory()->create();
+        app(ChangeRoleGrant::class)->apply($actor->id, RoleCode::SuperAdmin, 'institution', true);
+
+        try {
+            app(AccountAccess::class)->grant($actor, $target, RoleCode::InstitutionalAdmin, '');
+            $this->fail('A stale actor must not write a grant.');
+        } catch (HttpException $error) {
+            $this->assertSame(403, $error->getStatusCode());
+        }
+
+        $this->assertDatabaseMissing('role_grants', ['user_id' => $target->id]);
+    }
+
+    public function test_current_actor_without_grants_permission_cannot_write_through_the_service(): void
+    {
+        $admin = $this->academicUser();
+        $actor = $admin->fresh();
+        $target = User::factory()->create();
+        $access = app(AccountAccess::class);
+
+        try {
+            $access->grant($actor, $target, RoleCode::InstitutionalAdmin, '');
+            $this->fail('The grant policy must also be applied inside the service.');
+        } catch (AuthorizationException $error) {
+            $this->assertFalse($error->response()->allowed());
+        }
+
+        $this->assertDatabaseMissing('role_grants', ['user_id' => $target->id]);
+        $this->assertDatabaseMissing('audit_logs', [
+            'actor_id' => $actor->id,
+            'subject_key' => 'user:'.$target->id,
+            'action' => 'role.granted',
+        ]);
     }
 }

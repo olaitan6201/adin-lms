@@ -1,88 +1,76 @@
+import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Link } from '@inertiajs/react';
-import { ChevronRight, LogOut, ShieldCheck } from 'lucide-react';
+import { Icon } from '@/components/icons/Icon';
 import type { ReactNode } from 'react';
 import { InstallPortal } from './InstallPortal';
-import { SidebarNavigation, type Destination } from './SidebarNavigation';
-
-export type PortalBrand = {
-    institution: string;
-    logoFull: string;
-    logoWhite: string
-};
-export type Account = {
-    name: string;
-    role: string;
-    initials: string
-};
+import { SidebarNavigation } from './SidebarNavigation';
+import { roles, type RoleKey } from '../workspace/navigation';
+import { RoleSwitcher } from '../workspace/RoleSwitcher';
+import { useWorkspaceShell } from '../workspace/shellModel';
+import { InstitutionMark } from '@/components/icons/InstitutionMark';
 
 export function PortalRail({
-    branding,
-    signedIn,
-    account,
-    academicLinks,
     path,
+    role,
+    screen,
     close,
-    onCurrentPage,
+    onNavigate,
 }: {
-    branding: PortalBrand;
-    signedIn: boolean;
-    account: Account;
-    academicLinks: Destination[];
     path: string;
+    role?: RoleKey;
+    screen?: string;
     close?: ReactNode;
-    onCurrentPage: () => void;
+    onNavigate?: () => void;
 }) {
-    const routes = document.body.dataset;
+    const { brand, live } = useWorkspaceShell();
+    const home = role ? workspaceUrl(`${role}/${roles[role].home}`) : live?.home ?? '/portal';
+
     return (
         <>
             <div className="portal-brand-row">
-                <Link
-                    href={signedIn ? (routes.dashboard ?? '/dashboard') : '/'}
-                    className="portal-brand"
-                    aria-label={`${branding.institution} home`}
-                >
-                    <img
-                        src={branding.logoWhite || branding.logoFull}
-                        width="42"
-                        height="36"
-                        alt=""
-                    />
+                <Link href={home} className="portal-brand" onClick={onNavigate}>
+                    <InstitutionMark source={brand.crest} className="h-9 w-auto shrink-0" />
                     <span>
-                        <strong>AdinOpen LMS</strong>
-                        <small>{branding.institution}</small>
+                        <strong>{brand.name}</strong>
+                        <small>{brand.institution}</small>
                     </span>
                 </Link>
                 {close}
             </div>
-            {signedIn && (
-                <Link href={routes.profile ?? '/profile'} className="portal-account">
-                    <span className="portal-monogram">{account.initials}</span>
-                    <span className="portal-account-copy">
-                        <strong>{account.name}</strong>
-                        <small>{account.role}</small>
-                    </span>
-                    <ChevronRight size={16} aria-hidden="true" />
-                </Link>
+            {role && <RoleSwitcher role={role} onNavigate={onNavigate} />}
+            <SidebarNavigation
+                path={path}
+                role={role}
+                screen={screen}
+                onNavigate={onNavigate}
+            />
+            {live?.signedIn && (
+                <footer className="portal-rail-footer">
+                    <InstallPortal />
+                    <Link href="/logout" method="post" as="button">
+                        <Icon name="logout" className="size-4 shrink-0" />
+                        Sign out
+                    </Link>
+                </footer>
             )}
-            <SidebarNavigation {...{ signedIn, academicLinks, path, onCurrentPage }} />
-            {signedIn && (
+            {role && (
                 <footer className="portal-rail-footer">
                     <div>
-                        <ShieldCheck size={16} aria-hidden="true" />
-                        <span>
-                            Protected session<small>MFA enforced for privileged roles</small>
-                        </span>
+                        <Icon name="info" className="size-4 shrink-0" />
+                        <div className="min-w-0">
+                            <p className="truncate">Public workspace</p>
+                            <small className="truncate">No account required</small>
+                        </div>
                     </div>
                     <InstallPortal />
-                    <Link
-                        href="/logout"
-                        as="button"
-                        method="post"
-                        aria-label="Sign out"
+                    <a
+                        href="/login"
+                        onClick={onNavigate}
+                        className="mt-1 rounded-lg transition-colors hover:bg-white/10 hover:text-white"
                     >
-                        <LogOut size={16} aria-hidden="true" />
-                        Sign out of this session
-                    </Link>
+                        <Icon name="lock" className="size-4 shrink-0" />
+                        <span className="truncate">Sign in</span>
+                    </a>
                 </footer>
             )}
         </>

@@ -1,152 +1,112 @@
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { usePage } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Suspense, use, useEffect, useRef, type ReactNode } from 'react';
+import type { WorkspaceShellModel } from '@/types/navigation/shell';
 import { ConnectionStatus } from './portal/ConnectionStatus';
-import { PortalRail, type PortalBrand } from './portal/PortalRail';
-import { PortalTopbar } from './portal/PortalTopbar';
-import type { Destination } from './portal/SidebarNavigation';
+import { PortalChrome } from './portal/PortalChrome';
+import { liveWorkspaceShell, type PortalProps } from './workspace/liveWorkspaceShell';
+import { entries } from './workspace/navigation';
+import { WorkspaceShellContext } from './workspace/shellModel';
+import { WorkspaceOverlays } from './workspace/WorkspaceOverlays';
 
-type Shared = {
-    signedIn: boolean;
-    branding: PortalBrand;
-    academicLinks?: Destination[];
-    name?: string;
-    audience?: string;
-    portalIdentity?: {
-        name: string;
-        role: string
-    } | null;
-};
-
-export function PortalLayout({ children }: { children: ReactNode }) {
-    const { url, props, component } = usePage<Shared>();
+export function PortalLayout({ children, fixtureShell }: {
+    children: ReactNode;
+    fixtureShell?: Promise<WorkspaceShellModel>;
+}) {
+    const { component, props, url } = usePage<PortalProps>();
     const path = url.split(/[?#]/)[0];
     const previous = useRef(path);
-    const content = useRef<HTMLDivElement>(null);
-    const close = useRef<HTMLButtonElement>(null);
-    const navigated = useRef(false);
-    const [open, setOpen] = useState(false);
-    const bare = ['Auth/Login', 'Auth/ForgotPassword', 'Auth/ResetPassword'].includes(component);
-    const dashboard = component === 'Insights/Dashboard';
-    const name = props.portalIdentity?.name || (dashboard && props.name) || 'My account';
-    const role = props.portalIdentity?.role || (dashboard && props.audience) || 'Academic workspace';
-    const account = {
-        name,
-        role,
-        initials: name
-            .trim()
-            .split(/\s+/)
-            .slice(-2)
-            .map(part => part[0])
-            .join('')
-            .toUpperCase(),
-    };
-    const rail = {
-        branding: props.branding,
-        signedIn: props.signedIn,
-        academicLinks: props.academicLinks ?? [],
-        path,
-        account,
-        onCurrentPage: () => setOpen(false),
-    };
-    const module = component.split('/').pop() ?? component;
-    const title = dashboard
-        ? 'Dashboard'
-        : module === 'Home'
-          ? 'Learning portal'
-          : module.replace(/([a-z])([A-Z])/g, '$1 $2');
+    const authContent = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (previous.current === path) {
-            return;
+        if (previous.current !== path) {
+            previous.current = path;
+            authContent.current?.focus({ preventScroll: true });
         }
-
-        previous.current = path;
-        navigated.current = true;
-        setOpen(false);
-        content.current?.focus({ preventScroll: true });
     }, [path]);
-    useEffect(() => {
-        const query = window.matchMedia('(min-width: 1024px)');
-        const resize = () => {
-            if (query.matches) {
-                setOpen(false);
-            }
-        };
 
-        query.addEventListener('change', resize);
-        return () => query.removeEventListener('change', resize);
-    }, []);
-
-    const menu = (
-        <Sheet
-            open={open}
-            onOpenChange={value => {
-                if (value) {
-                    navigated.current = false;
-                }
-
-                setOpen(value);
-            }}
-        >
-            <SheetTrigger className="portal-icon portal-menu-trigger" aria-label="Menu">
-                <Menu size={20} />
-            </SheetTrigger>
-            <SheetContent
-                side="left"
-                showCloseButton={false}
-                className="portal-mobile-rail"
-                onOpenAutoFocus={event => {
-                    event.preventDefault();
-                    close.current?.focus();
-                }}
-                onCloseAutoFocus={event => {
-                    if (navigated.current) {
-                        event.preventDefault();
-                        content.current?.focus({ preventScroll: true });
-                    }
-                }}
-            >
-                <SheetTitle className="sr-only">Portal menu</SheetTitle>
-                <SheetDescription className="sr-only">{props.branding.institution}</SheetDescription>
-                <PortalRail
-                    {...rail}
-                    close={
-                        <SheetClose ref={close} className="portal-icon" aria-label="Close menu">
-                            <X size={16} />
-                        </SheetClose>
-                    }
-                />
-            </SheetContent>
-        </Sheet>
-    );
-    return (
-        <div className={bare ? 'portal-shell portal-bare' : 'portal-shell'}>
-            <a href="#portal-content" className="portal-skip">
-                Skip to content
-            </a>
-            {!bare && (
-                <aside className="portal-desktop-rail">
-                    <PortalRail {...rail} />
-                </aside>
-            )}
-            <div className="portal-shell-body">
-                {!bare && (
-                    <PortalTopbar
-                        menu={menu}
-                        branding={props.branding}
-                        title={title}
-                        signedIn={props.signedIn}
-                        account={account}
-                        academicLinks={rail.academicLinks}
-                    />
-                )}
+    if (component.startsWith('Auth/') || component === 'Security/Challenge') {
+        return (
+            <div className="portal-bare">
                 <ConnectionStatus />
-                <div id="portal-content" tabIndex={-1} ref={content}>
+                <div
+                    id="portal-content"
+                    className="outline-none"
+                    tabIndex={-1}
+                    ref={authContent}
+                >
                     {children}
                 </div>
             </div>
-        </div>
+        );
+    }
+
+    const fixture = fixtureShell && entries.find(entry => entry.key === props.screenKey);
+    if (fixture && fixtureShell) {
+        return (
+            <Suspense fallback={<p role="status" className="p-6">Loading workspace…</p>}>
+                <FixtureContent path={path} screen={fixture} model={fixtureShell}>
+                    {children}
+                </FixtureContent>
+            </Suspense>
+        );
+    }
+
+    const model = liveWorkspaceShell(props);
+    const destination = model.live?.groups
+        .flatMap(group => group.links)
+        .find(link => link.href === path);
+    const segments = component.split('/');
+    const componentName = segments.at(-1) ?? '';
+    const componentLabel = componentName.replace(/([a-z])([A-Z])/g, '$1 $2');
+    const title = destination?.label ?? componentLabel;
+
+    return (
+        <PortalContent path={path} title={title} model={model}>
+            {children}
+        </PortalContent>
+    );
+}
+
+type Screen = (typeof entries)[number];
+
+function FixtureContent({ path, screen, model, children }: {
+    path: string;
+    screen: Screen;
+    model: Promise<WorkspaceShellModel>;
+    children: ReactNode;
+}) {
+    const shell = use(model);
+
+    return (
+        <PortalContent
+            path={path}
+            screen={screen}
+            title={screen.title}
+            model={shell}
+        >
+            {children}
+        </PortalContent>
+    );
+}
+
+function PortalContent({ path, screen, title, model, children }: {
+    path: string;
+    screen?: Screen;
+    title: string;
+    model: WorkspaceShellModel;
+    children: ReactNode;
+}) {
+    return (
+        <WorkspaceShellContext.Provider value={model}>
+            <WorkspaceOverlays>
+                <PortalChrome
+                    path={path}
+                    screen={screen}
+                    title={title}
+                >
+                    {children}
+                </PortalChrome>
+            </WorkspaceOverlays>
+        </WorkspaceShellContext.Provider>
     );
 }

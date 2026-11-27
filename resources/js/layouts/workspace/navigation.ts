@@ -40,9 +40,8 @@ export const roles: Record<RoleKey, Role> = {
     admin: {
         label: 'Super Admin',
         short: 'ICT',
-        home: 'overview',
+        home: 'structure',
         groups: {
-            Overview: ['overview'],
             Academic: ['structure', 'people', 'curriculum', 'delivery'],
             Content: ['content', 'course', 'classroom'],
             Assessment: assessment,
@@ -84,7 +83,9 @@ export const roles: Record<RoleKey, Role> = {
 };
 
 export function groupsFor(role: RoleKey) {
-    return Object.entries(roles[role].groups).map(([group, items]) => ({
+    const groups = Object.entries(roles[role].groups);
+
+    return groups.map(([group, items]) => ({
         group,
         links: items.map(module => {
             const [name, icon] = modules[module];
@@ -111,6 +112,8 @@ export function groupsFor(role: RoleKey) {
 }
 
 export const roleKeys = Object.keys(roles) as RoleKey[];
-export const entries = roleKeys.flatMap(role =>
-    groupsFor(role).flatMap(group => group.links.map(link => ({ ...link, role }))),
-);
+export const entries = roleKeys.flatMap(role => {
+    const groups = groupsFor(role);
+
+    return groups.flatMap(group => group.links.map(link => ({ ...link, role })));
+});

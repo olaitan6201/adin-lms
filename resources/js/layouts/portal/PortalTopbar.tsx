@@ -1,101 +1,50 @@
+import { Icon } from '@/components/icons/Icon';
 import { Link } from '@inertiajs/react';
-import { Bell, SlidersHorizontal } from 'lucide-react';
-import { Popover } from 'radix-ui';
-import { useEffect, useState, type ReactNode } from 'react';
-import type { Account, PortalBrand } from './PortalRail';
+import type { ReactNode } from 'react';
+import type { RoleKey } from '../workspace/navigation';
+import { RoleSwitcher } from '../workspace/RoleSwitcher';
+import { useWorkspaceShell } from '../workspace/shellModel';
+import { WorkspaceAccount } from '../workspace/WorkspaceAccount';
+import { useWorkspaceOverlays } from '../workspace/WorkspaceOverlays';
+import { AccessibilityOptions, Notifications } from '../workspace/WorkspaceTools';
 import { PortalSearch } from './PortalSearch';
-import type { Destination } from './SidebarNavigation';
 
-export function PortalTopbar({
-    menu,
-    branding,
-    title,
-    signedIn,
-    account,
-    academicLinks,
-}: {
-    menu: ReactNode;
-    branding: PortalBrand;
+export function PortalTopbar({ path, role, title, menu }: {
+    path: string;
+    role?: RoleKey;
     title: string;
-    signedIn: boolean;
-    account: Account;
-    academicLinks: Destination[];
+    menu: ReactNode;
 }) {
-    const routes = document.body.dataset;
-    const [scale, setScale] = useState('md');
-    useEffect(() => {
-        document.documentElement.dataset.fontScale = scale;
-        return () => {
-            delete document.documentElement.dataset.fontScale;
-        };
-    }, [scale]);
+    const { brand, academicPeriod, live } = useWorkspaceShell();
+    const { notify } = useWorkspaceOverlays();
+    const context = [brand.institution, academicPeriod?.year, academicPeriod?.semester]
+        .filter(Boolean)
+        .join(' · ');
+
     return (
-        <header className="portal-topbar">
-            {menu}
-            <div className="portal-heading">
-                <span className="portal-institution portal-desktop-institution">{branding.institution}</span>
-                <Link
-                    className="portal-institution portal-mobile-institution"
-                    href={signedIn ? (routes.dashboard ?? '/dashboard') : '/'}
-                    aria-label={`${branding.institution} home`}
-                >
-                    <img
-                        src={branding.logoWhite || branding.logoFull}
-                        alt=""
-                        height={16}
-                        width={18}
-                    />
-                    <span>{branding.institution}</span>
-                </Link>
-                <p>{title}</p>
-            </div>
-            <div className="portal-tools">
-                {signedIn && <PortalSearch academicLinks={academicLinks} />}
-                {signedIn && routes.inbox && (
-                    <Link href={routes.inbox} className="portal-icon" aria-label="Notifications">
-                        <Bell size={20} aria-hidden="true" />
-                    </Link>
-                )}
-                <Popover.Root>
-                    <Popover.Trigger className="portal-icon" aria-label="Accessibility options">
-                        <SlidersHorizontal size={20} />
-                    </Popover.Trigger>
-                    <Popover.Portal>
-                        <Popover.Content
-                            align="end"
-                            sideOffset={8}
-                            collisionPadding={12}
-                            className="portal-access"
-                            aria-label="Accessibility options"
-                        >
-                            <strong>Text size</strong>
-                            <div>
-                                {['Default', 'Large', 'Larger'].map((label, i) => {
-                                    const value = ['md', 'lg', 'xl'][i];
-                                    return (
-                                        <button
-                                            type="button"
-                                            key={value}
-                                            aria-pressed={scale === value}
-                                            onClick={() => setScale(value)}
-                                        >
-                                            {label}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </Popover.Content>
-                    </Popover.Portal>
-                </Popover.Root>
-                {signedIn && routes.profile && (
-                    <Link href={routes.profile} className="portal-identity" aria-label="Open account profile">
-                        <span className="portal-avatar">{account.initials}</span>
-                        <span className="portal-account-copy">
-                            <strong>{account.name}</strong>
-                            <small>{account.role}</small>
-                        </span>
-                    </Link>
-                )}
+        <header className="sticky top-0 z-20">
+            <div className="flex h-16 items-center gap-3 border-b border-ink-100 bg-white/85 px-4 backdrop-blur-md sm:px-6">
+                {menu}
+                <div className="min-w-0">
+                    <p className="truncate text-[11px] font-medium tracking-[0.1em] text-ink-500 uppercase">
+                        {context}
+                    </p>
+                    <h2 className="truncate text-[15px] font-semibold tracking-[-0.01em] text-ink-900">
+                        {title}
+                    </h2>
+                </div>
+                <div className="portal-tools" key={path}>
+                    <PortalSearch />
+                    {role && <Notifications notify={notify} />}
+                    {live?.notifications && (
+                        <Link href={live.notifications} className="btn btn-ghost btn-sm" aria-label="Notifications">
+                            <Icon name="bell" className="size-5" />
+                        </Link>
+                    )}
+                    <AccessibilityOptions role={role} settings={live?.settings} />
+                    <span aria-hidden="true" className="ml-1 hidden h-8 w-px bg-ink-100 sm:block" />
+                    {role ? <RoleSwitcher role={role} compact /> : <WorkspaceAccount />}
+                </div>
             </div>
         </header>
     );

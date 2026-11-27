@@ -7,7 +7,7 @@ async function openPalette(page: Page) {
 }
 
 test('shortcut closes search, restores focus and clears the previous query', async ({ page }) => {
-    await page.goto('/admin/overview');
+    await page.goto('/admin/structure');
     await openPalette(page);
     const dialog = page.getByRole('dialog', { name: 'Search workspace screens' });
     const input = dialog.getByRole('textbox');
@@ -17,7 +17,7 @@ test('shortcut closes search, restores focus and clears the previous query', asy
     await expect(dialog.getByRole('link')).toHaveCount(0);
     await input.press('Enter');
     await expect(input).toBeFocused();
-    await expect(page).toHaveURL(/\/admin\/overview$/);
+    await expect(page).toHaveURL(/\/admin\/structure$/);
     await input.press('Control+k');
     await expect(dialog).toBeHidden();
     await expect(trigger).toBeFocused();
@@ -29,14 +29,14 @@ test('shortcut closes search, restores focus and clears the previous query', asy
 });
 
 test('dashboard results distinguish roles on a separate line and open the keyboard selection', async ({ page }) => {
-    await page.goto('/admin/overview');
+    await page.goto('/admin/structure');
     await openPalette(page);
     const dialog = page.getByRole('dialog', { name: 'Search workspace screens' });
     const input = dialog.getByRole('textbox');
     await input.fill('Dashboard');
     const results = dialog.getByRole('link');
-    await expect(results).toHaveCount(3);
-    for (const role of ['Super Admin', 'Lecturer', 'Student']) {
+    await expect(results).toHaveCount(2);
+    for (const role of ['Lecturer', 'Student']) {
         const result = results.filter({ hasText: role });
         await expect(result).toBeVisible();
         expect(await result.innerText()).toMatch(new RegExp(`^Dashboard\\s*\\n\\s*${role}$`));
@@ -47,7 +47,6 @@ test('dashboard results distinguish roles on a separate line and open the keyboa
     await page.keyboard.press('ArrowUp');
     await expect(input).toBeFocused();
     await input.press('ArrowDown');
-    await page.keyboard.press('ArrowDown');
     await expect(results.filter({ hasText: 'Lecturer' })).toBeFocused();
     const visit = page.waitForResponse(response => response.url().endsWith('/lecturer/overview') &&
         response.request().headers()['x-inertia'] === 'true');
@@ -58,7 +57,7 @@ test('dashboard results distinguish roles on a separate line and open the keyboa
 });
 
 test('holding the shortcut keeps the palette and its current query until a fresh press', async ({ page }) => {
-    await page.goto('/admin/overview');
+    await page.goto('/admin/structure');
     const search = page.getByRole('button', { name: 'Search', exact: true });
     const input = page.getByRole('textbox', { name: 'Search screens' });
     await search.focus();

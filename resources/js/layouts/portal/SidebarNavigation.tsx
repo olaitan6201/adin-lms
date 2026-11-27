@@ -1,54 +1,65 @@
+import { Icon } from '@/components/icons/Icon';
+import { workspaceUrl } from '@/lib/workspaceUrl';
 import { Link } from '@inertiajs/react';
-import { navigationGroups, type Destination } from './navigationGroups';
+import { groupsFor, type RoleKey } from '../workspace/navigation';
+import { useWorkspaceShell } from '../workspace/shellModel';
 
-export { navigationGroups, type Destination } from './navigationGroups';
-
-export function SidebarNavigation({
-    signedIn,
-    academicLinks,
-    path,
-    onCurrentPage,
-}: {
-    signedIn: boolean;
-    academicLinks: Destination[];
+export function SidebarNavigation({ path, role, screen, onNavigate }: {
     path: string;
-    onCurrentPage: () => void;
+    role?: RoleKey;
+    screen?: string;
+    onNavigate?: () => void;
 }) {
-    const groups = navigationGroups(signedIn, academicLinks);
-    const active = groups
-        .flatMap(({ links }) => links.map(({ href }) => href))
-        .filter((href): href is string => !!href && (path === href || (href !== '/' && path.startsWith(`${href}/`))))
+    const { live } = useWorkspaceShell();
+    const activeHref = live?.groups
+        .flatMap(group => group.links)
+        .map(link => link.href)
+        .filter(href => href === path || (href !== '/' && path.startsWith(`${href}/`)))
         .sort((a, b) => b.length - a.length)[0];
+    const fixtureGroups = role ? groupsFor(role) : null;
+    const groups = fixtureGroups
+        ? fixtureGroups.map(({ group, links }) => ({
+            label: group,
+            links: links.map(({ key, label, icon }) => ({
+                href: workspaceUrl(key),
+                label,
+                mark: <Icon name={icon} className="size-4 shrink-0" />,
+                current: key === screen ? 'page' as const : undefined,
+            })),
+        }))
+        : (live?.groups ?? []).map(({ label, links }) => ({
+            label,
+            links: links.map(({ href, label, Icon: Mark }) => ({
+                href,
+                label,
+                mark: <Mark className="size-4 shrink-0" aria-hidden="true" />,
+                current: href === activeHref ? (path === href ? 'page' as const : 'location' as const) : undefined,
+            })),
+        }));
+    const visibleGroups = groups.filter(group => group.links.length);
 
     return (
-        <nav className="portal-navigation" aria-label="Primary">
-            {groups
-                .filter(group => group.links.some(link => link.href))
-                .map(({ label, links }) => (
-                    <div key={label}>
-                        <p className="rail-section">{label}</p>
-                        <ul className="mt-1 space-y-0.5">
-                            {links.map(
-                                ({ label: text, href, Icon }) =>
-                                    href && (
-                                        <li key={href}>
-                                            <Link
-                                                href={href}
-                                                className={`rail-link${href === active ? ' rail-link-active' : ''}`}
-                                                onClick={path === href ? onCurrentPage : undefined}
-                                                aria-current={
-                                                    href === active ? (path === href ? 'page' : 'location') : undefined
-                                                }
-                                            >
-                                                <Icon size={16} aria-hidden="true" />
-                                                <span>{text}</span>
-                                            </Link>
-                                        </li>
-                                    ),
-                            )}
-                        </ul>
-                    </div>
-                ))}
+        <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-4" data-scroll aria-label={role ? 'Module navigation' : 'Primary'}>
+            {visibleGroups.map(({ label, links }) => (
+                <div className="mt-4" key={label}>
+                    <p className="rail-section">{label}</p>
+                    <ul className="mt-1 space-y-0.5">
+                        {links.map(({ href, mark, label, current }) => (
+                            <li key={href}>
+                                <Link
+                                    href={href}
+                                    onClick={onNavigate}
+                                    aria-current={current}
+                                    className={`rail-link ${current ? 'rail-link-active' : ''}`}
+                                >
+                                    {mark}
+                                    <span className="truncate">{label}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </nav>
     );
 }

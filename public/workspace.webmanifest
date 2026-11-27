@@ -3,7 +3,7 @@
     "name": "AdinOpen LMS",
     "short_name": "AdinOpen",
     "description": "Institutional learning management system for Adin Open University: course delivery, computer based testing, gradebook, attendance and reporting.",
-    "start_url": "/admin/overview",
+    "start_url": "/admin/structure",
     "scope": "/",
     "display": "standalone",
     "display_override": ["standalone", "minimal-ui", "browser"],

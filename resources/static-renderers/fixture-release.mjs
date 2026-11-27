@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 // Explicit public workspace route names. Never infer eligibility from a role prefix.
 const modules = {
-    admin: 'overview structure people curriculum delivery content course classroom assignments cbt gradebook attendance communication calendar reports qa administration settings.notifications',
+    admin: 'structure people curriculum delivery content course classroom assignments cbt gradebook attendance communication calendar reports qa administration settings.notifications',
     lecturer: 'overview courses course classroom assignments cbt gradebook attendance communication calendar reports settings.notifications',
     student: 'overview courses course assignments exam results downloads communication calendar settings.notifications',
     guardian: 'progress settings.notifications',
@@ -11,7 +11,11 @@ const modules = {
 const aliases = { 'admin/qa': 'admin/qa-review', 'student/downloads': 'student/offline-downloads' };
 const root = new URL('../../public/', import.meta.url);
 const read = path => readFile(new URL(path, root));
-const hash = bytes => createHash('sha256').update(bytes).digest('base64');
+function digest(bytes, encoding) {
+    return createHash('sha256')
+        .update(bytes)
+        .digest(encoding);
+}
 
 export async function buildFixtureRelease() {
     const manifest = JSON.parse(await read('build/manifest.json'));
@@ -23,7 +27,9 @@ export async function buildFixtureRelease() {
         '/portal-512.png', '/portal-maskable-512.png', '/apple-touch-icon.png']);
     const visited = new Set();
     function include(key) {
-        if (visited.has(key)) return;
+        if (visited.has(key)) {
+            return;
+        }
         visited.add(key);
         const chunk = manifest[key];
         for (const file of [chunk.file, ...chunk.css ?? [], ...chunk.assets ?? []]) {
@@ -34,17 +40,22 @@ export async function buildFixtureRelease() {
             assets.add(`/build/${file}`);
         }
         // Follow static dependencies only. Other application pages are dynamic imports.
-        for (const dependency of chunk.imports ?? []) include(dependency);
+        for (const dependency of chunk.imports ?? []) {
+            include(dependency);
+        }
     }
 
     const entry = 'resources/js/app.tsx';
     include(entry);
+    include('resources/js/data/navigation/shell.ts');
     const pages = {};
     for (const [role, list] of Object.entries(modules)) {
         for (const module of list.split(' ')) {
             const screen = `${role}/${module.replaceAll('.', '/')}`;
             const component = screen === 'guardian/progress' ? 'Guardian/ApprovedProgress'
-                : screen.split('/').map(word => word[0].toUpperCase() + word.slice(1)).join('/');
+                : screen.split('/')
+                    .map(word => word[0].toUpperCase() + word.slice(1))
+                    .join('/');
             include(`resources/js/pages/${component}.tsx`);
             pages[`/${aliases[screen] ?? screen}`] = { component, screen };
         }
@@ -54,18 +65,25 @@ export async function buildFixtureRelease() {
         lecturer: ['ACC302', 'BSC205', 'ENG210', 'CHM401'],
     })) {
         const path = `/${role}/course`;
-        for (const code of codes) pages[`${path}?course=${code}`] = pages[path];
+        for (const code of codes) {
+            pages[`${path}?course=${code}`] = pages[path];
+        }
+    }
+
+    const { start_url: startUrl } = JSON.parse(await read('workspace.webmanifest'));
+    if (!Object.hasOwn(pages, startUrl)) {
+        throw new Error('The installed workspace must open an offline fixture route.');
     }
 
     const files = {};
     for (const path of [...assets].sort()) {
-        files[path] = `sha256-${hash(await read(path.slice(1)))}`;
+        files[path] = `sha256-${digest(await read(path.slice(1)), 'base64')}`;
     }
     const release = {
         pages, files, entry: `/build/${manifest[entry].file}`,
         styles: manifest[entry].css.map(file => `/build/${file}`),
     };
-    const version = createHash('sha256').update(JSON.stringify(release)).digest('hex');
+    const version = digest(JSON.stringify(release), 'hex');
     await writeFile(new URL('build/fixture-release.js', root),
         `self.fixtureRelease = ${JSON.stringify({ ...release, version })};\n`);
 }

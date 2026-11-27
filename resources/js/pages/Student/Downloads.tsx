@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { SampleDownload } from '@/components/learning/SampleDownload';
-import { prepareLibrary, removeFile, savedDates, type StudyFile } from '@/components/learning/deviceFiles';
+import { useDeviceLibrary } from '@/components/learning/useDeviceLibrary';
 import { StudyMetric, Note } from '@/components/learning/Parts';
 import { FeatureStatusCard } from '@/components/students/FeatureStatusCard';
 import { Action } from '@/components/ui/controls/Action';
@@ -10,7 +9,7 @@ import { Card } from '@/components/ui/layout/Card';
 import { PageHeader } from '@/components/ui/layout/PageHeader';
 import { studyFiles, studyPack } from '@/data/learning/studyFiles';
 import { deviceStudy, libraryPreview } from '@/data/learning/downloads';
-import { WorkspaceInstall } from '@/layouts/workspace/WorkspaceInstall';
+import { InstallPortal } from '@/layouts/portal/InstallPortal';
 import { Icon } from '@/components/icons/Icon';
 
 function sampleLibraryDate(value?: string) {
@@ -20,10 +19,11 @@ function sampleLibraryDate(value?: string) {
 }
 
 export default function Downloads() {
-    const [dates, setDates] = useState<Record<string, string>>({});
-    const [error, setError] = useState('');
+    const { dates, error, refresh, remove } = useDeviceLibrary(studyFiles, libraryPreview.dates);
     const saved = studyFiles.filter((file) => dates[file.id]);
-    const latest = Object.values(dates).sort().at(-1);
+    const latest = Object.values(dates)
+        .sort()
+        .at(-1);
     const bytes = saved.reduce((total, file) => total + file.bytes, 0);
     const initial = studyFiles.every(file => dates[file.id] === libraryPreview.dates[file.id]);
     const metrics = initial ? libraryPreview.metrics : [
@@ -31,40 +31,6 @@ export default function Downloads() {
         { label: 'Available to save', value: `${studyFiles.length} files`, hint: 'ACC302 sample materials' },
         { label: 'Last library save', value: sampleLibraryDate(latest), hint: 'Latest copy in this library' },
     ];
-
-    async function refresh() {
-        try {
-            setDates(await savedDates(studyFiles));
-            setError('');
-        } catch {
-            setError('Device storage is unavailable. Direct downloads are still available online.');
-        }
-    }
-
-    useEffect(() => {
-        let active = true;
-        prepareLibrary(studyFiles, libraryPreview.dates).then(() => savedDates(studyFiles)).then((loaded) => {
-            if (active) {
-                setDates(loaded);
-            }
-        }).catch(() => {
-            if (active) {
-                setError('Device storage is unavailable. Direct downloads are still available online.');
-            }
-        });
-        return () => {
-            active = false;
-        };
-    }, []);
-
-    async function remove(file: StudyFile) {
-        try {
-            await removeFile(file);
-            await refresh();
-        } catch {
-            setError('Could not remove the device copy.');
-        }
-    }
 
     const rows = studyFiles.map((file) => [
         <div key="material" className="min-w-0">
@@ -104,7 +70,7 @@ export default function Downloads() {
                 description="Saved materials stay on this device for low bandwidth study. Work you submit always needs a connection."
                 actions={
                     <>
-                        <WorkspaceInstall inPage />
+                        <InstallPortal inPage />
                         <a className="btn btn-primary" href={studyPack.href} download={studyPack.filename}>
                             <Icon name="download" className="size-4" />
                             <span>Download all available</span>

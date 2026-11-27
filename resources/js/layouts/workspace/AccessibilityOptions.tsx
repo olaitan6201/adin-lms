@@ -12,8 +12,9 @@ const textSizes = [
     { value: 'xl', label: 'Larger' },
 ] as const;
 
-export function AccessibilityOptions({ role }: { role: RoleKey }) {
+export function AccessibilityOptions({ role, settings }: { role?: RoleKey; settings?: string }) {
     const { notify } = useWorkspaceOverlays();
+    const settingsHref = role ? workspaceUrl(`${role}/settings/notifications`) : settings;
     const [scale, setScale] = useState(() => {
         try {
             return localStorage.getItem('workspace-text-size') || 'md';
@@ -70,14 +71,17 @@ export function AccessibilityOptions({ role }: { role: RoleKey }) {
                         Keyboard: Ctrl K opens search, Escape closes panels, focus rings stay visible for keyboard
                         users.
                     </p>
-                    <Popover.Close asChild>
-                        <Link
-                            href={workspaceUrl(`${role}/settings/notifications`)}
-                            className="mt-2 block rounded-lg border border-ink-200 px-2 py-1.5 text-center text-[11px] font-medium hover:bg-ink-50"
-                        >
-                            <Icon name="bell" className="mr-1 inline size-3.5" /> Notification settings
-                        </Link>
-                    </Popover.Close>
+                    {settingsHref && (
+                        <Popover.Close asChild>
+                            <Link
+                                href={settingsHref}
+                                className="mt-2 block rounded-lg border border-ink-200 px-2 py-1.5 text-center text-[11px] font-medium hover:bg-ink-50"
+                            >
+                                <Icon name="bell" className="mr-1 inline size-3.5" />
+                                Notification settings
+                            </Link>
+                        </Popover.Close>
+                    )}
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

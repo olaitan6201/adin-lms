@@ -21,7 +21,7 @@ export type Destination = {
     href: string
 };
 
-export function navigationGroups(signedIn: boolean, academicLinks: Destination[]) {
+export function navigationGroups(signedIn: boolean, academicLinks: Destination[], home: string) {
     const routes = document.body.dataset;
     const supplied = (path: string) => academicLinks.find(link => link.href === path)?.href;
     const grouped = new Set([
@@ -33,7 +33,7 @@ export function navigationGroups(signedIn: boolean, academicLinks: Destination[]
     ]);
     return signedIn
         ? [
-              { label: 'Overview', links: [{ label: 'Dashboard', href: routes.dashboard, Icon: LayoutDashboard }] },
+              { label: 'Overview', links: [{ label: 'Dashboard', href: home, Icon: LayoutDashboard }] },
               {
                   label: 'Learning',
                   links: [
@@ -85,7 +85,7 @@ export function navigationGroups(signedIn: boolean, academicLinks: Destination[]
               {
                   label: 'Portal',
                   links: [
-                      { label: 'Portal home', href: '/', Icon: Home },
+                      { label: 'Portal home', href: '/portal', Icon: Home },
                       { label: 'Sign in', href: '/login', Icon: LogIn },
                   ],
               },

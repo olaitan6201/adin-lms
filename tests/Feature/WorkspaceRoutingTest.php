@@ -12,8 +12,8 @@ class WorkspaceRoutingTest extends TestCase
     {
         $routes = collect(Route::getRoutes()->getRoutesByName())
             ->filter(fn ($route, string $name) => str_starts_with($name, 'workspace.'));
-        $this->assertCount(42, $routes);
-        $this->assertCount(42, $routes->map(fn ($route) => $route->defaults['component'])->unique());
+        $this->assertCount(41, $routes);
+        $this->assertCount(41, $routes->map(fn ($route) => $route->defaults['component'])->unique());
         foreach ($routes as $name => $route) {
             $key = str_replace('.', '/', substr($name, strlen('workspace.')));
             $this->get(route($name))->assertInertia(fn (AssertableInertia $page) => $page

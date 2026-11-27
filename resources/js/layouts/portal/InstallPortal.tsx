@@ -1,57 +1,68 @@
-import { Download } from 'lucide-react';
-import { useId, useState } from 'react';
+import { Icon } from '@/components/icons/Icon';
+import { useSyncExternalStore } from 'react';
+import { useWorkspaceOverlays } from '../workspace/WorkspaceOverlays';
+import { useWorkspaceShell } from '../workspace/shellModel';
 
-type InstallPrompt = Event & {
-    prompt(): Promise<void>;
-    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+type InstallOffer = Event & {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: string }>
 };
+let pending: InstallOffer | null = null;
+const listeners = new Set<() => void>();
+function update(offer: InstallOffer | null) {
+    pending = offer;
+    listeners.forEach(listener => listener());
+}
 
-// Capture the one-shot browser offer even if the mobile rail is closed.
-let offer: InstallPrompt | null = null;
+function subscribe(listener: () => void) {
+    listeners.add(listener);
+    return () => {
+        listeners.delete(listener);
+    };
+}
+
 if (typeof window !== 'undefined') {
     window.addEventListener('beforeinstallprompt', event => {
         event.preventDefault();
-        offer = event as InstallPrompt;
+        update(event as InstallOffer);
     });
-    window.addEventListener('appinstalled', () => {
-        offer = null;
-    });
+    window.addEventListener('appinstalled', () => update(null));
 }
 
-export function InstallPortal() {
-    const id = useId();
-    const [message, setMessage] = useState('');
+export function InstallPortal({ inPage = false }: { inPage?: boolean }) {
+    const { live } = useWorkspaceShell();
+    const offer = useSyncExternalStore(
+        subscribe,
+        () => pending,
+        () => null,
+    );
+    const { notify } = useWorkspaceOverlays();
     async function install() {
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            setMessage('You are using the installed portal.');
-            return;
-        }
-
-        const pending = offer;
-        offer = null;
-        if (pending) {
+        if (offer) {
+            update(null);
             try {
-                await pending.prompt();
-                const choice = await pending.userChoice;
-                setMessage(choice.outcome === 'accepted' ? 'Installation requested.' : 'Installation cancelled.');
+                await offer.prompt();
+                const { outcome } = await offer.userChoice;
+                notify(outcome === 'accepted' ? 'Installation requested.' : 'Installation cancelled.');
                 return;
             } catch {
-                // Some browsers invalidate the offer before a user opens the rail.
+                /* An install prompt can expire. */
             }
         }
 
-        setMessage('Open your browser menu and choose Install app or Add to Home Screen, if available.');
+        notify('Open your browser menu and choose Install app or Add to Home Screen, if available.');
     }
 
     return (
-        <>
-            <button type="button" onClick={() => void install()} aria-describedby={message ? id : undefined}>
-                <Download size={16} aria-hidden="true" />
-                Install as an app
-            </button>
-            <p id={id} role="status" className="text-xs empty:hidden">
-                {message}
-            </p>
-        </>
+        <button
+            type="button"
+            onClick={() => void install()}
+            className={inPage ? 'btn btn-outline' : 'text-left transition-colors'}
+        >
+            <Icon name={inPage ? 'smartphone' : 'download'} className="size-4 shrink-0" />
+            <span className={inPage ? undefined : 'truncate'}>
+                {inPage ? 'Install app' : live || offer ? 'Install as an app' : 'Install this prototype as an app'}
+            </span>
+        </button>
     );
 }

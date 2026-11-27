@@ -4,7 +4,8 @@
 :is(.workspace-shell,.ws-mobile-rail) .portal-brand small { line-height: 1.25; }
 :is(.workspace-shell,.ws-mobile-rail) :is(.portal-brand small,.portal-account-copy small,.portal-rail-footer) { color: var(--color-ink-400); }
 :is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer > div { color: var(--color-ink-200); font-weight: 500; }
-:is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer small { color: var(--color-ink-500); font-weight: 400; }
+:is(.workspace-shell,.ws-mobile-rail) :is(.rail-section,.portal-rail-footer small) { color: var(--color-ink-300); }
+:is(.workspace-shell,.ws-mobile-rail) .portal-rail-footer small { font-weight: 400; }
 [data-slot=sheet-overlay]:has(+ .portal-mobile-rail), [data-slot=sheet-overlay]:has(+ .ws-detail-drawer) { backdrop-filter: blur(2px); }
 [data-slot=sheet-overlay]:has(+ .ws-mobile-rail) { background-color: rgb(10 17 28 / 50%); }
 .ws-role-switch { text-align: left; flex-shrink: 0; }

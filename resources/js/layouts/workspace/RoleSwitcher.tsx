@@ -15,6 +15,10 @@ export function RoleSwitcher({
     onNavigate?: () => void;
 }) {
     const { identities } = useWorkspaceShell();
+    if (!identities) {
+        return null;
+    }
+
     const { name: person } = identities[role];
     const { label, short } = roles[role];
     return (

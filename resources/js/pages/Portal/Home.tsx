@@ -3,15 +3,16 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
 export default function Home() {
-    const { signedIn, branding } = usePage<{
+    const { signedIn, branding, workspaceHome } = usePage<{
         signedIn: boolean;
+        workspaceHome: string;
         branding: {
             institution: string;
             logoFull: string;
         };
     }>().props;
     return (
-        <div>
+        <main>
             <Head title="Learning portal" />
             <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
                 <div>
@@ -22,7 +23,7 @@ export default function Home() {
                     </p>
                 </div>
                 <Button asChild className="btn btn-primary">
-                    <Link href={signedIn ? '/dashboard' : '/login'}>
+                    <Link href={workspaceHome}>
                         {signedIn ? 'Open dashboard' : 'Sign in to the portal'}
                         <ArrowRight aria-hidden="true" />
                     </Link>
@@ -43,6 +44,6 @@ export default function Home() {
                     </p>
                 </div>
             </section>
-        </div>
+        </main>
     );
 }

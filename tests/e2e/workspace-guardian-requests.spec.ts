@@ -27,7 +27,7 @@ test('a guardian can prepare a request without changing consent or exposing pend
 });
 
 test('changing workspace text size announces the applied preference', async ({ page }) => {
-    await page.goto('/admin/overview');
+    await page.goto('/admin/structure');
     await page.getByRole('button', { name: 'Accessibility options' }).click();
     await page.getByRole('button', { name: 'Larger', exact: true }).click();
     await expect(page.locator('html')).toHaveAttribute('data-font-scale', 'xl');

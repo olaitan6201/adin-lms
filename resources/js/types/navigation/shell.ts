@@ -1,4 +1,5 @@
 import type { WorkspaceRole } from '@/types/identity/roles';
+import type { LucideIcon } from 'lucide-react';
 
 export type ShellNotice = {
     id: string;
@@ -25,10 +26,19 @@ export type WorkspaceShellModel = {
         institution: string;
         crest: CrestSource;
     };
-    academicPeriod: {
+    academicPeriod?: {
         year: string;
         semester: string;
     };
-    identities: Record<WorkspaceRole, { name: string }>;
+    identities?: Record<WorkspaceRole, { name: string }>;
     notices: readonly ShellNotice[];
+    live?: {
+        groups: { label: string; links: { href: string; label: string; Icon: LucideIcon }[] }[];
+        account: { name: string; role: string } | null;
+        home: string;
+        notifications?: string;
+        settings?: string;
+        profile?: string;
+        signedIn: boolean;
+    };
 };

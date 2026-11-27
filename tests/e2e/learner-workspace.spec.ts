@@ -35,11 +35,21 @@ test('a registered learner can find a course and submit a persisted revision', a
     const due = await page.locator('li').filter({ has: page.getByRole('heading', { name: assignment }) })
         .locator('time').innerText();
     expect(due).toMatch(/GMT[+-]\d\d:\d\d/);
-    if (info.project.name === 'phone') await page.getByRole('button', { name: 'Menu', exact: true }).press('Enter');
+    if (info.project.name === 'phone') {
+        await page.getByRole('button', { name: 'Menu', exact: true }).press('Enter');
+    }
     await page.getByRole('link', { name: 'Search courses', exact: true }).press('Enter');
     await page.getByLabel('Course search', { exact: true }).fill(`Z-CSC101-workspace-${info.project.name}`);
     await page.getByLabel('Course search', { exact: true }).press('Enter');
     await page.getByRole('link', { name: /introduction to computing/i }).press('Enter');
+    if (info.project.name === 'phone') {
+        await page.getByRole('button', { name: 'Menu', exact: true }).press('Enter');
+    }
+    await expect(page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'My courses' }))
+        .toHaveAttribute('aria-current', 'location');
+    if (info.project.name === 'phone') {
+        await page.keyboard.press('Escape');
+    }
     await expect(page.getByRole('heading', { name: /introduction to computing/i }).first()).toBeVisible();
     await page.getByRole('link', { name: 'Open lesson' }).press('Enter');
     await expect(page.getByRole('heading', { name: 'First reading' })).toBeVisible();

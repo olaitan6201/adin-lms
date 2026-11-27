@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin\AccountDirectoryController;
 use App\Http\Controllers\Admin\AccountGrantsController;
 use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\QualityController;
+use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StructureImportController;
 use App\Models\User;
+use App\Services\Academics\HierarchyChanges;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'admin'])->group(function (): void {
@@ -16,6 +18,20 @@ Route::middleware(['auth', 'admin'])->group(function (): void {
         Route::get('qa', QualityController::class)
             ->middleware('can:view-quality-assurance')
             ->name('quality.index');
+        Route::prefix('structure')
+            ->name('admin.structure')
+            ->controller(StructureController::class)
+            ->middleware(['can:manage-academic-structure', 'cache.headers:private;no_store'])
+            ->group(function (): void {
+                Route::get('/', 'index')->name('');
+                Route::post('records/{kind}', 'store')
+                    ->whereIn('kind', HierarchyChanges::KINDS)
+                    ->name('.store');
+                Route::patch('records/{kind}/{record}', 'update')
+                    ->whereIn('kind', HierarchyChanges::KINDS)
+                    ->whereUuid('record')
+                    ->name('.update');
+            });
         Route::prefix('structure/import')
             ->name('admin.structure.import.')
             ->controller(StructureImportController::class)

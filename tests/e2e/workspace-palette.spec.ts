@@ -7,7 +7,7 @@ async function openPalette(page: Page) {
 }
 
 test('shortcut closes search, restores focus and clears the previous query', async ({ page }) => {
-    await page.goto('/admin/structure');
+    await page.goto('/admin/reports');
     await openPalette(page);
     const dialog = page.getByRole('dialog', { name: 'Search workspace screens' });
     const input = dialog.getByRole('textbox');
@@ -17,7 +17,7 @@ test('shortcut closes search, restores focus and clears the previous query', asy
     await expect(dialog.getByRole('link')).toHaveCount(0);
     await input.press('Enter');
     await expect(input).toBeFocused();
-    await expect(page).toHaveURL(/\/admin\/structure$/);
+    await expect(page).toHaveURL(/\/admin\/reports$/);
     await input.press('Control+k');
     await expect(dialog).toBeHidden();
     await expect(trigger).toBeFocused();
@@ -29,7 +29,7 @@ test('shortcut closes search, restores focus and clears the previous query', asy
 });
 
 test('dashboard results distinguish roles on a separate line and open the keyboard selection', async ({ page }) => {
-    await page.goto('/admin/structure');
+    await page.goto('/admin/reports');
     await openPalette(page);
     const dialog = page.getByRole('dialog', { name: 'Search workspace screens' });
     const input = dialog.getByRole('textbox');
@@ -57,7 +57,7 @@ test('dashboard results distinguish roles on a separate line and open the keyboa
 });
 
 test('holding the shortcut keeps the palette and its current query until a fresh press', async ({ page }) => {
-    await page.goto('/admin/structure');
+    await page.goto('/admin/reports');
     const search = page.getByRole('button', { name: 'Search', exact: true });
     const input = page.getByRole('textbox', { name: 'Search screens' });
     await search.focus();
@@ -76,10 +76,10 @@ test('holding the shortcut keeps the palette and its current query until a fresh
 });
 
 test('native modal retains the draft and focus without queuing a palette underneath', async ({ page }) => {
-    await page.goto('/admin/structure');
-    const add = page.getByRole('button', { name: 'Add faculty or department' });
+    await page.goto('/admin/people');
+    const add = page.getByRole('button', { name: 'Add person' });
     await add.press('Enter');
-    const dialog = page.getByRole('dialog', { name: 'Add faculty or department' });
+    const dialog = page.getByRole('dialog', { name: 'Add person' });
     const field = dialog.getByRole('textbox', { name: 'Name', exact: true });
     await field.fill('Arts');
     await field.press('Control+k');

@@ -1,7 +1,6 @@
 // The reference keeps these panels mounted across section changes. Only their
 // closed presentation belongs to the shell; form state stays with the page.
 const drawerCounts: Readonly<Partial<Record<string, 1 | 2>>> = {
-    'admin/structure': 1,
     'admin/people': 2,
     'admin/curriculum': 2,
     'admin/delivery': 1,

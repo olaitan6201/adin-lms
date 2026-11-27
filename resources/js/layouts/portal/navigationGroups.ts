@@ -48,7 +48,7 @@ export function navigationGroups(signedIn: boolean, academicLinks: Destination[]
                       .filter(link => !grouped.has(link.href))
                       .map(link => ({
                           ...link,
-                          Icon: link.label === 'Organisation' ? Building2 : Layers,
+                          Icon: ['/academics', '/admin/structure'].includes(link.href) ? Building2 : Layers,
                       })),
               },
               {

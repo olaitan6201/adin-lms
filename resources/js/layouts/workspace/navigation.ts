@@ -1,6 +1,5 @@
 const modules = {
     overview: ['Dashboard', 'dashboard'],
-    structure: ['Academic structure', 'hierarchy'],
     people: ['People and roles', 'users'],
     curriculum: ['Curriculum catalogue', 'layers'],
     delivery: ['Course delivery', 'book'],
@@ -40,9 +39,9 @@ export const roles: Record<RoleKey, Role> = {
     admin: {
         label: 'Super Admin',
         short: 'ICT',
-        home: 'structure',
+        home: 'reports',
         groups: {
-            Academic: ['structure', 'people', 'curriculum', 'delivery'],
+            Academic: ['people', 'curriculum', 'delivery'],
             Content: ['content', 'course', 'classroom'],
             Assessment: assessment,
             Engagement: engagement,

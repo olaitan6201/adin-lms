@@ -50,13 +50,18 @@ class AcademicNavigation
             'examinations.manage', 'curriculum.edit', 'curriculum.approve', 'compliance.read', 'operations.manage',
         ])->isNotEmpty() || $user->lecturer()->exists();
 
+        $managesStructure = $institution->contains('academics.manage');
+
         return array_values(
             array_filter([
                 $institution->contains('examinations.manage')
                     ? ['label' => 'Examinations office', 'href' => route('assessment.office', [], false)]
                     : null,
-                $oversight || $institution->contains('academics.manage')
-                    ? ['label' => 'Organisation', 'href' => route('academics.index', [], false)]
+                $oversight || $managesStructure
+                    ? [
+                        'label' => $managesStructure ? 'Academic structure' : 'Organisation',
+                        'href' => route($managesStructure ? 'admin.structure' : 'academics.index', [], false),
+                    ]
                     : null,
                 $institution
                     ->intersect(['curriculum.edit', 'curriculum.approve', 'compliance.read'])

@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 
 $screens = [
     'admin' => [
-        'structure', 'people', 'curriculum', 'delivery', 'content', 'course', 'classroom',
+        'people', 'curriculum', 'delivery', 'content', 'course', 'classroom',
         'assignments', 'cbt', 'gradebook', 'attendance', 'communication', 'calendar', 'reports', 'qa',
         'administration', 'settings/notifications',
     ],

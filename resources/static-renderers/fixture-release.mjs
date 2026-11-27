@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 // Explicit public workspace route names. Never infer eligibility from a role prefix.
 const modules = {
-    admin: 'structure people curriculum delivery content course classroom assignments cbt gradebook attendance communication calendar reports qa administration settings.notifications',
+    admin: 'people curriculum delivery content course classroom assignments cbt gradebook attendance communication calendar reports qa administration settings.notifications',
     lecturer: 'overview courses course classroom assignments cbt gradebook attendance communication calendar reports settings.notifications',
     student: 'overview courses course assignments exam results downloads communication calendar settings.notifications',
     guardian: 'progress settings.notifications',

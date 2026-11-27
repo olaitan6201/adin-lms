@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 type WorkspaceRoute = { uri: string; name: string };
 
 test('the public workspace links to real sign-in and email recovery', async ({ page }, info) => {
-    await page.goto('/admin/structure');
+    await page.goto('/admin/reports');
     if (info.project.name === 'phone') {
         await page.getByRole('button', { name: 'Open navigation' }).click();
     }
@@ -25,7 +25,7 @@ test('each role menu links to its Laravel workspace routes', async ({ page }, in
     ], { encoding: 'utf8' }));
 
     for (const [role, home] of Object.entries({
-        admin: 'structure', lecturer: 'overview', student: 'overview', guardian: 'progress',
+        admin: 'reports', lecturer: 'overview', student: 'overview', guardian: 'progress',
     })) {
         await page.goto(`/${role}/${home}`);
         if (info.project.name === 'phone') {
@@ -46,7 +46,7 @@ for (const [label, path, component, screenKey, live] of [
     ['Approved progress', '/guardian/progress', 'Guardian/ApprovedProgress', 'guardian/progress', '/guardian'],
 ]) {
     test(`search opens the ${label} fixture and the live route still requires login`, async ({ page }) => {
-        await page.goto('/admin/structure');
+        await page.goto('/admin/reports');
         await page.getByRole('button', { name: 'Search', exact: true }).click();
         await page.getByRole('textbox', { name: 'Search screens' }).fill(label);
         const link = page.getByRole('dialog').getByRole('link', { name: new RegExp(label) });
@@ -65,7 +65,7 @@ test.describe('narrow workspace', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
     test('open navigation owns the shortcut until the sheet closes', async ({ page }) => {
-        await page.goto('/admin/structure');
+        await page.goto('/admin/reports');
         const menu = page.getByRole('button', { name: 'Open navigation' });
         await menu.click();
         const sheet = page.getByRole('dialog', { name: 'Module navigation' });

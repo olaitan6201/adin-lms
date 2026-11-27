@@ -48,7 +48,7 @@ final class AdminOverview
             'links' => [
                 'reports' => route('insights.reports', $filters, false),
                 'offerings' => $this->link($user, PermissionCode::OfferingsManage, 'academics.delivery'),
-                'structure' => $this->link($user, PermissionCode::AcademicsManage, 'academics.index'),
+                'structure' => $this->link($user, PermissionCode::AcademicsManage, 'admin.structure'),
             ],
         ];
     }

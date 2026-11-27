@@ -44,6 +44,9 @@ foreach (['desktop', 'phone'] as $project) {
     $reportQa = User::factory()->create(['email' => "report-qa-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($reportQa->id, RoleCode::QualityAssuranceOfficer, 'institution', false);
     file_put_contents($run."/report-qa-{$project}.factor", enrollFixtureAuthenticator($reportQa), LOCK_EX);
+    $structureAdmin = User::factory()->create(['email' => "structure-{$project}@demo.example.test"]);
+    app(ChangeRoleGrant::class)->apply($structureAdmin->id, RoleCode::InstitutionalAdmin, 'institution', false);
+    file_put_contents($run."/structure-{$project}.factor", enrollFixtureAuthenticator($structureAdmin), LOCK_EX);
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);

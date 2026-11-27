@@ -17,8 +17,8 @@ class AcademicAuthorityTest extends TestCase
     public static function roles(): array
     {
         return [
-            ['institutional_admin', ['Organisation', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, false],
-            ['super_admin', ['Organisation', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, true],
+            ['institutional_admin', ['Academic structure', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, false],
+            ['super_admin', ['Academic structure', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, true],
             ['quality_assurance_officer', ['Curriculum', 'Calendar', 'Quality review', 'Notification settings'], false, false],
             ['dean', ['Organisation', 'Calendar', 'Notification settings'], false, false],
             ['head_of_department', ['Organisation', 'Calendar', 'Notification settings'], false, false],
@@ -43,12 +43,19 @@ class AcademicAuthorityTest extends TestCase
         $this->get('/courses')->assertInertia(
             fn (AssertableInertia $p) => $p->where(
                 'academicLinks',
-                fn ($links) => $links->pluck('label')->all() === $labels,
+                function ($links) use ($labels, $manage): bool {
+                    if ($links->pluck('label')->all() !== $labels) {
+                        return false;
+                    }
+
+                    return ! $manage || $links->firstWhere('label', 'Academic structure')['href'] === '/admin/structure';
+                },
             ),
         );
+        $this->get('/admin/structure')->assertStatus($manage ? 200 : 403);
+        $this->get('/academics')->assertStatus($manage || in_array('Organisation', $labels, true) ? 200 : 403);
         foreach (
             [
-                'Organisation' => '/academics',
                 'Curriculum' => '/academics/curriculum',
                 'Delivery' => '/academics/delivery',
             ] as $label => $url

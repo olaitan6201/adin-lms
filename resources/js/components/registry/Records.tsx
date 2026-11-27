@@ -42,6 +42,7 @@ export function Records({
     subtitle,
     columns,
     rows,
+    rowKeys,
     actions,
     children,
     tableClass,
@@ -52,6 +53,7 @@ export function Records({
     subtitle?: string;
     columns: string[];
     rows: ReactNode[][];
+    rowKeys?: readonly string[];
     actions?: ReactNode;
     children?: ReactNode;
     tableClass?: string;
@@ -71,7 +73,12 @@ export function Records({
         <Card {...{ title, subtitle, actions, bodyClassName }}>
             {children}
             <div className={`[&_.tbl]:leading-[1.25rem] [&_.tbl_.btn-sm]:leading-[1.25rem] ${tableClass ?? ''}`}>
-                <Table columns={columns} rows={displayRows} empty="No matching records." />
+                <Table
+                    columns={columns}
+                    rows={displayRows}
+                    rowKeys={rowKeys}
+                    empty="No matching records."
+                />
             </div>
             {footer}
         </Card>

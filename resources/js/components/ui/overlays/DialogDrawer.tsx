@@ -21,7 +21,7 @@ export function Drawer({
             className="fixed inset-y-0 right-0 left-auto m-0 ml-auto h-dvh max-h-dvh w-full max-w-md overflow-y-auto bg-white p-0 shadow-xl backdrop:bg-ink-900/45"
         >
             <header className="flex items-start justify-between gap-3 border-b p-5">
-                <div>
+                <div className="min-w-0 wrap-anywhere">
                     <h2 id={heading} className="font-semibold">
                         {title}
                     </h2>
@@ -29,7 +29,7 @@ export function Drawer({
                 </div>
                 <button
                     type="button"
-                    className="btn btn-ghost btn-sm"
+                    className="btn btn-ghost btn-sm shrink-0"
                     aria-label="Close panel"
                     onClick={close}
                 >

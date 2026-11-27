@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccountStatus;
 use App\Notifications\AccountResetLink;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -68,6 +69,7 @@ class User extends Authenticatable
             'auth_version' => 'integer',
             'email_verified_at' => 'datetime',
             'password_hash' => 'hashed',
+            'status' => AccountStatus::class,
         ];
     }
 }

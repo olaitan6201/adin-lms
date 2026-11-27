@@ -4,11 +4,45 @@
     z-index: 50;
     width: min(100%, 560px);
     translate: 100% 0;
-    will-change: transform;
     pointer-events: none;
+    box-shadow: var(--shadow-lift);
+}
+
+.ws-drawer-edge[data-panels="2"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: var(--shadow-lift);
+}
+
+.ws-drawer-edge-secondary {
+    display: none;
+}
+
+.ws-drawer-edge[data-module="communication"],
+.ws-drawer-edge[data-module="communication"] + .ws-drawer-edge-secondary {
+    display: block;
+    will-change: transform;
     border-left: 1px solid var(--color-ink-100);
     background: white;
-    box-shadow: var(--shadow-lift);
+}
+
+.ws-drawer-edge[data-module="communication"]::after {
+    display: none;
+}
+
+@media (max-width: 639px) {
+    .ws-drawer-edge[data-panels="2"]:not([data-module="cbt"]),
+    .ws-drawer-edge[data-panels="2"]:not([data-module="cbt"]) + .ws-drawer-edge-secondary {
+        display: block;
+        will-change: transform;
+        border-left: 1px solid var(--color-ink-100);
+        background: white;
+    }
+
+    .ws-drawer-edge[data-panels="2"]:not([data-module="cbt"])::after {
+        display: none;
+    }
 }
 
 /* Native dialogs and portalled workspace sheets own their open presentation. */

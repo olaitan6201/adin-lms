@@ -29,8 +29,14 @@ export function WorkspaceDrawerEdge({ screen }: { screen: string }) {
 
     return (
         <>
-            <span aria-hidden="true" inert className="ws-drawer-edge" />
-            {count === 2 && <span aria-hidden="true" inert className="ws-drawer-edge" />}
+            <span
+                aria-hidden="true"
+                inert
+                className="ws-drawer-edge"
+                data-panels={count}
+                data-module={screen.split('/')[1]}
+            />
+            {count === 2 && <span aria-hidden="true" inert className="ws-drawer-edge ws-drawer-edge-secondary" />}
         </>
     );
 }

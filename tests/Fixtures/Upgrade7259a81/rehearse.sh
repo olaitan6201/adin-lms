@@ -78,7 +78,7 @@ case $DB_CONNECTION in
 esac
 cd "$QA_ROOT/target"
 mv "$QA_ROOT/app/vendor" .
-php artisan migrate --no-interaction
+php artisan migrate --path="database/migrations/$baseline" --no-interaction
 [[ $(sql <<<'SELECT migration FROM migrations') == "${baseline%.php}" ]]
 cli=(php database/upgrades/7259a81/run.php)
 "${cli[@]}" plan > "$QA_ROOT/plan"
@@ -164,6 +164,7 @@ SQL
 ) == 1 ]]
 refuse 'is not empty' "apply:$plan"
 check_cutover
+php artisan migrate --no-interaction
 history candidate
 [[ $(sql <<<'SELECT count(*) FROM modules WHERE prerequisite_id IS NOT NULL') == 0 ]]
 [[ $(sql <<<'SELECT count(*) FROM examination_attempts WHERE visibility_receipts IS NOT NULL') == 0 ]]

@@ -79,8 +79,10 @@ paths leave the new module prerequisite and visibility receipt fields null.
    encryption keys; verify restoration in isolation. Keep the backup artifact
    and the restored source immutable. Budget space for a full copy, indexes
    and a single transaction’s journal/WAL. Do not expose either copy to traffic.
-2. Prepare a separate destination using this checkout's `php artisan migrate`
-   pointed **only** at the empty target, without seeders. Prepare per engine:
+2. Prepare a separate destination using this checkout's
+   `php artisan migrate --path=database/migrations/2026_11_25_000001_create_uuid_lms_schema.php --no-interaction`
+   pointed **only** at the empty target, without seeders. The pinned transfer
+   requires the baseline alone. Prepare per engine:
 
    | Engine | `UPGRADE_SOURCE` | `UPGRADE_DSN` (destination) |
    |---|---|---|
@@ -116,7 +118,11 @@ paths leave the new module prerequisite and visibility receipt fields null.
    and every original column in primary-key order, and commits together.
    It preserves recorded policy/grade history; it does not invent historical
    rubric snapshots. New tables start empty and new nullable fields stay null.
-4. On any error keep traffic on the old installation. Discard **only the
+4. After the transfer cutover check and before opening the target to traffic,
+   run `php artisan migrate --no-interaction` on the isolated target to apply
+   pending additive migrations. Verify the application and retained academic
+   records on that final schema. On any error keep traffic on the old
+   installation. Discard **only the
    isolated candidate**, prepare a fresh one, diagnose and re-plan. MySQL
    auto-increment counters can advance even after a failed transaction.
    Never run `migrate:fresh` or `migrate:rollback` on the source. On success,

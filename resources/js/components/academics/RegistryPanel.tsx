@@ -5,14 +5,16 @@ export function RegistryPanel({
     subtitle,
     children,
     actions,
+    id,
 }: {
     title: string;
     subtitle?: string;
     children: ReactNode;
     actions?: ReactNode;
+    id?: string;
 }) {
     return (
-        <section className="card min-w-0">
+        <section id={id} className="card min-w-0 scroll-mt-20" tabIndex={id ? -1 : undefined}>
             <div className="card-head">
                 <div className="min-w-0 flex-1">
                     <h2 className="card-title">{title}</h2>

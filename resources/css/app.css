@@ -11,6 +11,7 @@
 @import './layouts/drawers.css';
 @import './layouts/overview.css';
 @import './layouts/structure-register.css';
+@import './layouts/academic-core.css';
 @import './learning/study.css';
 @import './learning/course.css';
 @import './assessments/desk.css';

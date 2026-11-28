@@ -11,6 +11,7 @@ use App\Models\CurriculumCourse;
 use App\Models\Prerequisite;
 use App\Models\ProgrammeOutcome;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\Support\AcademicAccess;
 use Tests\Support\PathwayCurriculumScenario;
 use Tests\TestCase;
@@ -56,6 +57,7 @@ class AdminPathwayCurriculumGraphTest extends TestCase
     public function test_fork_copies_the_graph_without_reusing_version_owned_ids_or_approval(): void
     {
         $actor = $this->academicUser('super_admin');
+        $this->freezeSecond();
         $source = $this->createVersion();
         $entry = $this->assign($source, ['requirement_mode' => 'choice']);
         $required = $this->assign($source, ['requirement_mode' => 'choice']);
@@ -82,6 +84,8 @@ class AdminPathwayCurriculumGraphTest extends TestCase
         $this->postCurriculum($source, 'approve')->assertSessionHasNoErrors();
         $approvedAt = $source->refresh()->approved_at;
         $this->postCurriculum($source, 'programme-outcome', ['statement' => 'Not mutable'])->assertSessionHasErrors('status');
+        $oldGroup = CurriculumChoiceGroup::where('curriculum_id', $source->id)->sole();
+        $this->travel(1)->seconds();
         $response = $this->postCurriculum($source, 'fork')->assertSessionHasNoErrors();
         $draft = Curriculum::where('academic_pathway_id', $source->academic_pathway_id)->where('version', 2)->sole();
         $response->assertRedirect(route('admin.academic-core', ['curriculum' => $draft->id]));
@@ -101,6 +105,16 @@ class AdminPathwayCurriculumGraphTest extends TestCase
         $this->assertDatabaseHas('prerequisites', ['curriculum_course_id' => $copied->id, 'required_course_id' => $required->course_id]);
         $group = CurriculumChoiceGroup::where('curriculum_id', $draft->id)->sole();
         $this->assertEqualsCanonicalizing([$copied->id, $target->id], $group->options()->pluck('curriculum_course_id')->all());
+        $forkedAt = now()->toDateTimeString();
+        $oldOptionIds = $oldGroup->options()->pluck('id');
+        foreach ([$draft, $copied, $target, $group, ...$group->options()->get()] as $new) {
+            $this->assertTrue(Str::isUuid($new->id, 7));
+            $this->assertSame($forkedAt, $new->created_at?->toDateTimeString());
+            $this->assertFalse($oldOptionIds->contains($new->id));
+        }
+        $this->assertNotSame($oldGroup->id, $group->id);
+        $this->assertSame($forkedAt, $draft->updated_at?->toDateTimeString());
+        $this->assertEquals($approvedAt, $source->updated_at);
 
         $copiedCourseOutcome = CourseOutcome::where('curriculum_course_id', $copied->id)->sole();
         $copiedProgrammeOutcome = ProgrammeOutcome::where('curriculum_id', $draft->id)->sole();

@@ -11,8 +11,6 @@ class CurriculumAdoption extends DomainModel
     /** @use HasFactory<CurriculumAdoptionFactory> */
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = ['academic_pathway_id', 'academic_session_id', 'entry_cohort_id', 'active_decision_id'];
 
     public function activeDecision(): BelongsTo

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CurriculumChoiceOption extends DomainModel
 {
-    public $timestamps = false;
+    public const UPDATED_AT = null;
 
     protected $fillable = ['curriculum_id', 'group_id', 'curriculum_course_id'];
 

@@ -94,6 +94,7 @@
     "2026_11_27_212122_expand_academic_core_references.php": "a1aabfa360a1f6cc4af4afd1a3bd858df034bb3afdd9bed6d6fc5133fc97aa5e",
     "2026_11_27_212123_link_academic_core_requirements.php": "3eab13b5a8c8b06cd0efd144e98948832232100e043e110ab23bc3bf47d94c68",
     "2026_11_28_000039_activate_academic_core_legacy_compatibility.php": "01e28185b8ee9f2d5aebe76699cbf4b5e124307323afcf4f8795807d418e1239",
+    "2026_11_28_071531_add_academic_record_lifecycle_timestamps.php": "cb207ff7b7b136959ae8e0513a3ccc765c84a0ca360265eeef8f1018cbab45ec",
     "baseline/assessment_planning.php": "16f04ce5c9743770cbd4366c7d3c847709d6c1f3230402ef823cb326461c1429",
     "baseline/communications.php": "26d6ac9c1735192aa2543770a06390efc35165cec1bb89dd3181e937e4b7e92b",
     "baseline/coursework.php": "da1b14a6d6b9075b26e8f9aea27d27819b6a13a7554c016def09ac1cea431af5",

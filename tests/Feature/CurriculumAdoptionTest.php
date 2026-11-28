@@ -14,6 +14,7 @@ use App\Models\EntryCohort;
 use App\Models\Offering;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\Support\AcademicAccess;
 use Tests\TestCase;
 
@@ -44,11 +45,16 @@ class CurriculumAdoptionTest extends TestCase
             'academic_pathway_id' => AcademicPathway::factory()->create()->id,
         ];
 
-        $this->freezeTime();
+        $this->freezeSecond();
         $this->submit($firstRequest);
 
         $adoption = CurriculumAdoption::where('entry_cohort_id', $cohort->id)->sole();
         $firstDecision = $adoption->activeDecision;
+        $openedAt = now()->toDateTimeString();
+        $this->assertTrue(Str::isUuid($adoption->id, 7));
+        $this->assertTrue(Str::isUuid($firstDecision->id, 7));
+        $this->assertSame($openedAt, $adoption->created_at?->toDateTimeString());
+        $this->assertSame($openedAt, $adoption->updated_at?->toDateTimeString());
         $firstDecisionFields = $firstDecision->getRawOriginal();
         $this->assertDatabaseHas('curriculum_adoption_decisions', [
             'id' => $firstDecision->id,
@@ -62,7 +68,9 @@ class CurriculumAdoptionTest extends TestCase
         ]);
         $this->assertSame(now()->toDateTimeString(), $firstDecision->recorded_at->toDateTimeString());
 
+        $this->travel(1)->seconds();
         $this->submit($firstRequest);
+        $this->assertSame($openedAt, $adoption->fresh()->updated_at->toDateTimeString());
         $this->assertDatabaseCount('curriculum_adoption_decisions', 2);
 
         $replacementRequest = array_replace($firstRequest, [
@@ -71,11 +79,16 @@ class CurriculumAdoptionTest extends TestCase
             'reason' => 'Replacement applies to this tuple only.',
         ]);
         $this->submit($replacementRequest);
+        $replacedAt = now()->toDateTimeString();
+        $this->travel(1)->seconds();
         $this->submit($firstRequest);
 
         $this->assertDatabaseCount('curriculum_adoptions', 2);
         $this->assertDatabaseCount('curriculum_adoption_decisions', 3);
         $this->assertSame($firstDecisionFields, $firstDecision->fresh()->getRawOriginal());
+        $adoption->refresh();
+        $this->assertSame($openedAt, $adoption->created_at->toDateTimeString());
+        $this->assertSame($replacedAt, $adoption->updated_at->toDateTimeString());
         $current = $adoption->fresh()->activeDecision;
         $this->assertSame($replacement->id, $current->curriculum_id);
         $this->assertSame('BOARD-002', $current->decision_reference);

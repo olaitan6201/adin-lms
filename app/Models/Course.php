@@ -11,7 +11,7 @@ class Course extends DomainModel
 
     protected $table = 'courses';
 
-    public $timestamps = false;
+    public const UPDATED_AT = null;
 
     public function department(): BelongsTo
     {

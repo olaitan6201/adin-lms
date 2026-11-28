@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CurriculumChoiceGroup extends DomainModel
 {
-    public $timestamps = false;
+    public const UPDATED_AT = null;
 
     protected $fillable = ['curriculum_id', 'code', 'minimum_selections', 'maximum_selections'];
 

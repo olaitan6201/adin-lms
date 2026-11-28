@@ -13,8 +13,6 @@ class CourseRevision extends DomainModel
     /** @use HasFactory<CourseRevisionFactory> */
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = ['title', 'description', 'syllabus', 'learning_outcomes', 'standard_units'];
 
     protected function casts(): array

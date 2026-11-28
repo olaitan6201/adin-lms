@@ -12,8 +12,6 @@ class Curriculum extends DomainModel
 
     protected $table = 'curricula';
 
-    public $timestamps = false;
-
     protected function casts(): array
     {
         return [

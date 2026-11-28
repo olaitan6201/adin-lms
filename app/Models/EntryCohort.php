@@ -10,7 +10,7 @@ class EntryCohort extends DomainModel
     /** @use HasFactory<EntryCohortFactory> */
     use HasFactory;
 
-    public $timestamps = false;
+    public const UPDATED_AT = null;
 
     protected $fillable = ['code', 'label'];
 }

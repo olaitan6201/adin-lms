@@ -3,6 +3,7 @@
 namespace App\Services\Academics;
 
 use App\Enums\CurriculumStatus;
+use App\Enums\OrganisationAuditAction;
 use App\Enums\PermissionCode;
 use App\Models\AcademicPathway;
 use App\Models\Curriculum;
@@ -16,14 +17,25 @@ use Illuminate\Validation\ValidationException;
 
 final class CurriculumAdoptionRegister
 {
-    public function __construct(private ScopedAuthority $authority) {}
+    public function __construct(
+        private ScopedAuthority $authority,
+        private AcademicCoreAudit $audit,
+    ) {}
 
     /** @param array{code: string, label: string} $input */
     public function createCohort(array $input, User $actor): EntryCohort
     {
         abort_unless($this->authority->institutionAllows($actor, PermissionCode::CurriculumEdit), 403);
 
-        return EntryCohort::create($input);
+        return DB::transaction(function () use ($input, $actor): EntryCohort {
+            $cohort = EntryCohort::create($input);
+            $this->audit->record($actor, $cohort, OrganisationAuditAction::Created, [
+                'before' => [],
+                'after' => ['code' => $cohort->code, 'label' => $cohort->label],
+            ]);
+
+            return $cohort;
+        });
     }
 
     /** @param array{curriculum_id: string, academic_session_id: string, entry_cohort_id: string, decision_reference: string, reason: string} $input */

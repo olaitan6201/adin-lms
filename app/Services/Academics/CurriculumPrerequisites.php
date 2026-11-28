@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 class CurriculumPrerequisites
 {
-    public function add(CurriculumCourse $entry, string $requiredId): void
+    public function add(CurriculumCourse $entry, string $requiredId): bool
     {
         $required = CurriculumCourse::where('curriculum_id', $entry->curriculum_id)->findOrFail($requiredId);
         $edges = Prerequisite::join(
@@ -39,11 +39,11 @@ class CurriculumPrerequisites
             }
         }
 
-        Prerequisite::unguarded(
+        return Prerequisite::unguarded(
             fn () => Prerequisite::firstOrCreate([
                 'curriculum_course_id' => $entry->id,
                 'required_course_id' => $required->course_id,
             ]),
-        );
+        )->wasRecentlyCreated;
     }
 }

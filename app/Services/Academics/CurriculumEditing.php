@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class CurriculumEditing
 {
-    public function apply(Curriculum $version, string $action, array $data): void
+    public function apply(Curriculum $version, string $action, array $data): bool
     {
         $entries = CurriculumCourse::where('curriculum_id', $version->id);
         $entry = isset($data['entry_id']) ? (clone $entries)->findOrFail($data['entry_id']) : null;
@@ -31,19 +31,22 @@ class CurriculumEditing
                         $data,
                     ),
                 );
-                break;
+
+                return true;
             case 'course-outcome':
                 CourseOutcome::forceCreate([
                     'curriculum_course_id' => $entry->id,
                     'statement' => $data['statement'],
                 ]);
-                break;
+
+                return true;
             case 'programme-outcome':
                 ProgrammeOutcome::forceCreate([
                     'curriculum_id' => $version->id,
                     'statement' => $data['statement'],
                 ]);
-                break;
+
+                return true;
             case 'mapping':
                 $valid =
                     CourseOutcome::whereIn('curriculum_course_id', $entries->select('id'))
@@ -58,16 +61,17 @@ class CurriculumEditing
                     ]);
                 }
 
-                OutcomeMapping::unguarded(fn () => OutcomeMapping::firstOrCreate($data));
-                break;
+                return OutcomeMapping::unguarded(fn () => OutcomeMapping::firstOrCreate($data))->wasRecentlyCreated;
             case 'unmap':
                 OutcomeMapping::whereIn('course_outcome_id', CourseOutcome::whereIn(
                     'curriculum_course_id', $entries->select('id'),
                 )->select('id'))->findOrFail($data['mapping_id'])->delete();
-                break;
+
+                return true;
             case 'prerequisite':
-                app(CurriculumPrerequisites::class)->add($entry, $data['required_entry_id']);
-                break;
+                return app(CurriculumPrerequisites::class)->add($entry, $data['required_entry_id']);
         }
+
+        return false;
     }
 }

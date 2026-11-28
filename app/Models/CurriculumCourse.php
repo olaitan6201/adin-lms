@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\CurriculumCourseCategory;
+use App\Enums\CurriculumRequirementMode;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +21,26 @@ class CurriculumCourse extends DomainModel
         return [
             'compulsory' => 'boolean',
         ];
+    }
+
+    protected function category(): Attribute
+    {
+        return Attribute::set(fn (CurriculumCourseCategory|string|null $value): ?string => $value instanceof CurriculumCourseCategory ? $value->value : $value);
+    }
+
+    protected function requirementMode(): Attribute
+    {
+        return Attribute::set(fn (CurriculumRequirementMode|string|null $value): ?string => $value instanceof CurriculumRequirementMode ? $value->value : $value);
+    }
+
+    protected function pathwayCategory(): Attribute
+    {
+        return Attribute::get(fn (): ?CurriculumCourseCategory => CurriculumCourseCategory::tryFrom($this->category ?? ''));
+    }
+
+    protected function pathwayRequirementMode(): Attribute
+    {
+        return Attribute::get(fn (): ?CurriculumRequirementMode => CurriculumRequirementMode::tryFrom($this->requirement_mode ?? ''));
     }
 
     public function curriculum(): BelongsTo

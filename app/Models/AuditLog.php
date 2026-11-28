@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\CourseCatalogueEvent;
 use App\Enums\OrganisationAuditAction;
+use App\Enums\PathwayCurriculumAuditAction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,7 +35,7 @@ class AuditLog extends DomainModel
     protected function action(): Attribute
     {
         return Attribute::set(
-            fn (OrganisationAuditAction|string $value): string => $value instanceof OrganisationAuditAction ? $value->value : $value,
+            fn (OrganisationAuditAction|CourseCatalogueEvent|PathwayCurriculumAuditAction|string $value): string => is_string($value) ? $value : $value->value,
         )->withoutObjectCaching();
     }
 
@@ -44,6 +46,20 @@ class AuditLog extends DomainModel
     {
         return Attribute::get(
             fn (): ?OrganisationAuditAction => OrganisationAuditAction::tryFrom($this->action ?? ''),
+        )->withoutObjectCaching();
+    }
+
+    protected function courseCatalogueAction(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?CourseCatalogueEvent => CourseCatalogueEvent::tryFrom($this->action ?? ''),
+        )->withoutObjectCaching();
+    }
+
+    protected function pathwayCurriculumAction(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?PathwayCurriculumAuditAction => PathwayCurriculumAuditAction::tryFrom($this->action ?? ''),
         )->withoutObjectCaching();
     }
 }

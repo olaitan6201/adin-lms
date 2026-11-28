@@ -20,4 +20,5 @@ enum PermissionCode: string
     case OperationsManage = 'operations.manage';
     case PrivacyManage = 'privacy.manage';
     case PortabilityManage = 'portability.manage';
+    case PlacementApprove = 'placement.approve';
 }

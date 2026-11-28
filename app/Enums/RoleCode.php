@@ -14,6 +14,7 @@ enum RoleCode: string
     case ExaminationOfficer = 'examination_officer';
     case QualityAssuranceOfficer = 'quality_assurance_officer';
     case Guardian = 'guardian';
+    case Registrar = 'registrar';
 
     public function scope(): ScopeType
     {
@@ -23,7 +24,7 @@ enum RoleCode: string
             self::Lecturer => ScopeType::Offering,
             self::SuperAdmin, self::InstitutionalAdmin, self::IctAdmin,
             self::Student, self::ExaminationOfficer, self::QualityAssuranceOfficer,
-            self::Guardian => ScopeType::Institution,
+            self::Guardian, self::Registrar => ScopeType::Institution,
         };
     }
 }

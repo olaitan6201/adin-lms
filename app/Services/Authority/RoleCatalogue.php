@@ -26,6 +26,7 @@ final class RoleCatalogue
             RoleCode::ExaminationOfficer => [PermissionCode::ExaminationsManage],
             RoleCode::QualityAssuranceOfficer => [PermissionCode::ComplianceRead],
             RoleCode::Guardian => [PermissionCode::ProgressReadApproved],
+            RoleCode::Registrar => [PermissionCode::PlacementApprove],
         };
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Authority;
 
+use App\Enums\AccountStatus;
 use App\Enums\PermissionCode;
 use App\Enums\RoleCode;
 use App\Enums\ScopeType;
@@ -49,6 +50,12 @@ class ScopedAuthority
         $roles = array_values(array_filter(RoleCode::cases(), fn (RoleCode $role) => $role->scope() === ScopeType::Institution));
 
         return $this->hasGrant($user, $permission, ScopeType::Institution->key(), $roles);
+    }
+
+    public function registrarAllows(User $user): bool
+    {
+        return User::query()->whereKey($user->id)->where('status', AccountStatus::Active)->exists()
+            && $this->hasGrant($user, PermissionCode::PlacementApprove, ScopeType::Institution->key(), [RoleCode::Registrar]);
     }
 
     public function rosterAllows(User $user, Offering $offering): bool

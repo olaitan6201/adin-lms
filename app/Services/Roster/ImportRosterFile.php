@@ -23,7 +23,7 @@ final class ImportRosterFile
             throw new DomainException('Expected CSV header: '.implode(',', self::HEADER));
         }
 
-        return DB::transaction(function () use ($file) {
+        return DB::transaction(function () use ($file): int {
             $changed = 0;
             $record = 1;
             while (! $file->eof()) {
@@ -57,8 +57,8 @@ final class ImportRosterFile
 
     private function apply(string $student, string $offering, EnrolmentStatus $status, int $revision, int $record): bool
     {
-        $now = now();
-        $timestamps = ['created_at' => $now, 'updated_at' => $now];
+        $receivedAt = now();
+        $timestamps = ['created_at' => $receivedAt, 'updated_at' => $receivedAt];
         DB::table('students')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_student_id' => $student] + $timestamps);
         $studentId = DB::table('students')->where('external_student_id', $student)->lockForUpdate()->firstOrFail()->id;
         DB::table('offerings')->insertOrIgnore(['id' => (string) Str::uuid7(), 'external_offering_id' => $offering] + $timestamps);
@@ -77,12 +77,13 @@ final class ImportRosterFile
         $values = ['status' => $status->value, 'source_revision' => $revision];
         $id = $current->id ?? (string) Str::uuid7();
         if ($current) {
-            $query->update($values + ['updated_at' => $now]);
+            $query->update($values + ['updated_at' => $receivedAt]);
         } else {
             DB::table('enrolments')->insert(['id' => $id] + $key + $values + $timestamps);
         }
+
         if ($status === EnrolmentStatus::Registered) {
-            RegistrationInterval::observe($id, $current, $revision, $now);
+            RegistrationInterval::observe($id, $current, $revision, $receivedAt);
         }
 
         return true;

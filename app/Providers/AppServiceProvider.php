@@ -37,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-academic-structure', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::AcademicsManage));
         Gate::define('edit-academic-core', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::CurriculumEdit));
         Gate::define('approve-academic-core', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::CurriculumApprove));
+        Gate::define('review-placements', fn (User $actor): bool => $authority->registrarAllows($actor));
+        Gate::define('manage-delivery-links', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::OfferingsManage));
         Gate::define('view-academic-core', fn (User $actor): bool => $authority->institutionAllows($actor, PermissionCode::CurriculumEdit)
             || $authority->institutionAllows($actor, PermissionCode::CurriculumApprove)
             || $authority->institutionAllows($actor, PermissionCode::ComplianceRead));

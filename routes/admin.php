@@ -20,28 +20,6 @@ use App\Models\User;
 use App\Services\Academics\HierarchyChanges;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-
-Route::prefix('admin')->name('workspace.admin.')->group(function (): void {
-    $pages = [
-        'people', 'curriculum', 'delivery', 'content', 'course', 'classroom',
-        'assignments', 'cbt', 'gradebook', 'attendance', 'communication', 'calendar', 'reports', 'qa',
-        'administration', 'settings/notifications',
-    ];
-
-    foreach ($pages as $page) {
-        $screen = "admin/$page";
-        $path = $page === 'qa' ? 'qa-review' : $page;
-        $component = collect(explode('/', $screen))->map(fn (string $segment) => Str::studly($segment))->implode('/');
-        Route::inertia($path, $component, [
-            'screenKey' => $screen,
-            'branding' => null,
-            'portalIdentity' => null,
-            'signedIn' => false,
-            'academicLinks' => [],
-        ])->name(str_replace('/', '.', $page));
-    }
-});
 
 Route::prefix('admin/placements')->name('admin.placements.')
     ->withoutMiddleware(SubstituteBindings::class)

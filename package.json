@@ -5,13 +5,13 @@
     "scripts": {
         "build": "vite build",
         "lint": "npm run lint:source && npm run lint:components",
-        "lint:source": "npm exec --yes --package=oxlint@1.95.0 -- oxlint --react-plugin --deny-warnings resources scripts tests public/portal-worker.js public/scorm-bridge.js vite.config.js playwright.config.ts",
+        "lint:source": "npm exec --yes --package=oxlint@1.95.0 -- oxlint --react-plugin --deny-warnings resources scripts tests public/portal-worker.js public/scorm-bridge.js vite.config.js playwright*.config.ts",
         "lint:components": "node scripts/qualification/check-component-layout.mjs",
         "typecheck": "tsc --noEmit",
         "test:structure": "node --test tests/frontend/structure.test.mjs",
         "test:frontend": "node --test tests/frontend/*.test.mjs",
         "dev": "vite",
-        "test:e2e": "npm run build && playwright test && playwright test --config=playwright.academic-core.config.ts"
+        "test:e2e": "npm run build && playwright test && playwright test --config=playwright.academic-core.config.ts && playwright test --config=playwright.placements.config.ts"
     },
     "devDependencies": {
         "@playwright/test": "1.62.1",

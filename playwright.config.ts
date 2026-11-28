@@ -9,7 +9,7 @@ process.env.PORTAL_E2E_RUN ??= mkdtempSync(`${runRoot}/run-`);
 
 export default defineConfig({
     testDir: 'tests/e2e',
-    testIgnore: 'academic-core.spec.ts',
+    testIgnore: ['academic-core.spec.ts', 'placements.spec.ts'],
     workers: 1,
     forbidOnly: true,
     outputDir: '.agent-work/browser-tests/results',

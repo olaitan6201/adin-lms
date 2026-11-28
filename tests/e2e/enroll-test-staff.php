@@ -32,6 +32,7 @@ if (! $run || ! $sandbox || ! str_starts_with($run, $sandbox.'/run-')
 }
 
 require __DIR__.'/workspace-fixtures.php';
+require_once __DIR__.'/placement-fixtures.php';
 
 umask(0077);
 $offering = Offering::where('external_offering_id', 'DEMO-CSC101-2026-1')->sole();
@@ -47,6 +48,10 @@ foreach (['desktop', 'phone'] as $project) {
     $structureAdmin = User::factory()->create(['email' => "structure-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($structureAdmin->id, RoleCode::InstitutionalAdmin, 'institution', false);
     file_put_contents($run."/structure-{$project}.factor", enrollFixtureAuthenticator($structureAdmin), LOCK_EX);
+    if (getenv('PORTAL_E2E_PLACEMENTS') === '1') {
+        seedPlacementFixture($run, $project);
+    }
+
     if (getenv('PORTAL_E2E_ACADEMIC_CORE') === '1') {
         $academicAdmin = User::factory()->create(['email' => "academic-core-{$project}@demo.example.test"]);
         app(ChangeRoleGrant::class)->apply($academicAdmin->id, RoleCode::SuperAdmin, 'institution', false);

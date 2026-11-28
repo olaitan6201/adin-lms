@@ -18,18 +18,37 @@ repository, ask the user rather than making the product decision for them.
 `.agents/` is intentionally local: if the pack is missing, stop and request
 it rather than substituting another copy or claiming compliance.
 
-1. **Before edits:** select the applicable workflow mode, read the role/surface
-   references, and map the user’s acceptance criteria to observable outcomes.
-   Use `.agents/product-requirements.md` and `.agents/docs/` for LMS requirements.
-2. **During work:** record boundaries, owners, decisions, evidence and blockers
-   in `.agent-work/`. Apply the pack’s architecture, UI and domain guidance
-   throughout the work, not as a formatting pass at the end.
-3. **Before handover:** verify real workflows and failure cases at the required
-   boundaries. Use the `design-principles` MCP for qualification together with the
-   required local pack. Apply `references/qa/qualification-protocol.md`
-   and `references/qualification/enterprise-qualification.md`, preserve independent
-   review and give only their evidence-backed verdict. Passing tests, compiling
-   or finishing a sprint is not acceptance of a complete product.
+1. **At intake, before any edits:** select the smallest sufficient adaptive
+   workflow mode. Map acceptance criteria to observable outcomes and select
+   named pack roles by affected surface, risk and stage; record why roles apply
+   or do not. Use `.agents/product-requirements.md` and `.agents/docs/` for LMS
+   requirements. Quick work stays Quick; do not add inapplicable roles or stages.
+2. **At each applicable stage:** Adin LMS requires actual separate host
+   subagent invocations for the selected named pack roles, from discovery and
+   planning through implementation, testing and review as applicable. A generic
+   host wrapper counts only if explicitly assigned the exact registry role and
+   its instruction file. Give each role its scoped authority and expected evidence;
+   keep one implementation owner per scope. Apply specialist guidance when the
+   work is done, not as a final QA substitute. Record role IDs, invocation IDs,
+   stages, boundaries, owners, decisions, evidence and blockers in `.agent-work/`.
+3. **Before handover:** invoke a separate `senior-qa-engineer` who did not
+   author the candidate for independent, evidence-backed qualification. Use the
+   `design-principles` MCP together with the required local pack; apply
+   `references/qa/qualification-protocol.md` and
+   `references/qualification/enterprise-qualification.md`. Inventory the exact
+   final candidate across staged, unstaged and untracked changes, distinguishing
+   task changes from unrelated work. Check each [Engineering Bar](#engineering-bars)
+   against every local task change, inspecting whole affected files, controllers
+   and contracts, not only edited lines. Record evidence or a specific
+   not-applicable reason for each bar, and verify real workflows and failure
+   cases at the required boundaries. If candidate bytes change, re-review the
+   changes and rerun affected checks before qualifying the new candidate.
+   Self-review or generic final QA does not replace independent qualification or
+   an applicable specialist. A confirmed mandatory failure is **NOT QUALIFIED**;
+   otherwise a missing required actor or blocked, missing or unverified required
+   check is **INCONCLUSIVE**, not a pass or N/A. Report only the evidence-backed
+   verdict for the assessed scope; passing tests, compiling or finishing a sprint
+   is not acceptance of a complete product.
 
 ## Frontend boundaries
 
@@ -62,7 +81,7 @@ Run `npm run lint` for frontend changes. It includes the TSX layout check (`npm 
 - Persist exam answers before acknowledging autosave. Enforce deadlines and attempt limits on the server under concurrency. Version submissions, score changes and published results. Audit grading, moderation and release.
 - Every domain table has a Laravel-generated UUIDv7 `id`; use UUID foreign keys and a default string length of 191; enforce natural uniqueness separately. Store exact scores and use institutional grading policies.
 
-## Engineering bar
+## Engineering Bars
 
 - In each `routes/web/` module, put imports before route registration. Group
   endpoints by resource prefix or controller under one common middleware group;

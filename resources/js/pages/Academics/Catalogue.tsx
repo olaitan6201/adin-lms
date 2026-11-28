@@ -26,6 +26,7 @@ export default function Catalogue({
     const base = '/academics/curriculum';
     const path = `${base}/${version?.id}`;
 
+    const pathway = version?.pathway;
     const draft = edit && version?.status === 'draft';
 
     return (
@@ -35,7 +36,7 @@ export default function Catalogue({
                 My courses
             </Link>
             <DeskHeading area="Academic registry" title="Curriculum catalogue">
-                Select a programme version to inspect course requirements, academic levels and outcome coverage.
+                Select a curriculum version to inspect course requirements, academic levels and outcome coverage.
             </DeskHeading>
             <RegistryPanel title="Programme versions" subtitle="Select a curriculum revision">
                 <nav aria-label="Curriculum versions">
@@ -44,9 +45,11 @@ export default function Catalogue({
                             {versions.map((v) => (
                                 <li key={v.id}>
                                     <Link
-                                        className={
-                                            v.id === version?.id ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'
-                                        }
+                                        className={`btn btn-sm transition-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-800 focus-visible:ring-0 ${
+                                            v.id === version?.id
+                                                ? 'bg-brand-700 text-white hover:bg-brand-800'
+                                                : 'btn-outline border-ink-500'
+                                        }`}
                                         aria-current={v.id === version?.id ? 'page' : undefined}
                                         href={`${base}/${v.id}`}
                                     >
@@ -83,7 +86,19 @@ export default function Catalogue({
                     </Collapsible>
                 )}
             </RegistryPanel>
-            {version?.id && (
+            {version && pathway && (
+                <RegistryPanel
+                    title={`${pathway.specialization} · ${pathway.programme}`}
+                    subtitle={`Version ${version.version} · ${version.status}`}
+                >
+                    {version.framework_revision && <p>{version.framework_revision}</p>}
+                    {version.approved_at && approverName && (
+                        <p>Approved {new Date(version.approved_at).toLocaleString()} by {approverName}</p>
+                    )}
+                    <p>This catalogue shows version details only for pathway-linked curricula.</p>
+                </RegistryPanel>
+            )}
+            {version?.id && !pathway && (
                 <>
                     <RegistryPanel
                         title="Course catalogue"

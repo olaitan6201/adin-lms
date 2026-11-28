@@ -8,6 +8,7 @@ type Version = {
     framework_revision: string | null;
     approved_at: string | null;
     approved_by: string | null;
+    pathway: { programme: string; specialization: string } | null;
 };
 
 export type Entry = {

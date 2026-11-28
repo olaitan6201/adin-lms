@@ -10,6 +10,7 @@ import { DeskHeading } from '../../components/academics/DeskHeading';
 import { RegistryPanel } from '@/components/academics/RegistryPanel';
 
 export default function Catalogue({
+    academicCoreUrl,
     edit,
     approve,
     approverName,
@@ -96,6 +97,14 @@ export default function Catalogue({
                         <p>Approved {new Date(version.approved_at).toLocaleString()} by {approverName}</p>
                     )}
                     <p>This catalogue shows version details only for pathway-linked curricula.</p>
+                    {academicCoreUrl && (
+                        <Link
+                            className="text-brand-800 underline underline-offset-4 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-800"
+                            href={academicCoreUrl}
+                        >
+                            Open pathway curriculum
+                        </Link>
+                    )}
                 </RegistryPanel>
             )}
             {version?.id && !pathway && (

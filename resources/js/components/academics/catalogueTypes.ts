@@ -31,6 +31,7 @@ export type Outcome = {
 };
 
 export type CatalogueProps = {
+    academicCoreUrl: string | null;
     approverName: string | null;
     edit: boolean;
     approve: boolean;

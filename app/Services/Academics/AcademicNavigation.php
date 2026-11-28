@@ -51,6 +51,7 @@ class AcademicNavigation
         ])->isNotEmpty() || $user->lecturer()->exists();
 
         $managesStructure = $institution->contains('academics.manage');
+        $readsCurriculum = $institution->intersect(['curriculum.edit', 'curriculum.approve', 'compliance.read'])->isNotEmpty();
 
         return array_values(
             array_filter([
@@ -63,11 +64,8 @@ class AcademicNavigation
                         'href' => route($managesStructure ? 'admin.structure' : 'academics.index', [], false),
                     ]
                     : null,
-                $institution
-                    ->intersect(['curriculum.edit', 'curriculum.approve', 'compliance.read'])
-                    ->isNotEmpty()
-                    ? ['label' => 'Curriculum', 'href' => route('academics.curriculum.show', [], false)]
-                    : null,
+                $this->link('Academic core', 'admin.academic-core', $readsCurriculum),
+                $this->link('Curriculum', 'academics.curriculum.show', $readsCurriculum),
                 $institution->contains('offerings.manage')
                     ? ['label' => 'Delivery', 'href' => route('academics.delivery', [], false)]
                     : null,

@@ -37,6 +37,9 @@ final class CurriculumCataloguePageResource extends JsonResource
             'version' => $version === null
                 ? null
                 : CurriculumCatalogueSelectionResource::make($version)->resolve($request),
+            'academicCoreUrl' => $version?->academic_pathway_id === null
+                ? null
+                : route('admin.academic-core', ['curriculum' => $version->id], false),
             'approverName' => $page['approverName'],
             'mappings' => $page['mappings']->map(fn (OutcomeMapping $mapping): array => [
                 'id' => $mapping->id,

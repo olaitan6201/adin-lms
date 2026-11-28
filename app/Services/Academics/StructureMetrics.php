@@ -61,6 +61,7 @@ final class StructureMetrics
                 'departments_with_active_hod' => $heads->count(),
                 'programmes_with_approved_curriculum' => Curriculum::query()
                     ->whereIn('programme_id', $programmeIds)
+                    ->whereNull('academic_pathway_id')
                     ->where('status', CurriculumStatus::Approved)
                     ->distinct()
                     ->count('programme_id'),

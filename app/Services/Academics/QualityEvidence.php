@@ -11,6 +11,7 @@ final class QualityEvidence
     {
         $versions = DB::table('curricula as c')
             ->join('programmes as p', 'p.id', '=', 'c.programme_id')
+            ->whereNull('c.academic_pathway_id')
             ->orderBy('p.name')
             ->orderBy('p.id')
             ->orderByDesc('c.version')
@@ -24,6 +25,7 @@ final class QualityEvidence
         $mapped = (clone $outcomes)->whereExists(fn ($query) => $query->from('outcome_mappings as m')
             ->join('course_outcomes as co', 'co.id', '=', 'm.course_outcome_id')
             ->join('curriculum_courses as cc', 'cc.id', '=', 'co.curriculum_course_id')
+            ->whereNull('cc.course_revision_id')
             ->whereColumn('m.programme_outcome_id', 'po.id')
             ->whereColumn('cc.curriculum_id', 'c.id'));
 

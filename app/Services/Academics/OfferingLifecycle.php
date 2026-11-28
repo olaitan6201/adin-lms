@@ -38,7 +38,7 @@ class OfferingLifecycle
 
                 if ($action === 'prepare') {
                     $entry = CurriculumCourse::findOrFail($data['curriculum_course_id']);
-                    if ($entry->curriculum->status !== CurriculumStatus::Approved) {
+                    if (! $this->isApprovedLegacyEntry($entry)) {
                         throw ValidationException::withMessages([
                             'curriculum_course_id' => 'Select an approved curriculum course.',
                         ]);
@@ -53,7 +53,7 @@ class OfferingLifecycle
                         ! $offering->section ||
                         ! $offering->semester_id ||
                         ! in_array($offering->delivery_mode, self::MODES, true) ||
-                        $offering->curriculumCourse?->curriculum?->status !== CurriculumStatus::Approved ||
+                        ! $this->isApprovedLegacyEntry($offering->curriculumCourse) ||
                         ! TeachingAllocation::where('offering_id', $offering->id)->exists()
                     ) {
                         throw ValidationException::withMessages([
@@ -82,5 +82,13 @@ class OfferingLifecycle
                 'section' => 'This course section already exists in the selected semester.',
             ]);
         }
+    }
+
+    private function isApprovedLegacyEntry(?CurriculumCourse $entry): bool
+    {
+        return $entry !== null
+            && $entry->course_revision_id === null
+            && $entry->curriculum->academic_pathway_id === null
+            && $entry->curriculum->status === CurriculumStatus::Approved;
     }
 }

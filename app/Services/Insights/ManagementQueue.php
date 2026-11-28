@@ -47,6 +47,7 @@ final class ManagementQueue
 
         if (! $offerings && $this->authority->institutionAllows($user, PermissionCode::CurriculumApprove)) {
             $versions = DB::table('curricula as c')->join('programmes as p', 'p.id', '=', 'c.programme_id')
+                ->whereNull('c.academic_pathway_id')
                 ->where('c.status', CurriculumStatus::Reviewed)->orderBy('p.name')->orderBy('c.version')->limit(12)
                 ->get(['c.id', 'p.name', 'c.version']);
             foreach ($versions as $v) {

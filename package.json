@@ -11,7 +11,7 @@
         "test:structure": "node --test tests/frontend/structure.test.mjs",
         "test:frontend": "node --test tests/frontend/*.test.mjs",
         "dev": "vite",
-        "test:e2e": "npm run build && playwright test"
+        "test:e2e": "npm run build && playwright test && playwright test --config=playwright.academic-core.config.ts"
     },
     "devDependencies": {
         "@playwright/test": "1.62.1",

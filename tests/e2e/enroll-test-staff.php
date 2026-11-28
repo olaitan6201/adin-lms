@@ -47,6 +47,11 @@ foreach (['desktop', 'phone'] as $project) {
     $structureAdmin = User::factory()->create(['email' => "structure-{$project}@demo.example.test"]);
     app(ChangeRoleGrant::class)->apply($structureAdmin->id, RoleCode::InstitutionalAdmin, 'institution', false);
     file_put_contents($run."/structure-{$project}.factor", enrollFixtureAuthenticator($structureAdmin), LOCK_EX);
+    if (getenv('PORTAL_E2E_ACADEMIC_CORE') === '1') {
+        $academicAdmin = User::factory()->create(['email' => "academic-core-{$project}@demo.example.test"]);
+        app(ChangeRoleGrant::class)->apply($academicAdmin->id, RoleCode::SuperAdmin, 'institution', false);
+        file_put_contents($run."/academic-core-{$project}.factor", enrollFixtureAuthenticator($academicAdmin), LOCK_EX);
+    }
     $exchange = 'exchange-'.$project;
     $reader = User::factory()->create(['email' => "$exchange-reader@demo.example.test"]);
     Student::factory()->create(['user_id' => $reader->id]);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ClearHistoryAtSessionBoundary;
 use App\Http\Middleware\EnsureActiveAccount;
 use App\Http\Middleware\EnsureAdminAccess;
 use App\Http\Middleware\EnsureSessionSecurity;
@@ -31,7 +32,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['admin' => EnsureAdminAccess::class]);
-        $middleware->web(append: [EnsureActiveAccount::class, EnsureSessionSecurity::class, Inertia\Middleware::class]);
+        $middleware->web(append: [
+            ClearHistoryAtSessionBoundary::class,
+            EnsureActiveAccount::class,
+            EnsureSessionSecurity::class,
+            Inertia\Middleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

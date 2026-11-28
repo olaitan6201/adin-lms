@@ -19,6 +19,8 @@ export type Field = {
     min?: number;
     max?: number;
     inputMode?: 'decimal' | 'numeric';
+    showSelectedOption?: boolean;
+    description?: string;
 };
 
 export default function RecordForm({
@@ -28,6 +30,9 @@ export default function RecordForm({
     method = 'post',
     resetOnSuccess = false,
     preserveScroll = false,
+    onStart,
+    onSuccess,
+    submitId,
 }: {
     title: string;
     action: string;
@@ -35,6 +40,9 @@ export default function RecordForm({
     method?: 'post' | 'delete' | 'patch';
     resetOnSuccess?: boolean;
     preserveScroll?: boolean;
+    onStart?: () => void;
+    onSuccess?: () => void;
+    submitId?: string;
 }) {
     return (
         <Form
@@ -43,17 +51,19 @@ export default function RecordForm({
             className="my-3 grid gap-3 border-l-2 border-border pl-4"
             options={{ preserveScroll }}
             resetOnSuccess={resetOnSuccess}
+            onStart={onStart}
+            onSuccess={onSuccess}
         >
             {({ processing, errors, recentlySuccessful }) => (
                 <FormFeedback errors={errors}>
                     {fields.map((f) => (
                         <RecordField key={f.name} field={f} error={errors[f.name]} />
                     ))}
-                    <Button variant={method === 'delete' ? 'destructive' : 'default'} disabled={processing}>
+                    <Button id={submitId} variant={method === 'delete' ? 'destructive' : 'default'} disabled={processing}>
                         {title}
                     </Button>
                     {processing && <p role="status">Saving…</p>}
-                    {recentlySuccessful && <p role="status">Saved.</p>}
+                    {!onSuccess && recentlySuccessful && <p role="status">Saved.</p>}
                 </FormFeedback>
             )}
         </Form>

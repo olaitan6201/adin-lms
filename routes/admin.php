@@ -6,16 +6,62 @@ use App\Http\Controllers\Admin\AcademicCourseRevisionController;
 use App\Http\Controllers\Admin\AccountDirectoryController;
 use App\Http\Controllers\Admin\AccountGrantsController;
 use App\Http\Controllers\Admin\CurriculumAdoptionController;
+use App\Http\Controllers\Admin\DeliveryLinksController;
 use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\PathwayCurriculumController;
+use App\Http\Controllers\Admin\PlacementDeskController;
 use App\Http\Controllers\Admin\QualityController;
 use App\Http\Controllers\Admin\StructureController;
 use App\Http\Controllers\Admin\StructureImportController;
 use App\Http\Controllers\Admin\StructureRegisterController;
 use App\Http\Controllers\Admin\StructureRegisterImportController;
+use App\Http\Middleware\BindAcademicDeskRecords;
 use App\Models\User;
 use App\Services\Academics\HierarchyChanges;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+
+Route::prefix('admin')->name('workspace.admin.')->group(function (): void {
+    $pages = [
+        'people', 'curriculum', 'delivery', 'content', 'course', 'classroom',
+        'assignments', 'cbt', 'gradebook', 'attendance', 'communication', 'calendar', 'reports', 'qa',
+        'administration', 'settings/notifications',
+    ];
+
+    foreach ($pages as $page) {
+        $screen = "admin/$page";
+        $path = $page === 'qa' ? 'qa-review' : $page;
+        $component = collect(explode('/', $screen))->map(fn (string $segment) => Str::studly($segment))->implode('/');
+        Route::inertia($path, $component, [
+            'screenKey' => $screen,
+            'branding' => null,
+            'portalIdentity' => null,
+            'signedIn' => false,
+            'academicLinks' => [],
+        ])->name(str_replace('/', '.', $page));
+    }
+});
+
+Route::prefix('admin/placements')->name('admin.placements.')
+    ->withoutMiddleware(SubstituteBindings::class)
+    ->middleware(['auth', 'can:review-placements', 'cache.headers:private;no_store', BindAcademicDeskRecords::class])
+    ->controller(PlacementDeskController::class)->group(function (): void {
+        Route::get('/{update?}', 'index')->whereUuid('update')->middleware('inertia.encrypt')->name('index');
+        Route::get('/csv/template', 'template')->name('template');
+        Route::get('/csv/references', 'references')->name('references');
+        Route::post('/csv', 'upload')->middleware('throttle:10,1')->name('upload');
+        Route::post('/{update}/approve', 'approve')->whereUuid('update')->name('approve');
+        Route::post('/{update}/enrolment', 'link')->whereUuid('update')->name('link');
+    });
+
+Route::prefix('admin/delivery-links')->name('admin.delivery-links.')
+    ->withoutMiddleware(SubstituteBindings::class)
+    ->middleware(['auth', 'can:manage-delivery-links', 'cache.headers:private;no_store', BindAcademicDeskRecords::class])
+    ->controller(DeliveryLinksController::class)->group(function (): void {
+        Route::get('/{offering?}', 'index')->whereUuid('offering')->middleware('inertia.encrypt')->name('index');
+        Route::post('/{offering}', 'store')->whereUuid('offering')->name('store');
+    });
 
 Route::middleware(['auth', 'admin'])->group(function (): void {
     Route::prefix('admin')->group(function (): void {

@@ -65,10 +65,12 @@ class AcademicNavigation
                     ]
                     : null,
                 $this->link('Academic core', 'admin.academic-core', $readsCurriculum),
+                $this->link('Student placements', 'admin.placements.index', $user->can('review-placements')),
                 $this->link('Curriculum', 'academics.curriculum.show', $readsCurriculum),
                 $institution->contains('offerings.manage')
                     ? ['label' => 'Delivery', 'href' => route('academics.delivery', [], false)]
                     : null,
+                $this->link('Delivery links', 'admin.delivery-links.index', $user->can('manage-delivery-links')),
                 $this->link('Student directory', 'students.index', $institution->contains('roster.read')),
                 $this->link('Staff directory', 'staff.index', $institution->contains('staff.manage')),
                 $this->link('Guardian progress', 'guardian.index', $institution->contains('progress.read_approved')),

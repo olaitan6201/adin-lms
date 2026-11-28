@@ -17,12 +17,13 @@ class AcademicAuthorityTest extends TestCase
     public static function roles(): array
     {
         return [
-            ['institutional_admin', ['Academic structure', 'Academic core', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, false],
-            ['super_admin', ['Academic structure', 'Academic core', 'Curriculum', 'Delivery', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, true],
+            ['institutional_admin', ['Academic structure', 'Academic core', 'Curriculum', 'Delivery', 'Delivery links', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, false],
+            ['super_admin', ['Academic structure', 'Academic core', 'Curriculum', 'Delivery', 'Delivery links', 'Student directory', 'Staff directory', 'Calendar', 'Notification settings'], true, true],
             ['quality_assurance_officer', ['Academic core', 'Curriculum', 'Calendar', 'Quality review', 'Notification settings'], false, false],
             ['dean', ['Organisation', 'Calendar', 'Notification settings'], false, false],
             ['head_of_department', ['Organisation', 'Calendar', 'Notification settings'], false, false],
             ['student', ['Calendar', 'Notification settings'], false, false],
+            ['registrar', ['Student placements', 'Notification settings'], false, false],
         ];
     }
 
@@ -59,6 +60,8 @@ class AcademicAuthorityTest extends TestCase
                 'Curriculum' => '/academics/curriculum',
                 'Academic core' => '/admin/academic-core',
                 'Delivery' => '/academics/delivery',
+                'Delivery links' => '/admin/delivery-links',
+                'Student placements' => '/admin/placements',
             ] as $label => $url
         ) {
             $this->get($url)->assertStatus(in_array($label, $labels, true) ? 200 : 403);

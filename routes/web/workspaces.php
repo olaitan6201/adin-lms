@@ -4,11 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 $screens = [
-    'admin' => [
-        'people', 'curriculum', 'delivery', 'content', 'course', 'classroom',
-        'assignments', 'cbt', 'gradebook', 'attendance', 'communication', 'calendar', 'reports', 'qa',
-        'administration', 'settings/notifications',
-    ],
     'lecturer' => [
         'overview', 'courses', 'course', 'classroom', 'assignments', 'cbt', 'gradebook', 'attendance',
         'communication', 'calendar', 'reports', 'settings/notifications',
@@ -25,7 +20,6 @@ foreach ($screens as $role => $pages) {
         foreach ($pages as $page) {
             $screen = "$role/$page";
             $path = match ($screen) {
-                'admin/qa' => 'qa-review',
                 'student/downloads' => 'offline-downloads',
                 default => $page,
             };

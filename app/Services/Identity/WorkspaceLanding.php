@@ -31,6 +31,10 @@ final class WorkspaceLanding
             return 'login';
         }
 
+        if ($this->authority->registrarAllows($user)) {
+            return 'admin.placements.index';
+        }
+
         return $this->authority->institutionAllows($user, PermissionCode::RosterRead)
             && $this->authority->canAccessAdminWorkspace($user)
             ? 'admin.overview'

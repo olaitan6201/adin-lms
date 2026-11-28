@@ -31,8 +31,59 @@
     transition: none;
 }
 
+html:has(.academic-register) {
+    scroll-padding-top: calc(var(--topbar-h, 4rem) + 0.5rem);
+}
+
+.academic-register .card-title {
+    overflow-wrap: anywhere;
+}
+
+.academic-register .card-title[tabindex='-1']:focus {
+    outline: 2px solid var(--color-brand-800);
+    outline-offset: 3px;
+}
+
+.academic-register .register-row[aria-current='page'] {
+    box-shadow: inset 3px 0 var(--color-brand-800);
+    background-color: var(--color-muted);
+    font-weight: 600;
+}
+
+.academic-register :is([data-slot='button'], input, select) {
+    min-height: 2.75rem;
+}
+
+.academic-register :is([data-slot='button'], [data-slot='native-select-wrapper']) {
+    max-width: 100%;
+}
+
+.academic-register :is([data-slot='button'], [data-slot='badge']) {
+    height: auto;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.academic-register .card :is(.card-head, .card-head + div) {
+    padding-inline: clamp(0.75rem, 5vw, 1.25rem);
+}
+
+.academic-register form {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline-start: clamp(0.5rem, 3vw, 1rem);
+}
+
+.academic-register input[type='file'] {
+    padding-inline: clamp(0.25rem, 2vw, 0.75rem);
+}
+
 @media (forced-colors: active) {
     .academic-core :is(a, button, summary, input, select, textarea):focus-visible {
+        outline-color: Highlight;
+    }
+
+    .academic-register .card-title[tabindex='-1']:focus {
         outline-color: Highlight;
     }
 }

@@ -24,6 +24,7 @@ export type Destination = {
 export function navigationGroups(signedIn: boolean, academicLinks: Destination[], home: string) {
     const routes = document.body.dataset;
     const supplied = (path: string) => academicLinks.find(link => link.href === path)?.href;
+    const registrarHome = supplied('/admin/placements');
     const grouped = new Set([
         '/calendar',
         '/student/downloads',
@@ -33,7 +34,10 @@ export function navigationGroups(signedIn: boolean, academicLinks: Destination[]
     ]);
     return signedIn
         ? [
-              { label: 'Overview', links: [{ label: 'Dashboard', href: home, Icon: LayoutDashboard }] },
+              {
+                  label: 'Overview',
+                  links: home === registrarHome ? [] : [{ label: 'Dashboard', href: home, Icon: LayoutDashboard }],
+              },
               {
                   label: 'Learning',
                   links: [
